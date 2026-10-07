@@ -51,9 +51,36 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-// -------------------------------------------------------
+// GPTW register bit definitions
+#define HAL_LL_TIM_GTCR_CST (0)
+#define HAL_LL_TIM_GTCR_MD_MASK (0xF0000UL)
 
-#define HAL_LL_TIM_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT | GPIO_CFG_PORT_PULL_UP_ENABLE)
+#define HAL_LL_TIM_GTBER_PR_MASK (0x300000UL)
+#define HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER (0x100000UL)
+#define HAL_LL_TIM_GTBER_CCRA_MASK (0x30000UL)
+#define HAL_LL_TIM_GTBER_CCRA_SINGLE_BUFFER (0x10000UL)
+#define HAL_LL_TIM_GTBER_CCRB_MASK (0xC0000UL)
+#define HAL_LL_TIM_GTBER_CCRB_SINGLE_BUFFER (0x40000UL)
+
+#define HAL_LL_TIM_GTUDDTYC_UD (0)
+
+#define HAL_LL_TIM_GTIOR_GTIOA_MASK (0x1FUL)
+#define HAL_LL_TIM_GTIOR_GTIOB_MASK (0x1FUL << 16)
+#define HAL_LL_TIM_GTIOR_GTIOA_9 (0x9)
+#define HAL_LL_TIM_GTIOR_GTIOB_9 (0x9UL << 16)
+#define HAL_LL_TIM_GTIOR_OAE (8)
+#define HAL_LL_TIM_GTIOR_OBE (24)
+
+// TODO: confirm PCLKC (SCKCR.PCKC) for the active clock configuration.
+#define HAL_LL_TIM_SOURCE_CLOCK_HZ (120000000UL)
+
+// TODO: MSTPCRA bit for GPTW is not in the uploaded chapter, confirm against section 11.
+#define HAL_LL_TIM_MSTPCRA_GPTW_POS (7)
+
+#define HAL_LL_TIM_PRCR_ADDR (0x000803FEUL)
+#define HAL_LL_TIM_PRCR_UNLOCK_VAL (0xA502U)
+#define HAL_LL_TIM_PRCR_LOCK_VAL (0xA500U)
+// -------------------------------------------------------
 
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_tim_get_base_struct(_handle) ((hal_ll_tim_base_handle_t *)_handle)
@@ -72,7 +99,38 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 /*!< @brief TIM register structure. */
 typedef struct
 {
-    uint32_t placeholder;
+    uint32_t gtwp;
+    uint32_t gtstr;
+    uint32_t gtstp;
+    uint32_t gtclr;
+    uint32_t gtssr;
+    uint32_t gtpsr;
+    uint32_t gtcsr;
+    uint32_t gtupsr;
+    uint32_t gtdnsr;
+    uint32_t gticasr;
+    uint32_t gticbsr;
+    uint32_t gtcr;
+    uint32_t gtuddtyc;
+    uint32_t gtior;
+    uint32_t gtintad;
+    uint32_t gtst;
+    uint32_t gtber;
+    uint32_t gtitc;
+    uint32_t gtcnt;
+    uint32_t gtccr[6];
+    uint32_t gtpr;
+    uint32_t gtpbr;
+    uint32_t gtpdbr;
+    uint32_t gtadtra;
+    uint32_t gtadtbra;
+    uint32_t gtadtdbra;
+    uint32_t gtadtrb;
+    uint32_t gtadtbrb;
+    uint32_t gtadtdbrb;
+    uint32_t gtdtcr;
+    uint32_t gtdvu;
+    uint32_t gtdvd;
 } hal_ll_tim_base_handle_t;
 
 /*!< @brief TIM pin structure */
@@ -106,9 +164,30 @@ typedef enum
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 {
-    // GPT modules
+    // GPTW modules
     #ifdef TIM_MODULE_0
     {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0)},
+    #endif
+    #ifdef TIM_MODULE_1
+    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1)},
+    #endif
+    #ifdef TIM_MODULE_2
+    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2)},
+    #endif
+    #ifdef TIM_MODULE_3
+    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3)},
+    #endif
+    #ifdef TIM_MODULE_4
+    {HAL_LL_TIM4_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_4)},
+    #endif
+    #ifdef TIM_MODULE_5
+    {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5)},
+    #endif
+    #ifdef TIM_MODULE_6
+    {HAL_LL_TIM6_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_6)},
+    #endif
+    #ifdef TIM_MODULE_7
+    {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_7)},
     #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
@@ -120,7 +199,7 @@ static volatile hal_ll_tim_hw_specifics_map_t *hal_ll_tim_hw_specifics_map_local
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
-  * @brief  Initializes a GPT or AGT module at the hardware level.
+  * @brief  Initializes a GPTW module at the hardware level.
   *
   * Configures the selected module according to its previously set configuration.
   * Enables the module in the MCU, sets appropriate pin alternate functions,
@@ -229,98 +308,299 @@ static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map );
   */
 static uint32_t hal_ll_tim_clock_source();
 
-// --- AGT-specific private helpers --------------------------------------------
-/**
-  * @brief  Set AGT frequency register values.
-  *
-  * Calculates and writes the reload (period) value to the AGT register
-  * based on the peripheral clock and the desired output frequency.
-  * Supports normal and toggle modes depending on the configured pin type.
-  *
-  * @param[in] map - Object specific context handler.
-  * @return uint32_t - Configured period (reload) value.
-  */
-static uint32_t hal_ll_agt_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map );
-
-/**
-  * @brief  Initialize AGT module on hardware level.
-  *
-  * Initializes AGT module on hardware level, based on beforehand
-  * set configuration and module handler.
-  *
-  * @param  map - Object specific context handler.
-  * @return uint32_t - Set period.
-  *
-  */
-static uint32_t hal_ll_agt_hw_init( hal_ll_tim_hw_specifics_map_t *map );
-
-/**
-  * @brief  Select TIM clock source
-  * @return uint32_t - clock source
-  */
-static uint32_t hal_ll_agt_clock_source ();
-
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 hal_ll_err_t hal_ll_tim_register_handle( hal_ll_pin_name_t pin, hal_ll_tim_handle_register_t *handle_map,
                                                                 uint8_t *hal_module_id ) {
-    return 0;
+    uint8_t index;
+    uint16_t pin_check_result;
+
+    if ( HAL_LL_PIN_NC == ( pin_check_result = hal_ll_tim_check_pin( pin, &index, handle_map ) ) ) {
+        return HAL_LL_TIM_WRONG_PIN;
+    }
+
+    if ( hal_ll_tim_hw_specifics_map[ pin_check_result ].config.pin != pin ) {
+        hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], false );
+
+        hal_ll_tim_map_pin( pin_check_result, index );
+
+        hal_ll_tim_alternate_functions_set_state( &hal_ll_tim_hw_specifics_map[ pin_check_result ], true );
+
+        handle_map[ pin_check_result ].init_ll_state = false;
+
+        hal_ll_module_state[ pin_check_result ].init_ll_state = false;
+    }
+
+    *hal_module_id = pin_check_result;
+
+    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
+                        ( handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+
+    handle_map[ pin_check_result ].hal_ll_tim_handle =
+                        ( handle_t *)&hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle;
+
+    return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_module_configure_tim( handle_t *handle ) {
-    return 0;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_handle_register_t *hal_handle = (hal_ll_tim_handle_register_t *)*handle;
+    uint8_t pin_check_result = hal_ll_tim_hw_specifics_map_local->module_index;
+
+    hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
+
+    hal_ll_module_state[ pin_check_result ].hal_ll_tim_handle =
+                         (handle_t *)&hal_ll_tim_hw_specifics_map[ pin_check_result ].base;
+    hal_ll_module_state[ pin_check_result ].init_ll_state = true;
+    hal_handle->init_ll_state = true;
+
+    return HAL_LL_TIM_SUCCESS;
 }
 
 uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
-    return 0;
+    uint32_t period;
+    low_level_handle = hal_ll_tim_get_handle;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+
+    low_level_handle->init_ll_state = false;
+
+    hal_ll_tim_hw_specifics_map_local->freq_hz = freq_hz;
+
+    period = hal_ll_tim_init( hal_ll_tim_hw_specifics_map_local );
+
+    low_level_handle->init_ll_state = true;
+
+    // Memorize information about the max period available (PWM duty cycle is dependant of this information).
+    return ( hal_ll_tim_hw_specifics_map_local->max_period = period );
 }
 
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
-    return 0;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+    uint8_t ccr_index = ( HAL_LL_TIM_PIN_A == hal_ll_tim_hw_specifics_map_local->config.pin_type ) ? 0 : 1;
+    uint32_t compare = 0;
+
+    if ( 0.0f < duty_ratio ) {
+        compare = ( uint32_t )( ( float )( hal_ll_tim_hw_specifics_map_local->max_period + 1 ) * duty_ratio );
+
+        if ( 0 < compare ) {
+            compare--;
+        }
+    }
+
+    if ( check_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ) ) {
+        write_reg( &hal_ll_hw_reg->gtccr[ ccr_index + 2 ], compare );
+    } else {
+        write_reg( &hal_ll_hw_reg->gtccr[ ccr_index ], compare );
+        write_reg( &hal_ll_hw_reg->gtccr[ ccr_index + 2 ], compare );
+    }
+
+    return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_tim_start( handle_t *handle ) {
-    return 0;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+    hal_ll_tim_pin_type_t pin_type = hal_ll_tim_hw_specifics_map_local->config.pin_type;
+
+    if ( read_reg( &hal_ll_hw_reg->gtpr ) &&
+         read_reg( &hal_ll_hw_reg->gtccr[ ( HAL_LL_TIM_PIN_A == pin_type ) ? 0 : 1 ] ) ) {
+        set_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
+    }
+
+    return HAL_LL_TIM_SUCCESS;
 }
 
 hal_ll_err_t hal_ll_tim_stop( handle_t *handle ) {
-    return 0;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+
+    clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
+
+    return HAL_LL_TIM_SUCCESS;
 }
 
 void hal_ll_tim_close( handle_t *handle ) {
+    low_level_handle = hal_ll_tim_get_handle;
+    hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
+
+    if( NULL != low_level_handle->hal_ll_tim_handle ) {
+        hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+
+        low_level_handle->hal_ll_tim_handle = NULL;
+        low_level_handle->hal_drv_tim_handle = NULL;
+
+        low_level_handle->init_ll_state = false;
+
+        hal_ll_tim_hw_specifics_map_local->max_period = 0;
+        hal_ll_tim_hw_specifics_map_local->freq_hz = 0;
+
+        hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, true );
+        clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST );
+        hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_local, false );
+        hal_ll_tim_module_enable( hal_ll_tim_hw_specifics_map_local, false );
+
+        hal_ll_tim_hw_specifics_map_local->config.pin = HAL_LL_PIN_NC;
+        hal_ll_tim_hw_specifics_map_local->config.pin_type = HAL_LL_PIN_NC;
+        hal_ll_tim_hw_specifics_map_local->config.af = 0;
+    }
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static hal_ll_pin_name_t hal_ll_tim_check_pin( hal_ll_pin_name_t pin, uint8_t *index,
                                                 hal_ll_tim_handle_register_t *handle_map ) {
-    return 0;
+    hal_ll_pin_name_t pin_num;
+    uint8_t index_counter = 0;
+    uint8_t hal_ll_module_id = 0;
+    uint16_t map_size = ( sizeof( hal_ll_tim_pin_map ) / sizeof( hal_ll_tim_pin_map_t ) );
+
+    if ( HAL_LL_PIN_NC == pin ) {
+        return HAL_LL_PIN_NC;
+    }
+
+    // Check if the selected pin is valid.
+    for ( pin_num = 0; pin_num < map_size; pin_num++ ) {
+        if ( hal_ll_tim_pin_map[ pin_num ].pin == pin ) {
+            // Get module number
+            hal_ll_module_id = hal_ll_tim_pin_map[ pin_num ].module_index;
+
+            // Map module number to map index
+            for ( uint8_t map_member = 0; map_member < TIM_MODULE_COUNT + 1; map_member++  ) {
+                if ( hal_ll_tim_hw_specifics_map[ map_member ].module_index == hal_ll_module_id ) {
+                    hal_ll_module_id = map_member;
+                    break;
+                }
+            }
+
+            if ( NULL == handle_map[ hal_ll_module_id ].hal_drv_tim_handle ) {
+                *index = pin_num;
+                return hal_ll_module_id;
+            } else if ( TIM_MODULE_COUNT == ++index_counter ) {
+                return --index_counter;
+            }
+        }
+    }
+    // By default return last error msg.
+    if ( index_counter ) {
+        return hal_ll_module_id;
+    } else {
+        return HAL_LL_PIN_NC;
+    }
 }
 
 static hal_ll_tim_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
-    return 0;
+    uint8_t hal_ll_module_count = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
+    static uint8_t hal_ll_module_error = sizeof( hal_ll_module_state ) / ( sizeof( hal_ll_tim_handle_register_t ) );
+
+    while( hal_ll_module_count-- ) {
+        if ( hal_ll_tim_get_base_from_hal_handle == hal_ll_tim_hw_specifics_map[ hal_ll_module_count ].base ) {
+            return &hal_ll_tim_hw_specifics_map[ hal_ll_module_count ];
+        }
+    }
+
+    return &hal_ll_tim_hw_specifics_map[ hal_ll_module_error ];
 }
 
 static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
+    volatile uint16_t *prcr = ( uint16_t * )HAL_LL_TIM_PRCR_ADDR;
+    uint8_t module_count = TIM_MODULE_COUNT;
+
+    // All GPTW channels share one module-stop bit; stop it only when no channel is left in use.
+    if ( false == hal_ll_state ) {
+        while ( module_count-- ) {
+            if ( NULL != hal_ll_module_state[ module_count ].hal_ll_tim_handle ) {
+                return;
+            }
+        }
+    }
+
+    write_reg( prcr, HAL_LL_TIM_PRCR_UNLOCK_VAL );
+
+    hal_ll_state ? clear_reg_bit( _MSTPCRA, MSTPCRA_MSTPA7_POS ) :
+                   set_reg_bit  ( _MSTPCRA, MSTPCRA_MSTPA7_POS );
+
+    write_reg( prcr, HAL_LL_TIM_PRCR_LOCK_VAL );
 }
 
 static uint32_t hal_ll_tim_clock_source() {
-    return 0;
+    return HAL_LL_TIM_SOURCE_CLOCK_HZ;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {
+    // Map new pin.
+    hal_ll_tim_hw_specifics_map[ module_index ].config.pin = hal_ll_tim_pin_map[ index ].pin;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.pin_type = hal_ll_tim_pin_map[ index ].pin_type;
+    hal_ll_tim_hw_specifics_map[ module_index ].config.af = hal_ll_tim_pin_map[ index ].af;
 }
 
 static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_map_t *map, bool hal_ll_state ) {
+    module_struct module;
+
+    if( HAL_LL_PIN_NC != map->config.pin ) {
+        module.pins[0] = map->config.pin;
+        module.pins[1] = GPIO_MODULE_STRUCT_END;
+
+        module.configs[0] = map->config.af;
+        module.configs[1] = GPIO_MODULE_STRUCT_END;
+
+        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
+    }
 }
 
 static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *map ) {
-    return 0;
+    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
+    uint32_t period = hal_ll_tim_clock_source() / map->freq_hz - 1;
+
+    // Keep the period within 16 bits, as the upper GTPR bits are reserved on some products.
+    if ( 0xFFFF < period ) {
+        period = 0xFFFF;
+    }
+
+    write_reg( &hal_ll_hw_reg->gtpr, period );
+    write_reg( &hal_ll_hw_reg->gtpbr, period );
+
+    return period;
 }
 
 static uint32_t hal_ll_tim_hw_init( hal_ll_tim_hw_specifics_map_t *map ) {
-    return 0;
+    hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( map->base );
+    uint32_t period;
+
+    clear_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ); // Stop operation first.
+    clear_reg_bits( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_MD_MASK ); // Sawtooth-wave PWM mode.
+    set_reg_bit( &hal_ll_hw_reg->gtuddtyc, HAL_LL_TIM_GTUDDTYC_UD ); // Count up.
+    clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_MASK );
+    set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_PR_SINGLE_BUFFER ); // Single buffer operation.
+
+    // Frequency settings
+    period = hal_ll_tim_set_freq_bare_metal( map );
+
+    clear_reg( &hal_ll_hw_reg->gtcnt );
+
+    if( HAL_LL_TIM_PIN_A == map->config.pin_type ) {
+        // A
+        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end).
+        clear_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_MASK );
+        set_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOA_9 );
+        set_reg_bit( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_OAE ); // Enable GTIOC pin output.
+        clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRA_MASK );
+        set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRA_SINGLE_BUFFER );
+    } else {
+        // B
+        // Set GTIOC pin function (Initial low -> Low at GTCCRA/B compare match -> High at cycle end).
+        clear_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOB_MASK );
+        set_reg_bits( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_GTIOB_9 );
+        set_reg_bit( &hal_ll_hw_reg->gtior, HAL_LL_TIM_GTIOR_OBE ); // Enable GTIOC pin output.
+        clear_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRB_MASK );
+        set_reg_bits( &hal_ll_hw_reg->gtber, HAL_LL_TIM_GTBER_CCRB_SINGLE_BUFFER );
+    }
+
+    return period;
 }
 
 static uint32_t hal_ll_tim_init( hal_ll_tim_hw_specifics_map_t *map ) {
-    return 0;
+    hal_ll_tim_module_enable( map, true );
+    hal_ll_tim_alternate_functions_set_state( map, true );
+
+    return hal_ll_tim_hw_init( map );
 }
 // ------------------------------------------------------------------------- END

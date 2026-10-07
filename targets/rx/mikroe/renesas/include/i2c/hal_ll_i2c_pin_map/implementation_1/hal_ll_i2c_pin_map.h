@@ -68,6 +68,9 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
     #ifdef I2C0_SCL_PB1_AF15
     {GPIO_PB1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 15},
     #endif
+    #ifdef SCI5_SCL_P901_AF10
+    {GPIO_P901, HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_5 ), 10},
+    #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
@@ -76,6 +79,9 @@ static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
     #ifdef I2C0_SDA_PB2_AF15
     {GPIO_PB2, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), 15},
+    #endif
+    #ifdef SCI5_SDA_P900_AF10
+    {GPIO_P900, HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_5 ), 10},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}

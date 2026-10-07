@@ -64,16 +64,16 @@
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089000UL);
 static const hal_ll_base_addr_t HAL_LL_ADC1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089200UL);
 static const hal_ll_base_addr_t HAL_LL_ADC2_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00089400UL);
-static const hal_ll_base_addr_t HAL_LL_SCI5_BASE_ADDR = ( hal_ll_base_addr_t ) (0x0008A0A0UL);
 static const hal_ll_base_addr_t HAL_LL_SCI6_BASE_ADDR = ( hal_ll_base_addr_t ) (0x0008A0C0UL);
 static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x00088300UL);
+static const hal_ll_base_addr_t HAL_LL_SCI5_BASE_ADDR = ( hal_ll_base_addr_t ) (0x0008A0A0UL);
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x000D0100UL);
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0x000E2800UL);
+static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x000C2000UL);
 // TODO: the following addresses are not valid for RX26T, they are just placeholders for now
 static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);
 static const hal_ll_base_addr_t HAL_LL_SAU0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2000UL);
 static const hal_ll_base_addr_t HAL_LL_SAU1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2200UL);
-static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2600UL);
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

@@ -37,54 +37,54 @@
 **
 ****************************************************************************/
 /*!
- * @file  hal_ll_tim_pin_map.h
- * @brief TIM HAL LOW LEVEL PIN MAP.
+ * @file  hal_ll_sci.h
+ * @brief API for SCI sub-implementation of I2C and SPI modules.
  */
 
-#ifndef _HAL_LL_TIM_PIN_MAP_H_
-#define _HAL_LL_TIM_PIN_MAP_H_
+#ifndef _HAL_LL_SCI_H_
+#define _HAL_LL_SCI_H_
+
+#include "hal_ll_target.h"
+#include "hal_ll_sci_i2c.h"
+// #include "hal_ll_sci_spi.h"
+// #include "hal_ll_sci_uart.h"
+#include <stdbool.h>
+
+/*!< @brief Helper macro for getting adequate module index number */
+#define hal_ll_sci_module_num(_module_num) (_module_num - 1)
+
+/**
+ * @brief SCI module mode selection values.
+ *
+ * The context structure for determining the SCI module
+ * mode of operation, which can be either I2C or SPI.
+ *
+ */
+typedef enum
+{
+    HAL_LL_SCI_I2C_MODE = 0,
+    HAL_LL_SCI_SPI_MODE
+} hal_ll_sci_mode_t;
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-#include "hal_ll_pin_names.h"
-
-/*!< @brief Macro defining `weak` attribute */
-#define __weak __attribute__((weak))
-/*!< @brief Helper macro for getting adequate module index number */
-#define hal_ll_tim_module_num(_module_num) (_module_num - 1)
-
-typedef enum {
-    HAL_LL_TIM_PIN_A = 0,
-    HAL_LL_TIM_PIN_B,
-    HAL_LL_TIM_PIN_NONE
-} hal_ll_tim_pin_type_t;
-
-/*!< @brief TIM pin structure. */
-typedef struct {
-    hal_ll_pin_name_t pin;
-    hal_ll_base_addr_t base;
-    uint8_t af;
-    hal_ll_pin_name_t module_index;
-    hal_ll_tim_pin_type_t pin_type;
-} hal_ll_tim_pin_map_t;
-
-/*!< TIM pins. */
-static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
-    #ifdef TIM0_P704_CHB_AF20
-    {GPIO_P704, HAL_LL_TIM0_BASE_ADDR, 20, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_B},
-    #endif
-    #ifdef TIM0_P701_CHA_AF20
-    {GPIO_P701, HAL_LL_TIM0_BASE_ADDR, 20, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_A},
-    #endif
-
-    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
-};
+/**
+  * @brief  Enable or disable the SCI hardware module.
+  *
+  * Controls the clock and power state of the specified I2CSCI hardware module
+  * by enabling or disabling it, depending on the provided state parameter.
+  *
+  * @param[in]  module_index - SCI module index
+  * @param[in]  hal_ll_state - Desired state of the module (true to enable, false to disable).
+  * @return None
+  */
+void hal_ll_sci_module_enable( uint8_t module_index, bool hal_ll_state );
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _HAL_LL_TIM_PIN_MAP_H_
+#endif // _HAL_LL_SCI_H_
 // ------------------------------------------------------------------------- END

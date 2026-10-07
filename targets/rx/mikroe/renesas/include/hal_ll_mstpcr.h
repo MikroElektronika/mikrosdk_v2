@@ -65,6 +65,7 @@ extern "C"{
 #define HAL_LL_MSTPCR_PRCR_UNLOCK_VAL  (0xA502U)
 
 // MSTPCRA bit positions
+#define MSTPCRA_MSTPA7_POS  7  // GPTW
 #define MSTPCRA_MSTPA16_POS 16 // ADC1
 #define MSTPCRA_MSTPA17_POS 17 // ADC0
 #define MSTPCRA_MSTPA23_POS 23 // ADC2

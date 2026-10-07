@@ -52,6 +52,8 @@
 #define __P201_CN
 #define __P400_CN
 #define __P501_CN
+#define __P701_CN
+#define __P704_CN
 #define __P900_CN
 #define __P901_CN
 #define __P902_CN
@@ -118,6 +120,15 @@
  #define SAU_UART_MODULE_COUNT 2
 //EOF SAU_UART
 
+// SCI
+#define SCI5_SCL_P901_AF10
+#define SCI5_SDA_P900_AF10
+
+#define SCI_MODULE_5 6
+
+#define SCI_MODULE_COUNT 1
+// EOF SCI
+
 //I2C
 
 #define I2C_MODULE_0 1
@@ -125,7 +136,7 @@
 #define I2C0_SCL_PB1_AF15
 #define I2C0_SDA_PB2_AF15
 
-#define I2C_MODULE_COUNT 1
+#define I2C_MODULE_COUNT 2
 //EOF I2C
 
 //UART
@@ -147,6 +158,8 @@
 //EOF SPI
 
 //TIM
+#define TIM0_P704_CHB_AF20
+#define TIM0_P701_CHA_AF20
 
 #define TIM_MODULE_0 1
 
