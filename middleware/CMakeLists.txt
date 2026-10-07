@@ -52,3 +52,6 @@ add_subdirectory(lcd)
 
 ## GLCD library.
 add_subdirectory(glcd)
+
+## ST7789 display library (SPI).
+add_subdirectory(st7789)
