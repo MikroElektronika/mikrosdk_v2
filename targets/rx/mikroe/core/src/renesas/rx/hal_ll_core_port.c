@@ -39,45 +39,27 @@
 /*!
  * @file  hal_ll_core_port.c
  * @brief This file contains all low level function definitions for chip specific core functionality.
- * @note  Refers to all BumbleBee RISC-V core chips.
+ * @note  Refers to RX26T (RXv3 core, ICU).
  */
 
 #include "hal_ll_core_defines.h"
 #include "hal_ll_bit_control.h"
 
-void hal_ll_core_port_clic_mode_enable() {
+void hal_ll_core_port_icu_enable_irq( uint8_t IRQn )
+{
+    if ( IRQn >= HAL_LL_CORE_ICU_VECTOR_MIN )
+        HAL_LL_CORE_ICU_IER( IRQn ) |= hal_ll_core_irq( IRQn );
 }
 
-void hal_ll_core_port_eclic_set_vectored_mode( uint32_t IRQn ) {
+void hal_ll_core_port_icu_disable_irq( uint8_t IRQn )
+{
+    if ( IRQn >= HAL_LL_CORE_ICU_VECTOR_MIN )
+        HAL_LL_CORE_ICU_IER( IRQn ) &= ( uint8_t )~hal_ll_core_irq( IRQn );
 }
 
-void hal_ll_core_port_eclic_init ( uint32_t IRQn ) {
+void hal_ll_core_port_icu_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
+{
+    if ( IRQn >= HAL_LL_CORE_ICU_VECTOR_MIN )
+        HAL_LL_CORE_ICU_IPR( IRQn ) = ( uint8_t )( IRQn_priority & HAL_LL_CORE_PRIORITY_MASK );
 }
-
-void hal_ll_core_port_eclic_enable_irq( uint8_t IRQn ) {
-}
-
-void hal_ll_core_port_eclic_disable_irq( uint8_t IRQn ) {
-}
-
-uint8_t hal_ll_core_port_eclic_get_cfg_nlbits() {
-    return 0;
-}
-
-uint8_t hal_ll_core_port_eclic_get_info_clicintctlbits() {
-    return 0;
-}
-
-void hal_ll_core_port_eclic_set_irq_lvl_abs( uint32_t IRQn, uint8_t IRQn_level ) {
-}
-
-void hal_ll_core_port_eclic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority ) {
-}
-
-void hal_ll_core_port_eclic_set_priority_level( uint32_t IRQn, uint8_t IRQn_level, uint8_t IRQn_priority ) {
-}
-
-void hal_ll_core_port_eclic_priority_group_set( uint32_t prigroup ) {
-}
-
 // ------------------------------------------------------------------------- END

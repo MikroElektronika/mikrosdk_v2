@@ -38,40 +38,39 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_core.c
- * @brief This file contains all CORE functionalities for RISC-V chips.
+ * @brief This file contains all CORE functionalities for RX chips.
  */
 
 #include "hal_ll_core_defines.h"
 #include "hal_ll_core_port.h"
 #include "hal_ll_bit_control.h"
-#include <stdbool.h>
 
 bool hal_ll_core_implemented( void ) {
-    return 0;
+    return true;
 }
 
 void hal_ll_core_enable_interrupts( void )
 {
-    return;
+    hal_ll_core_enable_int_asm;
 }
 
 void hal_ll_core_disable_interrupts( void )
 {
-    return;
+    hal_ll_core_disable_int_asm;
 }
 
 void hal_ll_core_enable_irq( uint8_t IRQn )
 {
-    return;
+    hal_ll_core_port_icu_enable_irq( IRQn );
 }
 
 void hal_ll_core_disable_irq( uint8_t IRQn )
 {
-    return;
+    hal_ll_core_port_icu_disable_irq( IRQn );
 }
 
 void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
 {
-    return;
+    hal_ll_core_port_icu_set_priority_irq( IRQn, IRQn_priority );
 }
 // ------------------------------------------------------------------------- END

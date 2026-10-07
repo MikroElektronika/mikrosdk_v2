@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_core_defines.h
- * @brief Core specific defines and enums used for RISC-V chips.
+ * @brief Core specific defines and enums used for RX chips.
  */
 
 #ifndef _HAL_LL_CORE_DEFINES_H_
@@ -50,90 +50,23 @@ extern "C"{
 
 #include <stdint.h>
 
-#define MSTATUS_MIE                      (0x00000008)
-#define ECLIC_ADDR_BASE                  (0xD2000000)
-#define CLIC_CFG_NLBITS_MASK             (0x1E)
-#define CLIC_CFG_NLBITS_SHIFT            (1)
-#define CLIC_INFO_CLICINTCTLBITS_MASK    (0x01E00000)
-#define CLIC_INFO_CLICINTCTLBITS_SHIFT   (21)
-#define MTVEC_CLIC_INTERRUPT_MODE        (0x00000003)
-#define MTVEC_CLIC_INTERRUPT_MODE_MASK   (0xFFFFFFC0)
-#define CLICINT_ATTR_VECTORED_INTERRUPT  (0x1)
+#define hal_ll_core_enable_int_asm   __asm__ volatile ( "setpsw i" )
+#define hal_ll_core_disable_int_asm  __asm__ volatile ( "clrpsw i" )
 
-#define ECLIC_INT_IP_OFFSET              (0x1000UL)
-#define ECLIC_INT_IE_OFFSET              (0x1001UL)
-#define ECLIC_INT_ATTR_OFFSET            (0x1002UL)
-#define ECLIC_INT_CTL_OFFSET             (0x1003UL)
+#define HAL_LL_CORE_ICU_BASE         ( 0x00087000UL )
+#define HAL_LL_CORE_ICU_IER_BASE     ( HAL_LL_CORE_ICU_BASE + 0x200UL )
+#define HAL_LL_CORE_ICU_IPR_BASE     ( HAL_LL_CORE_ICU_BASE + 0x300UL )
 
-#define SET_ECLIC_CLICINT_IP(IRQn,val)   (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_IP_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_IP(IRQn)       (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_IP_OFFSET+IRQn*4)
+#define HAL_LL_CORE_ICU_VECTOR_MIN   ( 16 )
+#define HAL_LL_CORE_PRIORITY_MASK    ( 0x0F )
 
-#define SET_ECLIC_CLICINT_IE(IRQn,val)   (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_IE_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_IE(IRQn)       (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_IE_OFFSET+IRQn*4)
+#define HAL_LL_CORE_ICU_IER( vector ) \
+( *( volatile uint8_t * )( HAL_LL_CORE_ICU_IER_BASE + (( vector ) >> 3 )))
 
-#define SET_ECLIC_CLICINT_ATTR(IRQn,val) (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_ATTR_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_ATTR(IRQn)     (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_ATTR_OFFSET+IRQn*4)
+#define HAL_LL_CORE_ICU_IPR( vector ) \
+( *( volatile uint8_t * )( HAL_LL_CORE_ICU_IPR_BASE + ( vector )))
 
-#define SET_ECLIC_CLICINT_CTL(IRQn,val)  (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_CTL_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_CTL(IRQn)      (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_CTL_OFFSET+IRQn*4)
-
-typedef struct {
-    volatile uint8_t cfg;               // Global configuration register
-    uint8_t _unused1[3];
-    const uint32_t info;                // Global info register
-    uint8_t _unused2[3];
-    volatile uint8_t mth;               // Target threshold level register
-} eclic;
-
-#define __weak __attribute__((weak))
-
-#define set_csr(reg, bit) ({ unsigned long __tmp; \
-                             if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-                                 asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
-                             else \
-                                 asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
-                             __tmp; })
-#define clear_csr(reg, bit) ({ unsigned long __tmp; \
-                               if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-                                   asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
-                               else \
-                                   asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
-                               __tmp; })
-
-#define read_csr(reg) ({ unsigned long __tmp; \
-                         asm volatile ("csrr %0, " #reg : "=r"(__tmp)); \
-                         __tmp; })
-
-#define write_csr(reg, val) ({ \
-                               if (__builtin_constant_p(val) && (unsigned long)(val) < 32) \
-                                   asm volatile ("csrw " #reg ", %0" :: "i"(val)); \
-                               else \
-                                   asm volatile ("csrw " #reg ", %0" :: "r"(val)); })
-
-#if defined(gigadevice)
-#if defined(__core_bumblebee__)
-    typedef enum
-    {
-        HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
-        HAL_LL_IVT_PRIORITY_LEVEL_1,
-        HAL_LL_IVT_PRIORITY_LEVEL_2,
-        HAL_LL_IVT_PRIORITY_LEVEL_3,
-        HAL_LL_IVT_PRIORITY_LEVEL_4,
-        HAL_LL_IVT_PRIORITY_LEVEL_5,
-        HAL_LL_IVT_PRIORITY_LEVEL_6,
-        HAL_LL_IVT_PRIORITY_LEVEL_7,
-        HAL_LL_IVT_PRIORITY_LEVEL_8,
-        HAL_LL_IVT_PRIORITY_LEVEL_9,
-        HAL_LL_IVT_PRIORITY_LEVEL_10,
-        HAL_LL_IVT_PRIORITY_LEVEL_11,
-        HAL_LL_IVT_PRIORITY_LEVEL_12,
-        HAL_LL_IVT_PRIORITY_LEVEL_13,
-        HAL_LL_IVT_PRIORITY_LEVEL_14,
-        HAL_LL_IVT_PRIORITY_LEVEL_15
-    } hal_ll_core_irq_priority_levels;
-
-#endif
-#endif
+#define hal_ll_core_irq( vector )    ( uint8_t )( 1U << (( vector ) & 0x07 ))
 
 #ifdef __cplusplus
 }

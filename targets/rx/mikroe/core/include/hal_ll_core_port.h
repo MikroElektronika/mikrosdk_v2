@@ -52,6 +52,43 @@ extern "C"
 
 #include "stdint.h"
 
+/**
+ * @brief  Enables selected IRQ.
+ *
+ * Registers interrupt on hardware level and enables
+ * it.
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ * @return void None.
+ */
+void hal_ll_core_port_icu_enable_irq( uint8_t IRQn );
+
+/**
+ * @brief  Disables selected IRQ.
+ *
+ * Disables previously registered interrupt
+ * handler..
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ * @return void None.
+ */
+void hal_ll_core_port_icu_disable_irq( uint8_t IRQn );
+
+/**
+ * @brief  Sets IRQ priority level.
+ *
+ * Sets specified IRQ priority on
+ * hardware level.
+ *
+ * @param[in] IRQn Chip specific IRQ number.
+ *
+ * One of predefined hal_ll_core_irq_priority_levels.
+ * Take into consideration that this is chip specific.
+ *
+ * @return void None.
+ */
+void hal_ll_core_port_icu_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority );
+
 #ifdef __cplusplus
 }
 #endif

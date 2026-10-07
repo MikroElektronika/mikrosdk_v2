@@ -85,6 +85,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_UART_SCR_TE                      (5)
 #define HAL_LL_SCI_UART_SCR_RIE                     (6)
 #define HAL_LL_SCI_UART_SCR_TIE                     (7)
+#define HAL_LL_SCI_UART_SCR_IRQ_MASK                ((1 << HAL_LL_SCI_UART_SCR_RIE) | (1 << HAL_LL_SCI_UART_SCR_TIE))
 
 /*!< @brief SSR -- Serial Status Register bit positions. */
 #define HAL_LL_SCI_UART_SSR_MPBT                    (0)
@@ -95,6 +96,23 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_UART_SSR_ORER                    (5)
 #define HAL_LL_SCI_UART_SSR_RDRF                    (6)
 #define HAL_LL_SCI_UART_SSR_TDRE                    (7)
+#define HAL_LL_SCI_UART_SSR_ERROR_CLEAR_VAL         (0xC0)
+
+#define HAL_LL_SCI_ERI_INTERRUPT_PRIORITY           (4)
+#define HAL_LL_SCI_RXI_INTERRUPT_PRIORITY           (3)
+#define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY           (2)
+
+#define HAL_LL_SCI6_RXI_VECTOR                      (86)
+#define HAL_LL_SCI6_TXI_VECTOR                      (87)
+#define HAL_LL_ICU_GROUPBL0_VECTOR                  (110)
+#define HAL_LL_SCI6_ERI_GROUP_BIT                   (13)
+
+#define HAL_LL_ICU_GRPBL0                           (( volatile uint32_t * )0x00087630UL )
+#define HAL_LL_ICU_IR_SCI6_TXI                      (( volatile uint8_t * )0x00087057UL )
+#define HAL_LL_ICU_GENBL0                           (( volatile uint32_t * )0x00087670UL )
+
+#define HAL_LL_CORE_INTB_CREG                       (0xC)
+extern void * const rvectors_start[];
 
 /*!< @brief SCMR -- Smart Card Mode Register bit positions. */
 #define HAL_LL_SCI_UART_SCMR_SMIF                   (0)
@@ -532,19 +550,79 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
     objects[ hal_ll_uart_find_index( handle ) ] = obj;
 
-    // TODO: hook TXI/RXI/ERI up to the NVIC once interrupt-driven mode is implemented.
+    switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+        #ifdef SCI_MODULE_6
+        case hal_ll_uart_module_num( SCI_MODULE_6 ):
+            hal_ll_core_set_priority_irq( HAL_LL_ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( HAL_LL_SCI6_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( HAL_LL_SCI6_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENBL0, HAL_LL_SCI6_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( HAL_LL_ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( HAL_LL_SCI6_RXI_VECTOR );
+            hal_ll_core_enable_irq( HAL_LL_SCI6_TXI_VECTOR );
+            break;
+        #endif
+
+        default:
+            break;
+    }
+
+    __builtin_rx_mvtc( HAL_LL_CORE_INTB_CREG, ( int )rvectors_start );
+
+    hal_ll_core_enable_interrupts();
 }
 
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    // TODO: enable SCI TXI/RXI interrupts (SCR.TIE/RIE) once interrupt-driven mode is implemented.
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_UART_SCR_RIE );
+            break;
+        case HAL_LL_UART_IRQ_TX:
+            {
+                uint8_t scr_val = read_reg( &hal_ll_hw_reg->scr );
+                scr_val &= ( uint8_t )~( ( 1 << HAL_LL_SCI_UART_SCR_TIE ) | ( 1 << HAL_LL_SCI_UART_SCR_TE ) );
+
+                while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_UART_SSR_TEND ) );
+                write_reg( &hal_ll_hw_reg->scr, scr_val );
+                write_reg( HAL_LL_ICU_IR_SCI6_TXI, 0 );
+                write_reg( &hal_ll_hw_reg->scr, scr_val | ( 1 << HAL_LL_SCI_UART_SCR_TIE ) | ( 1 << HAL_LL_SCI_UART_SCR_TE ) );
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    // TODO: disable SCI TXI/RXI interrupts (SCR.TIE/RIE) once interrupt-driven mode is implemented.
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_UART_SCR_RIE );
+            break;
+        case HAL_LL_UART_IRQ_TX:
+            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_UART_SCR_TIE );
+            break;
+
+        default:
+            break;
+    }
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
-    // TODO: interrupt-driven write path -- use hal_ll_uart_write_polling for now.
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_UART_SSR_TDRE ) );
+
+    write_reg( &hal_ll_hw_reg->tdr, wr_data );
 }
 
 void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
@@ -571,8 +649,10 @@ void hal_ll_uart_write_polling( handle_t *handle, uint8_t wr_data ) {
 }
 
 uint8_t hal_ll_uart_read( handle_t *handle ) {
-    // TODO: interrupt-driven read path -- use hal_ll_uart_read_polling for now.
-    return 0;
+    hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->base );
+
+    return read_reg( &hal_ll_hw_reg->rdr );
 }
 
 uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
@@ -590,7 +670,28 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
+#if defined( SCI_MODULE_6 )
+void __attribute__(( interrupt( ".rvectors", HAL_LL_SCI6_TXI_VECTOR ))) hal_ll_sci6_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_6 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
 
+void __attribute__(( interrupt( ".rvectors", HAL_LL_SCI6_RXI_VECTOR ))) hal_ll_sci6_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_6 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", HAL_LL_ICU_GROUPBL0_VECTOR ))) hal_ll_icu_groupbl0_isr( void ) {
+    hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( HAL_LL_SCI6_BASE_ADDR );
+
+    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, HAL_LL_SCI6_ERI_GROUP_BIT ) ) {
+        write_reg( &hal_ll_hw_reg->ssr, HAL_LL_SCI_UART_SSR_ERROR_CLEAR_VAL );
+        ( void )read_reg( &hal_ll_hw_reg->ssr );
+    }
+}
+#endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
@@ -900,6 +1001,7 @@ static void hal_ll_uart_clear_regs( hal_ll_uart_base_handle_t *hal_ll_hw_reg ) {
 
 static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( map->base );
+    uint8_t irq_bits = read_reg( &hal_ll_hw_reg->scr ) & HAL_LL_SCI_UART_SCR_IRQ_MASK;
 
     // SCR/SMR must be re-initialized (with TE = RE = 0) before any mode/format change.
     hal_ll_uart_clear_regs( hal_ll_hw_reg );
@@ -918,6 +1020,8 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_UART_SSR_PER );
 
     hal_ll_uart_set_module( hal_ll_hw_reg, HAL_LL_UART_ENABLE );
+
+    set_reg_bits( &hal_ll_hw_reg->scr, irq_bits );
 }
 
 static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map ) {
