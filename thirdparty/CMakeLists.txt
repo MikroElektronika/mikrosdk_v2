@@ -18,7 +18,7 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
         if(${has_eth} STREQUAL "true")
             check_eth_requirements(memory_requirements_passed)
             if(${memory_requirements_passed} STREQUAL "true")
-                add_subdirectory(ethernet)
+               # add_subdirectory(ethernet)
             else()
                 message(WARNING "${MCU_NAME} does not have enough memory for CycloneTCP")
             endif()
