@@ -109,7 +109,8 @@
 #define HAL_LL_ICU_IR_SCI6_TXI              (( volatile uint8_t * )0x00087057UL )
 
 /*!< @brief Macros used for bit rate and SSDA delay calculations */
-#define HAL_LL_SCI_BRR_DIVISOR_BASE         (32UL)
+#define HAL_LL_SCI_SCL_STEP_BASE            (4UL)
+#define HAL_LL_SCI_SCL_OVERHEAD_CYCLES      (15UL)
 #define HAL_LL_SCI_BRR_COUNT_MAX            (256UL)
 #define HAL_LL_SCI_UART_BRR_MAX_VALUE       (255)
 #define HAL_LL_SCI_CKS_COUNT                (4)
@@ -382,7 +383,7 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
                                               uint8_t *write_data_buf,
                                               size_t len_write_data,
                                               hal_ll_sci_i2c_end_mode_t mode ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
@@ -718,23 +719,23 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
     uint8_t best_cks = 0;
     uint8_t best_brr = 0;
 
-    /* Formula for I2C Master mode speed calculation of SCI module is:
-     * BRR = ( PCLK / ( bit_rate * 64 * 2^(2n-1) )) - 1
-     * Where n is CKS value in [0..3], so divider constant in
-     * this equation can be 32, 128, 512 and 2048.
-     */
+    // SCL period in cycles: 8 * ( N + 1 ) * 2^(2n-1) + 15 (Table 32.12).
     for ( uint8_t cks = 0; cks < HAL_LL_SCI_CKS_COUNT; cks++ ) {
-        uint32_t divisor = HAL_LL_SCI_BRR_DIVISOR_BASE << ( 2 * cks );
-        uint32_t brr_plus_one = ( HAL_LL_SCI_MCU_CLOCK_HZ + ( divisor * speed ) / 2 ) /
-                                ( divisor * speed );
+        uint32_t step = HAL_LL_SCI_SCL_STEP_BASE << ( 2 * cks );
+        uint32_t cycles = HAL_LL_SCI_MCU_CLOCK_HZ / speed;
+
+        if ( cycles <= HAL_LL_SCI_SCL_OVERHEAD_CYCLES ) {
+            continue;
+        }
+
+        uint32_t brr_plus_one = ( cycles - HAL_LL_SCI_SCL_OVERHEAD_CYCLES + step / 2 ) / step;
 
         if (( 0 == brr_plus_one ) || ( brr_plus_one > HAL_LL_SCI_BRR_COUNT_MAX )) {
             continue;
         }
 
-        uint32_t real_bitrate = HAL_LL_SCI_MCU_CLOCK_HZ / ( divisor * brr_plus_one );
-        uint32_t error = ( real_bitrate > speed ) ? ( real_bitrate - speed ) :
-                                                    ( speed - real_bitrate );
+        uint32_t real_speed = HAL_LL_SCI_MCU_CLOCK_HZ / ( step * brr_plus_one + HAL_LL_SCI_SCL_OVERHEAD_CYCLES );
+        uint32_t error = ( real_speed > speed ) ? ( real_speed - speed ) : ( speed - real_speed );
 
         if ( error < best_error ) {
             best_error = error;
@@ -794,6 +795,8 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 
     // Enable transmitter and receiver at the same time.
     write_reg( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_ENABLE_MASK );
+
+    return;
 }
 
 static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
