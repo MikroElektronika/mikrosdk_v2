@@ -47,7 +47,7 @@
 #include "hal_ll_target.h"
 #include "hal_ll_sci_i2c.h"
 // #include "hal_ll_sci_spi.h"
-// #include "hal_ll_sci_uart.h"
+#include "hal_ll_sci_uart.h"
 #include <stdbool.h>
 
 /*!< @brief Helper macro for getting adequate module index number */
