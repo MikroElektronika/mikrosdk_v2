@@ -199,9 +199,6 @@ typedef struct {
     uint32_t hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
     bool is_rspia_module;
-    uint32_t sck_pin_af;
-    uint32_t miso_pin_af;
-    uint32_t mosi_pin_af;
 } hal_ll_spi_master_hw_specifics_map_t;
 
 // ------------------------------------------------------------------ VARIABLES
@@ -214,16 +211,16 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
-     { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0, 0, 0, 0},
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
     #endif
     #ifdef SPI_MODULE_1
     { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
-     { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1, 0, 0, 0},
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0, 0 }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -445,9 +442,9 @@ hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pi
     }
 
     // Same module and same pins do not need remapping; otherwise clear af-s, map new pins, set af-s and reset init state.
-    if ( ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.sck != sck ) ||
-         ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.miso != miso ) ||
-         ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.mosi != mosi ) ) {
+    if ( ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.sck.pin_name != sck ) ||
+         ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.miso.pin_name != miso ) ||
+         ( hal_ll_spi_master_hw_specifics_map[ pin_check_result ].pins.mosi.pin_name != mosi ) ) {
 
         hal_ll_spi_master_alternate_functions_set_state( &hal_ll_spi_master_hw_specifics_map[ pin_check_result ], false );
 
@@ -644,12 +641,12 @@ void hal_ll_spi_master_close( handle_t* handle ) {
         hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_local, false );
         hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_local, false );
 
-        hal_ll_spi_master_hw_specifics_map_local->pins.sck = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map_local->pins.miso = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map_local->pins.mosi = HAL_LL_PIN_NC;
-        hal_ll_spi_master_hw_specifics_map_local->sck_pin_af = 0;
-        hal_ll_spi_master_hw_specifics_map_local->miso_pin_af = 0;
-        hal_ll_spi_master_hw_specifics_map_local->mosi_pin_af = 0;
+        hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_name = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.miso.pin_name = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.mosi.pin_name = HAL_LL_PIN_NC;
+        hal_ll_spi_master_hw_specifics_map_local->pins.sck.pin_af = 0;
+        hal_ll_spi_master_hw_specifics_map_local->pins.miso.pin_af = 0;
+        hal_ll_spi_master_hw_specifics_map_local->pins.mosi.pin_af = 0;
     }
 }
 
@@ -842,19 +839,19 @@ static hal_ll_spi_master_hw_specifics_map_t *hal_ll_get_specifics( handle_t hand
 }
 
 static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id *index_list ) {
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck  =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_name  =
                                     hal_ll_spi_master_sck_map[ index_list[ module_index ].pin_sck ].pin;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_name =
                                     hal_ll_spi_master_miso_map[ index_list[ module_index ].pin_miso ].pin;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_name =
                                     hal_ll_spi_master_mosi_map[ index_list[ module_index ].pin_mosi ].pin;
 
     // SCK, MISO and MOSI pins could have different alternate function settings, hence save all the AF-s.
-    hal_ll_spi_master_hw_specifics_map[ module_index ].sck_pin_af   =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_af   =
                                     hal_ll_spi_master_sck_map[ index_list[ module_index ].pin_sck ].af;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].miso_pin_af  =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_af  =
                                     hal_ll_spi_master_miso_map[ index_list[ module_index ].pin_miso ].af;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].mosi_pin_af  =
+    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_af  =
                                     hal_ll_spi_master_mosi_map[ index_list[ module_index ].pin_mosi ].af;
 }
 
@@ -862,44 +859,22 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
                                                              bool hal_ll_state ) {
     module_struct module;
 
-    if ( ( HAL_LL_PIN_NC != map->pins.sck ) &&
-         ( HAL_LL_PIN_NC != map->pins.miso ) &&
-         ( HAL_LL_PIN_NC != map->pins.mosi ) ) {
+    if ( ( HAL_LL_PIN_NC != map->pins.sck.pin_name ) &&
+         ( HAL_LL_PIN_NC != map->pins.miso.pin_name ) &&
+         ( HAL_LL_PIN_NC != map->pins.mosi.pin_name ) ) {
 
-        // Pins are passed plain; the PSEL value goes through module.configs[].
-        module.pins[ 0 ] = map->pins.sck;
-        module.pins[ 1 ] = map->pins.miso;
-        module.pins[ 2 ] = map->pins.mosi;
+        module.pins[ 0 ] = VALUE( map->pins.sck.pin_name, map->pins.sck.pin_af );
+        module.pins[ 1 ] = VALUE( map->pins.miso.pin_name, map->pins.miso.pin_af );
+        module.pins[ 2 ] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
         module.pins[ 3 ] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = map->sck_pin_af;
-        module.configs[ 1 ] = map->miso_pin_af;
-        module.configs[ 2 ] = map->mosi_pin_af;
+        module.configs[ 0 ] = GPIO_CFG_DIGITAL_OUTPUT;
+        module.configs[ 1 ] = GPIO_CFG_DIGITAL_INPUT;
+        module.configs[ 2 ] = GPIO_CFG_DIGITAL_OUTPUT;
         module.configs[ 3 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
-    // TODO ESMA
-    // module_struct module;
-
-    // if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
-    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
-    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
-
-    //     module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
-    //     module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
-    //     module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
-    //     module.pins[3] = GPIO_MODULE_STRUCT_END;
-
-    //     module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT;
-    //     module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
-    //     module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT;
-    //     module.configs[3] = GPIO_MODULE_STRUCT_END;
-
-    //     module.gpio_remap = map->pins.sck.pin_af;
-
-    //     hal_ll_gpio_module_struct_init(&module, hal_ll_state);
-    // }
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
