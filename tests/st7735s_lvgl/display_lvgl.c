@@ -3,12 +3,12 @@
 
 // ---------------------------------------------------- DISPLAY CONFIGURATION
 
-#define TFT_RST_PIN   GPIO_PG8
-#define TFT_CS_PIN    GPIO_PG9
-#define TFT_DC_PIN    GPIO_PG10
-#define TFT_SCK_PIN   GPIO_PG13   // SCL
-#define TFT_MISO_PIN  GPIO_PG12   // Not wired, but required by the SPI driver.
-#define TFT_MOSI_PIN  GPIO_PG14   // SDA
+#define TFT_RST_PIN HAL_PIN_NC
+#define TFT_CS_PIN HAL_PIN_NC
+#define TFT_DC_PIN HAL_PIN_NC
+#define TFT_SCK_PIN HAL_PIN_NC // SCL
+#define TFT_MISO_PIN HAL_PIN_NC // Not wired, but required by the SPI driver.
+#define TFT_MOSI_PIN HAL_PIN_NC // SDA
 
 #define TFT_SPI_SPEED 10000000    // In Hz.
 

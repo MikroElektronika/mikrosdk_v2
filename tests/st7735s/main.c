@@ -16,12 +16,12 @@
 // -------------------------------------------------------------------- MACROS
 
 // Display pins. SCK, MISO and MOSI must belong to the same SPI module.
-#define TEST_ST7735S_PIN_RST   GPIO_PG8
-#define TEST_ST7735S_PIN_CS        GPIO_PG9
-#define TEST_ST7735S_PIN_DC    GPIO_PG10
-#define TEST_ST7735S_PIN_SCK   GPIO_PG13   // SCL
-#define TEST_ST7735S_PIN_MISO  GPIO_PG12   // Not wired, but required by the SPI driver.
-#define TEST_ST7735S_PIN_MOSI  GPIO_PG14   // SDA
+#define TEST_ST7735S_PIN_RST HAL_PIN_NC
+#define TEST_ST7735S_PIN_CS HAL_PIN_NC
+#define TEST_ST7735S_PIN_DC HAL_PIN_NC
+#define TEST_ST7735S_PIN_SCK HAL_PIN_NC // SCL
+#define TEST_ST7735S_PIN_MISO HAL_PIN_NC // Not wired, but required by the SPI driver.
+#define TEST_ST7735S_PIN_MOSI HAL_PIN_NC // SDA
 
 #define TEST_ST7735S_SPI_SPEED 10000000    // In Hz.
 #define TEST_ST7735S_COLOR_DELAY_MS 3000
