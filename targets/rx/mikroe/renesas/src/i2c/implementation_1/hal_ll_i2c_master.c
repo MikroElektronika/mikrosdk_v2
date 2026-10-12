@@ -69,11 +69,9 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 // TODO: confirm GPIO_CFG_PORT_PULL_UP_ENABLE / GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE / GPIO_CFG_PERIPHERAL_PIN
 // exist in this project's hal_ll_gpio.h and map to real ODR0/ODR1 + PMR/PFS writes -- RIIC needs open-drain
 // SCL0/SDA0 pins routed to the peripheral, this is not the RL78-style "no such bit" case the old stub assumed.
-// #define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
-//                               GPIO_CFG_DIGITAL_OUTPUT |\
-//                               GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE |\
-//                               GPIO_CFG_PERIPHERAL_PIN)
-#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_DIGITAL_OUTPUT)
+#define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
+                              GPIO_CFG_DIGITAL_OUTPUT |\
+                              GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE)
 
 /*!< @brief ICBRL and ICBRH setting helper macros */
 #define HAL_LL_I2C_BRL_BRH_MAX          (31)
@@ -885,34 +883,14 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
                                                              bool hal_ll_state ) {
     module_struct module;
 
-    // if( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
-    //     module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
-    //     module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
-    //     module.pins[2] = GPIO_MODULE_STRUCT_END;
-
-    //     module.configs[0] = HAL_LL_I2C_AF_CONFIG;
-    //     module.configs[1] = HAL_LL_I2C_AF_CONFIG;
-    //     module.configs[2] = GPIO_MODULE_STRUCT_END;
-
-    //     hal_ll_gpio_module_struct_init( &module, hal_ll_state );
-    // }
-
-
-    if ( ( map->pins.pin_sda.pin_name != HAL_LL_PIN_NC ) &&
-         ( map->pins.pin_scl.pin_name != HAL_LL_PIN_NC ) )
-    {
-        module.pins[0] = map->pins.pin_scl.pin_name;
-        module.pins[1] = map->pins.pin_sda.pin_name;
+    if( (map->pins.pin_scl.pin_name != HAL_LL_PIN_NC) && (map->pins.pin_sda.pin_name != HAL_LL_PIN_NC) ) {
+        module.pins[0] = VALUE( map->pins.pin_scl.pin_name, map->pins.pin_scl.pin_af );
+        module.pins[1] = VALUE( map->pins.pin_sda.pin_name, map->pins.pin_sda.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        if ( HAL_LL_I2C_MODULE_TYPE_SCI == map->i2c_module_type ) {
-            module.configs[ 0 ] = map->pins.pin_scl.pin_af;
-            module.configs[ 1 ] = map->pins.pin_sda.pin_af;
-        } else {
-            module.configs[ 0 ] = 15;
-            module.configs[ 1 ] = 15;
-        }
-        module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
+        module.configs[0] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[1] = HAL_LL_I2C_AF_CONFIG;
+        module.configs[2] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }

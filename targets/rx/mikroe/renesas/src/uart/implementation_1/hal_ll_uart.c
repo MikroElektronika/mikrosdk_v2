@@ -554,15 +554,15 @@ static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *inde
 static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
 
-    if ( ( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
-         ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ) )
+    if (( map->pins.rx_pin.pin_name != HAL_LL_PIN_NC ) &&
+        ( map->pins.tx_pin.pin_name != HAL_LL_PIN_NC ))
     {
-        module.pins[0] = map->pins.tx_pin.pin_name;
-        module.pins[1] = map->pins.rx_pin.pin_name;
+        module.pins[0] = VALUE( map->pins.tx_pin.pin_name, map->pins.tx_pin.pin_af );
+        module.pins[1] = VALUE( map->pins.rx_pin.pin_name, map->pins.rx_pin.pin_af );
         module.pins[2] = GPIO_MODULE_STRUCT_END;
 
-        module.configs[ 0 ] = 10;
-        module.configs[ 1 ] = 10;
+        module.configs[ 0 ] = GPIO_CFG_DIGITAL_OUTPUT;
+        module.configs[ 1 ] = GPIO_CFG_DIGITAL_INPUT;
         module.configs[ 2 ] = GPIO_MODULE_STRUCT_END;
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );

@@ -48,12 +48,8 @@
 
 #define GPIO_ALT_FUNC_MASK (0xFF00)
 
-/* Peripheral base, used below by the MPC (PWPR/PFS) addressing — the
- * per-port table above uses its own named GPIO_PORTx_BASE macros instead
- * of this + an offset. */
 #define RX26T_PORT_BASE   ( 0x0008C000UL )
 
-/* Base address per slot, in slot order (array index == GPIO_PORT_x value). */
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
     #ifdef __PORT_0_CN
@@ -133,21 +129,22 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     #endif
 };
 
-/* PDR/PODR/PIDR/PMR/PCR offsets */
 #define HAL_LL_GPIO_PDR_OFFSET   ( 0x00UL )
 #define HAL_LL_GPIO_PODR_OFFSET  ( 0x20UL )
 #define HAL_LL_GPIO_PIDR_OFFSET  ( 0x40UL )
 #define HAL_LL_GPIO_PMR_OFFSET   ( 0x60UL )
+#define HAL_LL_GPIO_ODR_OFFSET   ( 0x80UL )
 #define HAL_LL_GPIO_PCR_OFFSET   ( 0xC0UL )
+#define HAL_LL_GPIO_DSCR_OFFSET  ( 0xE0UL )
 
-/* MPC register offsets and bit positions */
 #define HAL_LL_MPC_PWPR_OFFSET       ( 0x11FUL )
 #define HAL_LL_MPC_PFS_BASE_OFFSET   ( 0x140UL )
 #define HAL_LL_MPC_PFS_PORT_STRIDE   ( 0x08UL )
 #define HAL_LL_MPC_PWPR_PFSWE_BIT    ( 6U )
 #define HAL_LL_MPC_PWPR_B0WI_BIT     ( 7U )
+#define HAL_LL_MPC_PFS_ISEL_BIT      ( 6U )
 #define HAL_LL_MPC_PFS_ASEL_BIT      ( 7U )
-
+#define HAL_LL_MPC_PFS_PSEL_MASK     ( 0x3FU )
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -162,11 +159,10 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
 
 /**
   * @brief  Configure alternate function for pin
-  * @param  module_pin    - pin
+  * @param  module_pin    - pin name with alternate function in the upper byte
   *         module_config - pin settings
   *         state         - true/false
   * @return none
-
   */
 static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32_t module_config, bool state );
 
@@ -211,8 +207,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
         return;
     }
 
-    /* Analog pins stay general input (R01UH0979 21.3.3) — PMR/PDR both 0
-     * before ASEL goes high, so the output buffer is off first. */
+    /* PMR/PDR both 0 before ASEL goes high (R01UH0979 21.3.3). */
     *pmr &= ( uint8_t )~pin_mask;
     *pdr &= ( uint8_t )~pin_mask;
 
@@ -262,29 +257,41 @@ static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
+    uint32_t real_id = ( uint32_t )port - RX26T_PORT_BASE;
     volatile uint8_t *pdr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PDR_OFFSET );
     volatile uint8_t *pmr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PMR_OFFSET );
     volatile uint8_t *pcr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PCR_OFFSET );
+    volatile uint8_t *dscr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_GPIO_DSCR_OFFSET + real_id );
+    volatile uint8_t *odr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_GPIO_ODR_OFFSET + ( real_id * 2U ) );
+    uint8_t pin;
 
     if ( 0 == ( uint32_t )port ) {
         return;
     }
 
-    /* General I/O, not a peripheral function. */
     *pmr &= ( uint8_t )~pin_mask;
 
-    switch ( config ) {
-        case GPIO_CFG_DIGITAL_OUTPUT:
-            *pdr |= ( uint8_t )pin_mask;
-            *pcr &= ( uint8_t )~pin_mask;
-            break;
+    if ( 0 != ( config & GPIO_CFG_DIGITAL_OUTPUT ) ) {
+        *pdr |= ( uint8_t )pin_mask;
+        *pcr &= ( uint8_t )~pin_mask;
+    } else if ( 0 != ( config & GPIO_CFG_DIGITAL_INPUT ) ) {
+        *pdr &= ( uint8_t )~pin_mask;
+    }
 
-        case GPIO_CFG_DIGITAL_INPUT:
-            *pdr &= ( uint8_t )~pin_mask;
-            break;
+    if ( 0 != ( config & GPIO_CFG_PORT_PULL_UP_ENABLE ) ) {
+        *pcr |= ( uint8_t )pin_mask;
+    }
 
-        default:
-            break;
+    if ( ( 0 != ( config & GPIO_CFG_PORT_MIDDLE_DRIVE ) ) && ( ( real_id < 4U ) || ( real_id > 6U ) ) ) {
+        *dscr |= ( uint8_t )pin_mask;
+    }
+
+    if ( 0 != ( config & GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE ) ) {
+        for ( pin = 0; pin < 8; pin++ ) {
+            if ( 0 != ( pin_mask & ( 1U << pin ) ) ) {
+                *( odr + ( pin >> 2 ) ) |= ( uint8_t )( 1U << ( ( pin & 0x03U ) * 2U ) );
+            }
+        }
     }
 }
 
@@ -293,8 +300,9 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     uint8_t port_index = hal_ll_gpio_port_get_port_index( ( uint8_t )pin_name );
     uint32_t port_base = hal_ll_gpio_get_base_addr( port_index );
     uint8_t pin = hal_ll_gpio_pin_index( pin_name );
+    uint8_t psel = ( uint8_t )( ( module_pin & GPIO_ALT_FUNC_MASK ) >> GPIO_AF_OFFSET );
+    uint8_t pfs_value = 0x00U;
     uint32_t real_id;
-    uint32_t pfs_addr;
     volatile uint8_t *pmr;
     volatile uint8_t *pwpr;
     volatile uint8_t *pfs;
@@ -304,18 +312,31 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     }
 
     real_id = port_base - RX26T_PORT_BASE;
-    pfs_addr = RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET + ( real_id * HAL_LL_MPC_PFS_PORT_STRIDE ) + pin;
     pmr = ( volatile uint8_t * )( port_base + HAL_LL_GPIO_PMR_OFFSET );
     pwpr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
-    pfs = ( volatile uint8_t * )pfs_addr;
+    pfs = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET +
+                                  real_id * HAL_LL_MPC_PFS_PORT_STRIDE +
+                                  pin );
+
+    if ( true == state ) {
+        pfs_value = ( uint8_t )( psel & HAL_LL_MPC_PFS_PSEL_MASK );
+
+        if ( 0 != ( module_config & GPIO_CFG_IRQ_ENABLE ) ) {
+            pfs_value |= ( uint8_t )( 1U << HAL_LL_MPC_PFS_ISEL_BIT );
+        }
+    }
 
     /* PMR must be 0 while PSEL is changed (R01UH0979 21.3.2 note 1). */
     *pmr &= ( uint8_t )~( 1U << pin );
 
+    if ( true == state ) {
+        hal_ll_gpio_config( ( uint32_t * )port_base, ( uint16_t )( 1U << pin ), module_config );
+    }
+
     *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_B0WI_BIT );
     *pwpr |= ( uint8_t )( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
 
-    *pfs = ( true == state ) ? ( uint8_t )module_config : 0x00U;
+    *pfs = pfs_value;
 
     *pwpr &= ( uint8_t )~( 1U << HAL_LL_MPC_PWPR_PFSWE_BIT );
 

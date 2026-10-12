@@ -879,6 +879,27 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
+    // TODO ESMA
+    // module_struct module;
+
+    // if((map->pins.sck.pin_name != HAL_LL_PIN_NC) &&
+    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC) &&
+    //    (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
+
+    //     module.pins[0] = VALUE(map->pins.sck.pin_name, map->pins.sck.pin_af);
+    //     module.pins[1] = VALUE(map->pins.miso.pin_name, map->pins.miso.pin_af);
+    //     module.pins[2] = VALUE(map->pins.mosi.pin_name, map->pins.mosi.pin_af);
+    //     module.pins[3] = GPIO_MODULE_STRUCT_END;
+
+    //     module.configs[0] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT;
+    //     module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
+    //     module.configs[2] = GPIO_CFG_PORT_PULL_UP_ENABLE | GPIO_CFG_DIGITAL_OUTPUT;
+    //     module.configs[3] = GPIO_MODULE_STRUCT_END;
+
+    //     module.gpio_remap = map->pins.sck.pin_af;
+
+    //     hal_ll_gpio_module_struct_init(&module, hal_ll_state);
+    // }
 }
 
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
