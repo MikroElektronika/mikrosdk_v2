@@ -3,7 +3,7 @@ add_executable(test_st7735s_lvgl
     main.c
     display_lvgl.c
     display_lvgl.h
-    mikrosdk_logo_mali.c
+    mikrosdk_logo_small.c
     ReadMe.txt
 )
 

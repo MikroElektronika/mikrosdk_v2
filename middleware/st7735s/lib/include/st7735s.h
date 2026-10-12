@@ -58,20 +58,27 @@ typedef struct
     hal_pin_name_t cs;                       /*!< Chip Select pin. */
     hal_pin_name_t d_c;                      /*!< Data/Command select pin */
     hal_pin_name_t sck;                      /*!< SPI clock pin (SCL).*/
-    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI driver). */
+    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI
+                                                  driver). */
     hal_pin_name_t mosi;                     /*!< SPI data pin (SDA).*/
 
     uint32_t speed;
 
     uint16_t width;                          /*!< Panel width in pixels (the visible area). */
     uint16_t height;                         /*!< Panel height in pixels (the visible area). */
-    uint16_t ram_width;                      /*!< Controller memory width in pixels (128 or 132, depends on the GM pins of the module). */
-    uint16_t ram_height;                     /*!< Controller memory height in pixels (160, 132 or 162, depends on the GM pins of the module). */
-    uint16_t col_offset;                     /*!< Column offset of the panel inside the controller memory, for rotation 0. */
-    uint16_t row_offset;                     /*!< Row offset of the panel inside the controller memory, for rotation 0. */
+    uint16_t ram_width;                      /*!< Controller memory width in pixels (128 or 132, depends on the GM
+                                                  pins of the module). */
+    uint16_t ram_height;                     /*!< Controller memory height in pixels (160, 132 or 162, depends on the
+                                                  GM pins of the module). */
+    uint16_t col_offset;                     /*!< Column offset of the panel inside the controller memory, for
+                                                  rotation 0. */
+    uint16_t row_offset;                     /*!< Row offset of the panel inside the controller memory, for rotation
+                                                  0. */
     uint8_t invert;                          /*!< 1 if the display colors need to be inverted, 0 if not. */
-    uint8_t bgr;                             /*!< 1 if the panel has BGR color order (sets the RGB bit in MADCTL), 0 for RGB. */
-    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters, parameters..., ends with 0. NULL if not used. */
+    uint8_t bgr;                             /*!< 1 if the panel has BGR color order (sets the RGB bit in MADCTL), 0
+                                                  for RGB. */
+    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters,
+                                                  parameters..., ends with 0. NULL if not used. */
 } st7735s_cfg_t;
 /*!
  * @addtogroup middlewaregroup Middleware
@@ -87,9 +94,12 @@ typedef struct
 
 /**
  * @brief ST7735S Display Controller initialization.
- * @details This function initializes the control pins, the SPI module and the ST7735S Display Controller, and links the driver interface object with the ST7735S driver functions. If the SPI module can not be opened, the driver interface object is left untouched.
+ * @details This function initializes the control pins, the SPI module and the ST7735S Display Controller, and links the
+ * driver interface object with the ST7735S driver functions. If the SPI module can not be opened, the driver interface
+ * object is left untouched.
  * @param[in] cfg : ST7735S configuration object. See #st7735s_cfg_t structure definition for detailed explanation.
- * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and #gl_set_driver function for detailed explanation.
+ * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and
+ * #gl_set_driver function for detailed explanation.
  * @return Nothing.
  */
 void st7735s_init(st7735s_cfg_t *cfg, gl_driver_t * __generic_ptr driver);

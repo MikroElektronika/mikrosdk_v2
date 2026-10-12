@@ -60,23 +60,22 @@ static st7735s_cfg_t st7735s_cfg; // ST7735S configuration.
 int main()
 {
     // Configure the display.
-    st7735s_cfg.rst      = TEST_ST7735S_PIN_RST;
-    st7735s_cfg.cs       = TEST_ST7735S_PIN_CS;
-    st7735s_cfg.d_c      = TEST_ST7735S_PIN_DC;
-    st7735s_cfg.sck      = TEST_ST7735S_PIN_SCK;
-    st7735s_cfg.miso     = TEST_ST7735S_PIN_MISO;
-    st7735s_cfg.mosi     = TEST_ST7735S_PIN_MOSI;
-    st7735s_cfg.speed    = TEST_ST7735S_SPI_SPEED;
-    st7735s_cfg.width    = TEST_ST7735S_WIDTH;
-    st7735s_cfg.height   = TEST_ST7735S_HEIGHT;
+    st7735s_cfg.rst        = TEST_ST7735S_PIN_RST;
+    st7735s_cfg.cs         = TEST_ST7735S_PIN_CS;
+    st7735s_cfg.d_c        = TEST_ST7735S_PIN_DC;
+    st7735s_cfg.sck        = TEST_ST7735S_PIN_SCK;
+    st7735s_cfg.miso       = TEST_ST7735S_PIN_MISO;
+    st7735s_cfg.mosi       = TEST_ST7735S_PIN_MOSI;
+    st7735s_cfg.speed      = TEST_ST7735S_SPI_SPEED;
+    st7735s_cfg.width      = TEST_ST7735S_WIDTH;
+    st7735s_cfg.height     = TEST_ST7735S_HEIGHT;
     st7735s_cfg.ram_width  = TEST_ST7735S_RAM_WIDTH;
     st7735s_cfg.ram_height = TEST_ST7735S_RAM_HEIGHT;
     st7735s_cfg.col_offset = TEST_ST7735S_COL_OFFSET;
     st7735s_cfg.row_offset = TEST_ST7735S_ROW_OFFSET;
     st7735s_cfg.bgr        = TEST_ST7735S_BGR;
-    st7735s_cfg.invert   = TEST_ST7735S_INVERT_COLORS;
-    st7735s_cfg.init_seq = TEST_ST7735S_INIT_SEQ;
-
+    st7735s_cfg.invert     = TEST_ST7735S_INVERT_COLORS;
+    st7735s_cfg.init_seq   = TEST_ST7735S_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
     st7735s_init(&st7735s_cfg, &gl_driver);
     gl_set_driver(&gl_driver);
@@ -106,7 +105,9 @@ int main()
     gl_set_brush_color(GL_BLUE);
     gl_draw_rect(0, TEST_ST7735S_HEIGHT - TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_SQUARE_SIZE);
     gl_set_brush_color(GL_WHITE);
-    gl_draw_rect(TEST_ST7735S_WIDTH - TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_HEIGHT - TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_SQUARE_SIZE);
+    gl_draw_rect(TEST_ST7735S_WIDTH - TEST_ST7735S_SQUARE_SIZE,
+                 TEST_ST7735S_HEIGHT - TEST_ST7735S_SQUARE_SIZE,
+                 TEST_ST7735S_SQUARE_SIZE, TEST_ST7735S_SQUARE_SIZE);
 
     Delay_ms(TEST_ST7735S_COLOR_DELAY_MS);
 
