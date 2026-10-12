@@ -59,7 +59,6 @@
 #ifndef ST7789_CMD_H
 #define ST7789_CMD_H
 
-
 /**
  * @brief Software Reset
  */
@@ -86,7 +85,7 @@
 #define ST7789_CMD_CASET 0x2A
 
 /**
- * @brief Row Address Set 
+ * @brief Row Address Set
  */
 #define ST7789_CMD_RASET 0x2B
 
@@ -137,5 +136,4 @@
 
 #endif // ST7789_CMD_H
 // ------------------------------------------------------------------------- END
-
 

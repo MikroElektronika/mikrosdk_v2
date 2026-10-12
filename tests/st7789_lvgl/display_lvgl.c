@@ -6,11 +6,11 @@
 // Uncomment for the 1.3" GMT130 module (no CS, 240x240, soft SPI, own init sequence).
 // #define TEST_GMT130
 
-#define TFT_RST_PIN   GPIO_PG8
-#define TFT_DC_PIN    GPIO_PG10
-#define TFT_SCK_PIN   GPIO_PG13   // SCL
-#define TFT_MISO_PIN  GPIO_PG12   // Not wired, but required by the SPI driver.
-#define TFT_MOSI_PIN  GPIO_PG14   // SDA
+#define TFT_RST_PIN HAL_PIN_NC
+#define TFT_DC_PIN HAL_PIN_NC
+#define TFT_SCK_PIN HAL_PIN_NC // SCL
+#define TFT_MISO_PIN HAL_PIN_NC // Not wired, but required by the SPI driver.
+#define TFT_MOSI_PIN HAL_PIN_NC // SDA
 
 #define _TFT_WIDTH_   240
 
@@ -38,7 +38,7 @@
     #define TFT_SOFT_SPI      1
     #define TFT_INIT_SEQ      gmt130_init
 #else
-    #define TFT_CS_PIN        GPIO_PG9
+    #define TFT_CS_PIN        HAL_PIN_NC
     #define _TFT_HEIGHT_      320
     #define TFT_INVERT_COLORS 1     // 1 for GMT020-02
 #endif

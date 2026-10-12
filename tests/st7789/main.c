@@ -16,11 +16,11 @@
 // -------------------------------------------------------------------- MACROS
 
 // Display pins. SCK, MISO and MOSI must belong to the same SPI module.
-#define TEST_ST7789_PIN_RST   GPIO_PG8
-#define TEST_ST7789_PIN_DC    GPIO_PG10
-#define TEST_ST7789_PIN_SCK   GPIO_PG13   // SCL
-#define TEST_ST7789_PIN_MISO  GPIO_PG12   // Not wired, but required by the SPI driver.
-#define TEST_ST7789_PIN_MOSI  GPIO_PG14   // SDA
+#define TEST_ST7789_PIN_RST HAL_PIN_NC
+#define TEST_ST7789_PIN_DC HAL_PIN_NC
+#define TEST_ST7789_PIN_SCK HAL_PIN_NC // SCL
+#define TEST_ST7789_PIN_MISO HAL_PIN_NC // Not wired, but required by the SPI driver.
+#define TEST_ST7789_PIN_MOSI HAL_PIN_NC // SDA
 
 #define TEST_ST7789_SPI_SPEED 20000000    // In Hz.
 #define TEST_ST7789_SPI_MODE  0           // SPI mode (0 to 3). Not used when soft_spi is 1.
@@ -39,7 +39,7 @@
     #define TEST_ST7789_SOFT_SPI      1
     #define TEST_ST7789_INIT_SEQ      gmt130_init
 #else
-    #define TEST_ST7789_PIN_CS        GPIO_PG9
+    #define TEST_ST7789_PIN_CS        HAL_PIN_NC
     #define TEST_ST7789_WIDTH         240
     #define TEST_ST7789_HEIGHT        320
     #define TEST_ST7789_INVERT_COLORS 0     // 1 for GMT020-02.
@@ -85,7 +85,6 @@ int main()
     st7789_cfg.spi_mode = TEST_ST7789_SPI_MODE;
     st7789_cfg.soft_spi = TEST_ST7789_SOFT_SPI;
     st7789_cfg.init_seq = TEST_ST7789_INIT_SEQ;
-
     // Initialize the display and link it with the graphic library.
     st7789_init(&st7789_cfg, &gl_driver);
     gl_set_driver(&gl_driver);
@@ -115,7 +114,9 @@ int main()
     gl_set_brush_color(GL_BLUE);
     gl_draw_rect(0, TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
     gl_set_brush_color(GL_WHITE);
-    gl_draw_rect(TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE, TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
+    gl_draw_rect(TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE,
+                 TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE,
+                 TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
 
     Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
 

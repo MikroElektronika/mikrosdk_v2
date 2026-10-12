@@ -5,7 +5,7 @@
 #include "delays.h"
 #include "lvgl.h"
 #include "display_lvgl.h"
-LV_IMAGE_DECLARE(mikrosdk_logo_mali);
+LV_IMAGE_DECLARE(mikrosdk_logo_small);
 
 static lv_obj_t *counter_label;
 
@@ -21,7 +21,6 @@ static void update_cb(lv_timer_t *timer)
 
 int main(void)
 {
-    
     lv_init();
     lv_port_disp_init();
     lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0xFFC0CB), 0);
@@ -46,7 +45,7 @@ int main(void)
     lv_timer_create(update_cb, 1000, NULL);
 
     lv_obj_t *logo = lv_image_create(lv_screen_active());
-    lv_image_set_src(logo, &mikrosdk_logo_mali);
+    lv_image_set_src(logo, &mikrosdk_logo_small);
     lv_obj_align(logo, LV_ALIGN_BOTTOM_MID, 0, -10);
 
     while (1)
