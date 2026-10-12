@@ -290,10 +290,10 @@ void st7796_rotate(uint8_t rotation)
 
     switch (rotation)
     {
-        case 1:  madctl = ST7796_MADCTL_MV; landscape = 1; break;   // 90 degrees.
-        case 2:  madctl = ST7796_MADCTL_MY; landscape = 0; break;   // 180 degrees.
-        case 3:  madctl = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_MV; landscape = 1; break;   // 270 degrees.
-        default: madctl = ST7796_MADCTL_MX; landscape = 0; break;   // 0 degrees.
+        case 1:  madctl = ST7796_MADCTL_MV; landscape = 1; break; // 90 degrees.
+        case 2:  madctl = ST7796_MADCTL_MY; landscape = 0; break; // 180 degrees.
+        case 3:  madctl = ST7796_MADCTL_MX | ST7796_MADCTL_MY | ST7796_MADCTL_MV; landscape = 1; break; // 270 degrees.
+        default: madctl = ST7796_MADCTL_MX; landscape = 0; break; // 0 degrees.
     }
 
     if (bgr_order)

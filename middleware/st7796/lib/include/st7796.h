@@ -58,7 +58,8 @@ typedef struct
     hal_pin_name_t cs;                       /*!< Chip Select pin. */
     hal_pin_name_t d_c;                      /*!< Data/Command select pin */
     hal_pin_name_t sck;                      /*!< SPI clock pin (SCL).*/
-    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI driver). */
+    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI
+                                                  driver). */
     hal_pin_name_t mosi;                     /*!< SPI data pin (SDA).*/
 
     uint32_t speed;
@@ -66,8 +67,10 @@ typedef struct
     uint16_t width;                          /*!< Panel width in pixels (the visible area). */
     uint16_t height;                         /*!< Panel height in pixels (the visible area). */
     uint8_t invert;                          /*!< 1 if the display colors need to be inverted, 0 if not. */
-    uint8_t bgr;                             /*!< 1 if the panel has BGR color order (sets the RGB bit in MADCTL), 0 for RGB. */
-    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters, parameters..., ends with 0. NULL if not used. */
+    uint8_t bgr;                             /*!< 1 if the panel has BGR color order (sets the RGB bit in MADCTL), 0
+                                                  for RGB. */
+    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters,
+                                                  parameters..., ends with 0. NULL if not used. */
 } st7796_cfg_t;
 /*!
  * @addtogroup middlewaregroup Middleware
@@ -83,9 +86,12 @@ typedef struct
 
 /**
  * @brief ST7796 Display Controller initialization.
- * @details This function initializes the control pins, the SPI module and the ST7796 Display Controller, and links the driver interface object with the ST7796 driver functions. If the SPI module can not be opened, the driver interface object is left untouched.
+ * @details This function initializes the control pins, the SPI module and the ST7796 Display Controller, and links the
+ * driver interface object with the ST7796 driver functions. If the SPI module can not be opened, the driver interface
+ * object is left untouched.
  * @param[in] cfg : ST7796 configuration object. See #st7796_cfg_t structure definition for detailed explanation.
- * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and #gl_set_driver function for detailed explanation.
+ * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and
+ * #gl_set_driver function for detailed explanation.
  * @return Nothing.
  */
 void st7796_init(st7796_cfg_t *cfg, gl_driver_t * __generic_ptr driver);

@@ -71,7 +71,7 @@ extern "C"{
 // SCK, MISO and MOSI must belong to the same SPI module.
 #if !defined(TFT_RST_PIN) || !defined(TFT_CS_PIN) || !defined(TFT_DC_PIN) || \
     !defined(TFT_SCK_PIN) || !defined(TFT_MISO_PIN) || !defined(TFT_MOSI_PIN)
-#error "Define TFT_RST_PIN, TFT_CS_PIN, TFT_DC_PIN, TFT_SCK_PIN, TFT_MISO_PIN and TFT_MOSI_PIN before including lvgl_common.h."
+#error "Define the TFT pin macros (RST, CS, DC, SCK, MISO, MOSI) before including lvgl_common.h."
 #endif
 
 // Display size. Everything in LVGL scales from these two values.
@@ -125,18 +125,18 @@ static st7796_cfg_t display_cfg;
  */
 static inline void display_configure(void)
 {
-    display_cfg.rst    = TFT_RST_PIN;
-    display_cfg.cs     = TFT_CS_PIN;
-    display_cfg.d_c    = TFT_DC_PIN;
-    display_cfg.sck    = TFT_SCK_PIN;
-    display_cfg.miso   = TFT_MISO_PIN;
-    display_cfg.mosi   = TFT_MOSI_PIN;
-    display_cfg.speed  = TFT_SPI_SPEED;
-    display_cfg.width  = _TFT_WIDTH_;
-    display_cfg.height = _TFT_HEIGHT_;
-    display_cfg.invert = TFT_INVERT_COLORS;
+    display_cfg.rst      = TFT_RST_PIN;
+    display_cfg.cs       = TFT_CS_PIN;
+    display_cfg.d_c      = TFT_DC_PIN;
+    display_cfg.sck      = TFT_SCK_PIN;
+    display_cfg.miso     = TFT_MISO_PIN;
+    display_cfg.mosi     = TFT_MOSI_PIN;
+    display_cfg.speed    = TFT_SPI_SPEED;
+    display_cfg.width    = _TFT_WIDTH_;
+    display_cfg.height   = _TFT_HEIGHT_;
+    display_cfg.invert   = TFT_INVERT_COLORS;
     display_cfg.init_seq = TFT_INIT_SEQ;
-    display_cfg.bgr = TFT_BGR;
+    display_cfg.bgr      = TFT_BGR;
 
     st7796_init(&display_cfg, &display_driver);
 }
