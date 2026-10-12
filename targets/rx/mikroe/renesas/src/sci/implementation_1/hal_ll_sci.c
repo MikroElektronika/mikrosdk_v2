@@ -51,7 +51,7 @@
 // ------------------------------------------------------------- PRIVATE MACROS
 
 /*!< @brief Helper macro for getting module specific control register structure */
-#define hal_ll_sci_get_base_struct(_handle) ((hal_ll_sci_base_handle_t *)_handle)
+#define hal_ll_sci_get_base_struct(_handle) ((volatile hal_ll_sci_base_handle_t *)_handle)
 
 /*!< @brief Macros defining bit location. */
 #define HAL_LL_SCI_SCR_TEIE         (2)
@@ -267,7 +267,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 // ----------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
 void hal_ll_sci_uart_irq_enable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_uart_irq_t irq ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( irq ) {
         case HAL_LL_SCI_UART_IRQ_RX:
@@ -298,7 +298,7 @@ void hal_ll_sci_uart_irq_enable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll
 }
 
 void hal_ll_sci_uart_irq_disable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_ll_sci_uart_irq_t irq ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( irq ) {
         case HAL_LL_SCI_UART_IRQ_RX:
@@ -314,7 +314,7 @@ void hal_ll_sci_uart_irq_disable( hal_ll_sci_uart_hw_specifics_map_t *map, hal_l
 }
 
 void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ) );
 
@@ -322,7 +322,7 @@ void hal_ll_sci_uart_write( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_
 }
 
 void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uint8_t wr_data ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint32_t time_counter = map->timeout_polling_write;
 
     // The wait can last a full frame, so scale the timeout for baud rates below 115200.
@@ -341,13 +341,13 @@ void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uin
 }
 
 uint8_t hal_ll_sci_uart_read( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     return read_reg( &hal_ll_hw_reg->rdr );
 }
 
 uint8_t hal_ll_sci_uart_read_polling( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     uint8_t rx_data;
 
@@ -365,14 +365,14 @@ uint8_t hal_ll_sci_uart_read_polling( hal_ll_sci_uart_hw_specifics_map_t *map ) 
 }
 
 void hal_ll_sci_uart_clear_regs( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     clear_reg( &hal_ll_hw_reg->scr );
     clear_reg( &hal_ll_hw_reg->smr );
 }
 
 void hal_ll_sci_uart_clear_errors( uint32_t base ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
 
     uint8_t ssr = read_reg( &hal_ll_hw_reg->ssr );
 
@@ -469,7 +469,7 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
                                              uint8_t *read_data_buf,
                                              size_t len_read_data,
                                              hal_ll_sci_i2c_end_mode_t mode ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = HAL_LL_SCI_DUMMY_BYTE;
     uint8_t dummy_read = 0;
@@ -659,7 +659,7 @@ void hal_ll_sci_i2c_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 }
 
 void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint8_t irq_bits = read_reg( &hal_ll_hw_reg->scr ) & HAL_LL_SCI_SCR_IRQ_MASK;
 
     // SCR/SMR must be re-initialized (with TE = RE = 0) before any mode/format change.
@@ -714,7 +714,7 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_spec
 }
 
 static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sci_mode_t sci_mode ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
     uint32_t best_error = 0xFFFFFFFFUL;
     uint8_t best_cks = 0;
     uint8_t best_brr = 0;
@@ -762,7 +762,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
 }
 
 static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // Clear Serial Control Register before configuring SCI in I2C master mode.
     clear_reg( &hal_ll_hw_reg->scr );
@@ -795,12 +795,10 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 
     // Enable transmitter and receiver at the same time.
     write_reg( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_ENABLE_MASK );
-
-    return;
 }
 
 static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( map->stop_bit ) {
         case HAL_LL_SCI_UART_STOP_BITS_ONE:
@@ -814,7 +812,7 @@ static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     // 8/7 bit selection needs SCMR.CHR1 = 1 (SCMR.CHR1/SMR.CHR combination);
     // 9 bit needs SCMR.CHR1 = 0 regardless of SMR.CHR.
@@ -836,7 +834,7 @@ static void hal_ll_sci_uart_set_data_bits_bare_metal( hal_ll_sci_uart_hw_specifi
 }
 
 static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
 
     switch ( map->parity )
     {
@@ -856,7 +854,7 @@ static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_
 }
 
 static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module_state ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
 
     switch ( module_state )
     {
@@ -874,7 +872,7 @@ static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module
 }
 
 static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t module_state ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
 
     switch ( module_state )
     {
@@ -892,7 +890,7 @@ static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t m
 }
 
 static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t module_state ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
 
     switch ( module_state )
     {
@@ -910,7 +908,7 @@ static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t modu
 }
 
 static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
-    hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint32_t source_clock = HAL_LL_SCI_MCU_CLOCK_HZ;
     uint32_t brr_value;
     uint8_t n;

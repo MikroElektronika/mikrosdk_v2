@@ -47,7 +47,7 @@
 #include "hal_ll_mstpcr.h"
 #include "delays.h"
 #include <stdbool.h>
-#include "mcu.h"
+
 /*!< @brief Local handle list */
 static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODULE_COUNT] = { (handle_t *)NULL, (handle_t *)NULL, false };
 
@@ -627,7 +627,7 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
                                                         uint8_t *write_data_buf,
                                                         size_t len_write_data,
                                                         hal_ll_i2c_master_end_mode_t mode ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
     // Read the BBSY flag in ICCR2 to check that the bus is free.
@@ -725,7 +725,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
                                                        uint8_t *read_data_buf,
                                                        size_t len_read_data,
                                                        hal_ll_i2c_master_end_mode_t mode ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
 
@@ -880,7 +880,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
     return HAL_LL_I2C_MASTER_SUCCESS;
 }
-#include "mcu.h"
+
 static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_t *map,
                                                              bool hal_ll_state ) {
     module_struct module;
@@ -896,6 +896,7 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
 
     //     hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     // }
+
 
     if ( ( map->pins.pin_sda.pin_name != HAL_LL_PIN_NC ) &&
          ( map->pins.pin_scl.pin_name != HAL_LL_PIN_NC ) )
@@ -915,100 +916,6 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
 
         hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
-    //                                                             volatile uint8_t *portb_pmr  = (volatile uint8_t *)0x0008C06B;
-    // volatile uint8_t *portb_odr0 = (volatile uint8_t *)0x0008C096;
-    // volatile uint8_t *portb_pcr  = (volatile uint8_t *)0x0008C0CB;
-    // volatile uint8_t *pb1_pfs    = (volatile uint8_t *)0x0008C199;
-    // volatile uint8_t *pb2_pfs    = (volatile uint8_t *)0x0008C19A;
-    // volatile uint8_t *pwpr       = (volatile uint8_t *)0x0008C11F;
-
-    // if ( ( map->pins.pin_scl.pin_name == HAL_LL_PIN_NC ) ||
-    //      ( map->pins.pin_sda.pin_name == HAL_LL_PIN_NC ) ) {
-    //     return;
-    // }
-
-    // if ( hal_ll_state ) {
-    //     /*
-    //      * PB1/PB2 must be in general I/O mode while PFS is modified.
-    //      */
-    //     // *portb_pmr &= (uint8_t)~((1U << 1) | (1U << 2));
-    //     PORTB.PMR.BYTE &= (uint8_t)~((1U << 1) | (1U << 2));
-
-    //     /*
-    //      * Configure PB1 (SCL0) and PB2 (SDA0) as NMOS open-drain.
-    //      *
-    //      * ODR0:
-    //      *   bit 2 = PB1
-    //      *   bit 4 = PB2
-    //      */
-    //     // *portb_odr0 |= (uint8_t)((1U << 2) | (1U << 4));
-    //     PORTB.ODR0.BYTE |= (uint8_t)((1U << 2) | (1U << 4));
-
-    //     /*
-    //      * Enable writing to PFS registers.
-    //      *
-    //      * PWPR.B0WI = 0
-    //      * PWPR.PFSWE = 1
-    //      */
-    //     // *pwpr = 0x40;
-    //     MPC.PWPR.BYTE = 0x40;
-
-    //     /*
-    //      * PSEL = 001111b = SCL0/SDA0.
-    //      * ISEL = 0, ASEL = 0.
-    //      */
-    //     // *pb1_pfs = 0x0F;
-    //     // *pb2_pfs = 0x0F;
-    //     MPC.PB1PFS.BYTE = 0x0F;
-    //     MPC.PB2PFS.BYTE = 0x0F;
-
-    //     /*
-    //      * Disable PFS write access.
-    //      */
-    //     // *pwpr = 0x80;
-    //     MPC.PWPR.BYTE = 0x40;
-
-    //     /*
-    //      * Enable peripheral-function mode for PB1 and PB2.
-    //      */
-    //     // *portb_pmr |= (uint8_t)((1U << 1) | (1U << 2));
-    //     PORTB.PMR.BYTE |= (uint8_t)((1U << 1) | (1U << 2));
-
-    //     /*
-    //      * Pull-up control.
-    //      *
-    //      * The RIIC pins are open-drain. If external I2C pull-ups are
-    //      * present, these should remain disabled.
-    //      */
-    //     // *portb_pcr &= (uint8_t)~((1U << 1) | (1U << 2));
-    //     PORTB.PCR.BYTE &= (uint8_t)~((1U << 1) | (1U << 2));
-    // } else {
-    //     /*
-    //      * Return PB1/PB2 to general I/O mode before changing PFS.
-    //      */
-    //     *portb_pmr &= (uint8_t)~((1U << 1) | (1U << 2));
-
-    //     /*
-    //      * Disable PFS write protection.
-    //      */
-    //     *pwpr = 0x40;
-
-    //     /*
-    //      * Return PB1/PB2 to the default pin function.
-    //      */
-    //     *pb1_pfs = 0x00;
-    //     *pb2_pfs = 0x00;
-
-    //     /*
-    //      * Disable PFS write access.
-    //      */
-    //     *pwpr = 0x80;
-
-    //     /*
-    //      * Return the pins to CMOS output configuration.
-    //      */
-    //     *portb_odr0 &= (uint8_t)~((1U << 2) | (1U << 4));
-    // }
 }
 
 static void hal_ll_i2c_master_map_pins( uint8_t module_index, hal_ll_i2c_pin_id *index_list ) {
@@ -1123,7 +1030,7 @@ static hal_ll_pin_name_t hal_ll_i2c_master_check_pins( hal_ll_pin_name_t scl,
 }
 
 static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
 
     while( check_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_BBSY )) {
@@ -1138,7 +1045,7 @@ static hal_ll_err_t hal_ll_i2c_master_wait_for_idle( hal_ll_i2c_hw_specifics_map
 }
 
 static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
     // Enable SCL Synchronous Circuit and Digital Noise Filtering.
     set_reg_bit( &hal_ll_hw_reg->icfer, HAL_LL_I2C_ICFER_SCLE );
@@ -1214,7 +1121,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
 }
 
 static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
     // I2C initialization
     // Set the ICCR1.ICE bit to 0 to set the SCLn and SDAn pins to the inactive state.
@@ -1246,7 +1153,7 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
 }
 
 static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map ) {
-    hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
 
     // Enable IIC peripheral
     hal_ll_i2c_master_module_enable( map, true );

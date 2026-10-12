@@ -52,6 +52,8 @@
 #define __P201_CN
 #define __P400_CN
 #define __P501_CN
+#define __P604_CN
+#define __P605_CN
 #define __P701_CN
 #define __P704_CN
 #define __P900_CN
