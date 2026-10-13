@@ -181,3 +181,7 @@ add_subdirectory(conversions)
 add_subdirectory(st7789)
 
 add_subdirectory(st7789_lvgl)
+
+add_subdirectory(sh1107)
+
+add_subdirectory(sh1107_lvgl)
