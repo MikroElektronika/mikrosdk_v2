@@ -1,6 +1,4 @@
 ## ./tests/CMakeLists.txt
-
-
 set(tftTests TRUE)
 if (${_MSDK_BOARD_NAME_} MATCHES "(^CLICKER(.+)$|^(.+)CLICKER$|^(.+)CURIOSITY(.+)$|^FLIP_AND_CLICK_PIC32MZ$|^GENERIC_BOARD$|^BOARD_PICPLC16_V7$|^(.+)_V7_(.+)$|^(.+)V7$|^BOARD_FLOWPAW$|^BOARD_QUAIL$|^BOARD_MICROMOD(.+))")
     set(tftTests FALSE)
@@ -89,7 +87,7 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     if((${has_usb} STREQUAL "true") AND (${has_usb_interrupts} STREQUAL "true"))
         check_usb_requirements(memory_requirements_passed)
         if(${memory_requirements_passed} STREQUAL "true")
-           # add_subdirectory(usb)
+            add_subdirectory(usb)
         endif()
     endif()
 endif()
@@ -100,7 +98,7 @@ if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mch
     if(${has_eth} STREQUAL "true")
         check_eth_requirements(memory_requirements_passed)
         if(${memory_requirements_passed} STREQUAL "true")
-            # add_subdirectory(ethernet)
+            add_subdirectory(ethernet)
         endif()
     endif()
 endif()
@@ -124,7 +122,7 @@ add_subdirectory(lcd)
 ## 12K Flash and 4K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 12288 4096)
 if (${memory_issue} STREQUAL "FALSE")
-    # add_subdirectory(glcd)
+    add_subdirectory(glcd)
 endif()
 
 if (_MSDK_TFT_BOARD_)
@@ -138,12 +136,12 @@ if (_MSDK_TFT_BOARD_)
     endif()
     ## LVGL
     if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
-       # add_subdirectory(lvgl)
+        add_subdirectory(lvgl)
     endif()
 endif()
 
 if (clickTests)
-   # add_subdirectory(clicks)
+    add_subdirectory(clicks)
 endif()
 
 if (tftTests)
