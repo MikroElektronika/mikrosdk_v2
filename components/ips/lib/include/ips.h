@@ -84,24 +84,24 @@
 #define DISPLAY_SPI_MIKROBUS MIKROBUS_1
 #endif
 
-#define IPS_MAP_PINOUTS( ips_cfg )                                    \
-   ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
-   ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
-   ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
-   ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
-   ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
-   ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
-   ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
+#define IPS_MAP_PINOUTS( ips_cfg )                                     \
+    ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
+    ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
+    ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
+    ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
+    ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
+    ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
+    ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
 
 /*!
  * \brief IPS SPI Display definition structure.
  */
 typedef struct ips_display_s
 {
-   uint16_t display_width;  /*!< Display width resolution in pixels. */
-   uint16_t display_height; /*!< Display height resolution in pixels. */
+    uint16_t display_width;  /*!< Display width resolution in pixels. */
+    uint16_t display_height; /*!< Display height resolution in pixels. */
 
-   void ( *reset_procedure )( void );
+    void ( *reset_procedure )( void );
 } ips_display_t;
 
 /// Definition constant for IPS_DISPLAY_CLICK display Click Board.
@@ -115,15 +115,15 @@ extern const ips_display_t IPS_DISPLAY_2_CLICK;
  */
 typedef struct
 {
-   const ips_display_t *board; /*!< Board definition constant. */
+    const ips_display_t *board; /*!< Board definition constant. */
 
-   hal_pin_name_t ips_bck;     /*!< BCK pin name. */
-   hal_pin_name_t ips_rst;     /*!< RST pin name. */
-   hal_pin_name_t ips_cs;      /*!< CS pin name. */
-   hal_pin_name_t ips_sck;     /*!< SCK pin name. */
-   hal_pin_name_t ips_sdi;     /*!< SDI pin name. */
-   hal_pin_name_t ips_sdo;     /*!< SDO pin name. */
-   hal_pin_name_t ips_dc;      /*!< D/C pin name. */
+    hal_pin_name_t ips_bck;     /*!< BCK pin name. */
+    hal_pin_name_t ips_rst;     /*!< RST pin name. */
+    hal_pin_name_t ips_cs;      /*!< CS pin name. */
+    hal_pin_name_t ips_sck;     /*!< SCK pin name. */
+    hal_pin_name_t ips_sdi;     /*!< SDI pin name. */
+    hal_pin_name_t ips_sdo;     /*!< SDO pin name. */
+    hal_pin_name_t ips_dc;      /*!< D/C pin name. */
 } ips_cfg_t;
 
 #ifdef __cplusplus

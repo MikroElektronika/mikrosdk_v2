@@ -88,68 +88,68 @@ static uint16_t display_height;
 
 uint16_t st7789_get_display_width()
 {
-   return display_width;
+    return display_width;
 }
 
 uint16_t st7789_get_display_height()
 {
-   return display_height;
+    return display_height;
 }
 
 void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv )
 {
-   spi_master_config_t spi_cfg;
+    spi_master_config_t spi_cfg;
 
-   // Initialize communication pins.
-   spi_master_configure_default( &spi_cfg );
+    // Initialize communication pins.
+    spi_master_configure_default( &spi_cfg );
 
-   spi_cfg.sck = cfg->sck;
-   spi_cfg.miso = cfg->sdo;
-   spi_cfg.mosi = cfg->sdi;
+    spi_cfg.sck = cfg->sck;
+    spi_cfg.miso = cfg->sdo;
+    spi_cfg.mosi = cfg->sdi;
 
-   spi_master_open( &ctx->spi, &spi_cfg );
-   spi_master_set_default_write_data( &ctx->spi, SPI_DUMMY );
-   spi_master_set_mode( &ctx->spi, SPI_MASTER_MODE_0 );
-   spi_master_set_speed( &ctx->spi, 5000000 );
+    spi_master_open( &ctx->spi, &spi_cfg );
+    spi_master_set_default_write_data( &ctx->spi, SPI_DUMMY );
+    spi_master_set_mode( &ctx->spi, SPI_MASTER_MODE_0 );
+    spi_master_set_speed( &ctx->spi, 5000000 );
 
-   display_spi = ctx->spi;
+    display_spi = ctx->spi;
 
-   // Initialize control pins.
-   digital_out_init( &pin_cs, cfg->cs );
-   digital_out_init( &pin_rst, cfg->rst );
-   digital_out_init( &pin_dc, cfg->rs );
-   digital_out_init( &pin_bck, cfg->bck );
-   CS_DEACTIVE();
+    // Initialize control pins.
+    digital_out_init( &pin_cs, cfg->cs );
+    digital_out_init( &pin_rst, cfg->rst );
+    digital_out_init( &pin_dc, cfg->rs );
+    digital_out_init( &pin_bck, cfg->bck );
+    CS_DEACTIVE();
 }
 
 void st7789_write_command( uint8_t command )
 {
-   CS_ACTIVE();
-   COMMAND_SELECT();
-   spi_master_write( &display_spi, &command, 1 );
-   CS_DEACTIVE();
+    CS_ACTIVE();
+    COMMAND_SELECT();
+    spi_master_write( &display_spi, &command, 1 );
+    CS_DEACTIVE();
 }
 
 void st7789_write_param( uint8_t param )
 {
-   CS_ACTIVE();
-   DATA_SELECT();
-   spi_master_write( &display_spi, &param, 1 );
-   CS_DEACTIVE();
+    CS_ACTIVE();
+    DATA_SELECT();
+    spi_master_write( &display_spi, &param, 1 );
+    CS_DEACTIVE();
 }
 
 void st7789_reset()
 {
-   RESET_ACTIVE();
-   Delay_1ms();
-   RESET_DEACTIVE();
-   Delay_100ms();
-   Delay_100ms();
+    RESET_ACTIVE();
+    Delay_1ms();
+    RESET_DEACTIVE();
+    Delay_100ms();
+    Delay_100ms();
 }
 
 void st7789_set_backlight( uint8_t intensity )
 {
-   digital_out_write( &pin_bck, intensity );
+    digital_out_write( &pin_bck, intensity );
 }
 
 /**
@@ -157,7 +157,7 @@ void st7789_set_backlight( uint8_t intensity )
  */
 static tp_err_t tp_st7789_process( tp_st7789_t *ctx )
 {
-   return TP_OK;
+    return TP_OK;
 }
 
 /**
@@ -165,7 +165,7 @@ static tp_err_t tp_st7789_process( tp_st7789_t *ctx )
  */
 static tp_event_t tp_st7789_press_detect( tp_st7789_t *ctx )
 {
-   return TP_EVENT_PRESS_NOT_DET;
+    return TP_EVENT_PRESS_NOT_DET;
 }
 
 /**
@@ -173,7 +173,7 @@ static tp_event_t tp_st7789_press_detect( tp_st7789_t *ctx )
  */
 static void tp_st7789_gesture( tp_st7789_t *ctx, tp_event_t *event )
 {
-   *event = TP_EVENT_GEST_NONE;
+    *event = TP_EVENT_GEST_NONE;
 }
 
 /**
@@ -181,17 +181,17 @@ static void tp_st7789_gesture( tp_st7789_t *ctx, tp_event_t *event )
  */
 static void tp_st7789_coord( void *ctx, tp_touch_item_t *coord )
 {
-   coord->n_touches = 0;
-   return;
+    coord->n_touches = 0;
+    return;
 }
 
 tp_err_t tp_st7789_init( tp_st7789_t *ctx, tp_st7789_cfg_t *cfg, tp_drv_t *drv )
 {
-   drv->tp_press_detect_f = tp_st7789_press_detect;
-   drv->tp_press_coordinates_f = tp_st7789_coord;
-   drv->tp_gesture_f = tp_st7789_gesture;
-   drv->tp_process_f = tp_st7789_process;
-   return TP_OK;
+    drv->tp_press_detect_f = tp_st7789_press_detect;
+    drv->tp_press_coordinates_f = tp_st7789_coord;
+    drv->tp_gesture_f = tp_st7789_gesture;
+    drv->tp_process_f = tp_st7789_process;
+    return TP_OK;
 }
 
 void tp_st7789_cfg_setup( tp_st7789_cfg_t *cfg )

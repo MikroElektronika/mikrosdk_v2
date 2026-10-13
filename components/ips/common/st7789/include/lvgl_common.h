@@ -83,14 +83,14 @@ extern "C"
  */
 
 /*!< Set display column to write data to. */
-#define set_column()               \
-   uint16_t start_column = act_x1; \
-   uint16_t end_column = act_x2;
+#define set_column()                \
+    uint16_t start_column = act_x1; \
+    uint16_t end_column = act_x2;
 
 /*!< Set display page to write data to. */
-#define set_page()               \
-   uint16_t start_page = act_y1; \
-   uint16_t end_page = act_y2;
+#define set_page()                \
+    uint16_t start_page = act_y1; \
+    uint16_t end_page = act_y2;
 
 /*!< Set SPI dummy write data. */
 #define SPI_DUMMY          0x00
@@ -137,10 +137,10 @@ static tp_t tp;
  */
 static inline void write_command( uint8_t command )
 {
-   CS_LOW;
-   DC_LOW;
-   spi_master_write( &disp_spi, &command, 1 );
-   CS_HIGH;
+    CS_LOW;
+    DC_LOW;
+    spi_master_write( &disp_spi, &command, 1 );
+    CS_HIGH;
 }
 
 /**
@@ -150,10 +150,10 @@ static inline void write_command( uint8_t command )
  */
 static inline void write_param( uint8_t param )
 {
-   CS_LOW;
-   DC_HIGH;
-   spi_master_write( &disp_spi, &param, 1 );
-   CS_HIGH;
+    CS_LOW;
+    DC_HIGH;
+    spi_master_write( &disp_spi, &param, 1 );
+    CS_HIGH;
 }
 
 /**
@@ -165,13 +165,13 @@ static inline void write_param( uint8_t param )
  */
 static inline void write_array_data( uint16_t *array, uint16_t length )
 {
-   /* LVGL v9 gives pixels as a byte pointer. For SPI treat it as uint8_t */
-   uint8_t *data = (uint8_t *)array;
+    /* LVGL v9 gives pixels as a byte pointer. For SPI treat it as uint8_t */
+    uint8_t *data = (uint8_t *)array;
 
-   /*Write px data*/
-   CS_LOW;
-   spi_master_write( &disp_spi, data, length * 2 );
-   CS_HIGH;
+    /*Write px data*/
+    CS_LOW;
+    spi_master_write( &disp_spi, data, length * 2 );
+    CS_HIGH;
 }
 
 /**
@@ -181,30 +181,30 @@ static inline void write_array_data( uint16_t *array, uint16_t length )
  */
 static inline void display_configure( void )
 {
-   spi_master_config_t spi_cfg;
+    spi_master_config_t spi_cfg;
 
-   // Initialize communication pins.
-   spi_master_configure_default( &spi_cfg );
+    // Initialize communication pins.
+    spi_master_configure_default( &spi_cfg );
 
-   spi_cfg.sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );
-   spi_cfg.miso = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO );
-   spi_cfg.mosi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI );
+    spi_cfg.sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );
+    spi_cfg.miso = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO );
+    spi_cfg.mosi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI );
 
-   spi_master_open( &disp_spi, &spi_cfg );
-   spi_master_set_default_write_data( &disp_spi, SPI_DUMMY );
-   spi_master_set_mode( &disp_spi, SPI_MASTER_MODE_0 );
-   spi_master_set_speed( &disp_spi, 5000000 );
+    spi_master_open( &disp_spi, &spi_cfg );
+    spi_master_set_default_write_data( &disp_spi, SPI_DUMMY );
+    spi_master_set_mode( &disp_spi, SPI_MASTER_MODE_0 );
+    spi_master_set_speed( &disp_spi, 5000000 );
 
-   // Initialize control pins.
-   digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
-   digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
-   digital_out_init( &pin_dc, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) );
-   digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ) );
-   digital_out_high( &pin_bck );
-   CS_HIGH;
+    // Initialize control pins.
+    digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
+    digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
+    digital_out_init( &pin_dc, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) );
+    digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ) );
+    digital_out_high( &pin_bck );
+    CS_HIGH;
 
-   // Initialize touch controller.
-   touch_controller_init( &display_driver, TFT_MAX_BACKLIGHT );
+    // Initialize touch controller.
+    touch_controller_init( &display_driver, TFT_MAX_BACKLIGHT );
 }
 
 /**
@@ -218,22 +218,22 @@ static inline void display_configure( void )
 static inline void frame_start( uint32_t start_column, uint32_t end_column,
                                 uint32_t start_page, uint32_t end_page )
 {
-   write_command( ST7789_CMD_CASET );
-   write_param( Hi( start_column ) );
-   write_param( Lo( start_column ) );
-   write_param( Hi( end_column ) );
-   write_param( Lo( end_column ) );
+    write_command( ST7789_CMD_CASET );
+    write_param( Hi( start_column ) );
+    write_param( Lo( start_column ) );
+    write_param( Hi( end_column ) );
+    write_param( Lo( end_column ) );
 
-   write_command( ST7789_CMD_RASET );
-   write_param( Hi( start_page ) );
-   write_param( Lo( start_page ) );
-   write_param( Hi( end_page ) );
-   write_param( Lo( end_page ) );
+    write_command( ST7789_CMD_RASET );
+    write_param( Hi( start_page ) );
+    write_param( Lo( start_page ) );
+    write_param( Hi( end_page ) );
+    write_param( Lo( end_page ) );
 
-   write_command( ST7789_CMD_RAMWR );
+    write_command( ST7789_CMD_RAMWR );
 
-   CS_LOW;
-   DC_HIGH;
+    CS_LOW;
+    DC_HIGH;
 }
 
 /**
@@ -244,12 +244,12 @@ static inline void frame_start( uint32_t start_column, uint32_t end_column,
  */
 static inline void get_touch_coordinates( int16_t *x, int16_t *y )
 {
-   tp_touch_item_t touch_item;
+    tp_touch_item_t touch_item;
 
-   tp_press_coordinates( &tp, &touch_item );
+    tp_press_coordinates( &tp, &touch_item );
 
-   ( *x ) = touch_item.point[0].coord_x;
-   ( *y ) = touch_item.point[0].coord_y;
+    ( *x ) = touch_item.point[0].coord_x;
+    ( *y ) = touch_item.point[0].coord_y;
 }
 
 /*! @} */ // tftgroupCommon

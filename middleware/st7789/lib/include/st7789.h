@@ -52,10 +52,10 @@
  * @note This function is a placeholder, current screens based on this driver do not have
  * touch screen drivers yet.
  */
-#define TP_ST7789_MAP_PINS( cfg ) \
-   do                             \
-   {                              \
-   } while ( 0 )
+#define TP_ST7789_MAP_PINS( cfg )  \
+    do                             \
+    {                              \
+    } while ( 0 )
 
 /**
  * @brief ST7789 Touch Configuration Object.
@@ -63,8 +63,8 @@
  */
 typedef struct
 {
-   uint16_t width;  /**< Touch panel width in pixels. */
-   uint16_t height; /**< Touch panel height in pixels. */
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
 } tp_st7789_cfg_t;
 
 /**
@@ -75,8 +75,8 @@ typedef struct
  */
 typedef struct
 {
-   uint16_t width;  /**< Touch panel width in pixels. */
-   uint16_t height; /**< Touch panel height in pixels. */
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
 } tp_st7789_t;
 
 /**
@@ -85,16 +85,16 @@ typedef struct
  */
 typedef struct
 {
-   hal_pin_name_t bck; /*!< Backlight pin. */
-   hal_pin_name_t rst; /*!< Reset pin. */
-   hal_pin_name_t cs;  /*!< Chip Select pin. */
-   hal_pin_name_t sck; /*!< SPI Clock pin. */
-   hal_pin_name_t sdi; /*!< SPI Data IN pin. */
-   hal_pin_name_t sdo; /*!< SPI Data Out pin. */
-   hal_pin_name_t rs;  /*!< Data/Command select pin */
+    hal_pin_name_t bck; /*!< Backlight pin. */
+    hal_pin_name_t rst; /*!< Reset pin. */
+    hal_pin_name_t cs;  /*!< Chip Select pin. */
+    hal_pin_name_t sck; /*!< SPI Clock pin. */
+    hal_pin_name_t sdi; /*!< SPI Data IN pin. */
+    hal_pin_name_t sdo; /*!< SPI Data Out pin. */
+    hal_pin_name_t rs;  /*!< Data/Command select pin */
 
-   uint16_t width;     /*!< Display width. */
-   uint16_t height;    /*!< Display height. */
+    uint16_t width;     /*!< Display width. */
+    uint16_t height;    /*!< Display height. */
 } st7789_cfg_t;
 
 /**
@@ -105,12 +105,12 @@ typedef struct
  */
 typedef struct
 {
-   spi_master_t spi; /**< Communication module object. */
+    spi_master_t spi; /**< Communication module object. */
 
-   uint16_t width;   /**< Touch panel width in pixels. */
-   uint16_t height;  /**< Touch panel height in pixels. */
+    uint16_t width;   /**< Touch panel width in pixels. */
+    uint16_t height;  /**< Touch panel height in pixels. */
 
-   bool pen_down;    /**< Utility helper variable used for interpreting events. */
+    bool pen_down;    /**< Utility helper variable used for interpreting events. */
 } st7789_t;
 
 /*!
