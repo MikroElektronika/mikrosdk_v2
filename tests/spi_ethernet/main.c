@@ -2,7 +2,8 @@
 #include "preinit.h"
 #endif
 
-#include "transport.h"
+#define SPI_ETH_CHIP    ENC28J60        // Define your chip
+#define USE_DHCP        1               // Define your mode (1 = DHCP; 0 = local static ip)
 
 #define SPI_ETH_CHIP    ENC28J60      // Define your chip
 
@@ -15,7 +16,7 @@
 #include <stdint.h>
 
 #ifndef MIKROBUS_POSITION_SPI_ETH
-    #define MIKROBUS_POSITION_SPI_ETH 1
+    #define MIKROBUS_POSITION_SPI_ETH 1 // Define your mikrobus position
 #endif
 
 static spi_ethernet_t eth;
@@ -23,9 +24,40 @@ static spi_master_t   spi;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
-static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };
+static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };   // Define your local static ip
+static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
+static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
+static uint8_t dhcp_src_ip[ 4 ]     = { 0, 0, 0, 0 };
+static uint32_t dhcp_xid = 0x39017623;
 static char hex_digits[ ] = "0123456789ABCDEF";
 
+// Print an IP address in dotted decimal format
+static void log_print_ip( log_t *logger, uint8_t *ip ) {
+    uint8_t k, val, digit;
+    for ( k = 0; k < 4; k++ ) {
+        val = ip[ k ];
+        if ( val >= 100 ) {
+            digit = val / 100; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 100;
+            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 10;
+        } else if ( val >= 10 ) {
+            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
+            val -= digit * 10;
+        }
+        log_printf( logger, "%c", hex_digits[ val ] );
+        if ( k < 3 ) log_printf( logger, "." );
+    }
+}
+
+// Print the HTTP server ready message
+static void print_server_ready( void ) {
+    log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://" );
+    log_print_ip( &logger, local_ip );
+    log_printf( &logger, " ===\r\n" );
+}
+
+// Web server response (HTTP 200 OK)
 static char http_response[ ] =
     "HTTP/1.1 200 OK\r\n"
     "Content-Type: text/html\r\n"
@@ -34,22 +66,21 @@ static char http_response[ ] =
     "<!DOCTYPE html><html><body>"
     "<h1>Hello from ETH Click chip!</h1>"
     "<p>MikroE SPI-ETHERNET library test works!</p>"
-    "<p>IP: 172.20.22.200</p>"
     "</body></html>\r\n";
 
-// Handler TCP/HTTP
+// Handler TCP/HTTP (dispatch SYN/ACK/FIN)
 static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *ip = &pkt[ 14 ];
-    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL in 32-bit words and x4 for the IP header size in bytes (only take the 4 bits on the right for IHL)
-    uint8_t *tcp = &ip[ ihl ];                  // TCP header immediately after the IP header
+    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL: lower 4 bits, converted from 32-bit words to bytes
+    uint8_t *tcp = &ip[ ihl ];                  // TCP header starts after the IP header
     uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
     uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
     uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
-                ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian, 32 bits)
-    uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset = the upper 4 bits of byte 12, x4 bytes size
-    uint8_t  flags = tcp[ 13 ];                     // byte 13 = flags TCP (SYN/ACK/FIN/...)
-    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total length IP
-    uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // Data size
+                ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian)
+    uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset: upper 4 bits, converted to bytes
+    uint8_t  flags = tcp[ 13 ];                     // TCP flags
+    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total IP packet length
+    uint16_t tcp_payload_len = ip_total - ihl - tcp_hlen;               // TCP payload length
     uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address
     uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source
 
@@ -60,17 +91,17 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
     if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )        // IP bytes 16-19 = dest. address
         return;
 
-    if ( flags & TCP_FLAG_SYN ) {           // bit SYN pose -> ask open connection
+    if ( flags & TCP_FLAG_SYN ) {                       // SYN: request to establish a connection
         log_printf( &logger, "TCP SYN recu -> SYN-ACK\r\n" );
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
-                our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );      // ack_num = seq client + 1 (SYN acknowledgment of receipt)
+                our_seq, seq + 1, TCP_FLAG_SYN | TCP_FLAG_ACK, NULL, 0 );       // ACK the client's SYN
         our_seq++;
         return;
     }
 
     if ( ( flags & TCP_FLAG_ACK ) && tcp_payload_len > 0 ) {    // ACK with data = HTTP request received
-        uint32_t new_ack = seq + tcp_payload_len;               // All received data bytes are acknowledged.
-        uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // -1 to exclude the final '\0'
+        uint32_t new_ack = seq + tcp_payload_len;               // Acknowledge all received data bytes
+        uint16_t resp_len = ( uint16_t )( sizeof( http_response ) - 1 );        // Exclude the terminating '\0'
         log_printf( &logger, "TCP DATA recu -> HTTP 200\r\n" );
 
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
@@ -83,9 +114,9 @@ static void handle_tcp( spi_ethernet_t *eth, uint8_t *pkt, uint16_t len ) {
         return;
     }
 
-    if ( flags & TCP_FLAG_FIN ) {       // FIN bit set -> the client closes the connection
+    if ( flags & TCP_FLAG_FIN ) {                               // FIN: client requests connection closure
         spi_ethernet_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
-                our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // +1 because END also uses a client-side sequence number
+                our_seq, seq + 1, TCP_FLAG_ACK, NULL, 0 );      // Acknowledge the client's FIN
         log_printf( &logger, "TCP FIN -> ACK\r\n" );
     }
 }
@@ -120,6 +151,7 @@ int main( void ) {
     spi_eth_cfg_t eth_cfg;
     const char msg[ ] = "HELLO_FROM_MCU";
     static uint8_t rx_buf[ 700 ];
+    static uint8_t rx_buf2[ 400 ];
     uint8_t tx_buf[ 60 ];
     uint8_t rev;
     uint8_t low, high;
@@ -127,9 +159,15 @@ int main( void ) {
     uint8_t i;
     uint8_t last_link;
     uint8_t current_link;
+    uint8_t dhcp_state = 0;
+    uint8_t retry;
+    uint8_t *ip2;
+    uint8_t result;
     uint16_t phhid1;
     uint16_t rx_len;
     uint16_t etype;
+    uint16_t rx_len2;
+    uint16_t etype2;
 
     // Init UART
     LOG_MAP_USB_UART( log_cfg );
@@ -179,15 +217,15 @@ int main( void ) {
 
     // Waiting link
     log_printf( &logger, "\r\nWAIT LINK (10s max)...\r\n" );
-    for ( i = 0; i < 100; i++ ) {       // 100ms x 100 = max 10s timeout
+    for ( i = 0; i < 100; i++ ) {               // 100ms x 100 = max 10s timeout
         if ( spi_ethernet_get_link_status( &eth ) ) {
             link_ok = 1;
             log_printf( &logger, ">>> LINK UP\r\n" );
-            log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+            log_printf( &logger, "\r\n" );
             break;
         }
         log_printf( &logger, "." );
-        if ( ( i + 1 ) % 10 == 0 )      // Waiting messages for cable connection
+        if ( ( i + 1 ) % 10 == 0 )              // Waiting messages for cable connection
             log_printf( &logger, "\r\n" );
         Delay_ms( 100 );
     }
@@ -206,12 +244,67 @@ int main( void ) {
     tx_buf[ 12 ] = 0x88; tx_buf[ 13 ] = 0xB5;       // EtherType = 0x88B5 for testing
     memcpy( &tx_buf[ 14 ], msg, sizeof( msg )-1 );  // Payload following Ethernet 14 bytes header
 
+    if ( link_ok ) {
+        #if USE_DHCP
+            for ( retry = 0; retry < 5 && dhcp_state != 2; retry++ ) {
+                if ( dhcp_state == 0 )
+                    spi_ethernet_dhcp_send( &eth, DHCP_MSG_DISCOVER, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+                else if ( dhcp_state == 1 )
+                    spi_ethernet_dhcp_send( &eth, DHCP_MSG_REQUEST, local_mac, dhcp_src_ip, dhcp_offered_ip, dhcp_server_ip, dhcp_xid );
+
+                // Wait ~2s for a reply (20 x 100ms)
+                for ( i = 0; i < 20; i++ ) {
+                    rx_len2 = spi_ethernet_receive( &eth, rx_buf2, sizeof( rx_buf2 ) );
+                    if ( rx_len2 >= 14 ) {
+                        etype2 = ( ( uint16_t )rx_buf2[ 12 ] << 8 ) | rx_buf2[ 13 ];
+                        if ( etype2 == 0x0800 ) {
+                            ip2 = &rx_buf2[ 14 ];
+                            if ( ip2[ 9 ] == 17 ) {
+                                result = spi_ethernet_handle_dhcp( rx_buf2, rx_len2, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
+                                if ( result == 1 && dhcp_state == 0 ) {
+                                    log_printf( &logger, "DHCPOFFER received\r\n" );
+                                    dhcp_state = 1;
+                                    break;
+                                }
+                                if ( result == 2 && dhcp_state == 1 ) {
+                                    log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
+                                    dhcp_state = 2;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    Delay_ms( 100 );
+                }
+            }
+        #endif
+    }
+
+    #if USE_DHCP
+        if ( dhcp_state == 2 ) {
+            memcpy( dhcp_src_ip, local_ip, 4 );
+            log_printf( &logger, "IP (DHCP) = " );
+            log_print_ip( &logger, local_ip );
+            log_printf( &logger, "\r\n" );
+            print_server_ready( );
+        } else if ( link_ok ) {
+            log_printf( &logger, "DHCP DOWN (timeout) -> static local IP\r\n" );
+        } else {
+            log_printf( &logger, "DHCP DOWN (no link) -> static local IP\r\n" );
+        }
+    #else
+        log_printf( &logger, "Static IP mode -> " );
+        log_print_ip( &logger, local_ip );
+        log_printf( &logger, "\r\n" );
+        print_server_ready( );
+    #endif
+
     while ( 1 ) {
         current_link = spi_ethernet_get_link_status( &eth );
         if ( current_link != last_link ) {
             if ( current_link ) {
                 log_printf( &logger, ">>> LINK UP\r\n" );
-                log_printf( &logger, "\r\n=== HTTP SERVER READY - open http://172.20.22.200 ===\r\n" );
+                print_server_ready( );
             }
             else {
                 log_printf( &logger, ">>> LINK DOWN\r\n" );
