@@ -1,8 +1,12 @@
 ## ./components/ips/lib/CMakeLists.txt
+# Generate mikroBUS selection header (DISPLAY_SPI_MIKROBUS) for IPS Display 2 Click + LVGL.
+ips_lvgl_mikrobus_selection(${CMAKE_CURRENT_SOURCE_DIR}/include ips_lvgl_mikrobus.h ${MIKROBUS_POSITION_IPSDISPLAY2})
+
 mikrosdk_add_library(lib_ips Components.IpsDisplay
     src/ips.c
 
     include/ips.h
+    include/ips_lvgl_mikrobus.h
 )
 
 target_link_libraries(lib_ips
@@ -28,4 +32,4 @@ target_include_directories(lib_ips
 )
 
 mikrosdk_install(Components.IpsDisplay)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/components/ips Components.IpsDisplay include/ips.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/components/ips Components.IpsDisplay include/ips.h include/ips_lvgl_mikrobus.h)
