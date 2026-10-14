@@ -86,8 +86,11 @@ typedef struct {
     volatile uint16_t adstrgr;
     volatile uint8_t  _unused2[14];
     volatile uint16_t addr[7];
-    volatile uint8_t  _unused3[178];
-    volatile uint8_t  adsstr[7];
+
+    // Note: register ADSSTR is not used in this implementation, so the following part
+    // of the struct is commented out to save space. Uncomment if needed in the future.
+    // volatile uint8_t  _unused3[178];
+    // volatile uint8_t  adsstr[7];
 } hal_ll_adc_base_handle_t;
 
 /**
@@ -457,8 +460,8 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     write_reg( &base->adcsr, HAL_LL_ADC_ADCSR_ADCS_SINGLE );
     clear_reg_bit( &base->adcer, HAL_LL_ADC_ADCER_ADRFMT_POS );
-    write_reg( &base->adstrgr, 0 );
-    write_reg( &base->adansa0, 0 );
+    clear_reg( &base->adstrgr );
+    clear_reg( &base->adansa0 );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
