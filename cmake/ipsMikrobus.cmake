@@ -22,5 +22,6 @@ macro(ips_lvgl_mikrobus_selection fileDestination fileName)
     endif()
 
     # Generate output file with adequate name and mikroBUS define.
-    configure_file(${PROJECT_SOURCE_DIR}/cmake/ipsLvglMikrobus.cmake.in ${fileDestination}/${fileName})
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/ipsLvglMikrobus.cmake.in ${CMAKE_BINARY_DIR}/generated/${fileName} @ONLY)
+    message(INFO "Generated ${CMAKE_BINARY_DIR}/generated/${fileName} with DISPLAY_SPI_MIKROBUS=${MIKROBUS_POSITION_IPSDISPLAY2}")
 endmacro()
