@@ -1,4 +1,4 @@
-This example is meant for testing the SPI Ethernet communication (ETH Click, ENC28J60) on MikroE boards.
+This example is meant for testing the SPI Ethernet communication on MikroE boards.
 
 The example initializes SPI, configures the ENC28J60 chip with a static IP and MAC address and waits for the Ethernet link to come up.
 

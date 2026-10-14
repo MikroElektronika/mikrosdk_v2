@@ -1,0 +1,22 @@
+{
+    "board_uid": "CLICKER_2_FOR_TMPM4L4A",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "TMPM4L4FYAUG"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

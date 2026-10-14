@@ -41,6 +41,44 @@ def fetch_current_indexed_packages(es : Elasticsearch, index_name):
 
     return all_packages
 
+def fetch_supported_items(es : Elasticsearch, index_name, requested_type):
+    # Search query to use
+    query_search = {
+        "size": 5000,
+        "query": {
+            "match_all": {}
+        }
+    }
+
+    # Search the base with provided query
+    num_of_retries = 1
+    while num_of_retries <= 10:
+        try:
+            response = es.search(index=index_name, body=query_search)
+            if not response['timed_out']:
+                break
+        except:
+            print("Executing search query - retry number %i" % num_of_retries)
+        num_of_retries += 1
+
+    all_items = []
+    for eachHit in response['hits']['hits']:
+        if not 'name' in eachHit['_source']:
+            continue
+        if '_type' in eachHit:
+            if '_doc' == eachHit['_type'] and 'type' in eachHit['_source']:
+                if requested_type == eachHit['_source']['type'] and False == eachHit['_source']['hidden']:
+                    if 'mcus' in eachHit['_source']:
+                        for mcu in eachHit['_source']['mcus']:
+                            all_items.append(mcu.upper())
+                    else:
+                        all_items.append(eachHit['_source']['display_name'])
+
+    # Remove duplicates
+    all_items = sorted(set(all_items))
+
+    return all_items
+
 if __name__ == "__main__":
     # First, check for arguments passed
     def str2bool(v):
@@ -80,6 +118,11 @@ if __name__ == "__main__":
         num_of_retries += 1
 
         time.sleep(1)
+
+    current_indexed_item = {
+        "mcu": {},
+        "board": {}
+    }
 
     date_to_update = datetime.now().strftime("%Y-%m-%d")
 
@@ -122,6 +165,12 @@ if __name__ == "__main__":
 
     # Find packages that should be reindexed with today's date
     for package in all_packages:
+        # Store found necto_supported_devices item
+        if 'necto_supported_devices' == package['name']:
+            current_indexed_item['mcu'] = package
+        # Store found necto_supported_boards item
+        if 'necto_supported_boards' == package['name']:
+            current_indexed_item['board'] = package
         # Check if it is a newly released package that is listed in release spreadsheet
         if package['display_name'] in update_data and 'mikroSDK' not in package['display_name']:
             package['published_at'] = f'{date_to_update}T06:00:00Z'
@@ -136,3 +185,21 @@ if __name__ == "__main__":
                 raise ValueError(f"Failed to update date for {package['display_name']}!")
             else:
                 print(f'- Indexed {package['display_name']} with the {date_to_update} date.')
+
+    # Update the list of supported devices and boards
+    for type in ['mcu', 'board']:
+        new_items = []
+        all_supported_items = fetch_supported_items(es, args.index, type)
+        for item in all_supported_items:
+            if item not in current_indexed_item[type]['items']:
+                # Store all new devices to print them out later
+                new_items.append(item)
+
+        if len(new_items):
+            current_indexed_item[type]['items'] = all_supported_items
+            response = es.index(index=args.index, doc_type=None, id=current_indexed_item[type]['name'], body=current_indexed_item[type])
+            if not 'updated' == response['result']:
+                raise ValueError(f"Failed to update date for {current_indexed_item[type]['name']}!")
+            else:
+                print(f'\n## Added new supported items of **{type}** in NECTO:')
+                print(f'- {'\n- '.join(new_items)}')

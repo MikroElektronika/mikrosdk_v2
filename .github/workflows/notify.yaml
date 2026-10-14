@@ -16,10 +16,6 @@ on:
         description: Notify Boards/Cards
         default: false
 
-  schedule:
-    - cron: "0 11 * * 1-5"  # 11:00 AM, Monday through Friday
-      timezone: "Europe/Belgrade"
-
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -51,12 +47,12 @@ jobs:
           pip install markdown
 
       - name: Build SDK Message with Python
-        if: ${{ github.event.inputs.notify_sdk == 'true' && github.event_name != 'schedule' }}
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
         run: |
           python -u scripts/build_message_sdk.py "${{ github.event.inputs.release_version }}" > message.txt
 
       - name: Send SDK notification to Mattermost
-        if: ${{ github.event.inputs.notify_sdk == 'true' && github.event_name != 'schedule' }}
+        if: ${{ github.event.inputs.notify_sdk == 'true' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
@@ -66,12 +62,12 @@ jobs:
           $MATTERMOST_WEBHOOK_URL
 
       - name: Build Boards/Cards Message with Python
-        if: ${{ github.event.inputs.notify_components == 'true' || github.event_name == 'schedule' }}
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         run: |
           python -u scripts/build_message.py > message.txt
 
       - name: Send Boards/Cards notification to Mattermost
-        if: ${{ github.event.inputs.notify_components == 'true' || github.event_name == 'schedule' }}
+        if: ${{ github.event.inputs.notify_components == 'true' }}
         env:
           MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
         run: |
