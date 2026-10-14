@@ -55,3 +55,6 @@ add_subdirectory(glcd)
 
 ## ST7789 display library (SPI).
 add_subdirectory(st7789)
+
+## UC1609C display library (SPI).
+add_subdirectory(uc1609c)
