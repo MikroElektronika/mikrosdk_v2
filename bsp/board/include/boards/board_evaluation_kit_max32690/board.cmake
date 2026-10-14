@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_EVALUATION_KIT_MAX32690")
+    set(BOARD_PATH "include/boards/board_evaluation_kit_max32690")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

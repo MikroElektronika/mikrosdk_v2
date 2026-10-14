@@ -54,7 +54,54 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define HEADER_CONNECTOR_CN1_D1      GPIO_P408
+#define HEADER_CONNECTOR_CN1_D2      GPIO_P407
+#define HEADER_CONNECTOR_CN1_D3      GPIO_P207
+#define HEADER_CONNECTOR_CN1_D4      GPIO_P201
+#define HEADER_CONNECTOR_CN1_D5      GPIO_P503
+#define HEADER_CONNECTOR_CN1_D6      // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D7      GPIO_P112
+#define HEADER_CONNECTOR_CN1_D8      GPIO_P114
+#define HEADER_CONNECTOR_CN1_D9      GPIO_P414
+#define HEADER_CONNECTOR_CN1_D10     GPIO_P111
+#define HEADER_CONNECTOR_CN1_D11     GPIO_P113
+#define HEADER_CONNECTOR_CN1_D12     GPIO_P415
+#define HEADER_CONNECTOR_CN1_D13     GPIO_P302
+#define HEADER_CONNECTOR_CN1_D14     GPIO_P301
+#define HEADER_CONNECTOR_CN1_D15     // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D16     // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D17     // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D18     // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D19     // Pin not routed.
+#define HEADER_CONNECTOR_CN1_D20     // Pin not routed.
+
+#define HEADER_CONNECTOR_CN2_D1      // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D2      // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D3      // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D4      GPIO_P003
+#define HEADER_CONNECTOR_CN2_D5      GPIO_P000
+#define HEADER_CONNECTOR_CN2_D6      GPIO_P001
+#define HEADER_CONNECTOR_CN2_D7      GPIO_P002
+#define HEADER_CONNECTOR_CN2_D8      GPIO_P014
+#define HEADER_CONNECTOR_CN2_D9      // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D10     GPIO_P504
+#define HEADER_CONNECTOR_CN2_D11     GPIO_P508
+#define HEADER_CONNECTOR_CN2_D12     GPIO_P015
+#define HEADER_CONNECTOR_CN2_D13     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D14     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D15     GPIO_P502
+#define HEADER_CONNECTOR_CN2_D16     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D17     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D18     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D19     // Pin not routed.
+#define HEADER_CONNECTOR_CN2_D20     // Pin not routed.
+
+#define BUTTON1    GPIO_P302
+#define BUTTON2    GPIO_P301
+
+#define LED1       GPIO_P408
+#define LED2       GPIO_P407
+#define LED3       GPIO_P207
 
 #ifdef __cplusplus
 }

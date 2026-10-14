@@ -1,0 +1,293 @@
+name: Filter SDK Boards
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        type: string
+        description: SDK release tag to process, for example mikroSDK-2.19.0
+        required: true
+        default: "mikroSDK-2.19.0"
+
+      previous_version:
+        type: string
+        description: Optional previous SDK tag override
+        required: false
+        default: ""
+
+      notify_mattermost:
+        type: boolean
+        description: Send the eligible-board report to Mattermost?
+        required: false
+        default: false
+
+      update_google_sheet:
+        type: boolean
+        description: Synchronize eligible vendor/MCU/package rows with the EW Google Sheet?
+        required: false
+        default: false
+
+  workflow_call:
+    inputs:
+      release_version:
+        type: string
+        description: SDK release tag to process
+        required: true
+
+      previous_version:
+        type: string
+        description: Optional previous SDK tag override
+        required: false
+        default: ""
+
+      notify_mattermost:
+        type: boolean
+        description: Send the eligible-board report to Mattermost?
+        required: false
+        default: false
+
+      update_google_sheet:
+        type: boolean
+        description: Synchronize eligible vendor/MCU/package rows with the EW Google Sheet?
+        required: false
+        default: false
+
+    secrets:
+      MATTERMOST_WEBHOOK_URL_EW:
+        required: false
+      GOOGLE_SERVICE_ACCOUNT_JSON_B64:
+        required: false
+
+permissions:
+  contents: read
+
+# Serializes spreadsheet synchronization so two releases cannot read and write
+# the EW table at the same time.
+concurrency:
+  group: embeddedwiki-sdk-board-filtering
+  cancel-in-progress: false
+
+env:
+  MCU_LIST_SHEET_URL: "https://docs.google.com/spreadsheets/d/1LHcPYnc8tPOm7Ma2PK1Gf7fr9-chJ_uWvhWTAp1AB80/edit#gid=53979511"
+  MCU_LIST_SHEET_NAME: "EW"
+  MCU_LIST_TIMEZONE: "Europe/Belgrade"
+
+jobs:
+  filter_boards:
+    name: Filter EmbeddedWiki Boards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout mikroSDK repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install extraction dependencies
+        run: |
+          set -euo pipefail
+
+          python -m pip install --upgrade pip
+          python -m pip install \
+            py7zr \
+            google-api-python-client \
+            google-auth
+
+      - name: Decode Google service account
+        if: ${{ inputs.update_google_sheet }}
+        shell: bash
+        env:
+          GCP_SA_JSON_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_B64 }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${GCP_SA_JSON_B64:-}" ]]; then
+            echo "::error::Google Sheet synchronization was requested, but GOOGLE_SERVICE_ACCOUNT_JSON_B64 is not available."
+            exit 1
+          fi
+
+          credentials_dir="${RUNNER_TEMP}/gcp"
+          credentials_path="${credentials_dir}/sa.json"
+
+          mkdir -p "${credentials_dir}"
+          printf '%s' "${GCP_SA_JSON_B64}" | base64 --decode > "${credentials_path}"
+
+          python -m json.tool "${credentials_path}" > /dev/null
+          chmod 600 "${credentials_path}"
+
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${credentials_path}" >> "${GITHUB_ENV}"
+          echo "GOOGLE_CREDENTIALS_PATH=${credentials_path}" >> "${GITHUB_ENV}"
+
+          echo "Decoded Google service account JSON."
+
+      - name: Verify selected SDK tag
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
+        run: |
+          set -euo pipefail
+
+          echo "Selected SDK release: ${RELEASE_VERSION}"
+
+          if ! git cat-file -e "${RELEASE_VERSION}^{commit}" 2>/dev/null; then
+            echo "::error::Git tag '${RELEASE_VERSION}' does not exist."
+            echo
+            echo "Available recent mikroSDK tags:"
+            git tag --list "mikroSDK-*" \
+              --sort=-version:refname \
+              | head -20
+            exit 1
+          fi
+
+      - name: Extract and classify SDK boards
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          PREVIOUS_VERSION: ${{ inputs.previous_version }}
+          UPDATE_GOOGLE_SHEET: ${{ inputs.update_google_sheet }}
+        run: |
+          set -euo pipefail
+
+          output_dir="artifacts/sdk-board-support"
+          mkdir -p "${output_dir}"
+
+          previous_args=()
+          if [[ -n "${PREVIOUS_VERSION}" ]]; then
+            echo "Using previous SDK override: ${PREVIOUS_VERSION}"
+            previous_args=(
+              "--previous-version"
+              "${PREVIOUS_VERSION}"
+            )
+          else
+            echo "Previous SDK release will be detected automatically."
+          fi
+
+          sheet_args=()
+          if [[ "${UPDATE_GOOGLE_SHEET}" == "true" ]]; then
+            if [[ -z "${GOOGLE_CREDENTIALS_PATH:-}" ]]; then
+              echo "::error::Google credentials path was not prepared."
+              exit 1
+            fi
+
+            date_added=$(TZ="${MCU_LIST_TIMEZONE}" date +%F)
+            sheet_args=(
+              "--update-google-sheet"
+              "--sheet-url"
+              "${MCU_LIST_SHEET_URL}"
+              "--sheet-name"
+              "${MCU_LIST_SHEET_NAME}"
+              "--google-credentials-path"
+              "${GOOGLE_CREDENTIALS_PATH}"
+              "--sheet-date-added"
+              "${date_added}"
+            )
+          fi
+
+          echo "Processing boards for ${RELEASE_VERSION}..."
+
+          # Complete JSON data and the single Google Sheet synchronization.
+          python -u scripts/extract_sdk_boards.py \
+            "${RELEASE_VERSION}" \
+            "${previous_args[@]}" \
+            "${sheet_args[@]}" \
+            --format json \
+            --output "${output_dir}/boards.json"
+
+          # Complete report shown on the GitHub Actions summary page.
+          python -u scripts/extract_sdk_boards.py \
+            "${RELEASE_VERSION}" \
+            "${previous_args[@]}" \
+            --format markdown \
+            --output "${output_dir}/boards.md"
+
+          # Eligible-board-only report sent to Mattermost.
+          python -u scripts/extract_sdk_boards.py \
+            "${RELEASE_VERSION}" \
+            "${previous_args[@]}" \
+            --format mattermost \
+            --output "${output_dir}/boards_mattermost.md"
+
+          echo
+          echo "Generated output:"
+          ls -lh \
+            "${output_dir}/boards.json" \
+            "${output_dir}/boards.md" \
+            "${output_dir}/boards_mattermost.md"
+
+      - name: Display board filtering result
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat artifacts/sdk-board-support/boards.md
+
+          {
+            echo
+            echo "---"
+            echo
+            cat artifacts/sdk-board-support/boards.md
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Send board filtering report to Mattermost
+        if: ${{ inputs.notify_mattermost }}
+        shell: bash
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
+        run: |
+          set -euo pipefail
+
+          report_file="artifacts/sdk-board-support/boards_mattermost.md"
+          payload_file="artifacts/sdk-board-support/mattermost-payload.json"
+
+          if [[ -z "${MATTERMOST_WEBHOOK_URL:-}" ]]; then
+            echo "::error::Mattermost notification was requested, but MATTERMOST_WEBHOOK_URL_EW is not available."
+            exit 1
+          fi
+
+          if [[ ! -s "${report_file}" ]]; then
+            echo "::error::Markdown report does not exist or is empty: ${report_file}"
+            exit 1
+          fi
+
+          python - "${report_file}" "${payload_file}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report_path = Path(sys.argv[1])
+          payload_path = Path(sys.argv[2])
+
+          message = report_path.read_text(encoding="utf-8")
+          payload_path.write_text(
+              json.dumps({"text": message}, ensure_ascii=False),
+              encoding="utf-8",
+          )
+          PY
+
+          curl \
+            --fail-with-body \
+            --show-error \
+            --silent \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data-binary "@${payload_file}" \
+            "${MATTERMOST_WEBHOOK_URL}"
+
+          echo
+          echo "Mattermost report sent successfully."
+
+      - name: Upload board filtering files
+        uses: actions/upload-artifact@v6
+        with:
+          name: sdk-board-filter-${{ inputs.release_version }}
+          path: |
+            artifacts/sdk-board-support/boards.json
+            artifacts/sdk-board-support/boards.md
+            artifacts/sdk-board-support/boards_mattermost.md
+          if-no-files-found: error
+          retention-days: 25

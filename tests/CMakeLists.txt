@@ -182,3 +182,5 @@ if(${enough_memory} STREQUAL "true")
 endif()
 
 add_subdirectory(sprint)
+
+add_subdirectory(conversions)

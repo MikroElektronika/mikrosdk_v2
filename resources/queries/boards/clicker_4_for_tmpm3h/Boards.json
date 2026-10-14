@@ -1,0 +1,16 @@
+{
+    "uid": "CLICKER_4_FOR_TMPM3H",
+    "name": "Clicker 4 for TMPM3H",
+    "icon": "images/boards/board-clicker-4-for-tmpm3h.png",
+    "default_device": "",
+    "soldered_device": "TMPM3HQF10BFG",
+    "category": "Supporting tools",
+    "mikrobus_count": 4,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_TMPM3H\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "144/QFP"
+}

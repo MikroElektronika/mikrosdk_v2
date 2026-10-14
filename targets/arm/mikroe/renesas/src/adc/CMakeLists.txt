@@ -3,10 +3,7 @@ set(hal_ll_def_list "")
 set(mcu_header_path ${MCU_NAME})
 
 find_cortex(hal_ll_def_list)
-
-list(APPEND hal_ll_def_list ${MCU_NAME})
-string(SUBSTRING ${MCU_NAME} 0 7 MCU_NAME_FIRST_7)
-list(APPEND hal_ll_def_list ${MCU_NAME_FIRST_7})
+configure_family_name(hal_ll_def_list)
 
 if (${CORE_NAME} EQUAL "M4EF")
     list(APPEND hal_ll_def_list "__cortex_m4_fpu__")
@@ -22,7 +19,10 @@ list(APPEND hal_ll_def_list "HAL_LL_ADC_RESOLUTION_CMAKE=HAL_LL_ADC_RESOLUTION_1
 if (${MCU_NAME} MATCHES "^R7FA0.+")
     set(adc_subimplementation "implementation_2/hal_ll_adc.c")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_2")
-    else()
+elseif(${MCU_NAME} MATCHES "^R7[KJ]A8.+")
+    set(adc_subimplementation "implementation_3/hal_ll_adc.c")
+    set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
+else()
     set(adc_subimplementation "implementation_1/hal_ll_adc.c")
     set(adc_pin_map "hal_ll_adc_pin_map/implementation_1")
 endif()
