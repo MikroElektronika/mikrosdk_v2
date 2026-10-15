@@ -1,6 +1,12 @@
 ## ./components/ips/lib/CMakeLists.txt
-# Generate mikroBUS selection header (DISPLAY_SPI_MIKROBUS) for IPS Display 2 Click + LVGL.
-ips_lvgl_mikrobus_selection(${CMAKE_BINARY_DIR}/generated ips_lvgl_mikrobus.h ${MIKROBUS_POSITION_IPSDISPLAY2})
+# IPS_DISPLAY_2_CLICK -> MIKROBUS_POSITION_IPSDISPLAY2, IPS_DISPLAY_1_CLICK -> ..._IPSDISPLAY1
+# (same rule NECTO uses to name the variable it passes).
+string(REGEX REPLACE "_CLICK$" "" _ips_click "${_MSDK_TFT_BOARD_}")
+string(REPLACE "_" "" _ips_click "${_ips_click}")
+set(_ips_position_var "MIKROBUS_POSITION_${_ips_click}")
+
+ips_lvgl_mikrobus_selection(${CMAKE_CURRENT_BINARY_DIR}/include ips_lvgl_mikrobus.h
+                            ${${_ips_position_var}})
 
 mikrosdk_add_library(lib_ips Components.IpsDisplay
     src/ips.c
