@@ -1,7 +1,7 @@
 // TODO
 // Test is done with IPS Display Clickboard with ST7789 driver.
 // TODO
-// Make sure output labels matches colors, shapes and screen orientation.  
+// Make sure output labels matches colors, shapes and screen orientation.
 
 #ifdef __GNUC__
 #include "delays.h"
@@ -95,7 +95,7 @@ int main(void)
     lv_obj_t * btnm = lv_buttonmatrix_create(lv_screen_active());
     lv_buttonmatrix_set_map(btnm, btnm_map);
 
-    lv_obj_set_size(btnm, lv_pct(100), lv_pct(100)); 
+    lv_obj_set_size(btnm, lv_pct(100), lv_pct(100));
     lv_obj_set_style_pad_all(btnm, 10, LV_PART_MAIN);
     lv_obj_set_style_border_width(btnm, 0, LV_PART_MAIN);
     lv_obj_set_style_outline_width(btnm, 0, LV_PART_MAIN);

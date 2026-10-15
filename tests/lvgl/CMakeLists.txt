@@ -1,7 +1,7 @@
 ## ./tests/lvgl/CMakeLists.txt
 
-## lvgl_button test is not supported on IPS Display 2 Click.
-if (NOT "${_MSDK_TFT_BOARD_}" MATCHES "^IPS_DISPLAY_2_CLICK$")
+## lvgl_button test is not supported on IPS Display Clicks.
+if (NOT "${_MSDK_TFT_BOARD_}" MATCHES "^IPS_DISPLAY_[12]_CLICK$")
     ## 330K Flash and 70K RAM minimum for lvgl_button test.
     memory_sdk_test_check(memory_issue 337920 71680)
 
