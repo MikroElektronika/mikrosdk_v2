@@ -49,93 +49,94 @@ extern "C"{
 #endif
 
 #include "hal_ll_pin_names.h"
+#include "mcu_reg_addresses.h"
 
 /*!< @brief Macro defining `weak` attribute */
 #define __weak __attribute__((weak))
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_i2c_module_num(_module_num) (_module_num - 1)
 
-#ifdef I2C_MODULE_0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = 0x40071000UL;
-#endif
-#ifdef I2C_MODULE_1
-static const hal_ll_base_addr_t HAL_LL_I2C1_BASE_ADDR = 0x40072000UL;
-#endif
-
 /**
  * Alternate Function Values.
  */
 typedef enum
 {
-HAL_LL_ALTERNATE_FUNCTION_1 = 1,
-HAL_LL_ALTERNATE_FUNCTION_2,
-HAL_LL_ALTERNATE_FUNCTION_3,
-HAL_LL_ALTERNATE_FUNCTION_4,
-HAL_LL_ALTERNATE_FUNCTION_5,
-HAL_LL_ALTERNATE_FUNCTION_6,
-HAL_LL_ALTERNATE_FUNCTION_7
+    HAL_LL_ALTERNATE_FUNCTION_1 = 1,
+    HAL_LL_ALTERNATE_FUNCTION_2,
+    HAL_LL_ALTERNATE_FUNCTION_3,
+    HAL_LL_ALTERNATE_FUNCTION_4,
+    HAL_LL_ALTERNATE_FUNCTION_5,
+    HAL_LL_ALTERNATE_FUNCTION_6,
+    HAL_LL_ALTERNATE_FUNCTION_7,
+    HAL_LL_ALTERNATE_FUNCTION_8
 } hal_ll_alternate_function_t;
 
 /*!< @brief I2C pin structure. */
 typedef struct {
-hal_ll_pin_name_t pin;
-hal_ll_base_addr_t base;
-hal_ll_pin_name_t module_index;
-hal_ll_alternate_function_t af;
+    hal_ll_pin_name_t pin;
+    hal_ll_base_addr_t base;
+    hal_ll_pin_name_t module_index;
+    hal_ll_alternate_function_t af;
 } hal_ll_i2c_pin_map_t;
 
 /*!< I2C SCL Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_scl_map[] = {
+    #ifdef I2C0_SCL_PA3_AF5
+    {GPIO_PA3, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    #endif
     #ifdef I2C0_SCL_PC1_AF3
-{GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
     #endif
     #ifdef I2C0_SCL_PC1_AF4
-{GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_4},
-    #endif
-    #ifdef I2C1_SCL_PD4_AF2
-{GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_2},
-    #endif
-    #ifdef I2C1_SCL_PD4_AF3
-{GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
-    #endif
-    #ifdef I2C1_SCL_PU1_AF3
-{GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
-    #endif
-    #ifdef I2C1_SCL_PU1_AF7
-{GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_7},
+    {GPIO_PC1, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_4},
     #endif
     #ifdef I2C1_SCL_PA5_AF5
-{GPIO_PA5, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    {GPIO_PA5, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    #endif
+    #ifdef I2C1_SCL_PD4_AF2
+    {GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_2},
+    #endif
+    #ifdef I2C1_SCL_PD4_AF3
+    {GPIO_PD4, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef I2C1_SCL_PU1_AF3
+    {GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef I2C1_SCL_PU1_AF7
+    {GPIO_PU1, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_7},
     #endif
 
-{HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
+    {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< I2C SDA Pins. */
 static const hal_ll_i2c_pin_map_t hal_ll_i2c_sda_map[] = {
+    #ifdef I2C0_SDA_PA4_AF5
+    {GPIO_PA4, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    #endif
     #ifdef I2C0_SDA_PC0_AF3
-{GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_3},
     #endif
     #ifdef I2C0_SDA_PC0_AF4
-{GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_4},
-    #endif
-    #ifdef I2C1_SDA_PD3_AF2
-{GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_2},
-    #endif
-    #ifdef I2C1_SDA_PD3_AF3
-{GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
-    #endif
-    #ifdef I2C1_SDA_PU0_AF3
-{GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
-    #endif
-    #ifdef I2C1_SDA_PU0_AF7
-{GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_7},
+    {GPIO_PC0, HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ), HAL_LL_ALTERNATE_FUNCTION_4},
     #endif
     #ifdef I2C1_SDA_PA6_AF5
-{GPIO_PA6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    {GPIO_PA6, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_5},
+    #endif
+    #ifdef I2C1_SDA_PD3_AF2
+    {GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_2},
+    #endif
+    #ifdef I2C1_SDA_PD3_AF3
+    {GPIO_PD3, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef I2C1_SDA_PU0_AF3
+    {GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_3},
+    #endif
+    #ifdef I2C1_SDA_PU0_AF7
+    {GPIO_PU0, HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ), HAL_LL_ALTERNATE_FUNCTION_7},
     #endif
 
-{HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
+    {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 #ifdef __cplusplus

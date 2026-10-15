@@ -37,15 +37,32 @@
 **
 ****************************************************************************/
 /*!
-* @file  mcu_reg_addresses.h
-* @brief MCU specific register address definitions.
-* @details TMPM4KLFWAUG register address definitions.
-*/
+ * @file  mcu_reg_addresses.h
+ * @brief MCU specific register address definitions.
+ * @details TMPM4KLFWAUG register address definitions.
+ */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
 // TMPM4KLFWAUG REGISTER DEFINITIONS
+#define HAL_LL_ADC0_BASE_ADDR                  0x400BA000UL
+#define HAL_LL_ADC1_BASE_ADDR                  0x400BA400UL
+#define HAL_LL_ADC2_BASE_ADDR                  0x400BA800UL
+#define HAL_LL_I2C0_BASE_ADDR                  0x400D1000UL
+#define HAL_LL_I2C1_BASE_ADDR                  0x400D2000UL
+#define HAL_LL_UART0_BASE_ADDRESS              0x400CE000UL
+#define HAL_LL_UART1_BASE_ADDRESS              0x400CE400UL
+#define HAL_LL_UART2_BASE_ADDRESS              0x400CE800UL
+#define HAL_LL_UART3_BASE_ADDRESS              0x400CEC00UL
+#define HAL_LL_SPI0_MASTER_BASE_ADDR           0x400CA000UL
+#define HAL_LL_SPI1_MASTER_BASE_ADDR           0x400CA400UL
+#define HAL_LL_TIM0_BASE_ADDR                  0x400C1000UL
+#define HAL_LL_TIM1_BASE_ADDR                  0x400C1400UL
+#define HAL_LL_TIM2_BASE_ADDR                  0x400C1800UL
+#define HAL_LL_TIM3_BASE_ADDR                  0x400C1C00UL
+#define HAL_LL_TIM4_BASE_ADDR                  0x400C2000UL
+#define HAL_LL_TIM5_BASE_ADDR                  0x400C2400UL
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
