@@ -1,0 +1,508 @@
+/****************************************************************************
+**
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
+** Contact: https://www.mikroe.com/contact
+**
+** This file is part of the mikroSDK package
+**
+** Commercial License Usage
+**
+** Licensees holding valid commercial NECTO compilers AI licenses may use this
+** file in accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The MikroElektronika Company.
+** For licensing terms and conditions see
+** https://www.mikroe.com/legal/software-license-agreement.
+** For further information use the contact form at
+** https://www.mikroe.com/contact.
+**
+**
+** GNU Lesser General Public License Usage
+**
+** Alternatively, this file may be used for
+** non-commercial projects under the terms of the GNU Lesser
+** General Public License version 3 as published by the Free Software
+** Foundation: https://www.gnu.org/licenses/lgpl-3.0.html.
+**
+** The above copyright notice and this permission notice shall be
+** included in all copies or substantial portions of the Software.
+**
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+** OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+** DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+** OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+** OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+**
+****************************************************************************/
+/*!
+ * @file  st7789_cmd.h
+ * @brief ST7789 Display Controller Commands.
+ */
+
+/*!
+ * @addtogroup middlewaregroup Middleware
+ * @{
+ */
+
+/*!
+ * @addtogroup st7789 ST7789 Display Controller Driver
+ * @{
+ */
+
+/*!
+ * @addtogroup st7789_commands ST7789 Display Controller Commands
+ * @brief ST7789 Display Controller Command List
+ * @{
+ */
+
+#ifndef ST7789_CMD_H
+#define ST7789_CMD_H
+
+/**
+ * @brief No operation.
+ */
+#define ST7789_CMD_NOP                     0x00
+
+/**
+ * @brief Software reset.
+ */
+#define ST7789_CMD_SWRESET                 0x01
+
+/**
+ * @brief Read display ID.
+ */
+#define ST7789_CMD_RDDID                   0x04
+
+/**
+ * @brief Read display status.
+ */
+#define ST7789_CMD_RDDST                   0x09
+
+/**
+ * @brief Read display power mode.
+ */
+#define ST7789_CMD_RDDPM                   0x0A
+
+/**
+ * @brief Read display MADCTL (Memory Data Access Control) setting.
+ */
+#define ST7789_CMD_RDDMADCTL               0x0B
+
+/**
+ * @brief Read display COLMOD (Interface Pixel Format) setting.
+ */
+#define ST7789_CMD_RDDCOLMOD               0x0C
+
+/**
+ * @brief Read display image mode.
+ */
+#define ST7789_CMD_RDDIM                   0x0D
+
+/**
+ * @brief Read display signal mode.
+ */
+#define ST7789_CMD_RDDSM                   0x0E
+
+/**
+ * @brief Read display self-diagnostic result.
+ */
+#define ST7789_CMD_RDDSDR                  0x0F
+
+/**
+ * @brief Enter sleep mode.
+ */
+#define ST7789_CMD_SLPIN                   0x10
+
+/**
+ * @brief Exit sleep mode.
+ */
+#define ST7789_CMD_SLPOUT                  0x11
+
+/**
+ * @brief Turn on partial display mode.
+ */
+#define ST7789_CMD_PTLON                   0x12
+
+/**
+ * @brief Turn on normal display mode.
+ */
+#define ST7789_CMD_NORON                   0x13
+
+/**
+ * @brief Turn off display inversion.
+ */
+#define ST7789_CMD_INVOFF                  0x20
+
+/**
+ * @brief Turn on display inversion.
+ */
+#define ST7789_CMD_INVON                   0x21
+
+/**
+ * @brief Select default gamma curve.
+ */
+#define ST7789_CMD_GAMSET                  0x26
+
+/**
+ * @brief Turn off the main display.
+ */
+#define ST7789_CMD_DISPOFF                 0x28
+
+/**
+ * @brief Turn on the main display.
+ */
+#define ST7789_CMD_DISPON                  0x29
+
+/**
+ * @brief Set column address area.
+ */
+#define ST7789_CMD_CASET                   0x2A
+
+/**
+ * @brief Set row address area.
+ */
+#define ST7789_CMD_RASET                   0x2B
+
+/**
+ * @brief Write data to display frame memory.
+ */
+#define ST7789_CMD_RAMWR                   0x2C
+
+/**
+ * @brief Read data from display frame memory.
+ */
+#define ST7789_CMD_RAMRD                   0x2E
+
+/**
+ * @brief Define partial display area sizes.
+ */
+#define ST7789_CMD_PTLAR                   0x30
+
+/**
+ * @brief Vertical scrolling definition.
+ */
+#define ST7789_CMD_VSCRDEF                 0x33
+
+/**
+ * @brief Turn off tearing effect output line.
+ */
+#define ST7789_CMD_TEOFF                   0x34
+
+/**
+ * @brief Turn on tearing effect output line.
+ */
+#define ST7789_CMD_TEON                    0x35
+
+/**
+ * @brief Memory data access control (rotation, RGB/BGR order).
+ */
+#define ST7789_CMD_MADCTL                  0x36
+
+/**
+ * @brief Set vertical scrolling start address.
+ */
+#define ST7789_CMD_VSCRSADD                0x37
+
+/**
+ * @brief Turn off idle mode.
+ */
+#define ST7789_CMD_IDMOFF                  0x38
+
+/**
+ * @brief Turn on idle mode (reduced color depth mode).
+ */
+#define ST7789_CMD_IDMON                   0x39
+
+/**
+ * @brief Interface pixel format setting (color depth selection).
+ */
+#define ST7789_CMD_COLMOD                  0x3A
+
+/**
+ * @brief Continue writing data to frame memory from current address.
+ */
+#define ST7789_CMD_RAMWRC                  0x3C
+
+/**
+ * @brief Continue reading data from frame memory from current address.
+ */
+#define ST7789_CMD_RAMRDC                  0x3E
+
+/**
+ * @brief Set tearing effect scanline value.
+ */
+#define ST7789_CMD_TESCAN                  0x44
+
+/**
+ * @brief Read tearing effect scanline value.
+ */
+#define ST7789_CMD_RDTESCAN                0x45
+
+/**
+ * @brief Write display brightness value.
+ */
+#define ST7789_CMD_WRDISBV                 0x51
+
+/**
+ * @brief Read display brightness value.
+ */
+#define ST7789_CMD_RDDISBV                 0x52
+
+/**
+ * @brief Write display control register.
+ */
+#define ST7789_CMD_WRCTRLD                 0x53
+
+/**
+ * @brief Read display control register.
+ */
+#define ST7789_CMD_RDCTRLD                 0x54
+
+/**
+ * @brief Write content adaptive brightness control (CABC) setting.
+ */
+#define ST7789_CMD_WRCACE                  0x55
+
+/**
+ * @brief Read content adaptive brightness control (CABC) setting.
+ */
+#define ST7789_CMD_RDCABC                  0x56
+
+/**
+ * @brief Write minimum brightness for CABC.
+ */
+#define ST7789_CMD_WRCABCMB                0x5E
+
+/**
+ * @brief Read minimum brightness for CABC.
+ */
+#define ST7789_CMD_RDCABCMB                0x5F
+
+/**
+ * @brief Read automatic brightness control self-diagnostic result.
+ */
+#define ST7789_CMD_RDABCSDR                0x68
+
+/**
+ * @brief Read display ID1.
+ */
+#define ST7789_CMD_RDID1                   0xDA
+
+/**
+ * @brief Read display ID2.
+ */
+#define ST7789_CMD_RDID2                   0xDB
+
+/**
+ * @brief Read display ID3.
+ */
+#define ST7789_CMD_RDID3                   0xDC
+
+/**
+ * @brief RAM control.
+ */
+#define ST7789_CMD_RAMCTRL                 0xB0
+
+/**
+ * @brief RGB control.
+ */
+#define ST7789_CMD_RGBCTRL                 0xB1
+
+/**
+ * @brief Porch control. 
+ */
+#define ST7789_CMD_PORCTRL                 0xB2
+
+/**
+ * @brief Frame Rate control.
+ */
+#define ST7789_CMD_FRCTRL1                 0xB3
+
+/**
+ * @brief Partial control. 
+ */
+#define ST7789_CMD_PARCTRL                 0xB5
+
+/**
+ * @brief Gate control setting.
+ */
+#define ST7789_CMD_GCTRL                   0xB7
+
+/**
+ * @brief Gate on timing adjustment.
+ */
+#define ST7789_CMD_GTADJ                   0xB8
+
+/**
+ * @brief Digital gamma enable.
+ */
+#define ST7789_CMD_DGMEN                   0xBA
+
+/**
+ * @brief VCOM voltage setting.
+ */
+#define ST7789_CMD_VCOMS                   0xBB
+
+/**
+ * @brief Power saving mode setting.
+ */
+#define ST7789_CMD_POWSAVE                 0xBC
+
+/**
+ * @brief Display off power saving.
+ */
+#define ST7789_CMD_DLPOFFSAVE              0xBD
+
+/**
+ * @brief LCM control setting.
+ */
+#define ST7789_CMD_LCMCTRL                 0xC0
+
+/**
+ * @brief ID code setting.
+ */
+#define ST7789_CMD_IDSET                   0xC1
+
+/**
+ * @brief VDV and VRH command enable.
+ */
+#define ST7789_CMD_VDVVRHEN                0xC2
+
+/**
+ * @brief VRH set (VAP/VAN voltage control).
+ */
+#define ST7789_CMD_VRHS                    0xC3
+
+/**
+ * @brief VDV set (VCOM alternating voltage control).
+ */
+#define ST7789_CMD_VDVSET                  0xC4
+
+/**
+ * @brief VCOM offset voltage setting.
+ */
+#define ST7789_CMD_VCMOFSET                0xC5
+
+/**
+ * @brief Frame rate control in normal mode 2.
+ */
+#define ST7789_CMD_FRCTR2                  0xC6
+
+/**
+ * @brief CABC (Content Adaptive Brightness Control) control.
+ */
+#define ST7789_CMD_CABCCTRL                0xC7
+
+/**
+ * @brief Register selection 1.
+ */
+#define ST7789_CMD_REGSEL1                 0xC8
+
+/**
+ * @brief Register selection 2.
+ */
+#define ST7789_CMD_REGSEL2                 0xCA
+
+/**
+ * @brief PWM frame rate selection.
+ */
+#define ST7789_CMD_PWMFRSEL                0xCC
+
+/**
+ * @brief Power control 1.
+ */
+#define ST7789_CMD_PWCTRL1                 0xD0
+
+/**
+ * @brief VAP/VAN enable.
+ */
+#define ST7789_CMD_VAPVANEN                0xD2
+
+/**
+ * @brief Command 2 enable part 0.
+ */
+#define ST7789_CMD_CMD2EN0                 0xDF
+
+/**
+ * @brief Command 2 enable part 1.
+ */
+#define ST7789_CMD_CMD2EN1                 0x5A
+
+/**
+ * @brief Command 2 enable part 2.
+ */
+#define ST7789_CMD_CMD2EN2                 0x69
+
+/**
+ * @brief Command 2 enable part 3.
+ */
+#define ST7789_CMD_CMD2EN3                 0x02
+
+/**
+ * @brief Positive voltage gamma control.
+ */
+#define ST7789_CMD_PVGAMCTRL               0xE0
+
+/**
+ * @brief Negative voltage gamma control.
+ */
+#define ST7789_CMD_NVGAMCTRL               0xE1
+
+/**
+ * @brief Digital gamma look-up table for Red.
+ */
+#define ST7789_CMD_DGMLUTR                 0xE2
+
+/**
+ * @brief Digital gamma look-up table for Blue.
+ */
+#define ST7789_CMD_DGMLUTB                 0xE3
+
+/**
+ * @brief Gate drive signal control.
+ */
+#define ST7789_CMD_GATECTRL                0xE4
+
+/**
+ * @brief SPI2 enable.
+ */
+#define ST7789_CMD_SPI2EN                  0xE7
+
+/**
+ * @brief Power control 2.
+ */
+#define ST7789_CMD_PWCTRL2                 0xE8
+
+/**
+ * @brief Equalization control.
+ */
+#define ST7789_CMD_EQCTRL                  0xE9
+
+/**
+ * @brief PROM control.
+ */
+#define ST7789_CMD_PROMCTRL                0xEC
+
+/**
+ * @brief PROM enable.
+ */
+#define ST7789_CMD_PROMEN                  0xFA
+
+/**
+ * @brief NVM (Non-Volatile Memory) setting.
+ */
+#define ST7789_CMD_NVMSET                  0xFC
+
+/**
+ * @brief PROM action.
+ */
+#define ST7789_CMD_PROMACT                 0xFE
+
+/*! @} */ // st7789
+/*! @} */ // st7789
+/*! @} */ // mwgroup
+
+#endif // ST7789_CMD_H
+// ------------------------------------------------------------------------- END
