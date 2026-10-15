@@ -49,6 +49,8 @@
 #include "drv_spi_master.h"
 #include "gl_types.h"
 
+#include "ips_lvgl_mikrobus.h"
+
 /*!
  * \addtogroup compgroup Components
  * \brief Libraries for extension boards.
@@ -75,10 +77,6 @@
  */
 #define IPS_MAX_BACKLIGHT ( 0xFF )
 #define TFT_MAX_BACKLIGHT IPS_MAX_BACKLIGHT
-
-#ifdef MIKROBUS_POSITION_IPSDISPLAY2
-#define DISPLAY_SPI_MIKROBUS MIKROBUS_POSITION_IPSDISPLAY2
-#endif
 
 #ifndef DISPLAY_SPI_MIKROBUS
 #define DISPLAY_SPI_MIKROBUS MIKROBUS_1
