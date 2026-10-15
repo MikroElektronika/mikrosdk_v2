@@ -49,6 +49,7 @@
 #define HAL_LL_ADC0_BASE_ADDR                  0x400BA000UL
 #define HAL_LL_ADC1_BASE_ADDR                  0x400BA400UL
 #define HAL_LL_ADC2_BASE_ADDR                  0x400BA800UL
+#define HAL_LL_GPIO_PORT_BASE                  0x40080000UL
 #define HAL_LL_I2C0_BASE_ADDR                  0x400D1000UL
 #define HAL_LL_I2C1_BASE_ADDR                  0x400D2000UL
 #define HAL_LL_UART0_BASE_ADDRESS              0x400CE000UL
