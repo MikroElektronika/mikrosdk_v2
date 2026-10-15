@@ -50,49 +50,49 @@
 #define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( __index & 0xF0 ) >> 4 )
 
 #ifdef GPIO_PORT_A
-    #define GPIO_PORTA_BASE ( 0x400E0000UL )
+    #define GPIO_PORTA_BASE ( HAL_LL_GPIO_PORT_BASE )
 #endif
 #ifdef GPIO_PORT_B
-    #define GPIO_PORTB_BASE ( 0x400E0100UL )
+    #define GPIO_PORTB_BASE ( HAL_LL_GPIO_PORT_BASE + 0x100 )
 #endif
 #ifdef GPIO_PORT_C
-    #define GPIO_PORTC_BASE ( 0x400E0200UL )
+    #define GPIO_PORTC_BASE ( HAL_LL_GPIO_PORT_BASE + 0x200UL )
 #endif
 #ifdef GPIO_PORT_D
-    #define GPIO_PORTD_BASE ( 0x400E0300UL )
+    #define GPIO_PORTD_BASE ( HAL_LL_GPIO_PORT_BASE + 0x300UL )
 #endif
 #ifdef GPIO_PORT_E
-    #define GPIO_PORTE_BASE ( 0x400E0400UL )
+    #define GPIO_PORTE_BASE ( HAL_LL_GPIO_PORT_BASE + 0x400UL )
 #endif
 #ifdef GPIO_PORT_F
-    #define GPIO_PORTF_BASE ( 0x400E0500UL )
+    #define GPIO_PORTF_BASE ( HAL_LL_GPIO_PORT_BASE + 0x500UL )
 #endif
 #ifdef GPIO_PORT_G
-    #define GPIO_PORTG_BASE ( 0x400E0600UL )
+    #define GPIO_PORTG_BASE ( HAL_LL_GPIO_PORT_BASE + 0x600UL )
 #endif
 #ifdef GPIO_PORT_H
-    #define GPIO_PORTH_BASE ( 0x400E0700UL )
+    #define GPIO_PORTH_BASE ( HAL_LL_GPIO_PORT_BASE + 0x700UL )
 #endif
 #ifdef GPIO_PORT_J
-    #define GPIO_PORTJ_BASE ( 0x400E0800UL )
+    #define GPIO_PORTJ_BASE ( HAL_LL_GPIO_PORT_BASE + 0x800UL )
 #endif
 #ifdef GPIO_PORT_K
-    #define GPIO_PORTK_BASE ( 0x400E0900UL )
+    #define GPIO_PORTK_BASE ( HAL_LL_GPIO_PORT_BASE + 0x900UL )
 #endif
 #ifdef GPIO_PORT_L
-    #define GPIO_PORTL_BASE ( 0x400E0A00UL )
+    #define GPIO_PORTL_BASE ( HAL_LL_GPIO_PORT_BASE + 0xA00UL )
 #endif
 #ifdef GPIO_PORT_M
-    #define GPIO_PORTM_BASE ( 0x400E0B00UL )
+    #define GPIO_PORTM_BASE ( HAL_LL_GPIO_PORT_BASE + 0xB00UL )
 #endif
 #ifdef GPIO_PORT_N
-    #define GPIO_PORTN_BASE ( 0x400E0C00UL )
+    #define GPIO_PORTN_BASE ( HAL_LL_GPIO_PORT_BASE + 0xC00UL )
 #endif
 #ifdef GPIO_PORT_U
-    #define GPIO_PORTU_BASE ( 0x400E1000UL )
+    #define GPIO_PORTU_BASE ( HAL_LL_GPIO_PORT_BASE + 0x1000UL )
 #endif
 #ifdef GPIO_PORT_V
-    #define GPIO_PORTV_BASE ( 0x400E1100UL )
+    #define GPIO_PORTV_BASE ( HAL_LL_GPIO_PORT_BASE + 0x1100UL )
 #endif
 
 /*!< @brief GPIO PORT array */

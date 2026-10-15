@@ -62,6 +62,7 @@ extern "C"{
 #define HAL_LL_CG_BASE_FSYSMENA_ADDR     0x40083048UL
 #define HAL_LL_CG_BASE_FSYSMENB_ADDR     0x4008304CUL
 #define HAL_LL_CG_BASE_FSYSENA_ADDR      0x40083050UL
+#define HAL_LL_CG_BASE_FSYSENB_ADDR      0x40083054UL
 #define HAL_LL_CG_BASE_FCEN_ADDR         0x40083058UL
 #define HAL_LL_CG_BASE_SPCLKEN_ADDR      0x4008305CUL
 
@@ -78,8 +79,8 @@ typedef struct {
     uint32_t _unused2[5];   // 0x40083034-0x40083044
     uint32_t fsysmena;      // 0x40083048 - Supply and Stop Register A for fsysm
     uint32_t fsysmenb;      // 0x4008304C - Supply and Stop Register B for fsysm
-    uint32_t sysena;        // 0x40083050 - Supply and Stop Register A for fsysh
-    uint32_t _unused3[1];   // 0x40083054
+    uint32_t fsysena;       // 0x40083050 - Supply and Stop Register A for fsysh
+    uint32_t fsysenb;       // 0x40083054 - Supply and Stop Register B for fsysh
     uint32_t fcen;          // 0x40083058 - Clock Supply and Stop Register for fc
     uint32_t spclken;       // 0x4008305C - Clock Supply and Stop Register for ADC and Debug Circuit
 } hal_ll_cg_base_handle_t;
@@ -87,9 +88,13 @@ typedef struct {
 typedef struct
 {
     uint32_t CG_FC_Frequency;       // System frequency.
+    #ifdef TMPM4K
     uint32_t CG_FSYSH_Frequency;    // High-speed system clock.
+    #endif
     uint32_t CG_FSYSM_Frequency;    // Middle-speed system clock.
+    #ifdef TMPM4K
     uint32_t CG_FT0H_Frequency;     // High-speed system prescaler clock.
+    #endif
     uint32_t CG_FT0M_Frequency;     // Middle-speed system prescaler clock.
 } CG_ClocksTypeDef;
 
