@@ -1,0 +1,18 @@
+{
+    "children": [
+    ],
+    "lvgl_version": "9.4.0",
+    "name": "main_screen",
+    "styles": [
+        {
+            "background": {
+                "bg_color": "#eeeeee",
+                "bg_grad_color": "#eeeeee",
+                "bg_grad_dir": "LV_GRAD_DIR_NONE"
+            },
+            "part": "LV_PART_MAIN",
+            "state": "LV_STATE_DEFAULT"
+        }
+    ],
+    "type": "obj"
+}
