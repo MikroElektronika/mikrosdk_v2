@@ -60,6 +60,9 @@ extern "C"{
 #elif defined(tp_mikroe)
     #include "tp_mikroe.h"
     #include "tft7.h"
+#elif defined(tp_st7789)
+    #include "st7789.h"
+    #include "ips.h"
 #else
     #error "touch_ic not defined"
 #endif
