@@ -15,9 +15,9 @@ macro(ips_lvgl_mikrobus_selection fileDestination fileName)
     # Did we get the optional mikroBUS argument?
     list(LENGTH extra_args extra_count)
     if(${extra_count} GREATER 0)
-        list(GET extra_args 0 MIKROBUS_POSITION_IPSDISPLAY2)
-        if(NOT "${MIKROBUS_POSITION_IPSDISPLAY2}" STREQUAL "")
-            string(APPEND IPS_LVGL_MIKROBUS_DEFINE "#define DISPLAY_SPI_MIKROBUS ${MIKROBUS_POSITION_IPSDISPLAY2}\n")
+        list(GET extra_args 0 _mikrobus_display)
+        if(NOT "${_mikrobus_display}" STREQUAL "")
+            string(APPEND IPS_LVGL_MIKROBUS_DEFINE "#define DISPLAY_SPI_MIKROBUS ${_mikrobus_display}\n")
         endif()
     endif()
 
