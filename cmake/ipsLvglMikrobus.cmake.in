@@ -48,7 +48,7 @@
 extern "C" {
 #endif
 
-// mikroBUS socket where the IPS Display 2 Click is placed.
+// mikroBUS socket where the click is placed.
 @IPS_LVGL_MIKROBUS_DEFINE@
 #ifdef __cplusplus
 }
