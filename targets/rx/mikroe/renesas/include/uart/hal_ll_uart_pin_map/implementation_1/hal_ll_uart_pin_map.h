@@ -65,16 +65,185 @@ typedef struct {
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+    #ifdef SCI11_TX_P902_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_P902, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_TX_PA00_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PA00, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_TX_PB05_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PB05, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_TX_PD03_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PD03, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI12_TX_P001_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P001, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_P201_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P201, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_P203_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P203, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_P801_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P801, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_PB03_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PB03, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_PB05_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PB05, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_TX_PD04_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PD04, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI1_TX_PD03_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_PD03, HAL_LL_SCI1_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_TX_P306_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_P306, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_TX_P900_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_P900, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_TX_PB05_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_PB05, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_TX_PD07_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_PD07, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_TX_P801_AF10
     {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_P801, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_TX_PB00_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PB00, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_TX_PB02_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PB02, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI8_TX_P201_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P201, HAL_LL_SCI8_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI8_TX_P203_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P203, HAL_LL_SCI8_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI8_TX_PA04_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PA04, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI8_TX_PB00_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PB00, HAL_LL_SCI8_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI8_TX_PD00_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PD00, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI8_TX_PD07_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PD07, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI9_TX_P001_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_P001, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_TX_P100_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_P100, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_TX_P903_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_P903, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_TX_P904_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_P904, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_TX_PA01_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_PA01, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_TX_PA03_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_PA03, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+    #ifdef SCI11_RX_P903_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_P903, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_RX_PA01_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PA01, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_RX_PB06_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PB06, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI11_RX_PD05_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PD05, HAL_LL_SCI11_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI12_RX_P000_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P000, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_RX_P202_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P202, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_RX_P800_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_P800, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_RX_PB04_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PB04, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_RX_PB06_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PB06, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI12_RX_PD06_AF12
+    {hal_ll_uart_module_num( SCI_MODULE_12 ), GPIO_PD06, HAL_LL_SCI12_BASE_ADDR, 12},
+    #endif
+    #ifdef SCI1_RX_PD05_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_1 ), GPIO_PD05, HAL_LL_SCI1_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_RX_P307_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_P307, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_RX_P901_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_P901, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_RX_PB06_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_PB06, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI5_RX_PE00_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_5 ), GPIO_PE00, HAL_LL_SCI5_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_RX_P800_AF10
     {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_P800, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_RX_P905_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_P905, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_RX_PA05_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PA05, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI6_RX_PB01_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PB01, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI8_RX_P200_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P200, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI8_RX_P202_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P202, HAL_LL_SCI8_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI8_RX_P905_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P905, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI8_RX_PA05_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PA05, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI8_RX_PD01_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_PD01, HAL_LL_SCI8_BASE_ADDR, 45},
+    #endif
+    #ifdef SCI9_RX_P000_AF44
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_P000, HAL_LL_SCI9_BASE_ADDR, 44},
+    #endif
+    #ifdef SCI9_RX_PA02_AF45
+    {hal_ll_uart_module_num( SCI_MODULE_9 ), GPIO_PA02, HAL_LL_SCI9_BASE_ADDR, 45},
+    #endif
 
-   {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 #ifdef __cplusplus
