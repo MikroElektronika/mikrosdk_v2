@@ -209,6 +209,41 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
+    #ifdef SCI_MODULE_1
+    { HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_1),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_5
+    { HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_5),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_6
+    { HAL_LL_SCI6_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_6),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_8
+    { HAL_LL_SCI8_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_8),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_9
+    { HAL_LL_SCI9_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_9),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_11
+    { HAL_LL_SCI11_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_11),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
+    #ifdef SCI_MODULE_12
+    { HAL_LL_SCI12_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_12),
+     { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+    #endif
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,

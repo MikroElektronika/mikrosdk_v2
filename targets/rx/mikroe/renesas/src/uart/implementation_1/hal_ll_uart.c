@@ -66,14 +66,6 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_SCI_RXI_INTERRUPT_PRIORITY           (3)
 #define HAL_LL_SCI_TXI_INTERRUPT_PRIORITY           (2)
 
-#define HAL_LL_SCI6_RXI_VECTOR                      (86)
-#define HAL_LL_SCI6_TXI_VECTOR                      (87)
-#define HAL_LL_ICU_GROUPBL0_VECTOR                  (110)
-#define HAL_LL_SCI6_ERI_GROUP_BIT                   (13)
-
-#define HAL_LL_ICU_GRPBL0                           (( volatile uint32_t * )0x00087630UL )
-#define HAL_LL_ICU_GENBL0                           (( volatile uint32_t * )0x00087670UL )
-
 #define HAL_LL_CORE_INTB_CREG                       (0xC)
 extern void * const rvectors_start[];
 
@@ -113,8 +105,26 @@ typedef struct {
 // ------------------------------------------------------------------ VARIABLES
 /*!< @brief UART hardware specific info. */
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
+    #ifdef SCI_MODULE_1
+    {HAL_LL_SCI1_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_1 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef SCI_MODULE_5
+    {HAL_LL_SCI5_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_5 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
     #ifdef SCI_MODULE_6
     {HAL_LL_SCI6_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_6 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef SCI_MODULE_8
+    {HAL_LL_SCI8_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_8 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef SCI_MODULE_9
+    {HAL_LL_SCI9_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_9 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef SCI_MODULE_11
+    {HAL_LL_SCI11_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_11 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+    #endif
+    #ifdef SCI_MODULE_12
+    {HAL_LL_SCI12_BASE_ADDR, hal_ll_uart_module_num( SCI_MODULE_12 ), {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0}, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000 }
@@ -383,17 +393,95 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     objects[ hal_ll_uart_find_index( handle ) ] = obj;
 
     switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
+        #ifdef SCI_MODULE_1
+        case hal_ll_uart_module_num( SCI_MODULE_1 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI1_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI1_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENBL0, SCI1_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI1_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI1_TXI_VECTOR );
+            break;
+        #endif
+        #ifdef SCI_MODULE_5
+        case hal_ll_uart_module_num( SCI_MODULE_5 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI5_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI5_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENBL0, SCI5_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI5_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI5_TXI_VECTOR );
+            break;
+        #endif
         #ifdef SCI_MODULE_6
         case hal_ll_uart_module_num( SCI_MODULE_6 ):
-            hal_ll_core_set_priority_irq( HAL_LL_ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
-            hal_ll_core_set_priority_irq( HAL_LL_SCI6_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
-            hal_ll_core_set_priority_irq( HAL_LL_SCI6_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI6_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI6_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENBL0, HAL_LL_SCI6_ERI_GROUP_BIT );
+            set_reg_bit( HAL_LL_ICU_GENBL0, SCI6_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( HAL_LL_ICU_GROUPBL0_VECTOR );
-            hal_ll_core_enable_irq( HAL_LL_SCI6_RXI_VECTOR );
-            hal_ll_core_enable_irq( HAL_LL_SCI6_TXI_VECTOR );
+            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI6_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI6_TXI_VECTOR );
+            break;
+        #endif
+        #ifdef SCI_MODULE_8
+        case hal_ll_uart_module_num( SCI_MODULE_8 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI8_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI8_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENAL0, SCI8_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI8_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI8_TXI_VECTOR );
+            break;
+        #endif
+        #ifdef SCI_MODULE_9
+        case hal_ll_uart_module_num( SCI_MODULE_9 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI9_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI9_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENAL0, SCI9_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI9_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI9_TXI_VECTOR );
+            break;
+        #endif
+        #ifdef SCI_MODULE_11
+        case hal_ll_uart_module_num( SCI_MODULE_11 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI11_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI11_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENAL0, SCI11_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI11_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI11_TXI_VECTOR );
+            break;
+        #endif
+        #ifdef SCI_MODULE_12
+        case hal_ll_uart_module_num( SCI_MODULE_12 ):
+            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI12_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI12_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
+
+            set_reg_bit( HAL_LL_ICU_GENBL0, SCI12_ERI_GROUP_BIT );
+
+            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI12_RXI_VECTOR );
+            hal_ll_core_enable_irq( SCI12_TXI_VECTOR );
             break;
         #endif
 
@@ -443,23 +531,146 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
+#if defined( SCI_MODULE_1 )
+void __attribute__(( interrupt( ".rvectors", SCI1_TXI_VECTOR ))) hal_ll_sci1_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_1 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI1_RXI_VECTOR ))) hal_ll_sci1_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_1 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
+#if defined( SCI_MODULE_5 )
+void __attribute__(( interrupt( ".rvectors", SCI5_TXI_VECTOR ))) hal_ll_sci5_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_5 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI5_RXI_VECTOR ))) hal_ll_sci5_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_5 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
 #if defined( SCI_MODULE_6 )
-void __attribute__(( interrupt( ".rvectors", HAL_LL_SCI6_TXI_VECTOR ))) hal_ll_sci6_txi_isr( void ) {
+void __attribute__(( interrupt( ".rvectors", SCI6_TXI_VECTOR ))) hal_ll_sci6_txi_isr( void ) {
     if ( NULL != irq_handler ) {
         irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_6 ) ], HAL_LL_UART_IRQ_TX );
     }
 }
 
-void __attribute__(( interrupt( ".rvectors", HAL_LL_SCI6_RXI_VECTOR ))) hal_ll_sci6_rxi_isr( void ) {
+void __attribute__(( interrupt( ".rvectors", SCI6_RXI_VECTOR ))) hal_ll_sci6_rxi_isr( void ) {
     if ( NULL != irq_handler ) {
         irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_6 ) ], HAL_LL_UART_IRQ_RX );
     }
 }
+#endif
 
-void __attribute__(( interrupt( ".rvectors", HAL_LL_ICU_GROUPBL0_VECTOR ))) hal_ll_icu_groupbl0_isr( void ) {
-    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, HAL_LL_SCI6_ERI_GROUP_BIT ) ) {
+#if defined( SCI_MODULE_8 )
+void __attribute__(( interrupt( ".rvectors", SCI8_TXI_VECTOR ))) hal_ll_sci8_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_8 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI8_RXI_VECTOR ))) hal_ll_sci8_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_8 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
+#if defined( SCI_MODULE_9 )
+void __attribute__(( interrupt( ".rvectors", SCI9_TXI_VECTOR ))) hal_ll_sci9_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_9 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI9_RXI_VECTOR ))) hal_ll_sci9_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_9 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
+#if defined( SCI_MODULE_11 )
+void __attribute__(( interrupt( ".rvectors", SCI11_TXI_VECTOR ))) hal_ll_sci11_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_11 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI11_RXI_VECTOR ))) hal_ll_sci11_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_11 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
+#if defined( SCI_MODULE_12 )
+void __attribute__(( interrupt( ".rvectors", SCI12_TXI_VECTOR ))) hal_ll_sci12_txi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_12 ) ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+void __attribute__(( interrupt( ".rvectors", SCI12_RXI_VECTOR ))) hal_ll_sci12_rxi_isr( void ) {
+    if ( NULL != irq_handler ) {
+        irq_handler( objects[ hal_ll_uart_module_num( SCI_MODULE_12 ) ], HAL_LL_UART_IRQ_RX );
+    }
+}
+#endif
+
+#if defined( SCI_MODULE_1 ) || defined( SCI_MODULE_5 ) || defined( SCI_MODULE_6 ) || defined( SCI_MODULE_12 )
+void __attribute__(( interrupt( ".rvectors", ICU_GROUPBL0_VECTOR ))) hal_ll_icu_groupbl0_isr( void ) {
+    #if defined( SCI_MODULE_1 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI1_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI1_BASE_ADDR );
+    }
+    #endif
+    #if defined( SCI_MODULE_5 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI5_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI5_BASE_ADDR );
+    }
+    #endif
+    #if defined( SCI_MODULE_6 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI6_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI6_BASE_ADDR );
     }
+    #endif
+    #if defined( SCI_MODULE_12 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI12_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI12_BASE_ADDR );
+    }
+    #endif
+}
+#endif
+
+#if defined( SCI_MODULE_8 ) || defined( SCI_MODULE_9 ) || defined( SCI_MODULE_11 )
+void __attribute__(( interrupt( ".rvectors", ICU_GROUPAL0_VECTOR ))) hal_ll_icu_groupal0_isr( void ) {
+    #if defined( SCI_MODULE_8 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI8_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI8_BASE_ADDR );
+    }
+    #endif
+    #if defined( SCI_MODULE_9 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI9_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI9_BASE_ADDR );
+    }
+    #endif
+    #if defined( SCI_MODULE_11 )
+    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI11_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI11_BASE_ADDR );
+    }
+    #endif
 }
 #endif
 

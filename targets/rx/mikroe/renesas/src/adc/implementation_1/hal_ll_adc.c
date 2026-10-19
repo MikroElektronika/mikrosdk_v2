@@ -120,6 +120,14 @@ static hal_ll_adc_hw_specifics_map_t hal_ll_adc_hw_specifics_map[ADC_MODULE_COUN
     {HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_PIN_NC,
      HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
     #endif
+    #ifdef ADC_MODULE_1
+    {HAL_LL_ADC1_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_1 ), HAL_LL_PIN_NC,
+     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
+    #ifdef ADC_MODULE_2
+    {HAL_LL_ADC2_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_2 ), HAL_LL_PIN_NC,
+     HAL_LL_ADC_VREF_DEFAULT, 0, HAL_LL_ADC_RESOLUTION_12_BIT, 0xFF},
+    #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_ADC_VREF_DEFAULT,
      0, HAL_LL_ADC_RESOLUTION_DEFAULT, 0xFF}
@@ -439,20 +447,40 @@ static hal_ll_adc_hw_specifics_map_t *hal_ll_get_specifics( handle_t handle ) {
 static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool hal_ll_state ) {
     volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
 
+    write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
+
     #ifdef ADC_MODULE_0
     if ( hal_ll_adc_module_num( ADC_MODULE_0 ) == map->module_index ) {
-        write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
-
         if ( hal_ll_state ) {
             clear_reg_bit( _MSTPCRA, MSTPCRA_MSTPA17_POS );
             Delay_us( HAL_LL_ADC_MODULE_STOP_WAIT_US );
         } else {
             set_reg_bit( _MSTPCRA, MSTPCRA_MSTPA17_POS );
         }
-
-        write_reg( prcr, HAL_LL_MSTPCR_PRCR_LOCK_VAL );
     }
     #endif
+    #ifdef ADC_MODULE_1
+    if ( hal_ll_adc_module_num( ADC_MODULE_1 ) == map->module_index ) {
+        if ( hal_ll_state ) {
+            clear_reg_bit( _MSTPCRA, MSTPCRA_MSTPA16_POS );
+            Delay_us( HAL_LL_ADC_MODULE_STOP_WAIT_US );
+        } else {
+            set_reg_bit( _MSTPCRA, MSTPCRA_MSTPA16_POS );
+        }
+    }
+    #endif
+    #ifdef ADC_MODULE_2
+    if ( hal_ll_adc_module_num( ADC_MODULE_2 ) == map->module_index ) {
+        if ( hal_ll_state ) {
+            clear_reg_bit( _MSTPCRA, MSTPCRA_MSTPA23_POS );
+            Delay_us( HAL_LL_ADC_MODULE_STOP_WAIT_US );
+        } else {
+            set_reg_bit( _MSTPCRA, MSTPCRA_MSTPA23_POS );
+        }
+    }
+    #endif
+
+    write_reg( prcr, HAL_LL_MSTPCR_PRCR_LOCK_VAL );
 }
 
 static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {

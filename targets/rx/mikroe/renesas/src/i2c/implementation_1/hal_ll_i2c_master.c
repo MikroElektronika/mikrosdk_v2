@@ -214,15 +214,45 @@ typedef enum {
 
 // ------------------------------------------------------------------ VARIABLES
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
-    #ifdef I2C_MODULE_0
-    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+    #ifdef SCI_MODULE_1
+    {HAL_LL_SCI1_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_1 ),
      {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
-     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_5
     {HAL_LL_SCI5_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_5 ),
      {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef SCI_MODULE_6
+    {HAL_LL_SCI6_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_6 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef SCI_MODULE_8
+    {HAL_LL_SCI8_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_8 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef SCI_MODULE_9
+    {HAL_LL_SCI9_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_9 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef SCI_MODULE_11
+    {HAL_LL_SCI11_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_11 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef SCI_MODULE_12
+    {HAL_LL_SCI12_BASE_ADDR, hal_ll_i2c_module_num( SCI_MODULE_12 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_SCI},
+    #endif
+    #ifdef I2C_MODULE_0
+    {HAL_LL_I2C0_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_0 ),
+     {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT, HAL_LL_I2C_MODULE_TYPE_I2C},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
@@ -1116,14 +1146,44 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
     volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
     write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
 
-    #ifdef I2C_MODULE_0
-    if ( hal_ll_i2c_module_num( I2C_MODULE_0 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS );
+    #ifdef SCI_MODULE_1
+    if ( hal_ll_i2c_module_num( SCI_MODULE_1 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS );
     }
     #endif
     #ifdef SCI_MODULE_5
     if ( hal_ll_i2c_module_num( SCI_MODULE_5 ) == map->module_index ) {
         hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS );
+    }
+    #endif
+    #ifdef SCI_MODULE_6
+    if ( hal_ll_i2c_module_num( SCI_MODULE_6 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS );
+    }
+    #endif
+    #ifdef SCI_MODULE_8
+    if ( hal_ll_i2c_module_num( SCI_MODULE_8 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS );
+    }
+    #endif
+    #ifdef SCI_MODULE_9
+    if ( hal_ll_i2c_module_num( SCI_MODULE_9 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS );
+    }
+    #endif
+    #ifdef SCI_MODULE_11
+    if ( hal_ll_i2c_module_num( SCI_MODULE_11 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS );
+    }
+    #endif
+    #ifdef SCI_MODULE_12
+    if ( hal_ll_i2c_module_num( SCI_MODULE_12 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS );
+    }
+    #endif
+    #ifdef I2C_MODULE_0
+    if ( hal_ll_i2c_module_num( I2C_MODULE_0 ) == map->module_index ) {
+        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS );
     }
     #endif
 
