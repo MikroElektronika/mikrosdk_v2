@@ -83,6 +83,16 @@ static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (
 static const hal_ll_base_addr_t HAL_LL_I3C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xEC000UL);
 static const hal_ll_base_addr_t HAL_LL_SPI0_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0xD0100UL);
 static const hal_ll_base_addr_t HAL_LL_SPI1_MASTER_BASE_ADDR = ( hal_ll_base_addr_t ) (0xE2800UL);
+#define HAL_LL_ICU_GRPBL0                           (( volatile uint32_t * )0x00087630UL )
+#define HAL_LL_ICU_GENBL0                           (( volatile uint32_t * )0x00087670UL )
+#define HAL_LL_ICU_GRPBL1                           (( volatile uint32_t * )0x00087634UL )
+#define HAL_LL_ICU_GENBL1                           (( volatile uint32_t * )0x00087674UL )
+#define HAL_LL_ICU_GRPBL2                           (( volatile uint32_t * )0x00087638UL )
+#define HAL_LL_ICU_GENBL2                           (( volatile uint32_t * )0x00087678UL )
+#define HAL_LL_ICU_GRPAL0                           (( volatile uint32_t * )0x00087830UL )
+#define HAL_LL_ICU_GENAL0                           (( volatile uint32_t * )0x00087870UL )
+#define HAL_LL_ICU_GRPAL1                           (( volatile uint32_t * )0x00087834UL )
+#define HAL_LL_ICU_GENAL1                           (( volatile uint32_t * )0x00087874UL )
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_
