@@ -56,9 +56,6 @@ extern "C"{
 #define GPIO_CFG_PORT_MIDDLE_DRIVE        ( 0x20 ) // bit 5
 #define GPIO_CFG_IRQ_ENABLE               ( 0x40 ) // bit 6
 
-#define GPIO_AF_OFFSET                    ( 8 )
-#define VALUE( pin, func )                ( ( pin ) | ( ( func ) << GPIO_AF_OFFSET ) )
-
 #ifdef __cplusplus
 }
 #endif
