@@ -44,6 +44,7 @@
 #include "hal_ll_spi_master_pin_map.h"
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_mstpcr.h"
+#include "hal_ll_sci.h"
 #include <stdbool.h>
 
 /*!< @brief Local handle list */
@@ -57,6 +58,8 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define hal_ll_spi_master_get_handle                    ( hal_ll_spi_master_handle_register_t *)hal_ll_spi_master_get_module_state_address->hal_ll_spi_master_handle
 /*!< @brief Helper macro for getting module specific control register structure */
 #define hal_ll_spi_master_get_base_struct( _handle )    ( ( hal_ll_spi_master_base_handle_t * )_handle )
+/*!< @brief Helper macro for getting SCI (simple SPI mode) hw specifics map from the SPI Master one */
+#define hal_ll_spi_master_get_sci_map( _map )           ( ( hal_ll_sci_spi_hw_specifics_map_t * )_map )
 /*!< @brief Helper macro for getting RSPIA specific control register structure */
 #define hal_ll_spi_master_get_rspia_base_struct( _handle ) ( ( hal_ll_spi_master_rspia_base_handle_t * )_handle )
 /*!< @brief Helper macro for getting module specific base address directly from HAL layer handle */
@@ -182,6 +185,13 @@ typedef struct {
     uint8_t spfclr;
 } hal_ll_spi_master_rspia_base_handle_t;
 
+/*!< @brief SPI Master module type flag. */
+typedef enum {
+    HAL_LL_SPI_MODULE_TYPE_RSPI = 0,
+    HAL_LL_SPI_MODULE_TYPE_RSPIA,
+    HAL_LL_SPI_MODULE_TYPE_SCI
+} hal_ll_spi_module_type_t;
+
 /*!< @brief SPI Master hardware specific module values. */
 typedef struct {
     uint8_t pin_miso;
@@ -198,7 +208,7 @@ typedef struct {
     uint32_t speed;
     uint32_t hw_actual_speed;
     hal_ll_spi_master_mode_t mode;
-    bool is_rspia_module;
+    hal_ll_spi_module_type_t spi_module_type;
 } hal_ll_spi_master_hw_specifics_map_t;
 
 // ------------------------------------------------------------------ VARIABLES
@@ -212,50 +222,50 @@ static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ 
     #ifdef SCI_MODULE_1
     { HAL_LL_SCI1_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_5
     { HAL_LL_SCI5_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_5),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_6
     { HAL_LL_SCI6_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_6),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_8
     { HAL_LL_SCI8_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_8),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_9
     { HAL_LL_SCI9_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_9),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_11
     { HAL_LL_SCI11_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_11),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SCI_MODULE_12
     { HAL_LL_SCI12_BASE_ADDR, hal_ll_spi_master_module_num(SCI_MODULE_12),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_SCI},
     #endif
     #ifdef SPI_MODULE_0
     { HAL_LL_SPI0_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 0},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_RSPI},
     #endif
     #ifdef SPI_MODULE_1
     { HAL_LL_SPI1_MASTER_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
-      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, 1},
+      HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT, HAL_LL_SPI_MODULE_TYPE_RSPIA},
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0, 0 }
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0, HAL_LL_SPI_MODULE_TYPE_RSPI }
 };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -535,7 +545,10 @@ hal_ll_err_t hal_ll_spi_master_write( handle_t *handle, uint8_t *write_data_buff
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    if ( true == hal_ll_spi_master_hw_specifics_map_local->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_get_sci_map( hal_ll_spi_master_hw_specifics_map_local ),
+                                         write_data_buffer, length_data );
+    } else if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
         hal_ll_spi_master_rspia_write_bare_metal( hal_ll_spi_master_get_rspia_base_struct( hal_ll_spi_master_hw_specifics_map_local->base ),
                                                   write_data_buffer, length_data );
     } else {
@@ -553,7 +566,11 @@ hal_ll_err_t hal_ll_spi_master_read( handle_t *handle, uint8_t *read_data_buffer
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    if ( true == hal_ll_spi_master_hw_specifics_map_local->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_get_sci_map( hal_ll_spi_master_hw_specifics_map_local ),
+                                        read_data_buffer, length_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
         hal_ll_spi_master_rspia_read_bare_metal( hal_ll_spi_master_get_rspia_base_struct( hal_ll_spi_master_hw_specifics_map_local->base ),
                                                  read_data_buffer, length_data,
                                                  hal_ll_spi_master_hw_specifics_map_local->dummy_data );
@@ -577,7 +594,13 @@ hal_ll_err_t hal_ll_spi_master_write_then_read( handle_t *handle,
     // Get appropriate hw specifics map.
     hal_ll_spi_master_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_spi_master_get_module_state_address );
 
-    if ( true == hal_ll_spi_master_hw_specifics_map_local->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
+        hal_ll_sci_spi_write_bare_metal( hal_ll_spi_master_get_sci_map( hal_ll_spi_master_hw_specifics_map_local ),
+                                         write_data_buffer, length_write_data );
+        hal_ll_sci_spi_read_bare_metal( hal_ll_spi_master_get_sci_map( hal_ll_spi_master_hw_specifics_map_local ),
+                                        read_data_buffer, length_read_data,
+                                        hal_ll_spi_master_hw_specifics_map_local->dummy_data );
+    } else if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
         hal_ll_spi_master_rspia_write_bare_metal( hal_ll_spi_master_get_rspia_base_struct( hal_ll_spi_master_hw_specifics_map_local->base ),
                                                   write_data_buffer, length_write_data );
         hal_ll_spi_master_rspia_read_bare_metal( hal_ll_spi_master_get_rspia_base_struct( hal_ll_spi_master_hw_specifics_map_local->base ),
@@ -605,7 +628,10 @@ hal_ll_err_t hal_ll_spi_master_transfer(handle_t *handle,
         return HAL_LL_SPI_MASTER_MODULE_ERROR;
     }
 
-    if ( true == hal_ll_spi_master_hw_specifics_map_local->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
+        hal_ll_sci_spi_transfer_bare_metal( hal_ll_spi_master_get_sci_map( hal_ll_spi_master_hw_specifics_map_local ),
+                                            write_data_buffer, read_data_buffer, data_length );
+    } else if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == hal_ll_spi_master_hw_specifics_map_local->spi_module_type ) {
         hal_ll_spi_master_rspia_transfer_bare_metal( hal_ll_spi_master_get_rspia_base_struct( hal_ll_spi_master_hw_specifics_map_local->base ),
                                                      write_data_buffer, read_data_buffer, data_length );
     } else {
@@ -915,9 +941,15 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
 static void hal_ll_spi_master_module_enable( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
     volatile uint16_t *prcr = ( volatile uint16_t * )HAL_LL_SPI_PRCR_ADDR;
 
+    // SCI modules have their own module stop bits.
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == map->spi_module_type ) {
+        hal_ll_sci_module_enable( map->module_index, hal_ll_state );
+        return;
+    }
+
     write_reg( prcr, HAL_LL_SPI_PRCR_UNLOCK_VAL );
 
-    if ( true == map->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == map->spi_module_type ) {
         if ( true == hal_ll_state ) {
             clear_reg_bit( _MSTPCRD, HAL_LL_SPI_RSPIA0_MSTPCRD_POS );
         } else {
@@ -956,7 +988,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
 
     map->hw_actual_speed = HAL_LL_SPI_MCU_CLOCK_HZ / ( ( 2UL << brdv ) * divisor );
 
-    if ( true == map->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == map->spi_module_type ) {
         hal_ll_spi_master_rspia_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_rspia_base_struct( map->base );
 
         write_reg( &hal_ll_hw_reg->spbr, ( uint8_t )( divisor - 1 ) );
@@ -1058,11 +1090,16 @@ static void hal_ll_spi_master_rspia_hw_init( hal_ll_spi_master_hw_specifics_map_
 }
 
 static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_SCI == map->spi_module_type ) {
+        hal_ll_sci_spi_init( hal_ll_spi_master_get_sci_map( map ) );
+        return;
+    }
+
     hal_ll_spi_master_module_enable( map, true );
 
     hal_ll_spi_master_alternate_functions_set_state( map, true );
 
-    if ( true == map->is_rspia_module ) {
+    if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == map->spi_module_type ) {
         hal_ll_spi_master_rspia_hw_init( map );
     } else {
         hal_ll_spi_master_hw_init( map );

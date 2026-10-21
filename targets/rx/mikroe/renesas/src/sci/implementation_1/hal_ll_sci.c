@@ -89,6 +89,10 @@
 #define HAL_LL_SCI_SMR_PM           (4)
 #define HAL_LL_SCI_SMR_PE           (5)
 #define HAL_LL_SCI_SMR_CHR          (6)
+#define HAL_LL_SCI_SMR_CM           (7)
+
+#define HAL_LL_SCI_SPMR_CKPOL       (6)
+#define HAL_LL_SCI_SPMR_CKPH        (7)
 
 /*!< @brief Macros defining register bit values. */
 #define HAL_LL_SCI_CLOCK_EXTERNAL           (0x3)
@@ -105,6 +109,9 @@
 /*!< @brief SCR enable mask for TIE, TE, RE and TEIE */
 #define HAL_LL_SCI_SCR_ENABLE_MASK          (0xB4)
 
+/*!< @brief SCR enable mask for TE and RE (set together in clock synchronous mode) */
+#define HAL_LL_SCI_SCR_TE_RE_MASK           (0x30)
+
 /*!< @brief Macros used for interrupt handling. */
 #define HAL_LL_ICU_IR_SCI6_TXI              (( volatile uint8_t * )0x00087057UL )
 
@@ -117,6 +124,7 @@
 #define HAL_LL_SCI_SCL_FALL_TIME_NS         (300UL)
 #define HAL_LL_SCI_IICDL_MAX                (31UL)
 #define HAL_LL_SCI_DUMMY_BYTE               (0xFF)
+#define HAL_LL_SCI_SPI_STEP_BASE            (4UL)
 
 // Board/clock-tree dependent -- confirmed PCLKB = 60MHz for this board during hal_ll_uart.c bring-up
 // (HOCO 20MHz -> PLLx12 -> ICLK/2 = 120MHz, PCLKB/4 = 60MHz). Re-confirm if the clock config changes.
@@ -252,10 +260,32 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_spec
                                                           bool hal_ll_state );
 
 /**
-  * @brief  Calculate and set SCI bit rate for I2C Master mode.
+  * @brief  Sets SCI pin alternate function state to work in SPI Master mode.
   *
-  * Picks the CKS/BRR pair with the smallest bit rate error and sets
-  * the SSDA output delay.
+  * Sets PSEL value for SCK, SMISO and SMOSI pins.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @param[in]  hal_ll_state - Init/De-init
+  * @return None
+  */
+static void hal_ll_sci_spi_alternate_functions_set_state( hal_ll_sci_spi_hw_specifics_map_t *map,
+                                                          bool hal_ll_state );
+
+/**
+  * @brief  Initialize SCI module in SPI Master mode on hardware level.
+  *
+  * @param[in]  *map - Object specific context handler.
+  * @return None
+  */
+static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map );
+
+/**
+  * @brief  Calculate and set SCI bit rate.
+  *
+  * I2C Master mode: picks the CKS/BRR pair with the smallest bit rate error
+  * and sets the SSDA output delay.
+  * SPI Master mode: picks the smallest CKS for which BRR fits, never exceeding
+  * the desired bit rate.
   *
   * @param[in]  base - SCI module base address.
   * @param[in]  speed - Desired bit rate.
@@ -601,6 +631,94 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
     return 0;
 }
 
+void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
+                                      uint8_t *write_data_buffer,
+                                      size_t write_data_length ) {
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    while ( 0 < write_data_length-- ) {
+        // An overrun error blocks both reception and transmission in clock synchronous mode.
+        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send byte from write buffer.
+        write_reg( &hal_ll_hw_reg->tdr, ( uint8_t )( *write_data_buffer++ ) );
+
+        // Wait until receive is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Dummy read to free the receive buffer.
+        volatile uint8_t temp = read_reg( &hal_ll_hw_reg->rdr );
+        ( void )temp;
+    }
+
+    // Wait until transmit is complete.
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+}
+
+void hal_ll_sci_spi_read_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
+                                     uint8_t *read_data_buffer, size_t read_data_length,
+                                     uint8_t dummy_data ) {
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    while ( 0 < read_data_length-- ) {
+        // An overrun error blocks both reception and transmission in clock synchronous mode.
+        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send dummy data to generate the clock.
+        write_reg( &hal_ll_hw_reg->tdr, dummy_data );
+
+        // Wait until receive is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Read received byte.
+        *read_data_buffer++ = read_reg( &hal_ll_hw_reg->rdr );
+    }
+
+    // Wait until transmit is complete.
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+}
+
+void hal_ll_sci_spi_transfer_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
+                                         uint8_t *write_data_buffer,
+                                         uint8_t *read_data_buffer,
+                                         size_t data_length ) {
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+
+    while ( 0 < data_length-- ) {
+        // An overrun error blocks both reception and transmission in clock synchronous mode.
+        if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
+            clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+        // Wait until transmit buffer is empty.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TDRE ));
+
+        // Send byte from write buffer, or dummy byte if there is none.
+        uint8_t tx_data = ( write_data_buffer ) ? *write_data_buffer++ : HAL_LL_SCI_DUMMY_BYTE;
+        write_reg( &hal_ll_hw_reg->tdr, tx_data );
+
+        // Wait until receive is complete.
+        while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ));
+
+        // Read received byte and store it if read buffer is provided.
+        uint8_t rx_data = read_reg( &hal_ll_hw_reg->rdr );
+
+        if ( read_data_buffer ) {
+            *read_data_buffer++ = rx_data;
+        }
+    }
+
+    // Wait until transmit is complete.
+    while ( !check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_TEND ));
+}
+
 void hal_ll_sci_module_enable( uint8_t module_index, bool hal_ll_state ) {
     volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
     write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
@@ -658,6 +776,15 @@ void hal_ll_sci_i2c_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
     hal_ll_sci_i2c_hw_init( map );
 }
 
+void hal_ll_sci_spi_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
+    // Enable SCI peripheral
+    hal_ll_sci_module_enable( map->module_index, true );
+
+    hal_ll_sci_spi_alternate_functions_set_state( map, true );
+
+    hal_ll_sci_spi_hw_init( map );
+}
+
 void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint8_t irq_bits = read_reg( &hal_ll_hw_reg->scr ) & HAL_LL_SCI_SCR_IRQ_MASK;
@@ -713,11 +840,61 @@ static void hal_ll_sci_i2c_alternate_functions_set_state( hal_ll_sci_i2c_hw_spec
     }
 }
 
+static void hal_ll_sci_spi_alternate_functions_set_state( hal_ll_sci_spi_hw_specifics_map_t *map,
+                                                          bool hal_ll_state ) {
+    module_struct module;
+
+    if (( map->pins.sck.pin_name != HAL_LL_PIN_NC ) &&
+        ( map->pins.miso.pin_name != HAL_LL_PIN_NC ) &&
+        ( map->pins.mosi.pin_name != HAL_LL_PIN_NC )) {
+        module.pins[0] = VALUE( map->pins.sck.pin_name, map->pins.sck.pin_af );
+        module.pins[1] = VALUE( map->pins.miso.pin_name, map->pins.miso.pin_af );
+        module.pins[2] = VALUE( map->pins.mosi.pin_name, map->pins.mosi.pin_af );
+        module.pins[3] = GPIO_MODULE_STRUCT_END;
+
+        module.configs[0] = GPIO_CFG_DIGITAL_OUTPUT;
+        module.configs[1] = GPIO_CFG_DIGITAL_INPUT;
+        module.configs[2] = GPIO_CFG_DIGITAL_OUTPUT;
+        module.configs[3] = GPIO_MODULE_STRUCT_END;
+
+        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
+    }
+}
+
 static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sci_mode_t sci_mode ) {
     volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
     uint32_t best_error = 0xFFFFFFFFUL;
     uint8_t best_cks = 0;
     uint8_t best_brr = 0;
+
+    if ( HAL_LL_SCI_SPI_MODE == sci_mode ) {
+        uint32_t divisor = HAL_LL_SCI_BRR_COUNT_MAX;
+        uint8_t cks;
+
+        // Bit rate = PCLK / ( 8 * 2^(2n-1) * ( N + 1 )) (Table 32.10); round the divisor up so the rate never exceeds the requested one.
+        for ( cks = 0; cks < HAL_LL_SCI_CKS_COUNT; cks++ ) {
+            uint32_t step = ( HAL_LL_SCI_SPI_STEP_BASE << ( 2 * cks )) * speed;
+
+            divisor = ( HAL_LL_SCI_MCU_CLOCK_HZ + step - 1 ) / step;
+
+            if ( HAL_LL_SCI_BRR_COUNT_MAX >= divisor ) {
+                break;
+            }
+        }
+
+        // Requested bit rate is below the minimum achievable, so use the slowest setting.
+        if ( HAL_LL_SCI_CKS_COUNT == cks ) {
+            cks = HAL_LL_SCI_CKS_COUNT - 1;
+            divisor = HAL_LL_SCI_BRR_COUNT_MAX;
+        }
+
+        clear_reg_bits( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CKS_MASK );
+        set_reg_bits( &hal_ll_hw_reg->smr, cks );
+
+        write_reg( &hal_ll_hw_reg->brr, ( uint8_t )( divisor - 1 ));
+
+        return;
+    }
 
     // SCL period in cycles: 8 * ( N + 1 ) * 2^(2n-1) + 15 (Table 32.12).
     for ( uint8_t cks = 0; cks < HAL_LL_SCI_CKS_COUNT; cks++ ) {
@@ -795,6 +972,63 @@ static void hal_ll_sci_i2c_hw_init( hal_ll_sci_i2c_hw_specifics_map_t *map ) {
 
     // Enable transmitter and receiver at the same time.
     write_reg( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_ENABLE_MASK );
+}
+
+static void hal_ll_sci_spi_hw_init( hal_ll_sci_spi_hw_specifics_map_t *map ) {
+    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
+    uint8_t cks;
+
+    // Clear Serial Control Register before configuring SCI in SPI master mode (internal clock, SCKn as output).
+    clear_reg( &hal_ll_hw_reg->scr );
+
+    // Simple I2C mode off, no SSDA output delay.
+    clear_reg( &hal_ll_hw_reg->simr1 );
+
+    // Master mode, SSn# pin function and CTS disabled (single master).
+    clear_reg( &hal_ll_hw_reg->spmr );
+
+    // Choose whether transmit occurs on the transition from ACTIVE to IDLE (1), or vice versa (0).
+    if (( HAL_LL_SCI_SPI_MODE_0 == map->mode ) || ( HAL_LL_SCI_SPI_MODE_2 == map->mode )) {
+        set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    } else {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPH );
+    }
+
+    // Choose whether idle state for the clock is high level (1) or low level (0).
+    if (( HAL_LL_SCI_SPI_MODE_0 == map->mode ) || ( HAL_LL_SCI_SPI_MODE_3 == map->mode )) {
+        clear_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
+    } else {
+        set_reg_bit( &hal_ll_hw_reg->spmr, HAL_LL_SCI_SPMR_CKPOL );
+    }
+
+    // Set Simple SPI mode as Communication Mode.
+    clear_reg( &hal_ll_hw_reg->smr );
+    set_reg_bit( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CM );
+
+    // Set the format for transmission as Simple SPI, don't invert data, transfer MSB first.
+    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SMIF );
+    clear_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SINV );
+    set_reg_bit( &hal_ll_hw_reg->scmr, HAL_LL_SCI_SCMR_SDIR );
+
+    // Asynchronous mode settings, noise filter and bit rate modulation are not used.
+    clear_reg( &hal_ll_hw_reg->semr );
+
+    // Don't invert TXD/RXD signals.
+    clear_reg( &hal_ll_hw_reg->sptr );
+
+    // Set the desired bit rate.
+    hal_ll_sci_calculate_speed( map->base, map->speed, HAL_LL_SCI_SPI_MODE );
+
+    cks = read_reg( &hal_ll_hw_reg->smr ) & HAL_LL_SCI_SMR_CKS_MASK;
+    map->hw_actual_speed = HAL_LL_SCI_MCU_CLOCK_HZ /
+                           (( HAL_LL_SCI_SPI_STEP_BASE << ( 2 * cks )) * ( read_reg( &hal_ll_hw_reg->brr ) + 1UL ));
+
+    // Clear any receive error flags -- ORER blocks transmission in clock synchronous mode.
+    if ( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER ))
+        clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_ORER );
+
+    // Enable transmitter and receiver at the same time.
+    write_reg( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE_RE_MASK );
 }
 
 static void hal_ll_sci_uart_set_stop_bits_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
