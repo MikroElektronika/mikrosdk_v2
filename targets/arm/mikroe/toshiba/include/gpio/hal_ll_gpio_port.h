@@ -55,9 +55,13 @@ extern "C"{
  *  Helper macros for GPIO HAL
  */
 #define GPIO_MODULE_STRUCT_END (-1)
-#define GPIO_PIN_NAME_MASK (0xFFUL)
-#define GPIO_AF_OFFSET 8
-#define VALUE(pin, func) (pin | (func << GPIO_AF_OFFSET))
+#define GPIO_PIN_NAME_MASK (0xFFFFUL)
+#define GPIO_AF_OFFSET 16
+#define VALUE(pin, func) ((uint32_t)(pin) | ((uint32_t)(func) << GPIO_AF_OFFSET))
+
+/*!< @brief Distance between two consecutive port register blocks.
+ *          Port index (pin name >> 4) equals the hardware port number on all Toshiba families. */
+#define GPIO_PORT_REG_STRIDE (0x100UL)
 
 /**
  *  GPIO module struct defining pins and proprietary functions
@@ -73,32 +77,13 @@ typedef struct
     uint32_t fr5;      // 0x18 - Function Register 5
     uint32_t fr6;      // 0x1C - Function Register 6
     uint32_t fr7;      // 0x20 - Function Register 7
-    uint32_t fr8;      // 0x24 - Function Register 8 (TMPM4L only)
+    uint32_t fr8;      // 0x24 - Function Register 8 (TMPM4L only; TMPM3H has FR1-FR6 only)
     uint32_t od;       // 0x28 - Open Drain Control Register
     uint32_t pup;      // 0x2C - Pull-up Control Register
     uint32_t pdn;      // 0x30 - Pull-down Control Register
     uint32_t _unused1; // 0x34
     uint32_t ie;       // 0x38 - Input Enable Register
 } hal_ll_gpio_base_handle_t;
-
-/*!< @brief GPIO port enable bits enumeration */
-enum fsysma_bits{
-    FSYSMENA_PORTA = 0,
-    FSYSMENA_PORTB = 1,
-    FSYSMENA_PORTC = 2,
-    FSYSMENA_PORTD = 3,
-    FSYSMENA_PORTE = 4,
-    FSYSMENA_PORTF = 5,
-    FSYSMENA_PORTG = 6,
-    FSYSMENA_PORTH = 7,
-    FSYSMENA_PORTJ = 8,
-    FSYSMENA_PORTK = 9,
-    FSYSMENA_PORTL = 10,
-    FSYSMENA_PORTM = 11,
-    FSYSMENA_PORTN = 12,
-    FSYSMENA_PORTU = 16,
-    FSYSMENA_PORTV = 17
-};
 
 /*!< @brief GPIO alternate function enumeration */
 typedef enum {
@@ -111,25 +96,6 @@ typedef enum {
     GPIO_ALTERNATE_FUNCTION_7 = 7,
     GPIO_ALTERNATE_FUNCTION_8 = 8
 } hal_ll_gpio_alternate_function_t;
-
-/*!< @brief GPIO port enumeration */
-typedef enum {
-    GPIO_PORT_INDEX_0 = 0,
-    GPIO_PORT_INDEX_1 = 1,
-    GPIO_PORT_INDEX_2 = 2,
-    GPIO_PORT_INDEX_3 = 3,
-    GPIO_PORT_INDEX_4 = 4,
-    GPIO_PORT_INDEX_5 = 5,
-    GPIO_PORT_INDEX_6 = 6,
-    GPIO_PORT_INDEX_7 = 7,
-    GPIO_PORT_INDEX_8 = 8,
-    GPIO_PORT_INDEX_9 = 9,
-    GPIO_PORT_INDEX_10 = 10,
-    GPIO_PORT_INDEX_11 = 11,
-    GPIO_PORT_INDEX_12 = 12,
-    GPIO_PORT_INDEX_13 = 13,
-    GPIO_PORT_INDEX_14 = 14
-} hal_ll_gpio_port_index_t;
 
 /**
  *  GPIO module struct defining pins and proprietary functions

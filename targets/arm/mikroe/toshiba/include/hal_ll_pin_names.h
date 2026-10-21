@@ -52,7 +52,6 @@ extern "C"{
 #include "hal_ll_target_names.h"
 
 #define GPIO_FEATURE_8BIT_PORT
-
 #ifdef __PORT_A_CN
 #define GPIO_FEATURE_GROUP_1
 #endif
@@ -92,11 +91,23 @@ extern "C"{
 #ifdef __PORT_N_CN
 #define GPIO_FEATURE_GROUP_13
 #endif
-#ifdef __PORT_U_CN
+#ifdef __PORT_P_CN
 #define GPIO_FEATURE_GROUP_14
 #endif
-#ifdef __PORT_V_CN
+#ifdef __PORT_R_CN
 #define GPIO_FEATURE_GROUP_15
+#endif
+#ifdef __PORT_T_CN
+#define GPIO_FEATURE_GROUP_16
+#endif
+#ifdef __PORT_U_CN
+#define GPIO_FEATURE_GROUP_17
+#endif
+#ifdef __PORT_V_CN
+#define GPIO_FEATURE_GROUP_18
+#endif
+#ifdef __PORT_W_CN
+#define GPIO_FEATURE_GROUP_19
 #endif
 
 #ifdef __PA0_CN
@@ -222,6 +233,14 @@ extern "C"{
 #define GPIO_PD5 (0x35)
 #define PD5 GPIO_PD5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD5!
 #endif
+#ifdef __PD6_CN
+#define GPIO_PD6 (0x36)
+#define PD6 GPIO_PD6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD6!
+#endif
+#ifdef __PD7_CN
+#define GPIO_PD7 (0x37)
+#define PD7 GPIO_PD7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PD7!
+#endif
 
 #ifdef __PE0_CN
 #define GPIO_PE0 (0x40)
@@ -317,6 +336,10 @@ extern "C"{
 #define GPIO_PG6 (0x66)
 #define PG6 GPIO_PG6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG6!
 #endif
+#ifdef __PG7_CN
+#define GPIO_PG7 (0x67)
+#define PG7 GPIO_PG7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PG7!
+#endif
 
 #ifdef __PH0_CN
 #define GPIO_PH0 (0x70)
@@ -325,6 +348,30 @@ extern "C"{
 #ifdef __PH1_CN
 #define GPIO_PH1 (0x71)
 #define PH1 GPIO_PH1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH1!
+#endif
+#ifdef __PH2_CN
+#define GPIO_PH2 (0x72)
+#define PH2 GPIO_PH2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH2!
+#endif
+#ifdef __PH3_CN
+#define GPIO_PH3 (0x73)
+#define PH3 GPIO_PH3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH3!
+#endif
+#ifdef __PH4_CN
+#define GPIO_PH4 (0x74)
+#define PH4 GPIO_PH4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH4!
+#endif
+#ifdef __PH5_CN
+#define GPIO_PH5 (0x75)
+#define PH5 GPIO_PH5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH5!
+#endif
+#ifdef __PH6_CN
+#define GPIO_PH6 (0x76)
+#define PH6 GPIO_PH6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH6!
+#endif
+#ifdef __PH7_CN
+#define GPIO_PH7 (0x77)
+#define PH7 GPIO_PH7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PH7!
 #endif
 
 #ifdef __PJ0_CN
@@ -351,6 +398,14 @@ extern "C"{
 #define GPIO_PJ5 (0x85)
 #define PJ5 GPIO_PJ5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ5!
 #endif
+#ifdef __PJ6_CN
+#define GPIO_PJ6 (0x86)
+#define PJ6 GPIO_PJ6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ6!
+#endif
+#ifdef __PJ7_CN
+#define GPIO_PJ7 (0x87)
+#define PJ7 GPIO_PJ7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PJ7!
+#endif
 
 #ifdef __PK0_CN
 #define GPIO_PK0 (0x90)
@@ -371,6 +426,18 @@ extern "C"{
 #ifdef __PK4_CN
 #define GPIO_PK4 (0x94)
 #define PK4 GPIO_PK4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK4!
+#endif
+#ifdef __PK5_CN
+#define GPIO_PK5 (0x95)
+#define PK5 GPIO_PK5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK5!
+#endif
+#ifdef __PK6_CN
+#define GPIO_PK6 (0x96)
+#define PK6 GPIO_PK6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK6!
+#endif
+#ifdef __PK7_CN
+#define GPIO_PK7 (0x97)
+#define PK7 GPIO_PK7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PK7!
 #endif
 
 #ifdef __PL0_CN
@@ -418,6 +485,26 @@ extern "C"{
 #define GPIO_PM2 (0xB2)
 #define PM2 GPIO_PM2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM2!
 #endif
+#ifdef __PM3_CN
+#define GPIO_PM3 (0xB3)
+#define PM3 GPIO_PM3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM3!
+#endif
+#ifdef __PM4_CN
+#define GPIO_PM4 (0xB4)
+#define PM4 GPIO_PM4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM4!
+#endif
+#ifdef __PM5_CN
+#define GPIO_PM5 (0xB5)
+#define PM5 GPIO_PM5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM5!
+#endif
+#ifdef __PM6_CN
+#define GPIO_PM6 (0xB6)
+#define PM6 GPIO_PM6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM6!
+#endif
+#ifdef __PM7_CN
+#define GPIO_PM7 (0xB7)
+#define PM7 GPIO_PM7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PM7!
+#endif
 
 #ifdef __PN0_CN
 #define GPIO_PN0 (0xC0)
@@ -431,47 +518,223 @@ extern "C"{
 #define GPIO_PN2 (0xC2)
 #define PN2 GPIO_PN2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN2!
 #endif
+#ifdef __PN3_CN
+#define GPIO_PN3 (0xC3)
+#define PN3 GPIO_PN3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN3!
+#endif
+#ifdef __PN4_CN
+#define GPIO_PN4 (0xC4)
+#define PN4 GPIO_PN4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN4!
+#endif
+#ifdef __PN5_CN
+#define GPIO_PN5 (0xC5)
+#define PN5 GPIO_PN5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN5!
+#endif
+#ifdef __PN6_CN
+#define GPIO_PN6 (0xC6)
+#define PN6 GPIO_PN6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN6!
+#endif
+#ifdef __PN7_CN
+#define GPIO_PN7 (0xC7)
+#define PN7 GPIO_PN7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PN7!
+#endif
+
+#ifdef __PP0_CN
+#define GPIO_PP0 (0xD0)
+#define PP0 GPIO_PP0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP0!
+#endif
+#ifdef __PP1_CN
+#define GPIO_PP1 (0xD1)
+#define PP1 GPIO_PP1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP1!
+#endif
+#ifdef __PP2_CN
+#define GPIO_PP2 (0xD2)
+#define PP2 GPIO_PP2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP2!
+#endif
+#ifdef __PP3_CN
+#define GPIO_PP3 (0xD3)
+#define PP3 GPIO_PP3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP3!
+#endif
+#ifdef __PP4_CN
+#define GPIO_PP4 (0xD4)
+#define PP4 GPIO_PP4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP4!
+#endif
+#ifdef __PP5_CN
+#define GPIO_PP5 (0xD5)
+#define PP5 GPIO_PP5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP5!
+#endif
+#ifdef __PP6_CN
+#define GPIO_PP6 (0xD6)
+#define PP6 GPIO_PP6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP6!
+#endif
+#ifdef __PP7_CN
+#define GPIO_PP7 (0xD7)
+#define PP7 GPIO_PP7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PP7!
+#endif
+
+#ifdef __PR0_CN
+#define GPIO_PR0 (0xE0)
+#define PR0 GPIO_PR0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR0!
+#endif
+#ifdef __PR1_CN
+#define GPIO_PR1 (0xE1)
+#define PR1 GPIO_PR1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR1!
+#endif
+#ifdef __PR2_CN
+#define GPIO_PR2 (0xE2)
+#define PR2 GPIO_PR2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR2!
+#endif
+#ifdef __PR3_CN
+#define GPIO_PR3 (0xE3)
+#define PR3 GPIO_PR3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR3!
+#endif
+#ifdef __PR4_CN
+#define GPIO_PR4 (0xE4)
+#define PR4 GPIO_PR4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR4!
+#endif
+#ifdef __PR5_CN
+#define GPIO_PR5 (0xE5)
+#define PR5 GPIO_PR5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR5!
+#endif
+#ifdef __PR6_CN
+#define GPIO_PR6 (0xE6)
+#define PR6 GPIO_PR6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR6!
+#endif
+#ifdef __PR7_CN
+#define GPIO_PR7 (0xE7)
+#define PR7 GPIO_PR7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PR7!
+#endif
+
+#ifdef __PT0_CN
+#define GPIO_PT0 (0xF0)
+#define PT0 GPIO_PT0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT0!
+#endif
+#ifdef __PT1_CN
+#define GPIO_PT1 (0xF1)
+#define PT1 GPIO_PT1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT1!
+#endif
+#ifdef __PT2_CN
+#define GPIO_PT2 (0xF2)
+#define PT2 GPIO_PT2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT2!
+#endif
+#ifdef __PT3_CN
+#define GPIO_PT3 (0xF3)
+#define PT3 GPIO_PT3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT3!
+#endif
+#ifdef __PT4_CN
+#define GPIO_PT4 (0xF4)
+#define PT4 GPIO_PT4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT4!
+#endif
+#ifdef __PT5_CN
+#define GPIO_PT5 (0xF5)
+#define PT5 GPIO_PT5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT5!
+#endif
+#ifdef __PT6_CN
+#define GPIO_PT6 (0xF6)
+#define PT6 GPIO_PT6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT6!
+#endif
+#ifdef __PT7_CN
+#define GPIO_PT7 (0xF7)
+#define PT7 GPIO_PT7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PT7!
+#endif
 
 #ifdef __PU0_CN
-#define GPIO_PU0 (0xD0)
+#define GPIO_PU0 (0x100)
 #define PU0 GPIO_PU0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU0!
 #endif
 #ifdef __PU1_CN
-#define GPIO_PU1 (0xD1)
+#define GPIO_PU1 (0x101)
 #define PU1 GPIO_PU1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU1!
 #endif
 #ifdef __PU2_CN
-#define GPIO_PU2 (0xD2)
+#define GPIO_PU2 (0x102)
 #define PU2 GPIO_PU2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU2!
 #endif
 #ifdef __PU3_CN
-#define GPIO_PU3 (0xD3)
+#define GPIO_PU3 (0x103)
 #define PU3 GPIO_PU3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU3!
 #endif
 #ifdef __PU4_CN
-#define GPIO_PU4 (0xD4)
+#define GPIO_PU4 (0x104)
 #define PU4 GPIO_PU4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU4!
 #endif
 #ifdef __PU5_CN
-#define GPIO_PU5 (0xD5)
+#define GPIO_PU5 (0x105)
 #define PU5 GPIO_PU5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU5!
 #endif
 #ifdef __PU6_CN
-#define GPIO_PU6 (0xD6)
+#define GPIO_PU6 (0x106)
 #define PU6 GPIO_PU6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU6!
 #endif
 #ifdef __PU7_CN
-#define GPIO_PU7 (0xD7)
+#define GPIO_PU7 (0x107)
 #define PU7 GPIO_PU7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PU7!
 #endif
 
 #ifdef __PV0_CN
-#define GPIO_PV0 (0xE0)
+#define GPIO_PV0 (0x110)
 #define PV0 GPIO_PV0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV0!
 #endif
 #ifdef __PV1_CN
-#define GPIO_PV1 (0xE1)
+#define GPIO_PV1 (0x111)
 #define PV1 GPIO_PV1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV1!
+#endif
+#ifdef __PV2_CN
+#define GPIO_PV2 (0x112)
+#define PV2 GPIO_PV2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV2!
+#endif
+#ifdef __PV3_CN
+#define GPIO_PV3 (0x113)
+#define PV3 GPIO_PV3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV3!
+#endif
+#ifdef __PV4_CN
+#define GPIO_PV4 (0x114)
+#define PV4 GPIO_PV4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV4!
+#endif
+#ifdef __PV5_CN
+#define GPIO_PV5 (0x115)
+#define PV5 GPIO_PV5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV5!
+#endif
+#ifdef __PV6_CN
+#define GPIO_PV6 (0x116)
+#define PV6 GPIO_PV6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV6!
+#endif
+#ifdef __PV7_CN
+#define GPIO_PV7 (0x117)
+#define PV7 GPIO_PV7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PV7!
+#endif
+
+#ifdef __PW0_CN
+#define GPIO_PW0 (0x120)
+#define PW0 GPIO_PW0 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW0!
+#endif
+#ifdef __PW1_CN
+#define GPIO_PW1 (0x121)
+#define PW1 GPIO_PW1 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW1!
+#endif
+#ifdef __PW2_CN
+#define GPIO_PW2 (0x122)
+#define PW2 GPIO_PW2 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW2!
+#endif
+#ifdef __PW3_CN
+#define GPIO_PW3 (0x123)
+#define PW3 GPIO_PW3 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW3!
+#endif
+#ifdef __PW4_CN
+#define GPIO_PW4 (0x124)
+#define PW4 GPIO_PW4 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW4!
+#endif
+#ifdef __PW5_CN
+#define GPIO_PW5 (0x125)
+#define PW5 GPIO_PW5 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW5!
+#endif
+#ifdef __PW6_CN
+#define GPIO_PW6 (0x126)
+#define PW6 GPIO_PW6 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW6!
+#endif
+#ifdef __PW7_CN
+#define GPIO_PW7 (0x127)
+#define PW7 GPIO_PW7 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PW7!
 #endif
 
 #define GPIO_PIN_0 (0x00)
@@ -543,13 +806,29 @@ extern "C"{
 #define GPIO_PORT_N (0x0C)
 #define PORT_N GPIO_PORT_N // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_N!
 #endif
+#ifdef __PORT_P_CN
+#define GPIO_PORT_P (0x0D)
+#define PORT_P GPIO_PORT_P // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_P!
+#endif
+#ifdef __PORT_R_CN
+#define GPIO_PORT_R (0x0E)
+#define PORT_R GPIO_PORT_R // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_R!
+#endif
+#ifdef __PORT_T_CN
+#define GPIO_PORT_T (0x0F)
+#define PORT_T GPIO_PORT_T // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_T!
+#endif
 #ifdef __PORT_U_CN
-#define GPIO_PORT_U (0x0D)
+#define GPIO_PORT_U (0x10)
 #define PORT_U GPIO_PORT_U // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_U!
 #endif
 #ifdef __PORT_V_CN
-#define GPIO_PORT_V (0x0E)
+#define GPIO_PORT_V (0x11)
 #define PORT_V GPIO_PORT_V // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_V!
+#endif
+#ifdef __PORT_W_CN
+#define GPIO_PORT_W (0x12)
+#define PORT_W GPIO_PORT_W // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_W!
 #endif
 
 #ifdef __cplusplus

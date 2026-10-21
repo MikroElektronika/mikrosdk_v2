@@ -80,9 +80,19 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
                           GPIO_CFG_OD |\
                           GPIO_CFG_PULL_UP)
 
+#ifdef TMPM3H
+/*!< @brief CGFSYSMENB bits for EI2C channels, CG-M3H(1) Table 1.10 */
+#define HAL_LL_CG_I2C_CLK_REG           fsysmenb
+#define HAL_LL_CG_I2C0_BIT              (11)
+#define HAL_LL_CG_I2C1_BIT              (12)
+#define HAL_LL_CG_I2C2_BIT              (13)
+#define HAL_LL_CG_I2C3_BIT              (14)
+#else
 /*!< @brief CGFSYSENB bits for EI2C channels */
+#define HAL_LL_CG_I2C_CLK_REG           fsysenb
 #define HAL_LL_CG_I2C0_BIT              (10)
 #define HAL_LL_CG_I2C1_BIT              (11)
+#endif
 
 /*!< @brief [I2CxARST] */
 #define HAL_LL_I2C_ARST_SWRES_10        (0x02UL)
@@ -223,6 +233,16 @@ static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COU
     #endif
     #ifdef I2C_MODULE_1
     {HAL_LL_I2C1_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_1 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_2
+    {HAL_LL_I2C2_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_2 ),
+     {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
+     HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
+    #endif
+    #ifdef I2C_MODULE_3
+    {HAL_LL_I2C3_BASE_ADDR, hal_ll_i2c_module_num( I2C_MODULE_3 ),
      {HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 10000},
      HAL_LL_I2C_MASTER_SPEED_100K , 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
@@ -1007,12 +1027,22 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map ) {
     switch ( map->module_index ) {
         #ifdef I2C_MODULE_0
         case hal_ll_i2c_module_num( I2C_MODULE_0 ):
-            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_I2C0_BIT );  // Enable clock for EI2C0 module
+            set_reg_bit( &hal_ll_cg_reg->HAL_LL_CG_I2C_CLK_REG, HAL_LL_CG_I2C0_BIT );  // Enable clock for EI2C0 module
             break;
         #endif
         #ifdef I2C_MODULE_1
         case hal_ll_i2c_module_num( I2C_MODULE_1 ):
-            set_reg_bit( &hal_ll_cg_reg->fsysenb, HAL_LL_CG_I2C1_BIT );  // Enable clock for EI2C1 module
+            set_reg_bit( &hal_ll_cg_reg->HAL_LL_CG_I2C_CLK_REG, HAL_LL_CG_I2C1_BIT );  // Enable clock for EI2C1 module
+            break;
+        #endif
+        #ifdef I2C_MODULE_2
+        case hal_ll_i2c_module_num( I2C_MODULE_2 ):
+            set_reg_bit( &hal_ll_cg_reg->HAL_LL_CG_I2C_CLK_REG, HAL_LL_CG_I2C2_BIT );  // Enable clock for EI2C2 module
+            break;
+        #endif
+        #ifdef I2C_MODULE_3
+        case hal_ll_i2c_module_num( I2C_MODULE_3 ):
+            set_reg_bit( &hal_ll_cg_reg->HAL_LL_CG_I2C_CLK_REG, HAL_LL_CG_I2C3_BIT );  // Enable clock for EI2C3 module
             break;
         #endif
 

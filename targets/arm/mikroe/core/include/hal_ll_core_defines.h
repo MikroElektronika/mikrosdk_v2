@@ -657,7 +657,8 @@ extern "C"{
         #define HAL_LL_NVIC_PRIO_BTIS   2U
     #endif
 #elif defined(toshiba)
-    #if defined(__cortex_m4__)
+    // Cortex-M3 (TMPM3H) and Cortex-M4 (TMPM4K/TMPM4L) share the same NVIC/SCB layout.
+    #if defined(__cortex_m4__) || defined(__cortex_m3__)
         typedef enum
         {
             HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,

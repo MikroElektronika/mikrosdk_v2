@@ -61,11 +61,13 @@
 /*!< @brief Helper macro for getting adequate module index number. */
 #define hal_ll_adc_module_num( _module_num ) ( _module_num - 1 )
 
-#define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( __index & 0xF0 ) >> 4 )
+#define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( ( __index ) >> 4 ) )
 
-#ifdef TMPM4L
+#if defined(TMPM4L)
 #define HAL_LL_CG_ADC0_BIT             (12)
 #define HAL_LL_CG_ADC1_BIT             (13)
+#elif defined(TMPM3H)
+#define HAL_LL_CG_ADC0_BIT             (15)
 #else
 #define HAL_LL_CG_ADC0_BIT             (2)
 #define HAL_LL_CG_ADC1_BIT             (3)
@@ -105,6 +107,18 @@
 #define HAL_LL_ADC_VADCLK_DIV4    (0x0u)
 #define HAL_LL_ADC_VADCLK_DIV8    (0x1u)
 
+#ifdef TMPM3H
+/*
+ * ADC-G reference manual and PINFO-M3H(1) Rev. Feb 2023, 2.10.4 and 2.10.5.
+ * <MOD1> n = 8 for 2.7V <= AVDD5 < 4.5V, SCLK must be 20MHz or less in that supply range.
+ */
+#define HAL_LL_ADC_MOD1_TMPM3H         (0x00004001u)
+#define HAL_LL_ADC_MOD2_TMPM3H         (0x00000300u)
+#define HAL_LL_ADC_TRM_TMPM3H          (0x00034000u)
+#define HAL_LL_ADC_SCLK_MAX_TMPM3H     (20000000u)
+#define HAL_LL_ADC_EXAZ_TMPM3H         (0x0u) // m = 1
+#endif
+
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
 static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { (handle_t *) NULL,
@@ -130,7 +144,8 @@ typedef struct {
     uint32_t psel[ 12 ];     // 0x0040-0x006C - PMD Trigger Input Selection Reg0~Reg11
     uint32_t pints[ 8 ];     // 0x0070-0x008C - PMD Trigger Interrupt Selection Reg0~Reg7
     uint32_t pregs;          // 0x0090 - PMD Trigger Storage Selection Register
-    uint32_t _unused2[ 2 ];  // 0x0094-0x0098 - Reserved
+    uint32_t trm;            // 0x0094 - Trimming Setting Register
+    uint32_t _unused2;       // 0x0098 - Reserved
     uint32_t exazsel;        // 0x009C - AIN Sampling Time Selection Register
     uint32_t pset[ 8 ];      // 0x00A0-0x00BC - PMD Trigger Program Reg0~Reg7
     uint32_t tset[ 24 ];     // 0x00C0-0x016C - General Purpose Start-up Factor Program Reg0~Reg23
@@ -502,8 +517,8 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     uint8_t port = hal_ll_gpio_port_get_port_index( map->pin );
 
-    #ifdef TMPM4L
-    // TMPM4L has no FSYSMENA/FSYSMENB, port and ADC clocks are in FSYSENA/FSYSENB
+    #if defined(TMPM4L) || defined(TMPM3H)
+    // TMPM4L/TMPM3H port and ADC clocks are in FSYSENA/FSYSENB
     volatile uint32_t *port_clk_reg = &hal_ll_cg_reg->fsysena;
     volatile uint32_t *adc_clk_reg  = &hal_ll_cg_reg->fsysenb;
     #else
@@ -592,9 +607,32 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     mod1 = HAL_LL_ADC_MOD1_TMPM4L;
     #endif
 
+    #ifdef TMPM3H
+    /*
+     * ADCLK is derived from fsys; use the smallest prescaler which keeps SCLK in range.
+     * [ADxCLK]<VADCLK>: 000 = /2, 100 = /3, 001 = /4, 101 = /5, 110 = /6, 010 = /8, 111 = /10, 011 = /16
+     */
+    static const uint8_t vadclk_div[] = { 2, 3, 4, 5, 6, 8, 10, 16 };
+    static const uint8_t vadclk_val[] = { 0x0, 0x4, 0x1, 0x5, 0x6, 0x2, 0x7, 0x3 };
+    uint8_t div_index;
+    for ( div_index = 0; div_index < ( sizeof( vadclk_div ) - 1 ); div_index++ ) {
+        if ( ( cg.CG_FSYSM_Frequency / vadclk_div[ div_index ] ) <= HAL_LL_ADC_SCLK_MAX_TMPM3H ) {
+            break;
+        }
+    }
+    vadclk = vadclk_val[ div_index ];
+    exaz   = HAL_LL_ADC_EXAZ_TMPM3H;
+    mod1   = HAL_LL_ADC_MOD1_TMPM3H;
+    #endif
+
     // Configuring these registers is allowed only if CR0<ADEN> = 0
     write_reg( &base->mod1, mod1 );
+    #ifdef TMPM3H
+    write_reg( &base->mod2, HAL_LL_ADC_MOD2_TMPM3H );
+    write_reg( &base->trm, HAL_LL_ADC_TRM_TMPM3H );
+    #else
     write_reg( &base->mod2, HAL_LL_ADC_MOD2_ALL );
+    #endif
     base->clk  = (vadclk << 0) | (exaz << 3) | (exaz << 8);
 
     // Choose EXAZ0 as setting for AIN sampling time for all channels

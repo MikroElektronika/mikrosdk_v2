@@ -121,7 +121,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_CG_PROTECT_OPEN_KEY        (0xC1u)
 #define HAL_LL_CG_PROTECT_CLOSE_KEY       (0x00u)
 
-#ifdef TMPM4L
+#if defined(TMPM4L)
 // TMPM4L has no CGFSYSMENA/CGFSYSMENB, T32A ch0-4 clocks are CGFSYSENA<IPENA27:31>
 #define HAL_LL_CG_FSYSENA    ((volatile uint32_t *)HAL_LL_CG_BASE_FSYSENA_ADDR)
 
@@ -135,6 +135,26 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_CG_TIM3_POS                (30u)
 #define HAL_LL_CG_TIM4_REG                HAL_LL_CG_FSYSENA
 #define HAL_LL_CG_TIM4_POS                (31u)
+#elif defined(TMPM3H)
+// TMPM3H T32A ch0-7 clocks are CGFSYSENA<IPENA24:31>, CG-M3H(1) Table 1.11
+#define HAL_LL_CG_FSYSENA    ((volatile uint32_t *)HAL_LL_CG_BASE_FSYSENA_ADDR)
+
+#define HAL_LL_CG_TIM0_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM0_POS                (24u)
+#define HAL_LL_CG_TIM1_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM1_POS                (25u)
+#define HAL_LL_CG_TIM2_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM2_POS                (26u)
+#define HAL_LL_CG_TIM3_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM3_POS                (27u)
+#define HAL_LL_CG_TIM4_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM4_POS                (28u)
+#define HAL_LL_CG_TIM5_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM5_POS                (29u)
+#define HAL_LL_CG_TIM6_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM6_POS                (30u)
+#define HAL_LL_CG_TIM7_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM7_POS                (31u)
 #else
 #define HAL_LL_CG_TIM0_REG                HAL_LL_CG_FSYSMENA
 #define HAL_LL_CG_TIM0_POS                (28u)
@@ -285,6 +305,12 @@ static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
     #endif
     #ifdef TIM_MODULE_5
     {HAL_LL_TIM5_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_5)},
+    #endif
+    #ifdef TIM_MODULE_6
+    {HAL_LL_TIM6_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_6)},
+    #endif
+    #ifdef TIM_MODULE_7
+    {HAL_LL_TIM7_BASE_ADDR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_7)},
     #endif
 
     {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, HAL_LL_PIN_NC}
@@ -752,6 +778,24 @@ static void hal_ll_tim_module_enable(hal_ll_tim_hw_specifics_map_t *map, bool ha
                 set_reg_bit( HAL_LL_CG_TIM5_REG, HAL_LL_CG_TIM5_POS );
             } else {
                 clear_reg_bit( HAL_LL_CG_TIM5_REG, HAL_LL_CG_TIM5_POS );
+            }
+            break;
+        #endif
+        #ifdef TIM_MODULE_6
+        case hal_ll_tim_module_num( TIM_MODULE_6 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_TIM6_REG, HAL_LL_CG_TIM6_POS );
+            } else {
+                clear_reg_bit( HAL_LL_CG_TIM6_REG, HAL_LL_CG_TIM6_POS );
+            }
+            break;
+        #endif
+        #ifdef TIM_MODULE_7
+        case hal_ll_tim_module_num( TIM_MODULE_7 ):
+            if ( hal_ll_state ) {
+                set_reg_bit( HAL_LL_CG_TIM7_REG, HAL_LL_CG_TIM7_POS );
+            } else {
+                clear_reg_bit( HAL_LL_CG_TIM7_REG, HAL_LL_CG_TIM7_POS );
             }
             break;
         #endif

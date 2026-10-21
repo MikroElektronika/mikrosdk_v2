@@ -56,7 +56,7 @@ extern "C"{
 
 typedef uintptr_t handle_t;
 typedef uint16_t hal_ll_gpio_mask_t;
-typedef uint8_t hal_ll_pin_name_t;
+typedef uint16_t hal_ll_pin_name_t;
 typedef uint8_t hal_ll_port_name_t;
 typedef uint16_t hal_ll_port_size_t;
 typedef uint32_t hal_ll_base_addr_t;

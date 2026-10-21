@@ -45,141 +45,32 @@
 #include "hal_ll_cg.h"
 #include "hal_ll_gpio_constants.h"
 
-#define hal_ll_gpio_port_get_pin_index( __index ) ( (uint8_t) __index & 0xF )
+#define hal_ll_gpio_port_get_pin_index( __index ) ( (uint8_t) ( ( __index ) & 0xF ) )
 
-#define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( __index & 0xF0 ) >> 4 )
-
-#ifdef GPIO_PORT_A
-    #define GPIO_PORTA_BASE ( HAL_LL_GPIO_PORT_BASE )
-#endif
-#ifdef GPIO_PORT_B
-    #define GPIO_PORTB_BASE ( HAL_LL_GPIO_PORT_BASE + 0x100 )
-#endif
-#ifdef GPIO_PORT_C
-    #define GPIO_PORTC_BASE ( HAL_LL_GPIO_PORT_BASE + 0x200UL )
-#endif
-#ifdef GPIO_PORT_D
-    #define GPIO_PORTD_BASE ( HAL_LL_GPIO_PORT_BASE + 0x300UL )
-#endif
-#ifdef GPIO_PORT_E
-    #define GPIO_PORTE_BASE ( HAL_LL_GPIO_PORT_BASE + 0x400UL )
-#endif
-#ifdef GPIO_PORT_F
-    #define GPIO_PORTF_BASE ( HAL_LL_GPIO_PORT_BASE + 0x500UL )
-#endif
-#ifdef GPIO_PORT_G
-    #define GPIO_PORTG_BASE ( HAL_LL_GPIO_PORT_BASE + 0x600UL )
-#endif
-#ifdef GPIO_PORT_H
-    #define GPIO_PORTH_BASE ( HAL_LL_GPIO_PORT_BASE + 0x700UL )
-#endif
-#ifdef GPIO_PORT_J
-    #define GPIO_PORTJ_BASE ( HAL_LL_GPIO_PORT_BASE + 0x800UL )
-#endif
-#ifdef GPIO_PORT_K
-    #define GPIO_PORTK_BASE ( HAL_LL_GPIO_PORT_BASE + 0x900UL )
-#endif
-#ifdef GPIO_PORT_L
-    #define GPIO_PORTL_BASE ( HAL_LL_GPIO_PORT_BASE + 0xA00UL )
-#endif
-#ifdef GPIO_PORT_M
-    #define GPIO_PORTM_BASE ( HAL_LL_GPIO_PORT_BASE + 0xB00UL )
-#endif
-#ifdef GPIO_PORT_N
-    #define GPIO_PORTN_BASE ( HAL_LL_GPIO_PORT_BASE + 0xC00UL )
-#endif
-#ifdef GPIO_PORT_U
-    #define GPIO_PORTU_BASE ( HAL_LL_GPIO_PORT_BASE + 0x1000UL )
-#endif
-#ifdef GPIO_PORT_V
-    #define GPIO_PORTV_BASE ( HAL_LL_GPIO_PORT_BASE + 0x1100UL )
-#endif
-
-/*!< @brief GPIO PORT array */
-static const uint32_t hal_ll_gpio_port_base_arr[] = {
-    #ifdef GPIO_PORTA_BASE
-    GPIO_PORTA_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTB_BASE
-    GPIO_PORTB_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTC_BASE
-    GPIO_PORTC_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTD_BASE
-    GPIO_PORTD_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTE_BASE
-    GPIO_PORTE_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTF_BASE
-    GPIO_PORTF_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTG_BASE
-    GPIO_PORTG_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTH_BASE
-    GPIO_PORTH_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTJ_BASE
-    GPIO_PORTJ_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTK_BASE
-    GPIO_PORTK_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTL_BASE
-    GPIO_PORTL_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTM_BASE
-    GPIO_PORTM_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTN_BASE
-    GPIO_PORTN_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTU_BASE
-    GPIO_PORTU_BASE,
-    #else
-    0,
-    #endif
-    #ifdef GPIO_PORTV_BASE
-    GPIO_PORTV_BASE,
-    #else
-    0
-    #endif
-};
+#define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( ( __index ) >> 4 ) )
 
 #define PROTECT_DISABLE ( 0xC1 )
 
-#ifdef TMPM4L
+#if defined(TMPM4L)
     #define GPIO_ALTERNATE_FUNCTION_LAST GPIO_ALTERNATE_FUNCTION_8
+#elif defined(TMPM3H)
+    // TMPM3H ports have only [PxFR1] to [PxFR6]
+    #define GPIO_ALTERNATE_FUNCTION_LAST GPIO_ALTERNATE_FUNCTION_6
 #else
     #define GPIO_ALTERNATE_FUNCTION_LAST GPIO_ALTERNATE_FUNCTION_7
+#endif
+
+/*!< @brief Port clock supply bit is the port number in this register (CG-M3H(1) Table 1.11, TMPM4L/TMPM4K CG). */
+#if defined(TMPM4K)
+    #define GPIO_PORT_CLOCK_REG_ADDR HAL_LL_CG_BASE_FSYSMENA_ADDR
+#else
+    #define GPIO_PORT_CLOCK_REG_ADDR HAL_LL_CG_BASE_FSYSENA_ADDR
+#endif
+
+#ifdef TMPM3H
+    // TMPM3H port W clock is [CGFSYSENB]<IPENB27> instead of [CGFSYSENA]<IPENA18>
+    #define GPIO_PORT_W_INDEX          (18)
+    #define GPIO_PORT_W_CLOCK_BIT      (27)
 #endif
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
@@ -232,7 +123,7 @@ uint16_t hal_ll_gpio_pin_mask( hal_ll_pin_name_t name ) {
 }
 
 uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
-    return hal_ll_gpio_port_base_arr[ name ];
+    return HAL_LL_GPIO_PORT_BASE + ( (uint32_t) name * GPIO_PORT_REG_STRIDE );
 }
 
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
@@ -264,12 +155,7 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name ) {
 }
 
 static uint8_t hal_ll_gpio_get_port_number( uint32_t base_addr ) {
-    for ( int i = 0; i < sizeof( hal_ll_gpio_port_base_arr ) / sizeof( hal_ll_gpio_port_base_arr[0] ); i++ ) {
-        if ( hal_ll_gpio_port_base_arr[i] == base_addr ) {
-            return i; // Port number.
-        }
-    }
-    return 0xFF; // Not found.
+    return (uint8_t) ( ( base_addr - HAL_LL_GPIO_PORT_BASE ) / GPIO_PORT_REG_STRIDE );
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
@@ -343,7 +229,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 
     pin_name  = module_pin & GPIO_PIN_NAME_MASK;
     pin_index = hal_ll_gpio_pin_index( pin_name );
-    port_name = hal_ll_gpio_port_index( module_pin & 0xFF );
+    port_name = hal_ll_gpio_port_index( pin_name );
     port_ptr  = (hal_ll_gpio_base_handle_t *) hal_ll_gpio_port_base( port_name );
 
     uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
@@ -407,81 +293,20 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
 }
 
 static void hal_ll_gpio_clock_enable( uint32_t port ) {
-    uint32_t  port_index;
-    #ifdef TMPM4L
-    uint32_t *sysma_addr   = (uint32_t *) HAL_LL_CG_BASE_FSYSENA_ADDR;
-    #else
-    uint32_t *sysma_addr   = (uint32_t *) HAL_LL_CG_BASE_FSYSMENA_ADDR;
-    #endif
+    uint32_t *clock_addr   = (uint32_t *) GPIO_PORT_CLOCK_REG_ADDR;
     uint32_t *protect_addr = (uint32_t *) HAL_LL_CG_BASE_PROTECT_ADDR;
+    uint8_t   port_index   = hal_ll_gpio_get_port_number( port );
 
     set_reg_bits( protect_addr, PROTECT_DISABLE );
 
-    port_index = hal_ll_gpio_get_port_number( port );
-
-    switch ( port_index ) {
-        case GPIO_PORT_INDEX_0:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTA );
-            break;
-
-        case GPIO_PORT_INDEX_1:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTB );
-            break;
-
-        case GPIO_PORT_INDEX_2:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTC );
-            break;
-
-        case GPIO_PORT_INDEX_3:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTD );
-            break;
-
-        case GPIO_PORT_INDEX_4:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTE );
-            break;
-
-        case GPIO_PORT_INDEX_5:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTF );
-            break;
-
-        case GPIO_PORT_INDEX_6:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTG );
-            break;
-
-        case GPIO_PORT_INDEX_7:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTH );
-            break;
-        case GPIO_PORT_INDEX_8:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTJ );
-            break;
-
-        case GPIO_PORT_INDEX_9:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTK );
-            break;
-
-        case GPIO_PORT_INDEX_10:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTL );
-            break;
-
-        case GPIO_PORT_INDEX_11:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTM );
-            break;
-        case GPIO_PORT_INDEX_12:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTN );
-            break;
-
-        case GPIO_PORT_INDEX_13:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTU );
-            break;
-
-        case GPIO_PORT_INDEX_14:
-            set_reg_bit( sysma_addr, FSYSMENA_PORTV );
-            break;
-
-        default:
-            // Do nothing
-            break;
+    #ifdef TMPM3H
+    if ( GPIO_PORT_W_INDEX == port_index ) {
+        set_reg_bit( (uint32_t *) HAL_LL_CG_BASE_FSYSENB_ADDR, GPIO_PORT_W_CLOCK_BIT );
+        return;
     }
+    #endif
+
+    set_reg_bit( clock_addr, port_index );
 }
 
 // ------------------------------------------------------------------------- END
