@@ -37,6 +37,17 @@
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
 
+Support added for following hardware:
+
++ **[2027-02-19](./new_hw/2027-02-19.md)**
++ **[2027-02-22](./new_hw/2027-02-22.md)**
++ **[2027-02-23](./new_hw/2027-02-23.md)**
++ **[2027-02-24](./new_hw/2027-02-24.md)**
++ **[2027-02-25](./new_hw/2027-02-25.md)**
++ **[2027-02-26](./new_hw/2027-02-26.md)**
++ **[2027-03-01](./new_hw/2027-03-01.md)**
++ **[2027-03-02](./new_hw/2027-03-02.md)**
+
 ---
 
 **[BACK TO MAIN FILE](../../changelog.md)**
