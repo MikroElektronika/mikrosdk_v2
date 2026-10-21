@@ -27,7 +27,7 @@
 Added a new SPI Ethernet library to mikroSDK.
 
 + Introduces a generic SPI Ethernet middleware layer for MCU networking use cases.
-+ Includes driver support for multiple SPI Ethernet controllers: ENC28J60, LAN9250, W5500, and W6100.
++ Includes driver support for multiple SPI Ethernet controllers: ENC28J60, LAN8651, LAN9250, W5500, and W6100.
 + Provides a common API for initialization, packet send/receive, link status, and MAC/IP configuration.
 + Adds protocol helpers for ARP, ICMP, and basic TCP frame handling.
 + Integrates the library into the SDK build and includes a dedicated validation test under `tests/spi_ethernet`.

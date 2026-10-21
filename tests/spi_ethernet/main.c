@@ -213,6 +213,14 @@ int main( void ) {
                 ( phhid1 >> 12 ) & 0x0F, ( phhid1 >> 8 ) & 0x0F,
                 ( phhid1 >> 4 ) & 0x0F, phhid1 & 0x0F,
                 ( high == 0x00 && low == 0x83 ) ? "" : " NOT OK" );   // 0x0083 = expected value for the ENC28J60 PHY
+    #elif SPI_ETH_CHIP == LAN8651
+    {
+        uint32_t phy_id = lan8651_get_phy_id( );
+        log_printf( &logger, "OA_PHYID = 0x" );
+        for ( i = 0; i < 8; i++ )
+            log_printf( &logger, "%c", hex_digits[ ( phy_id >> ( 28 - 4 * i ) ) & 0x0F ] );
+        log_printf( &logger, "\r\n" );
+    }
     #endif
 
     // Waiting link

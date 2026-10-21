@@ -60,6 +60,7 @@ extern "C"{
 #define WIZ_IP55        W5500
 #define LAN9250         2
 #define W6100           3
+#define LAN8651         4
 
 #define TCP_FLAG_FIN    0x01
 #define TCP_FLAG_SYN    0x02
