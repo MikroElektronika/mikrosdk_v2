@@ -80,6 +80,8 @@ extern "C"{
 #define MSTPCRC_MSTPC26_POS  26 // RSCI9
 #define MSTPCRC_MSTPC27_POS  27 // RSCI8
 
+#define MSTPCRD_MSTPD5_POS   5  // RI3C0
+
 typedef struct
 {
     uint32_t placeholder;
