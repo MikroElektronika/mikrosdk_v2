@@ -82,14 +82,14 @@ extern "C"
 #define MIKROBUS_2_SCL  GPIO_PA5
 #define MIKROBUS_2_SDA  GPIO_PA6
 
-#define LED_SDA_PIN GPIO_PA5
-#define LED_SCL_PIN GPIO_PA6
+#define LED_SDA_PIN GPIO_PA6
+#define LED_SCL_PIN GPIO_PA5
 #define LED_INT_PIN GPIO_PF3
 
 #define SLIDER_PIN  GPIO_PF2
 
-#define USB_UART_TX HAL_PIN_NC
-#define USB_UART_RX HAL_PIN_NC
+#define USB_UART_TX GPIO_PD2
+#define USB_UART_RX GPIO_PD3
 
 #ifdef __cplusplus
 }

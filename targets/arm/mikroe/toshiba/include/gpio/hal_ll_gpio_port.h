@@ -73,7 +73,7 @@ typedef struct
     uint32_t fr5;      // 0x18 - Function Register 5
     uint32_t fr6;      // 0x1C - Function Register 6
     uint32_t fr7;      // 0x20 - Function Register 7
-    uint32_t _unused0; // 0x24
+    uint32_t fr8;      // 0x24 - Function Register 8 (TMPM4L only)
     uint32_t od;       // 0x28 - Open Drain Control Register
     uint32_t pup;      // 0x2C - Pull-up Control Register
     uint32_t pdn;      // 0x30 - Pull-down Control Register
@@ -108,7 +108,8 @@ typedef enum {
     GPIO_ALTERNATE_FUNCTION_4 = 4,
     GPIO_ALTERNATE_FUNCTION_5 = 5,
     GPIO_ALTERNATE_FUNCTION_6 = 6,
-    GPIO_ALTERNATE_FUNCTION_7 = 7
+    GPIO_ALTERNATE_FUNCTION_7 = 7,
+    GPIO_ALTERNATE_FUNCTION_8 = 8
 } hal_ll_gpio_alternate_function_t;
 
 /*!< @brief GPIO port enumeration */
