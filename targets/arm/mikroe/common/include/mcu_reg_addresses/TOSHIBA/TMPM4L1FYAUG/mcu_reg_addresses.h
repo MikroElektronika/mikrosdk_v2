@@ -48,7 +48,7 @@
 // TMPM4L1FYAUG REGISTER DEFINITIONS
 #define HAL_LL_ADC0_BASE_ADDR                  0x4005A000UL
 #define HAL_LL_ADC1_BASE_ADDR                  0x4005A400UL
-#define HAL_LL_GPIO_PORT_BASE                  0x400E0000UL
+#define HAL_LL_GPIO_PORT_BASE                  0x40080000UL
 #define HAL_LL_I2C0_BASE_ADDR                  0x40071000UL
 #define HAL_LL_UART0_BASE_ADDRESS              0x4006E000UL
 #define HAL_LL_UART1_BASE_ADDRESS              0x4006E400UL

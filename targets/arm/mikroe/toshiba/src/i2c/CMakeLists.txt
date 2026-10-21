@@ -15,7 +15,12 @@ endif()
 
 ## BEGIN I2C
 list(APPEND hal_ll_def_list "MACRO_USAGE_I2C")
-set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
+# TMPM4L has I2C Interface Version A (EI2C), which has a different register set than TMPM4K I2C
+if (${MCU_NAME_FIRST_6} MATCHES "TMPM4K")
+    set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
+else()
+    set(i2c_subimplementation "implementation_2/hal_ll_i2c_master.c")
+endif()
 set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
 ## END I2C
 

@@ -176,6 +176,12 @@ static const uint32_t hal_ll_gpio_port_base_arr[] = {
 
 #define PROTECT_DISABLE ( 0xC1 )
 
+#ifdef TMPM4L
+    #define GPIO_ALTERNATE_FUNCTION_LAST GPIO_ALTERNATE_FUNCTION_8
+#else
+    #define GPIO_ALTERNATE_FUNCTION_LAST GPIO_ALTERNATE_FUNCTION_7
+#endif
+
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
 /**
@@ -341,20 +347,24 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
     port_ptr  = (hal_ll_gpio_base_handle_t *) hal_ll_gpio_port_base( port_name );
 
     uint32_t *fr_registers[] = { &port_ptr->fr1, &port_ptr->fr2, &port_ptr->fr3, &port_ptr->fr4,
-                                 &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7 };
+                                 &port_ptr->fr5, &port_ptr->fr6, &port_ptr->fr7,
+                                 #ifdef TMPM4L
+                                 &port_ptr->fr8
+                                 #endif
+                               };
 
     uint32_t mask = (uint32_t) ( 1 << pin_index );
 
     hal_ll_gpio_config( (uint32_t*)&port_ptr, mask, module_config );
 
     //Clear all FR registers for this pin
-    for ( int i = 0; i < GPIO_ALTERNATE_FUNCTION_7; i++ ) {
+    for ( int i = 0; i < GPIO_ALTERNATE_FUNCTION_LAST; i++ ) {
         clear_reg_bit( fr_registers[i], pin_index );
     }
 
     alt_offset = ( ( module_pin & ~GPIO_PIN_NAME_MASK ) >> GPIO_AF_OFFSET );
 
-    if ( state && ( alt_offset >= GPIO_ALTERNATE_FUNCTION_1 && alt_offset <= GPIO_ALTERNATE_FUNCTION_7 ) ) {
+    if ( state && ( alt_offset >= GPIO_ALTERNATE_FUNCTION_1 && alt_offset <= GPIO_ALTERNATE_FUNCTION_LAST ) ) {
         switch ( alt_offset ) {
             case GPIO_ALTERNATE_FUNCTION_1:
                 port_ptr->fr1 |= mask;
@@ -383,13 +393,26 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
             case GPIO_ALTERNATE_FUNCTION_7:
                 port_ptr->fr7 |= mask;
                 break;
+
+            #ifdef TMPM4L
+            case GPIO_ALTERNATE_FUNCTION_8:
+                port_ptr->fr8 |= mask;
+                break;
+            #endif
+
+            default:
+                break;
         }
     }
 }
 
 static void hal_ll_gpio_clock_enable( uint32_t port ) {
     uint32_t  port_index;
+    #ifdef TMPM4L
+    uint32_t *sysma_addr   = (uint32_t *) HAL_LL_CG_BASE_FSYSENA_ADDR;
+    #else
     uint32_t *sysma_addr   = (uint32_t *) HAL_LL_CG_BASE_FSYSMENA_ADDR;
+    #endif
     uint32_t *protect_addr = (uint32_t *) HAL_LL_CG_BASE_PROTECT_ADDR;
 
     set_reg_bits( protect_addr, PROTECT_DISABLE );

@@ -218,7 +218,9 @@
 #endif
 #endif
 #ifdef __PA6_CN
+#ifdef HAL_LL_I2C1_BASE_ADDR
 #define I2C1_SDA_PA6_AF5
+#endif
 #endif
 
 #define I2C_MODULE_0 1

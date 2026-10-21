@@ -201,7 +201,9 @@
 #endif
 #endif
 #ifdef __PA6_CN
+#ifdef HAL_LL_I2C1_BASE_ADDR
 #define I2C1_SDA_PA6_AF5
+#endif
 #endif
 
 #define I2C_MODULE_0 1
@@ -320,7 +322,7 @@
 #define UART_MODULE_1 2
 #define UART_MODULE_2 3
 #define UART_MODULE_3 4
-#define UART_MODULE_5 6
+#define UART_MODULE_5 5
 
 #define UART_MODULE_COUNT 5
 //EOF UART
@@ -355,11 +357,13 @@
 #endif
 #endif
 #ifdef __PG2_CN
+#ifdef HAL_LL_SPI0_MASTER_BASE_ADDR
 #define SPI0_SCK_PG2_AF3
 #endif
+#endif
 
-#define SPI_MODULE_1 2
-#define SPI_MODULE_2 3
+#define SPI_MODULE_1 1
+#define SPI_MODULE_2 2
 
 #define SPI_MODULE_COUNT 2
 //EOF SPI
