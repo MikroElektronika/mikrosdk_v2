@@ -91,8 +91,8 @@ extern "C"{
 typedef struct
 {
     uint32_t iclk;    // System clock frequency in Hz
-    uint32_t pclka;   // PCLKA clock frequency in Hz (RSCI, RSPIA, RI3C)
-    uint32_t pclkb;   // PCLKB clock frequency in Hz (SCI, RIIC)
+    uint32_t pclka;   // PCLKA clock frequency in Hz (RSCI11, RSPIA, RI3C)
+    uint32_t pclkb;   // PCLKB clock frequency in Hz (SCI, RSCI8, RSCI9, RIIC)
     uint32_t pclkc;   // PCLKC clock frequency in Hz (GPTW)
     uint32_t pclkd;   // PCLKD clock frequency in Hz (ADC)
     uint32_t fclk;    // Flash interface clock frequency in Hz

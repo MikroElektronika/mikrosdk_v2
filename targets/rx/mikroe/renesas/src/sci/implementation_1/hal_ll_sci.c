@@ -426,7 +426,7 @@ static bool hal_ll_sci_is_rsci( uint32_t base );
 /**
   * @brief  Returns the source clock of the SCI module.
   *
-  * RSCI8, RSCI9 and RSCI11 are clocked from PCLKA, SCI1/5/6/12 from PCLKB.
+  * RSCI11 is clocked from PCLKA, RSCI8, RSCI9 and SCI1/5/6/12 from PCLKB (RX26T manual sec. 33).
   *
   * @param[in]  base - SCI module base address.
   * @return Source clock frequency in Hz.
@@ -1587,7 +1587,12 @@ static uint32_t hal_ll_sci_get_source_clock( uint32_t base ) {
 
     SYSTEM_GetClocksFrequency( &system_clocks );
 
-    return hal_ll_sci_is_rsci( base ) ? system_clocks.pclka : system_clocks.pclkb;
+    #ifdef SCI_MODULE_11
+    if ( HAL_LL_SCI11_BASE_ADDR == base )
+        return system_clocks.pclka;
+    #endif
+
+    return system_clocks.pclkb;
 }
 
 static uint32_t hal_ll_rsci_cks_max( uint32_t base ) {
@@ -1908,8 +1913,8 @@ static void hal_ll_rsci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_m
         }
     }
 
-    // Requested baud rate is below the minimum achievable with BRR alone (e.g. 9600 on RSCI8/RSCI9, where
-    // CKS is fixed to PCLK/1) -- use the slowest setting and slow it further down with bit rate modulation:
+    // Requested baud rate is below the minimum achievable with BRR alone (e.g. below ~7.3k on RSCI8/RSCI9 at
+    // 60MHz, where CKS is fixed to PCLK/1) -- use the slowest setting and slow it further down with bit rate modulation:
     // B = PCLK / ( F/2 * 4^n * ( N + 1 )) * M / 256, 128 <= M <= 255 (Table 33.24).
     if ( 0xFFFFFFFFUL == best_error ) {
         uint32_t slowest_speed = ( source_clock /
