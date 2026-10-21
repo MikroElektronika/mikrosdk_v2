@@ -102,9 +102,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_RSPIA_SPTFSR_FREE_MASK (7U)
 #define HAL_LL_RSPIA_SPRFSR_FILL_MASK (7U)
 
-/*!< @brief RSPI and RSPIA are clocked from PCLKA. */
-// TODO: replace with the actual PCLKA value once a clock accessor is available.
-#define HAL_LL_SPI_MCU_CLOCK_HZ ( 120000000UL )
 
 #define HAL_LL_SPI_PRCR_ADDR ( 0x000803FEUL )
 #define HAL_LL_SPI_PRCR_UNLOCK_VAL ( 0xA502U )
@@ -970,11 +967,15 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
     uint32_t step;
     uint32_t divisor = 0;
     uint8_t brdv;
+    system_clocks_t system_clocks;
+
+    // RSPI and RSPIA are clocked from PCLKA.
+    SYSTEM_GetClocksFrequency( &system_clocks );
 
     // Bit rate = PCLKA / ( 2 * ( SPBR + 1 ) * 2^BRDV ); pick the smallest BRDV whose SPBR fits, rounding the rate down.
     for ( brdv = 0; brdv < 4; brdv++ ) {
         step = ( 2UL << brdv ) * map->speed;
-        divisor = ( HAL_LL_SPI_MCU_CLOCK_HZ + step - 1 ) / step;
+        divisor = ( system_clocks.pclka + step - 1 ) / step;
 
         if ( 256 >= divisor ) {
             break;
@@ -986,7 +987,7 @@ static void hal_ll_spi_master_set_bit_rate( hal_ll_spi_master_hw_specifics_map_t
         divisor = 256;
     }
 
-    map->hw_actual_speed = HAL_LL_SPI_MCU_CLOCK_HZ / ( ( 2UL << brdv ) * divisor );
+    map->hw_actual_speed = system_clocks.pclka / ( ( 2UL << brdv ) * divisor );
 
     if ( HAL_LL_SPI_MODULE_TYPE_RSPIA == map->spi_module_type ) {
         hal_ll_spi_master_rspia_base_handle_t *hal_ll_hw_reg = hal_ll_spi_master_get_rspia_base_struct( map->base );

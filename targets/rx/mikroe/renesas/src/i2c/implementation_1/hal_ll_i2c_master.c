@@ -120,10 +120,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_ICFER_SCLE           (6)
 #define HAL_LL_I2C_ICFER_NFE            (5)
 
-// Board/clock-tree dependent -- confirmed PCLKB = 60MHz for this board during hal_ll_uart.c bring-up
-// (HOCO 20MHz -> PLLx12 -> ICLK/2 = 120MHz, PCLKB/4 = 60MHz). Re-confirm if the clock config changes.
-#define HAL_LL_I2C_MCU_CLOCK_HZ         (60000000UL) /* TODO: verify against the actual board clock config */
-
 /*!< @brief Default I2C bit-rate if no speed is set */
 #define HAL_LL_I2C_MASTER_SPEED_100K    (100000UL)
 #define HAL_LL_I2C_MASTER_SPEED_400K    (400000UL)
@@ -1107,13 +1103,17 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
     */
     uint8_t constant, nf = 4, cks = 0, brhl = 0;
     float iic_speed;
+    system_clocks_t system_clocks;
+
+    // RIIC is clocked from PCLKB.
+    SYSTEM_GetClocksFrequency( &system_clocks );
 
     // Ensure that minimum high-/low-level period value is more than Noise Filtering stage.
     uint8_t min_brhl = nf + 1;
     float real_bitrate;
 
     for ( cks = 0; cks <= 7; ++cks ) {
-        iic_speed = ( (float)HAL_LL_I2C_MCU_CLOCK_HZ / ( 1 << cks ) );
+        iic_speed = ( (float)system_clocks.pclkb / ( 1 << cks ) );
 
         // For this equation there is always a constant, that depends on CKS value and bit rate.
         switch ( map->speed ) {

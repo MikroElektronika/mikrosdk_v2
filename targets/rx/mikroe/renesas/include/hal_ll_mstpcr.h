@@ -82,9 +82,21 @@ extern "C"{
 
 #define MSTPCRD_MSTPD5_POS   5  // RI3C0
 
+/**
+ * @brief System clocks structure.
+ *
+ * @note Field order must match SYSTEM_ClocksTypeDef in the core package (init_clock.c),
+ *       which implements SYSTEM_GetClocksFrequency() based on FOSC_KHZ_VALUE and the configured SCKCR dividers.
+ */
 typedef struct
 {
-    uint32_t placeholder;
+    uint32_t iclk;    // System clock frequency in Hz
+    uint32_t pclka;   // PCLKA clock frequency in Hz (RSCI, RSPIA, RI3C)
+    uint32_t pclkb;   // PCLKB clock frequency in Hz (SCI, RIIC)
+    uint32_t pclkc;   // PCLKC clock frequency in Hz (GPTW)
+    uint32_t pclkd;   // PCLKD clock frequency in Hz (ADC)
+    uint32_t fclk;    // Flash interface clock frequency in Hz
+    uint32_t cfdclk;  // CANFD clock frequency in Hz
 } system_clocks_t;
 
 /**

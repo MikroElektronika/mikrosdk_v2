@@ -72,8 +72,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 
-// TODO: confirm PCLKC (SCKCR.PCKC) for the active clock configuration.
-#define HAL_LL_TIM_SOURCE_CLOCK_HZ (120000000UL)
 
 // TODO: MSTPCRA bit for GPTW is not in the uploaded chapter, confirm against section 11.
 #define HAL_LL_TIM_MSTPCRA_GPTW_POS (7)
@@ -522,7 +520,12 @@ static void hal_ll_tim_module_enable ( hal_ll_tim_hw_specifics_map_t *map, bool 
 }
 
 static uint32_t hal_ll_tim_clock_source() {
-    return HAL_LL_TIM_SOURCE_CLOCK_HZ;
+    system_clocks_t system_clocks;
+
+    // GPTW is clocked from PCLKC.
+    SYSTEM_GetClocksFrequency( &system_clocks );
+
+    return system_clocks.pclkc;
 }
 
 static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index ) {

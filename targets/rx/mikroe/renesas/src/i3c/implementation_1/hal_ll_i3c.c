@@ -131,9 +131,6 @@
                               GPIO_CFG_DIGITAL_OUTPUT |\
                               GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE)
 
-// RI3C is clocked from PCLKA -- matches the PCLKA value assumed by hal_ll_spi_master.c.
-#define HAL_LL_I3C_MCU_CLOCK_HZ         (120000000UL) /* TODO: verify against the actual board clock config */
-
 #define HAL_LL_I3C_MASTER_SPEED_100K    (100000UL)
 #define HAL_LL_I3C_MASTER_SPEED_400K    (400000UL)
 
@@ -496,6 +493,10 @@ static hal_ll_err_t hal_ll_i3c_i2c_wait_response( hal_ll_i3c_i2c_hw_specifics_ma
 static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
     uint8_t double_period = 0;
     uint32_t high_cycles, low_cycles, bus_free_cycles;
+    system_clocks_t system_clocks;
+
+    // RI3C is clocked from PCLKA.
+    SYSTEM_GetClocksFrequency( &system_clocks );
 
     const i2c_spec_t *i2c_specs = ( map->speed <= 100000 ) ? &i2c_nxp_specifications[0] :
                                   ( map->speed <= 400000 ) ? &i2c_nxp_specifications[1] :
@@ -505,7 +506,7 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
                        ( map->speed <= 400000 ) ? 1300 :
                                                   500;
 
-    uint64_t clock_period_ps  = HAL_LL_I3C_PS_PER_SECOND / HAL_LL_I3C_MCU_CLOCK_HZ;
+    uint64_t clock_period_ps  = HAL_LL_I3C_PS_PER_SECOND / system_clocks.pclka;
     uint64_t target_period_ps = HAL_LL_I3C_PS_PER_SECOND / map->speed;
     uint64_t budget_ps        = target_period_ps - ( ( uint64_t )( i2c_specs->tr + i2c_specs->tf ) * 1000ULL );
 
@@ -549,7 +550,7 @@ static void hal_ll_i3c_i2c_calculate_speed( hal_ll_i3c_i2c_hw_specifics_map_t *m
     write_reg( &I3C_REG( map->base, HAL_LL_I3C_ICBATR_REG_OFFSET ), bus_free_cycles + 1 );
     // Bus idle time of 1ms
     write_reg( &I3C_REG( map->base, HAL_LL_I3C_ICBITR_REG_OFFSET ),
-               ( HAL_LL_I3C_MCU_CLOCK_HZ / 1000UL ) & HAL_LL_I3C_ICBITR_MASK );
+               ( system_clocks.pclka / 1000UL ) & HAL_LL_I3C_ICBITR_MASK );
 }
 
 static void hal_ll_i3c_i2c_hw_init( hal_ll_i3c_i2c_hw_specifics_map_t *map ) {
