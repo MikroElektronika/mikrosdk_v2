@@ -60,7 +60,8 @@
 #define HAL_LL_SCI_SCR_RIE          (6)
 #define HAL_LL_SCI_SCR_TIE          (7)
 
-#define HAL_LL_SCI_SEMR_ABCSE       (3)
+#define HAL_LL_SCI_SEMR_ABCS        (4)
+#define HAL_LL_SCI_SEMR_BGDM        (6)
 
 #define HAL_LL_SCI_SSR_TEND         (2)
 #define HAL_LL_SCI_SSR_PER          (3)
@@ -125,7 +126,7 @@
 #define HAL_LL_SCI_SCL_STEP_BASE            (4UL)
 #define HAL_LL_SCI_SCL_OVERHEAD_CYCLES      (15UL)
 #define HAL_LL_SCI_BRR_COUNT_MAX            (256UL)
-#define HAL_LL_SCI_UART_BRR_MAX_VALUE       (255)
+#define HAL_LL_SCI_UART_STEP_COUNT          (3)
 #define HAL_LL_SCI_CKS_COUNT                (4)
 #define HAL_LL_SCI_SCL_FALL_TIME_NS         (300UL)
 #define HAL_LL_SCI_IICDL_MAX                (31UL)
@@ -1516,25 +1517,50 @@ static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t modu
 static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint32_t source_clock = hal_ll_sci_get_source_clock( map->base );
-    uint32_t brr_value;
-    uint8_t n;
+    // F/2 for F = 64 (BGDM = 0, ABCS = 0), 32 (BGDM = 1, ABCS = 0) and 16 (BGDM = 1, ABCS = 1).
+    // SEMR.ABCSE is not used -- it is only valid with CKS = 0 and BRR = 0.
+    static const uint8_t step_base[ HAL_LL_SCI_UART_STEP_COUNT ] = { 32, 16, 8 };
+    static const uint8_t step_bgdm[ HAL_LL_SCI_UART_STEP_COUNT ] = { 0, 1, 1 };
+    static const uint8_t step_abcs[ HAL_LL_SCI_UART_STEP_COUNT ] = { 0, 0, 1 };
+    uint32_t best_error = 0xFFFFFFFFUL;
+    uint8_t best_cks = HAL_LL_SCI_SMR_CKS_MASK;
+    uint8_t best_step = 0;
+    uint32_t best_divisor = HAL_LL_SCI_BRR_COUNT_MAX;
 
-    set_reg_bit( &hal_ll_hw_reg->semr, HAL_LL_SCI_SEMR_ABCSE );
+    // Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )) (Table 32.10).
+    for ( uint8_t cks = 0; cks <= HAL_LL_SCI_SMR_CKS_MASK; cks++ ) {
+        for ( uint8_t s = 0; s < HAL_LL_SCI_UART_STEP_COUNT; s++ ) {
+            uint32_t step_clock = source_clock / (( uint32_t )step_base[ s ] << ( 2 * cks ));
+            uint32_t divisor = ( step_clock + map->baud_rate.baud / 2 ) / map->baud_rate.baud;
 
-    for ( n = 0; n <= HAL_LL_SCI_SMR_CKS_MASK; n++ ) {
-        brr_value = ( source_clock / ( 6UL * ( 1UL << ( 2 * n ) ) * map->baud_rate.baud ) ) - 1;
+            if (( 0 == divisor ) || ( HAL_LL_SCI_BRR_COUNT_MAX < divisor )) {
+                continue;
+            }
 
-        if ( HAL_LL_SCI_UART_BRR_MAX_VALUE >= brr_value ) {
-            break;
+            uint32_t real_speed = step_clock / divisor;
+            uint32_t error = ( real_speed > map->baud_rate.baud ) ? ( real_speed - map->baud_rate.baud ) :
+                                                                    ( map->baud_rate.baud - real_speed );
+
+            // Strictly better only, so the higher oversampling wins on a tie.
+            if ( error < best_error ) {
+                best_error = error;
+                best_cks = cks;
+                best_step = s;
+                best_divisor = divisor;
+            }
         }
     }
 
+    // Asynchronous base clock selection; noise filter, bit rate modulation and ABCSE are not used.
+    write_reg( &hal_ll_hw_reg->semr, ( uint8_t )(( step_abcs[ best_step ] << HAL_LL_SCI_SEMR_ABCS ) |
+                                                 ( step_bgdm[ best_step ] << HAL_LL_SCI_SEMR_BGDM )));
+
     clear_reg_bits( &hal_ll_hw_reg->smr, HAL_LL_SCI_SMR_CKS_MASK );
-    set_reg_bits( &hal_ll_hw_reg->smr, n );
+    set_reg_bits( &hal_ll_hw_reg->smr, best_cks );
 
-    write_reg( &hal_ll_hw_reg->brr, brr_value );
+    write_reg( &hal_ll_hw_reg->brr, ( uint8_t )( best_divisor - 1 ));
 
-    map->baud_rate.real_baud = source_clock / ( 6UL * ( 1UL << ( 2 * n ) ) * ( brr_value + 1 ) );
+    map->baud_rate.real_baud = ( source_clock / (( uint32_t )step_base[ best_step ] << ( 2 * best_cks ))) / best_divisor;
 }
 
 static bool hal_ll_sci_is_rsci( uint32_t base ) {
