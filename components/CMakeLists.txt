@@ -10,4 +10,4 @@ if (${MSDK_BUILD_TFT_MODULES})
 endif()
 
 # Ethernet components.
-add_subdirectory(ethernet) 
+add_subdirectory(ethernet)
