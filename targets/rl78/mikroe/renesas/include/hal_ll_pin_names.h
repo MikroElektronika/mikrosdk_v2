@@ -768,6 +768,82 @@ extern "C"{
 #define P915 GPIO_P915 // Notice: Will be removed in one of the upcoming releases. Use GPIO_P915!
 #endif
 
+// PORT 12
+#ifdef __P1200_CN
+#define GPIO_P1200 (0xC0)
+#endif
+#ifdef __P1201_CN
+#define GPIO_P1201 (0xC1)
+#endif
+#ifdef __P1202_CN
+#define GPIO_P1202 (0xC2)
+#endif
+#ifdef __P1203_CN
+#define GPIO_P1203 (0xC3)
+#endif
+#ifdef __P1204_CN
+#define GPIO_P1204 (0xC4)
+#endif
+#ifdef __P1205_CN
+#define GPIO_P1205 (0xC5)
+#endif
+#ifdef __P1206_CN
+#define GPIO_P1206 (0xC6)
+#endif
+#ifdef __P1207_CN
+#define GPIO_P1207 (0xC7)
+#endif
+// PORT 13
+#ifdef __P1300_CN
+#define GPIO_P1300 (0xD0)
+#endif
+#ifdef __P1301_CN
+#define GPIO_P1301 (0xD1)
+#endif
+#ifdef __P1302_CN
+#define GPIO_P1302 (0xD2)
+#endif
+#ifdef __P1303_CN
+#define GPIO_P1303 (0xD3)
+#endif
+#ifdef __P1304_CN
+#define GPIO_P1304 (0xD4)
+#endif
+#ifdef __P1305_CN
+#define GPIO_P1305 (0xD5)
+#endif
+#ifdef __P1306_CN
+#define GPIO_P1306 (0xD6)
+#endif
+#ifdef __P1307_CN
+#define GPIO_P1307 (0xD7)
+#endif
+// PORT 14
+#ifdef __P1400_CN
+#define GPIO_P1400 (0xE0)
+#endif
+#ifdef __P1401_CN
+#define GPIO_P1401 (0xE1)
+#endif
+#ifdef __P1402_CN
+#define GPIO_P1402 (0xE2)
+#endif
+#ifdef __P1403_CN
+#define GPIO_P1403 (0xE3)
+#endif
+#ifdef __P1404_CN
+#define GPIO_P1404 (0xE4)
+#endif
+#ifdef __P1405_CN
+#define GPIO_P1405 (0xE5)
+#endif
+#ifdef __P1406_CN
+#define GPIO_P1406 (0xE6)
+#endif
+#ifdef __P1407_CN
+#define GPIO_P1407 (0xE7)
+#endif
+
 // PORT A
 #ifdef __PA00_CN
 #define GPIO_PA00 (0xA0)
@@ -1236,6 +1312,15 @@ extern "C"{
 #ifdef __PORT_9_CN
 #define GPIO_PORT_9 (0x09)
 #define PORT_9 GPIO_PORT_9 // Notice: Will be removed in one of the upcoming releases. Use GPIO_PORT_9!
+#endif
+#ifdef __PORT_12_CN
+#define GPIO_PORT_12 (0x0C)
+#endif
+#ifdef __PORT_13_CN
+#define GPIO_PORT_13 (0x0D)
+#endif
+#ifdef __PORT_14_CN
+#define GPIO_PORT_14 (0x0E)
 #endif
 #ifdef __PORT_A_CN
 #define GPIO_PORT_A (0x0A)

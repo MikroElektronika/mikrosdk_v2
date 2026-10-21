@@ -73,11 +73,12 @@ typedef enum
  * (GPIO no longer touches PIOR at all), and being static there made it
  * invisible to this file's translation unit. */
 static inline void hal_ll_pior_set_field( uint8_t pior_index, uint8_t shift, uint8_t width, uint8_t value ) {
-    uint32_t reg  = HAL_LL_PIOR_BASE + pior_index;
-    uint8_t  mask = ( uint8_t ) ( ( ( 1U << width ) - 1U ) << shift );
+    volatile uint8_t *reg = ( volatile uint8_t * ) ( HAL_LL_PIOR_BASE + pior_index );
+    uint8_t mask = ( uint8_t ) ( ( ( 1U << width ) - 1U ) << shift );
 
-    clear_reg_bits( ( uint8_t * ) reg, mask );
-    set_reg_bits( ( uint8_t * ) reg, ( uint8_t ) ( ( value << shift ) & mask ) );
+    // PIORx only supports 8-bit access (4.3.10), a single write also avoids
+    // briefly routing the function to the value 0 pin.
+    *reg = ( uint8_t ) ( ( *reg & ( uint8_t ) ~mask ) | ( ( value << shift ) & mask ) );
 }
 
 /*!< @brief Used in low level source, same shape as the PIC32 pps_defines

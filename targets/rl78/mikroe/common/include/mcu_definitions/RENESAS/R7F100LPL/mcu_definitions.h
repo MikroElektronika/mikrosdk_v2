@@ -47,40 +47,102 @@
 #include "mcu_reg_addresses.h"
 
 //GPIO
-#define __P008_CN
-#define __P009_CN
-#define __P010_CN
-#define __P011_CN
-#define __P012_CN
-#define __P013_CN
-#define __P014_CN
-#define __P015_CN
+// R7F100LPL (RL78/L23, 100-pin), R01UH1082 2.1.6
+#define __P000_CN
+#define __P001_CN
+#define __P002_CN
+#define __P003_CN
+#define __P004_CN
+#define __P005_CN
+#define __P006_CN
+#define __P007_CN
 #define __P100_CN
 #define __P101_CN
 #define __P102_CN
 #define __P103_CN
-#define __P108_CN
-#define __P109_CN
-#define __P110_CN
-#define __P112_CN
+#define __P104_CN
+#define __P105_CN
+#define __P106_CN
+#define __P107_CN
 #define __P200_CN
 #define __P201_CN
+#define __P202_CN
+#define __P203_CN
+#define __P204_CN
+#define __P205_CN
 #define __P206_CN
 #define __P207_CN
-#define __P208_CN
-#define __P212_CN
-#define __P213_CN
-#define __P214_CN
-#define __P215_CN
 #define __P300_CN
+#define __P301_CN
+#define __P302_CN
+#define __P303_CN
+#define __P304_CN
+#define __P305_CN
+#define __P400_CN
+#define __P401_CN
+#define __P402_CN
+#define __P403_CN
+#define __P404_CN
+#define __P405_CN
+#define __P406_CN
+#define __P407_CN
+#define __P500_CN
+#define __P501_CN
+#define __P502_CN
+#define __P503_CN
+#define __P504_CN
 #define __P505_CN
 #define __P506_CN
-#define __P407_CN
+#define __P507_CN
 #define __P600_CN
 #define __P601_CN
+#define __P602_CN
+#define __P603_CN
 #define __P604_CN
-#define __P913_CN
-#define __P914_CN
+#define __P605_CN
+#define __P606_CN
+#define __P607_CN
+#define __P700_CN
+#define __P701_CN
+#define __P702_CN
+#define __P703_CN
+#define __P704_CN
+#define __P705_CN
+#define __P706_CN
+#define __P707_CN
+#define __P800_CN
+#define __P801_CN
+#define __P802_CN
+#define __P803_CN
+#define __P804_CN
+#define __P805_CN
+#define __P806_CN
+#define __P807_CN
+#define __P900_CN
+#define __P901_CN
+#define __P902_CN
+#define __P903_CN
+#define __P904_CN
+#define __P905_CN
+#define __P906_CN
+#define __P907_CN
+#define __P1201_CN
+#define __P1202_CN
+#define __P1203_CN
+#define __P1204_CN
+#define __P1205_CN
+#define __P1206_CN
+#define __P1207_CN
+#define __P1300_CN
+#define __P1307_CN
+#define __P1400_CN
+#define __P1401_CN
+#define __P1402_CN
+#define __P1403_CN
+#define __P1404_CN
+#define __P1405_CN
+#define __P1406_CN
+#define __P1407_CN
 
 #define __PORT_0_CN
 #define __PORT_1_CN
@@ -96,43 +158,49 @@
 #define __PORT_13_CN
 #define __PORT_14_CN
 
-#define PORT_SIZE (16)
-#define PORT_COUNT (6)
+#define PORT_SIZE (8)
+#define PORT_COUNT (13)
 //EOF GPIO
 
 //ADC
-#ifdef __P008_CN
-#define ADC0_P008_AN002
+#ifdef __P201_CN
+#define ADC0_P201_AN000
 #endif
-#ifdef __P009_CN
-#define ADC0_P009_AN003
+#ifdef __P200_CN
+#define ADC0_P200_AN001
 #endif
-#ifdef __P010_CN
-#define ADC0_P010_AN000
+#ifdef __P202_CN
+#define ADC0_P202_AN016
 #endif
-#ifdef __P011_CN
-#define ADC0_P011_AN001
+#ifdef __P203_CN
+#define ADC0_P203_AN017
+#endif
+#ifdef __P204_CN
+#define ADC0_P204_AN018
+#endif
+#ifdef __P205_CN
+#define ADC0_P205_AN019
+#endif
+#ifdef __P206_CN
+#define ADC0_P206_AN020
 #endif
 #ifdef __P207_CN
 #define ADC0_P207_AN021
-#endif
-#ifdef __P012_CN
-#define ADC0_P012_AN004
-#endif
-#ifdef __P013_CN
-#define ADC0_P013_AN005
-#endif
-#ifdef __P014_CN
-#define ADC0_P014_AN006
-#endif
-#ifdef __P015_CN
-#define ADC0_P015_AN007
 #endif
 #ifdef __P100_CN
 #define ADC0_P100_AN022
 #endif
 #ifdef __P101_CN
-#define ADC0_P101_AN021
+#define ADC0_P101_AN023
+#endif
+#ifdef __P102_CN
+#define ADC0_P102_AN024
+#endif
+#ifdef __P103_CN
+#define ADC0_P103_AN025
+#endif
+#ifdef __P104_CN
+#define ADC0_P104_AN026
 #endif
 
 #define ADC_MODULE_0 1

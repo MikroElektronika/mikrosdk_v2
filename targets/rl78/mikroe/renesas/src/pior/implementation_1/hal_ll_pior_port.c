@@ -20,7 +20,8 @@ static hal_ll_pior_err_t hal_ll_pior_check_pin_to_function( uint16_t *map_index,
     uint16_t index;
 
     for ( index = 0; index < map_size; index++ ) {
-        if ( ( hal_ll_pior_map[ index ].pin == pin_num ) &&
+        // Map rows hold the pin index (GPIO_PIN_n), callers may pass a full pin name.
+        if ( ( hal_ll_pior_map[ index ].pin == ( pin_num & 0x0F ) ) &&
              ( hal_ll_pior_map[ index ].port == port_name ) &&
              ( hal_ll_pior_map[ index ].direction == direction ) &&
              ( hal_ll_pior_map[ index ].pior_func == pior_func ) &&
