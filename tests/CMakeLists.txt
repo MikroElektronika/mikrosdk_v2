@@ -55,6 +55,15 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi\" test.")
 endif()
 
+## 8K Flash and 2K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 8192 2048)
+
+if (${memory_issue} STREQUAL "FALSE")
+    add_subdirectory(spi_ethernet)
+else()
+    message(INFO ": ${MCU_NAME} does not have enough memory for \"spi_ethernet\" test.")
+endif()
+
 ## 8K Flash and 4K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 8192 4096)
 

@@ -121,12 +121,34 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_CG_PROTECT_OPEN_KEY        (0xC1u)
 #define HAL_LL_CG_PROTECT_CLOSE_KEY       (0x00u)
 
-#define TSB_CG_FSYSMENA_IPMENA28_POS      (28u)
-#define TSB_CG_FSYSMENA_IPMENA29_POS      (29u)
-#define TSB_CG_FSYSMENA_IPMENA30_POS      (30u)
-#define TSB_CG_FSYSMENA_IPMENA31_POS      (31u)
-#define TSB_CG_FSYSMENB_IPMENB00_POS      (0u)
-#define TSB_CG_FSYSMENB_IPMENB01_POS      (1u)
+#ifdef TMPM4L
+// TMPM4L has no CGFSYSMENA/CGFSYSMENB, T32A ch0-4 clocks are CGFSYSENA<IPENA27:31>
+#define HAL_LL_CG_FSYSENA    ((volatile uint32_t *)HAL_LL_CG_BASE_FSYSENA_ADDR)
+
+#define HAL_LL_CG_TIM0_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM0_POS                (27u)
+#define HAL_LL_CG_TIM1_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM1_POS                (28u)
+#define HAL_LL_CG_TIM2_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM2_POS                (29u)
+#define HAL_LL_CG_TIM3_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM3_POS                (30u)
+#define HAL_LL_CG_TIM4_REG                HAL_LL_CG_FSYSENA
+#define HAL_LL_CG_TIM4_POS                (31u)
+#else
+#define HAL_LL_CG_TIM0_REG                HAL_LL_CG_FSYSMENA
+#define HAL_LL_CG_TIM0_POS                (28u)
+#define HAL_LL_CG_TIM1_REG                HAL_LL_CG_FSYSMENA
+#define HAL_LL_CG_TIM1_POS                (29u)
+#define HAL_LL_CG_TIM2_REG                HAL_LL_CG_FSYSMENA
+#define HAL_LL_CG_TIM2_POS                (30u)
+#define HAL_LL_CG_TIM3_REG                HAL_LL_CG_FSYSMENA
+#define HAL_LL_CG_TIM3_POS                (31u)
+#define HAL_LL_CG_TIM4_REG                HAL_LL_CG_FSYSMENB
+#define HAL_LL_CG_TIM4_POS                (0u)
+#define HAL_LL_CG_TIM5_REG                HAL_LL_CG_FSYSMENB
+#define HAL_LL_CG_TIM5_POS                (1u)
+#endif
 
 #define HAL_LL_DUTY_RATIO_MIN             (0.0f)
 #define HAL_LL_DUTY_RATIO_MAX             (1.0f)
@@ -160,7 +182,7 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_ROUNDING_DIV               (2u)
 
 #define HAL_LL_TIM_CR_PRESC_POS           (HAL_LL_TIM_CR_PRESCL_POS)
-#define HAL_LL_TIM_CR_PRESC_MSK           ( HAL_LL_MASK(3u, HAL_LL_TIM_CR_PRESC_POS) )
+#define HAL_LL_TIM_CR_PRESC_MSK           ( 0x7u << HAL_LL_TIM_CR_PRESC_POS )
 #define HAL_LL_TIM_CR_PRESC(V)            ( (uint32_t)(V) << HAL_LL_TIM_CR_PRESC_POS )
 
 #define HAL_LL_TIM_MOD32_MASK             (0x00000001 << 0)
@@ -227,7 +249,7 @@ typedef struct
 {
     hal_ll_base_addr_t  base;
     hal_ll_tim_t        config;
-    uint16_t            max_period;
+    uint32_t            max_period;
     uint32_t            freq_hz;
     hal_ll_pin_name_t   module_index;
 } hal_ll_tim_hw_specifics_map_t;
@@ -682,54 +704,54 @@ static void hal_ll_tim_module_enable(hal_ll_tim_hw_specifics_map_t *map, bool ha
         #ifdef TIM_MODULE_0
         case hal_ll_tim_module_num( TIM_MODULE_0 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
+                set_reg_bit( HAL_LL_CG_TIM0_REG, HAL_LL_CG_TIM0_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA28_POS );
+                clear_reg_bit( HAL_LL_CG_TIM0_REG, HAL_LL_CG_TIM0_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_1
         case hal_ll_tim_module_num( TIM_MODULE_1 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
+                set_reg_bit( HAL_LL_CG_TIM1_REG, HAL_LL_CG_TIM1_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA29_POS );
+                clear_reg_bit( HAL_LL_CG_TIM1_REG, HAL_LL_CG_TIM1_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_2
         case hal_ll_tim_module_num( TIM_MODULE_2 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
+                set_reg_bit( HAL_LL_CG_TIM2_REG, HAL_LL_CG_TIM2_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA30_POS );
+                clear_reg_bit( HAL_LL_CG_TIM2_REG, HAL_LL_CG_TIM2_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_3
         case hal_ll_tim_module_num( TIM_MODULE_3 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
+                set_reg_bit( HAL_LL_CG_TIM3_REG, HAL_LL_CG_TIM3_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENA, TSB_CG_FSYSMENA_IPMENA31_POS );
+                clear_reg_bit( HAL_LL_CG_TIM3_REG, HAL_LL_CG_TIM3_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_4
         case hal_ll_tim_module_num( TIM_MODULE_4 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
+                set_reg_bit( HAL_LL_CG_TIM4_REG, HAL_LL_CG_TIM4_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB00_POS );
+                clear_reg_bit( HAL_LL_CG_TIM4_REG, HAL_LL_CG_TIM4_POS );
             }
             break;
         #endif
         #ifdef TIM_MODULE_5
         case hal_ll_tim_module_num( TIM_MODULE_5 ):
             if ( hal_ll_state ) {
-                set_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
+                set_reg_bit( HAL_LL_CG_TIM5_REG, HAL_LL_CG_TIM5_POS );
             } else {
-                clear_reg_bit( HAL_LL_CG_FSYSMENB, TSB_CG_FSYSMENB_IPMENB01_POS );
+                clear_reg_bit( HAL_LL_CG_TIM5_REG, HAL_LL_CG_TIM5_POS );
             }
             break;
         #endif
@@ -797,13 +819,40 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
         regs->run &= ~HAL_LL_TIM_RUN_MASK;    // Disable operation
     }
 
+    if ( !map->freq_hz ) {
+        map->freq_hz = HAL_LL_DEFAULT_PWM_HZ;
+    }
+
+    /*
+     * Timers A and B are 16-bit, timer C is 32-bit ([T32AxMOD]<MODE32> = 1).
+     * Select the smallest prescaler ([T32AxCRx]<PRSCLx>) for which the period fits into the counter.
+     */
+    static const uint16_t prescaler_div[] = { HAL_LL_DIV_1, HAL_LL_DIV_2, HAL_LL_DIV_8, HAL_LL_DIV_32,
+                                              HAL_LL_DIV_128, HAL_LL_DIV_256, HAL_LL_DIV_512, HAL_LL_DIV_1024 };
+    const uint32_t max_ticks = ( HAL_LL_TIM_PIN_C == map->config.pin_type ) ? 0xFFFFFFFFu : HAL_LL_TIM_COUNTER_RANGE;
+    uint32_t prescaler;
+
+    for ( prescaler = 0; prescaler < ( sizeof( prescaler_div ) / sizeof( prescaler_div[0] ) ) - 1; prescaler++ ) {
+        if ( ( g_sysclk_hz / prescaler_div[ prescaler ] / map->freq_hz ) <= max_ticks ) {
+            break;
+        }
+    }
+
+    period_ticks = g_sysclk_hz / prescaler_div[ prescaler ] / map->freq_hz;
+    if ( period_ticks > max_ticks ) {
+        period_ticks = max_ticks;
+    } else if ( period_ticks < HAL_LL_MIN_TICKS ) {
+        period_ticks = HAL_LL_MIN_TICKS;
+    }
+
+    regs->cr = ( regs->cr & ~HAL_LL_TIM_CR_PRESC_MSK ) | HAL_LL_TIM_CR_PRESC( prescaler );
+
     /*
      * period_ticks = RGx1 - RELDx + 1
-     * T_pwm = period_ticks * (1/g_sysclk_hz)
-     * => 1/map->freq_hz = (RGx1 - RELDx + 1) / g_sysclk_hz
-     * => RGx1 = (g_sysclk_hz / map->freq_hz) + RELDx - 1
+     * T_pwm = period_ticks * (prescaler_div / g_sysclk_hz)
+     * => RGx1 = period_ticks + RELDx - 1
      */
-    regs->rg1 = (g_sysclk_hz / map->freq_hz) - 1 + regs->reld;
+    regs->rg1 = period_ticks - 1 + regs->reld;
 
     // Restore timer state
     if ( was_running ) {
@@ -811,7 +860,6 @@ static uint32_t hal_ll_tim_set_freq_bare_metal( hal_ll_tim_hw_specifics_map_t *m
         regs->run |= HAL_LL_TIM_RUN_SFTSTA_MASK;
     }
 
-    period_ticks = g_sysclk_hz / map->freq_hz;
     return period_ticks;
 }
 
