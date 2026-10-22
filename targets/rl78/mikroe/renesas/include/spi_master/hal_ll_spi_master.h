@@ -52,12 +52,20 @@ extern "C"{
 #include "hal_ll_gpio.h"
 
 /**
+ * @brief SPI pin structure (pin name and alternate function).
+ */
+typedef struct {
+    hal_ll_pin_name_t pin_name;
+    hal_ll_pin_name_t pin_af;
+} hal_ll_spi_master_pin_t;
+
+/**
  * @brief SPI configuration pins structure.
  */
 typedef struct {
-    hal_ll_pin_name_t  sck;
-    hal_ll_pin_name_t  miso;
-    hal_ll_pin_name_t  mosi;
+    hal_ll_spi_master_pin_t  sck;
+    hal_ll_spi_master_pin_t  miso;
+    hal_ll_spi_master_pin_t  mosi;
 } hal_ll_spi_master_pins_t;
 
 /**
