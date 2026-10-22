@@ -13,6 +13,7 @@ mikrosdk_add_library(lib_hal_ll_uart MikroSDK.HalLowLevel.UART
     ${uart_subimplementation}
 
     ../../include/hal_ll_target.h
+    ../../include/pior/hal_ll_pior_defines.h
     #  BEGIN UART
     ../../include/uart/hal_ll_uart.h
     ../../include/uart/${uart_pin_map}/hal_ll_uart_pin_map.h
@@ -34,6 +35,7 @@ target_include_directories(lib_hal_ll_uart
     PRIVATE
         ../../include
         ../../include/gpio
+        ../../include/pior
     #  BEGIN UART
         ../../include/uart
         ../../include/uart/${uart_pin_map}

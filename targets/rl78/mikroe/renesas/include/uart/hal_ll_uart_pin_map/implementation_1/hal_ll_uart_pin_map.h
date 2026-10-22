@@ -60,17 +60,25 @@ typedef struct {
     uint8_t module_index;
     hal_ll_pin_name_t pin;
     hal_ll_base_addr_t base;
-    uint8_t af;
+    uint8_t af; /*!< PIOR10/PIOR11 field value routing this pin. */
 } hal_ll_uart_pin_map_t;
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+    #ifdef UART2_TX_P077_AF0
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P077, HAL_LL_UART2_BASE_ADDR, 0},
+    #endif
+
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
-   {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
+    #ifdef UART2_RX_P076_AF0
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P076, HAL_LL_UART2_BASE_ADDR, 0},
+    #endif
+
+    {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
 };
 
 #ifdef __cplusplus
