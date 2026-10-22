@@ -106,7 +106,7 @@
 #define HAL_LL_ADC_FR_FCLK            ( 5 )     /* FR2:FR0 = 101 -> fAD = fCLK */
 
 /*!< @brief P21 is shared between ANI0 and AVREFP. */
-#define HAL_LL_ADC_AVREFP_PIN         ( GPIO_P201 )
+#define HAL_LL_ADC_AVREFP_PIN         ( GPIO_P021 )
 
 #define HAL_LL_ADC_STOP_WAIT_US       ( 5 )  /* 0.2us before FR/LV change, 5us before re-enabling */
 #define HAL_LL_ADC_REF_STABILIZE_US   ( 5 )  /* Reference voltage stabilization time A */

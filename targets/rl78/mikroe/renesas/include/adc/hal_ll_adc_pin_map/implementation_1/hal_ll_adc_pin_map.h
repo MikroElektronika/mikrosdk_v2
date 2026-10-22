@@ -89,44 +89,8 @@ typedef struct
 
 static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
-    #ifdef ADC0_P201_AN000
-    {GPIO_P201, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_0},
-    #endif
-    #ifdef ADC0_P200_AN001
-    {GPIO_P200, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_1},
-    #endif
-    #ifdef ADC0_P202_AN016
-    {GPIO_P202, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_16},
-    #endif
-    #ifdef ADC0_P203_AN017
-    {GPIO_P203, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_17},
-    #endif
-    #ifdef ADC0_P204_AN018
-    {GPIO_P204, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_18},
-    #endif
-    #ifdef ADC0_P205_AN019
-    {GPIO_P205, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_19},
-    #endif
-    #ifdef ADC0_P206_AN020
-    {GPIO_P206, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_20},
-    #endif
-    #ifdef ADC0_P207_AN021
-    {GPIO_P207, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_21},
-    #endif
-    #ifdef ADC0_P100_AN022
-    {GPIO_P100, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_22},
-    #endif
-    #ifdef ADC0_P101_AN023
-    {GPIO_P101, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_23},
-    #endif
-    #ifdef ADC0_P102_AN024
-    {GPIO_P102, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_24},
-    #endif
-    #ifdef ADC0_P103_AN025
-    {GPIO_P103, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_25},
-    #endif
-    #ifdef ADC0_P104_AN026
-    {GPIO_P104, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_26},
+    #ifdef ADC0_P027_AN021
+    {GPIO_P027, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_21},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_ADC_CHANNEL_NC}

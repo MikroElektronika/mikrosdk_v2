@@ -11,11 +11,11 @@
 // ---------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 
 static hal_ll_pior_err_t hal_ll_pior_check_pin_to_function( uint16_t *map_index,
-                                                              hal_ll_port_name_t port_name,
-                                                              hal_ll_pin_name_t pin_num,
-                                                              hal_ll_gpio_direction_t direction,
-                                                              hal_ll_pior_functionality_t pior_func,
-                                                              hal_ll_pior_module_index_t module_num ) {
+                                                            hal_ll_port_name_t port_name,
+                                                            hal_ll_pin_name_t pin_num,
+                                                            hal_ll_gpio_direction_t direction,
+                                                            hal_ll_pior_functionality_t pior_func,
+                                                            hal_ll_pior_module_index_t module_num ) {
     uint16_t map_size = ( sizeof( hal_ll_pior_map ) / sizeof( hal_ll_pior_pin_map_t ) );
     uint16_t index;
 
@@ -37,10 +37,10 @@ static hal_ll_pior_err_t hal_ll_pior_check_pin_to_function( uint16_t *map_index,
 // ---------------------------------------------- PUBLIC FUNCTION DEFINITIONS
 
 hal_ll_pior_err_t hal_ll_pior_port_map( hal_ll_port_name_t port_name, hal_ll_pin_name_t pin_num,
-                                         hal_ll_gpio_direction_t direction,
-                                         hal_ll_pior_functionality_t pior_func,
-                                         hal_ll_pior_module_index_t module_num,
-                                         bool hal_ll_state ) {
+                                        hal_ll_gpio_direction_t direction,
+                                        hal_ll_pior_functionality_t pior_func,
+                                        hal_ll_pior_module_index_t module_num,
+                                        bool hal_ll_state ) {
     uint16_t map_index_num = 0;
 
     if ( hal_ll_pior_check_pin_to_function( &map_index_num, port_name, pin_num, direction,
