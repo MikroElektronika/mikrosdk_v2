@@ -37,6 +37,12 @@ elseif(DIP_SOCKET)
     endif()
 endif()
 
+
+if (EXISTS ${BOARD_PATH}/shield.cmake)
+    include(${BOARD_PATH}/shield.cmake)
+endif()
+
+
 if (NOT DEFINED MSDK_SHIELD)
     set(MSDK_SHIELD "false")
 endif()
