@@ -19,7 +19,7 @@ The mikroSDK SPI driver requires all three SPI pins (SCK, MISO and MOSI). The di
 
 ## Configuration
 
-`st7789_cfg_t` fields:
+`st7789_gl_cfg_t` fields:
 
 - `rst`, `cs`, `d_c` - control pins,
 - `sck`, `miso`, `mosi` - SPI pins (must belong to the same SPI module),
@@ -31,16 +31,16 @@ The mikroSDK SPI driver requires all three SPI pins (SCK, MISO and MOSI). The di
 
 ```c
 static gl_driver_t gl_driver;
-static st7789_cfg_t st7789_cfg;
+static st7789_gl_cfg_t st7789_cfg;
 
 // Fill st7789_cfg (pins, speed, width, height, invert), then:
-st7789_init(&st7789_cfg, &gl_driver);
+st7789_gl_init(&st7789_cfg, &gl_driver);
 gl_set_driver(&gl_driver);
 
 gl_clear(GL_RED);
 ```
 
-Other functions: `st7789_rotate(0..3)` rotates the display (0, 90, 180 and 270 degrees clockwise), `st7789_display_power(1/0)` turns the display output on or off and `st7789_write_pixels()` sends raw RGB565 pixel data.
+Other functions: `st7789_gl_rotate(0..3)` rotates the display (0, 90, 180 and 270 degrees clockwise), `st7789_gl_display_power(1/0)` turns the display output on or off and `st7789_gl_write_pixels()` sends raw RGB565 pixel data.
 
 ## LVGL
 
