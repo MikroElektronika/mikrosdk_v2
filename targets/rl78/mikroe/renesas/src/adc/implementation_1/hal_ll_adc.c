@@ -66,7 +66,7 @@
 
 /*!< @brief CPU/peripheral clock (fCLK) used for the conversion clock divider. */
 #ifndef HAL_LL_ADC_FCLK_HZ
-#define HAL_LL_ADC_FCLK_HZ            ( 32000000UL ) /* TODO: replace with real fCLK source */
+#define HAL_LL_ADC_FCLK_HZ            ( ( uint32_t )Get_Fosc_kHz() * 1000UL )
 #endif
 
 // ADC register addresses

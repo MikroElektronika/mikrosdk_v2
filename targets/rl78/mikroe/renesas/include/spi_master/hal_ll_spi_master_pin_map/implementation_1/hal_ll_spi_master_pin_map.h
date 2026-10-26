@@ -60,21 +60,33 @@ typedef struct {
     hal_ll_pin_name_t pin;
     hal_ll_base_addr_t base;
     uint8_t module_index;
-    uint8_t af;
+    uint8_t af; /*!< PIOR10/PIOR11 field value routing this pin. */
 } hal_ll_spi_master_pin_map_t;
 
 /*!< SPI SCK pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
+    #ifdef SPI7_SCK_P140_AF0
+    {GPIO_P140, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
+    #ifdef SPI7_MOSI_P047_AF0
+    {GPIO_P047, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 
 /*!< SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
+    #ifdef SPI7_MISO_P046_AF0
+    {GPIO_P046, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
+    #endif
+
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC}
 };
 

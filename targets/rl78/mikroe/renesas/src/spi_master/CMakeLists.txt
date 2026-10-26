@@ -15,6 +15,7 @@ mikrosdk_add_library(lib_hal_ll_spi_master MikroSDK.HalLowLevel.SPI.Master
     ${spi_subimplementation}
 
     ../../include/hal_ll_target.h
+    ../../include/pior/hal_ll_pior_defines.h
     #  BEGIN SPI
     ../../include/spi_master/hal_ll_spi_master.h
     ../../include/spi_master/${spi_pin_map}/hal_ll_spi_master_pin_map.h
@@ -36,6 +37,7 @@ target_include_directories(lib_hal_ll_spi_master
     PRIVATE
         ../../include
         ../../include/gpio
+        ../../include/pior
     #  BEGIN SPI
         ../../include/spi_master
         ../../include/spi_master/${spi_pin_map}

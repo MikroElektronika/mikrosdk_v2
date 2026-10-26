@@ -69,7 +69,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 
 /*!< @brief CPU/peripheral clock (fCLK) feeding the SAU prescaler. */
 #ifndef HAL_LL_UART_FCLK_HZ
-#define HAL_LL_UART_FCLK_HZ             ( 32000000UL ) /* TODO: replace with real fCLK source */
+#define HAL_LL_UART_FCLK_HZ             ( ( uint32_t )Get_Fosc_kHz() * 1000UL )
 #endif
 
 /*!< @brief Register addresses outside of the SAU unit block. */

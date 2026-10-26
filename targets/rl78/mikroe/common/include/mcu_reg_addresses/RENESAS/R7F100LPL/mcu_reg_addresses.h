@@ -39,13 +39,13 @@
 /*!
 * @file  mcu_reg_addresses.h
 * @brief MCU specific register address definitions.
-* @details R7FA0E1053CFJ register address definitions.
+* @details R7F100LPL register address definitions.
 */
 
 #ifndef _MCU_REG_ADDRESSES_H_
 #define _MCU_REG_ADDRESSES_H_
 
-// R7FA0E1053CFJ REGISTER DEFINITIONS
+// R7F100LPL REGISTER DEFINITIONS
 #define GPIO_PORT0_BASE (0xFFF00UL)
 #define GPIO_PORT1_BASE (0xFFF01UL)
 #define GPIO_PORT2_BASE (0xFFF02UL)
@@ -59,27 +59,27 @@
 #define GPIO_PORT12_BASE (0xFFF0CUL)
 #define GPIO_PORT13_BASE (0xFFF0DUL)
 #define GPIO_PORT14_BASE (0xFFF0EUL)
-#define GPIO_PORT0_CFG_BASE   ( 0xF0030UL )
-#define GPIO_PORT1_CFG_BASE   ( 0xF0031UL )
-#define GPIO_PORT2_CFG_BASE   ( 0xF0032UL )
-#define GPIO_PORT3_CFG_BASE   ( 0xF0033UL )
-#define GPIO_PORT4_CFG_BASE   ( 0xF0034UL )
-#define GPIO_PORT5_CFG_BASE   ( 0xF0035UL )
-#define GPIO_PORT6_CFG_BASE   ( 0xF0036UL )
-#define GPIO_PORT7_CFG_BASE   ( 0xF0037UL )
-#define GPIO_PORT8_CFG_BASE   ( 0xF0038UL )
-#define GPIO_PORT9_CFG_BASE   ( 0xF0039UL )
-#define GPIO_PORT12_CFG_BASE  ( 0xF003CUL )
-#define GPIO_PORT14_CFG_BASE  ( 0xF003EUL )
-#define PFS_REGISTER_ADDR (GPIO_PORT0_BASE + 0x00000200UL)
-#define PWPR_REGISTER_BASE (* ( volatile uint8_t * )(PFS_REGISTER_ADDR + 0x00000140UL))
 static const hal_ll_base_addr_t HAL_LL_ADC0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF30UL); // ADM0
-static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A3000UL);
-static const hal_ll_base_addr_t HAL_LL_ICU_BASE_ADDR = ( hal_ll_base_addr_t ) (0x40006000UL);
-static const hal_ll_base_addr_t HAL_LL_SAU0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2000UL);
-static const hal_ll_base_addr_t HAL_LL_SAU1_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2200UL);
-static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A2600UL);
-static const hal_ll_base_addr_t HAL_LL_UARTA0_BASE_ADDR = ( hal_ll_base_addr_t ) (0x400A3400UL);
+static const hal_ll_base_addr_t HAL_LL_I2C0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF50UL); // IICA0
+static const hal_ll_base_addr_t HAL_LL_SAU0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xF0100UL); // SSR00
+static const hal_ll_base_addr_t HAL_LL_SAU1_BASE_ADDR = ( hal_ll_base_addr_t ) (0xF0140UL); // SSR10
+static const hal_ll_base_addr_t HAL_LL_SPI0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF10UL); // SDR00 (CSI00)
+static const hal_ll_base_addr_t HAL_LL_SPI1_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF12UL); // SDR01 (CSI01)
+static const hal_ll_base_addr_t HAL_LL_SPI2_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF44UL); // SDR02 (CSI10)
+static const hal_ll_base_addr_t HAL_LL_SPI3_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF46UL); // SDR03 (CSI11)
+static const hal_ll_base_addr_t HAL_LL_SPI4_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF48UL); // SDR10 (CSI20)
+static const hal_ll_base_addr_t HAL_LL_SPI5_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF4AUL); // SDR11 (CSI21)
+static const hal_ll_base_addr_t HAL_LL_SPI6_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF14UL); // SDR12 (CSI30)
+static const hal_ll_base_addr_t HAL_LL_SPI7_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF16UL); // SDR13 (CSI31)
+static const hal_ll_base_addr_t HAL_LL_TAU0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xF0190UL); // TMR00
+static const hal_ll_base_addr_t HAL_LL_TIM0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF1AUL); // TDR01 (TO01 slave)
+static const hal_ll_base_addr_t HAL_LL_TIM1_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF66UL); // TDR03 (TO03 slave)
+static const hal_ll_base_addr_t HAL_LL_TIM2_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF6AUL); // TDR05 (TO05 slave)
+static const hal_ll_base_addr_t HAL_LL_TIM3_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF6EUL); // TDR07 (TO07 slave)
+static const hal_ll_base_addr_t HAL_LL_UART0_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF10UL); // SDR00 (TXD0)
+static const hal_ll_base_addr_t HAL_LL_UART1_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF44UL); // SDR02 (TXD1)
+static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF48UL); // SDR10 (TXD2)
+static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF14UL); // SDR12 (TXD3)
 // EOF REGISTER DEFINITIONS
 
 #endif // _MCU_REG_ADDRESSES_H_

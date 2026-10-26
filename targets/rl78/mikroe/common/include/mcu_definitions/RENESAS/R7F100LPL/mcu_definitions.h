@@ -172,54 +172,6 @@
 #define ADC_MODULE_COUNT 1
 //EOF ADC
 
-//SAU_I2C
-#ifdef __P010_CN
-#define SAU_I2C00_SDA_P010_AF3
-#endif
-#ifdef __P012_CN
-#define SAU_I2C00_SCL_P012_AF3
-#endif
-
-#define SAU_I2C_MODULE_0 1
-#define SAU_I2C_MODULE_1 2
-
- #define SAU_I2C_MODULE_COUNT 2
-//EOF SAU_I2C
-
-//SAU_SPI
-#ifdef __P010_CN
-#define SAU_SPI00_MISO_P010_AF3
-#endif
-#ifdef __P011_CN
-#define SAU_SPI00_MOSI_P011_AF3
-#endif
-#ifdef __P012_CN
-#define SAU_SPI00_SCK_P012_AF3
-#endif
-
-#define SAU_SPI_MODULE_0 1
-#define SAU_SPI_MODULE_1 2
-
- #define SAU_SPI_MODULE_COUNT 2
-//EOF SAU_SPI
-
-//SAU_UART
-#ifdef __P010_CN
-#define SAU_UART0_RX_P010_AF3
-#endif
-#ifdef __P011_CN
-#define SAU_UART0_TX_P011_AF3
-#endif
-
-#define SAU_UART_CHANNEL_0
-#define SAU_UART_CHANNEL_1
-#define SAU_UART_CHANNEL_2
-#define SAU_UART_MODULE_0 1
-#define SAU_UART_MODULE_1 2
-
- #define SAU_UART_MODULE_COUNT 2
-//EOF SAU_UART
-
 //I2C
 #ifdef __P060_CN
 #define I2C0_SCL_P060_AF0
@@ -228,52 +180,75 @@
 #define I2C0_SDA_P061_AF0
 #endif
 
-#define I2C_MODULE_0 3
+#define I2C_MODULE_0 1
 
-#define I2C_MODULE_COUNT (SAU_I2C_MODULE_COUNT + 1)
+#define I2C_MODULE_COUNT 1
 //EOF I2C
 
 //UART
-#ifdef __P010_CN
-#define UART0_RX_P010_AF5
+// SAU UARTs only, AF = PIOR10 (UART0/1) / PIOR11 (UART2/3) field value. TX and RX
+// of one UART must share the AF value since a single PIOR field routes both.
+#ifdef __P077_CN
+#define UART2_TX_P077_AF0
 #endif
-#ifdef __P011_CN
-#define UART0_TX_P011_AF5
+#ifdef __P076_CN
+#define UART2_RX_P076_AF0
 #endif
 
-#define UART_MODULE_0 3
+#define UART_MODULE_0 1
+#define UART_MODULE_1 2
+#define UART_MODULE_2 3
+#define UART_MODULE_3 4
 
-#define UART_MODULE_COUNT (SAU_UART_MODULE_COUNT + 1)
+#define UART_MODULE_COUNT 4
 //EOF UART
 
 //SPI
-#define SPI_MODULE_COUNT (SAU_SPI_MODULE_COUNT + 0)
+// SAU simplified SPI (CSI) only, SPI0-7 = CSI00, CSI01, CSI10, CSI11, CSI20, CSI21, CSI30, CSI31.
+// AF = PIOR10 (SPI0-3) / PIOR11 (SPI4-7) field value. SCK, MISO and MOSI of one CSI must
+// share the AF value since a single PIOR field routes all three (R01UH1082 Figure 4-10).
+#ifdef __P140_CN
+#define SPI7_SCK_P140_AF0
+#endif
+#ifdef __P046_CN
+#define SPI7_MISO_P046_AF0
+#endif
+#ifdef __P047_CN
+#define SPI7_MOSI_P047_AF0
+#endif
+
+#define SPI_MODULE_0 1
+#define SPI_MODULE_1 2
+#define SPI_MODULE_2 3
+#define SPI_MODULE_3 4
+#define SPI_MODULE_4 5
+#define SPI_MODULE_5 6
+#define SPI_MODULE_6 7
+#define SPI_MODULE_7 8
+
+#define SPI_MODULE_COUNT 8
 //EOF SPI
 
 //TIM
-#ifdef __P010_CN
-#define TIM0_P010_CH1_AF2
+// TAU0 PWM, TIMn = master channel 2n + slave channel 2n + 1, output TO0(2n+1).
+// AF = PIOR0 (TO01) / PIOR1 (TO03, TO05) / PIOR2 (TO07) field value (R01UH1082 Figure 4-10).
+#ifdef __P064_CN
+#define TIM1_P064_CH3_AF4
+#endif
+#ifdef __P065_CN
+#define TIM2_P065_CH5_AF5
+#endif
+#ifdef __P077_CN
+#define TIM3_P077_CH7_AF3
 #endif
 
 #define TIM_MODULE_0 1
+#define TIM_MODULE_1 2
+#define TIM_MODULE_2 3
+#define TIM_MODULE_3 4
 
-#define TIM_MODULE_COUNT 1
+#define TIM_MODULE_COUNT 4
 //EOF TIM
-
-//IVT_TABLE
-#define SAU1_UART_TXI2_NVIC    12
-#define SAU1_UART_RXI2_NVIC    13
-#define SAU0_UART_TXI0_NVIC    18
-#define SAU0_UART_TXI1_NVIC    22
-#define SAU0_UART_RXI1_NVIC    23
-#define SAU0_UART_RXI0_NVIC    27
-#define UARTA0_ERRI_NVIC       39
-#define UARTA0_TXI_NVIC        40
-#define UARTA0_RXI_NVIC        41
-#define UARTA1_ERRI_NVIC       43
-#define UARTA1_TXI_NVIC        44
-#define UARTA1_RXI_NVIC        45
-//EOF IVT_TABLE
 
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END

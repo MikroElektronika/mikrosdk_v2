@@ -53,6 +53,8 @@ extern "C"{
 #ifdef __MIKROC_AI__
     #define __weak __attribute__((weak))
 #else
+    #include "core_header.h"
+    #define Get_Fosc_kHz() (FOSC_KHZ_VALUE)
     #define __weak
 #endif
 
