@@ -58,3 +58,12 @@ add_subdirectory(st7789)
 
 ## ST7525I display library (SPI).
 add_subdirectory(st7525i)
+
+## SH1107 display library (SPI).
+add_subdirectory(sh1107)
+
+## ST7796 display library (SPI).
+add_subdirectory(st7796)
+
+## ST7735S display library (SPI).
+add_subdirectory(st7735s)
