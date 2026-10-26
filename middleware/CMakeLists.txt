@@ -59,6 +59,12 @@ add_subdirectory(st7789)
 ## ST7525I display library (SPI).
 add_subdirectory(st7525i)
 
+## SSD1312 display library (I2C).
+add_subdirectory(ssd1312)
+
+## UC1609C display library (SPI).
+add_subdirectory(uc1609c)
+
 ## SH1107 display library (SPI).
 add_subdirectory(sh1107)
 

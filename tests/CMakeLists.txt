@@ -184,6 +184,14 @@ add_subdirectory(st7525i)
 
 add_subdirectory(st7525i_lvgl)
 
+add_subdirectory(ssd1312)
+
+add_subdirectory(ssd1312_lvgl)
+
+add_subdirectory(uc1609c)
+
+add_subdirectory(uc1609c_lvgl)
+
 add_subdirectory(sh1107)
 
 add_subdirectory(sh1107_lvgl)
