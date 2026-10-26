@@ -183,3 +183,15 @@ add_subdirectory(st7789_lvgl)
 add_subdirectory(uc1609c)
 
 add_subdirectory(uc1609c_lvgl)
+
+add_subdirectory(sh1107)
+
+add_subdirectory(sh1107_lvgl)
+
+add_subdirectory(st7796)
+
+add_subdirectory(st7796_lvgl)
+
+add_subdirectory(st7735s)
+
+add_subdirectory(st7735s_lvgl)
