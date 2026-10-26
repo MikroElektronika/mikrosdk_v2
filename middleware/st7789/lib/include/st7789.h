@@ -42,12 +42,12 @@
  */
 #ifndef ST7789_H
 #define ST7789_H
- 
+
 #include <stdint.h>
 #include "hal_gpio.h"
 #include "gl_types.h"
 #include "generic_pointer.h"
- 
+
 /**
  * @brief ST7789 Configuration Object.
  * @details Configuration object definition for ST7789 display controller.
@@ -58,39 +58,45 @@ typedef struct
     hal_pin_name_t cs;                       /*!< Chip Select pin. Use HAL_PIN_NC if the display has no CS pin. */
     hal_pin_name_t d_c;                      /*!< Data/Command select pin */
     hal_pin_name_t sck;                      /*!< SPI clock pin (SCL).*/
-    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI driver). */
+    hal_pin_name_t miso;                     /*!< SPI MISO pin (not wired to the display, but required by the SPI
+                                                  driver). */
     hal_pin_name_t mosi;                     /*!< SPI data pin (SDA).*/
- 
+
     uint32_t speed;                          /*!< SPI clock speed in Hz. Not used when soft_spi is 1. */
- 
+
     uint16_t width;                          /*!< Display width. */
     uint16_t height;                         /*!< Display height. */
     uint8_t invert;                          /*!< 1 if the display colors need to be inverted, 0 if not. */
     uint8_t spi_mode;                        /*!< SPI mode (0 to 3). Default is 0. Not used when soft_spi is 1. */
-    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters, parameters..., ends with 0. NULL if not used. */
-    uint8_t soft_spi;                        /*!< 1 to send the data with software SPI (GPIO pins), 0 for the SPI module. */
+    const uint8_t *init_seq;                 /*!< Optional extra init commands: command, number of parameters,
+                                                  parameters..., ends with 0. NULL if not used. */
+    uint8_t soft_spi;                        /*!< 1 to send the data with software SPI (GPIO pins), 0 for the SPI
+                                                  module. */
 } st7789_cfg_t;
 /*!
  * @addtogroup middlewaregroup Middleware
  * @{
  */
- 
+
 /*!
  * @addtogroup st7789 ST7789 Display Controller Driver
  * @brief ST7789 Display Controller Driver API reference.
  * @details API for configuring and manipulating ST7789 Display Controller driver.
  * @{
  */
- 
+
 /**
  * @brief ST7789 Display Controller initialization.
- * @details This function initializes the control pins, the SPI module and the ST7789 Display Controller, and links the driver interface object with the ST7789 driver functions. If the SPI module can not be opened, the driver interface object is left untouched.
+ * @details This function initializes the control pins, the SPI module and the ST7789 Display Controller, and links the
+ * driver interface object with the ST7789 driver functions. If the SPI module can not be opened, the driver interface
+ * object is left untouched.
  * @param[in] cfg : ST7789 configuration object. See #st7789_cfg_t structure definition for detailed explanation.
- * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and #gl_set_driver function for detailed explanation.
+ * @param[out] driver : Graphics Library driver interface object. See #gl_driver_t structure definition and
+ * #gl_set_driver function for detailed explanation.
  * @return Nothing.
  */
 void st7789_init(st7789_cfg_t *cfg, gl_driver_t * __generic_ptr driver);
- 
+
 /**
  * @brief Send command to ST7789 Display Controller.
  * @details This function sends command to ST7789 Display Controller.
@@ -98,7 +104,7 @@ void st7789_init(st7789_cfg_t *cfg, gl_driver_t * __generic_ptr driver);
  * @return Nothing.
  */
 void st7789_write_command(uint8_t command);
- 
+
 /**
  * @brief Send data to ST7789 Display Controller.
  * @details This function sends data to ST7789 Display Controller.
@@ -106,21 +112,21 @@ void st7789_write_command(uint8_t command);
  * @return Nothing.
  */
 void st7789_write_param(uint8_t param);
- 
+
 /**
  * @brief Get display width.
  * @details This function returns the width of the ST7789 controller based display.
  * @return Display width.
  */
 uint16_t st7789_get_display_width();
- 
+
 /**
  * @brief Get display height.
  * @details This function returns the height of the ST7789 controller based display.
  * @return Display height.
  */
 uint16_t st7789_get_display_height();
- 
+
 /**
  * @brief Change display rotation.
  * @details This function changes the orientation / rotation of the ST7789 display.
@@ -128,7 +134,7 @@ uint16_t st7789_get_display_height();
  * @return Nothing.
  */
 void st7789_rotate(uint8_t rotation);
- 
+
 /**
  * @brief Turn display on or off.
  * @details This function turns the display output on or off.
@@ -136,7 +142,7 @@ void st7789_rotate(uint8_t rotation);
  * @return Nothing.
  */
 void st7789_display_power(uint8_t state);
- 
+
 /**
  * @brief Send pixel data to ST7789 Display Controller.
  * @details Call it after the window is set (begin frame) and before end frame.
@@ -146,9 +152,9 @@ void st7789_display_power(uint8_t state);
  * @return Nothing.
  */
 void st7789_write_pixels(const uint8_t *data, uint32_t length);
- 
+
 /*! @} */ // st7789
 /*! @} */ // mwgroup
- 
+
 #endif // ST7789_H
 // ------------------------------------------------------------------------- END
