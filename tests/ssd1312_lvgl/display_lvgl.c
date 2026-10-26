@@ -4,8 +4,8 @@
 // ---------------------------------------------------- DISPLAY CONFIGURATION
 
 #define TFT_RST_PIN HAL_PIN_NC
-#define TEST_SSD1312_SCL HAL_PIN_NC // SCL
-#define TEST_SSD1312_SDA HAL_PIN_NC // SDA
+#define TFT_SCL_PIN HAL_PIN_NC // SCL
+#define TFT_SDA_PIN HAL_PIN_NC // SDA
 
 #define TFT_I2C_ADDRESS 0x3C
 #define TFT_I2C_SPEED   I2C_MASTER_SPEED_STANDARD // 100 kHz.

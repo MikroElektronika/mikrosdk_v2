@@ -53,7 +53,6 @@ extern "C"{
 #include "board.h"
 #include "gl.h"
 #include "ssd1312.h"
-#include "ssd1312.h"
 #include "drv_i2c_master.h"
 
 /*!

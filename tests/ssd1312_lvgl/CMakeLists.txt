@@ -3,7 +3,7 @@ add_executable(test_ssd1312_lvgl
     main.c
     display_lvgl.c
     display_lvgl.h
-    mikrosdk_logo_small.c
+    ../resources/mikrosdk_logo_small.c
     ReadMe.txt
 )
 
