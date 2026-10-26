@@ -6,7 +6,7 @@ mikrosdk_add_interface_library(lib_st7789_lvgl_common MikroSDK.St7789.LVGL.Commo
 target_link_libraries(lib_st7789_lvgl_common INTERFACE
     MikroC.Core
     MikroSDK.GraphicLibrary
-    MikroSDK.St7789
+    MikroSDK.ST7789
 )
 
 target_include_directories(lib_st7789_lvgl_common

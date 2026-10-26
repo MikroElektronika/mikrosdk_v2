@@ -92,12 +92,12 @@ void lv_port_disp_init(void)
 
 void lv_port_disp_rotate(uint8_t rotation)
 {
-    st7789_rotate(rotation);
-    lv_display_set_resolution(display, st7789_get_display_width(), st7789_get_display_height());
+    st7789_gl_rotate(rotation);
+    lv_display_set_resolution(display, st7789_gl_get_display_width(), st7789_gl_get_display_height());
     lv_obj_invalidate(lv_screen_active());
 }
 
 void lv_port_disp_power(bool on)
 {
-    st7789_display_power(on ? 1 : 0);
+    st7789_gl_display_power(on ? 1 : 0);
 }

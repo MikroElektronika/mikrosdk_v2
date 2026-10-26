@@ -43,7 +43,6 @@
 
 #include "st7789.h"
 #include "st7789_cmd.h"
-#include "gl.h"
 
 #ifdef __GNUC__
 #include <me_built_in.h>
@@ -52,70 +51,40 @@
 #include "built_in.h"
 #endif
 #include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "drv_port.h"
 #include "delays.h"
 
+/*!< Set SPI dummy write data. */
+#define SPI_DUMMY 0x00
+
 /**
- * @remark No context for display controller driver, because in most cases only
- * one TFT display on board. Performance concerns.
+ * @remark Configuration copy for display controller driver, API was
+ * built for single display applications which covers most use-cases.
  */
-static digital_out_t pin_rst;
+static spi_master_t display_spi;
+
+/*!< SPI handler. */
+static spi_master_t disp_spi;
+/*!< CS pin handle. */
 static digital_out_t pin_cs;
+/*!< RST pin handle. */
+static digital_out_t pin_rst;
+/*!< DC pin handle. */
 static digital_out_t pin_dc;
-static spi_master_t spi_master;
+/*!< BCK pin handle. */
+static digital_out_t pin_bck;
 
 static uint16_t display_width;
 static uint16_t display_height;
 
-static uint16_t native_width;
-static uint16_t native_height;
+#define DATA_SELECT()    digital_out_high( &pin_dc )
+#define COMMAND_SELECT() digital_out_low( &pin_dc )
 
-static gl_driver_t *current_gl_driver = NULL;
-static uint8_t cs_used;
-static digital_out_t pin_sck_soft;
-static digital_out_t pin_mosi_soft;
-static uint8_t soft_spi;
-static uint16_t offset_x;
-static uint16_t offset_y;
+#define CS_ACTIVE()      digital_out_low( &pin_cs )
+#define CS_DEACTIVE()    digital_out_high( &pin_cs )
 
-#define DATA_SELECT() digital_out_high(&pin_dc)
-#define COMMAND_SELECT() digital_out_low(&pin_dc)
-#define CS_ACTIVE() do { if (cs_used) { digital_out_low(&pin_cs); } } while (0)
-#define CS_DEACTIVE() do { if (cs_used) { digital_out_high(&pin_cs); } } while (0)
-#define ST7789_FILL_CHUNK 64   // Number of pixels sent with one SPI write.
-#define ST7789_RAM_WIDTH 240 //Size of the controller memory, in pixels
-#define ST7789_RAM_HEIGHT 320
-
-static void spi_send(uint8_t *data, uint32_t length)
-{
-    if (!soft_spi)
-    {
-        spi_master_write(&spi_master, data, length);
-        return;
-    }
-
-    while (length--)
-    {
-        uint8_t value = *data++;
-        uint8_t bit;
-
-        for (bit = 0; bit < 8; bit++)
-        {
-            if (value & 0x80)
-            {
-                digital_out_high(&pin_mosi_soft);
-            }
-            else
-            {
-                digital_out_low(&pin_mosi_soft);
-            }
-
-            digital_out_low(&pin_sck_soft);
-            digital_out_high(&pin_sck_soft);
-            value <<= 1;
-        }
-    }
-}
+#define RESET_ACTIVE()   digital_out_low( &pin_rst )
+#define RESET_DEACTIVE() digital_out_high( &pin_rst )
 
 uint16_t st7789_get_display_width()
 {
@@ -127,264 +96,110 @@ uint16_t st7789_get_display_height()
     return display_height;
 }
 
-void _st7789_begin_frame(gl_rectangle_t *rect)
-{
-    uint16_t start_column = rect->top_left.x + offset_x;
-    uint16_t end_column = rect->top_left.x + rect->width - 1 + offset_x;
-    uint16_t start_page = rect->top_left.y + offset_y;
-    uint16_t end_page = rect->top_left.y + rect->height - 1 + offset_y;
-
-    st7789_write_command(ST7789_CMD_CASET);
-    st7789_write_param(Hi(start_column));
-    st7789_write_param(Lo(start_column));
-    st7789_write_param(Hi(end_column));
-    st7789_write_param(Lo(end_column));
-
-    st7789_write_command(ST7789_CMD_RASET);
-    st7789_write_param(Hi(start_page));
-    st7789_write_param(Lo(start_page));
-    st7789_write_param(Hi(end_page));
-    st7789_write_param(Lo(end_page));
-
-    st7789_write_command(ST7789_CMD_RAMWR);
-
-    CS_ACTIVE();
-    DATA_SELECT();
-}
-
-void _st7789_end_frame()
-{
-    CS_DEACTIVE();
-}
-
-void _st7789_frame_data(gl_color_t color)
-{
-    uint8_t pixel[2];
-
-    pixel[0] = Hi(color);   /* High byte first. */
-    pixel[1] = Lo(color);   /* Low byte second. */
-
-    spi_send(pixel, 2);
-}
-
-void _st7789_fill(gl_rectangle_t *rect, gl_color_t color)
-{
-    uint32_t length = (uint32_t)rect->width * (uint32_t)rect->height;
-    uint8_t buffer[ST7789_FILL_CHUNK * 2];
-    uint8_t high = Hi(color);
-    uint8_t low = Lo(color);
-    uint32_t chunk;
-    uint32_t i;
-
-    if (!length)
-    {
-        return;
-    }
-
-    // Fill the buffer with the color (only as many pixels as needed).
-    chunk = (length < ST7789_FILL_CHUNK) ? length : ST7789_FILL_CHUNK;
-
-    for (i = 0; i < chunk; i++)
-    {
-        buffer[i * 2] = high;
-        buffer[i * 2 + 1] = low;
-    }
-
-    _st7789_begin_frame(rect);
-
-    while (length >= ST7789_FILL_CHUNK)
-    {
-        spi_send(buffer, ST7789_FILL_CHUNK * 2);
-        length -= ST7789_FILL_CHUNK;
-    }
-
-    if (length)
-    {
-        spi_send(buffer, length * 2);
-    }
-
-    _st7789_end_frame();
-}
-
-static void send_init_sequence(const uint8_t *sequence)
-{
-    while (*sequence)
-    {
-        uint8_t command = *sequence++;
-        uint8_t count = *sequence++;
-
-        st7789_write_command(command);
-
-        while (count--)
-        {
-            st7789_write_param(*sequence++);
-        }
-    }
-}
-
-void st7789_init(st7789_cfg_t *cfg, gl_driver_t * __generic_ptr driver)
+void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv )
 {
     spi_master_config_t spi_cfg;
 
-    cs_used = (HAL_PIN_NC != cfg->cs);
+    // Initialize communication pins.
+    spi_master_configure_default( &spi_cfg );
 
-    if (cs_used)
-    {
-        digital_out_init(&pin_cs, cfg->cs);
-        digital_out_high(&pin_cs);
-    }
-    digital_out_init(&pin_dc, cfg->d_c);
-    digital_out_init(&pin_rst, cfg->rst);
+    spi_cfg.sck = cfg->sck;
+    spi_cfg.miso = cfg->sdo;
+    spi_cfg.mosi = cfg->sdi;
 
-    soft_spi = cfg->soft_spi;
+    spi_master_open( &ctx->spi, &spi_cfg );
+    spi_master_set_default_write_data( &ctx->spi, SPI_DUMMY );
+    spi_master_set_mode( &ctx->spi, SPI_MASTER_MODE_0 );
+    spi_master_set_speed( &ctx->spi, 5000000 );
 
-    if (soft_spi)
-    {
-        digital_out_init(&pin_sck_soft, cfg->sck);
-        digital_out_init(&pin_mosi_soft, cfg->mosi);
-        digital_out_high(&pin_sck_soft);
-    }
+    display_spi = ctx->spi;
 
-    digital_out_high(&pin_dc);
-    digital_out_low(&pin_rst);
-
-    if (!soft_spi)
-    {
-        spi_master_configure_default(&spi_cfg);
-        spi_cfg.sck = cfg->sck;
-        spi_cfg.miso = cfg->miso;
-        spi_cfg.mosi = cfg->mosi;
-        spi_cfg.speed = cfg->speed;
-        spi_cfg.mode = (spi_master_mode_t)cfg->spi_mode;
-
-        if (SPI_MASTER_ERROR == spi_master_open(&spi_master, &spi_cfg))
-        {
-            return;
-        }
-
-        spi_master_set_speed(&spi_master, cfg->speed);
-    }
-
-    driver->fill_f = _st7789_fill;
-    driver->begin_frame_f = _st7789_begin_frame;
-    driver->end_frame_f = _st7789_end_frame;
-    driver->frame_data_f = _st7789_frame_data;
-
-    current_gl_driver = driver;
-
-    display_width = cfg->width;
-    driver->display_width = cfg->width;
-    display_height = cfg->height;
-    driver->display_height = cfg->height;
-
-    native_width = cfg->width;
-    native_height = cfg->height;
-
-    Delay_100ms();
-    digital_out_high(&pin_rst);
-    Delay_100ms();
-    Delay_100ms();
-
-    st7789_write_command(ST7789_CMD_SWRESET);
-    Delay_ms(ST7789_DELAY_SWRESET_MS);
-
-    if (cfg->init_seq)
-    {
-        send_init_sequence(cfg->init_seq);
-    }
-
-    st7789_write_command(ST7789_CMD_SLPOUT);
-    Delay_ms(ST7789_DELAY_SLPOUT_MS);
-
-    st7789_write_command(ST7789_CMD_COLMOD);
-    st7789_write_param(ST7789_COLMOD_16BIT);
-
-    if (cfg->invert)
-    {
-        st7789_write_command(ST7789_CMD_INVON);
-    }
-
-    st7789_write_command(ST7789_CMD_DISPON);
+    // Initialize control pins.
+    digital_out_init( &pin_cs, cfg->cs );
+    digital_out_init( &pin_rst, cfg->rst );
+    digital_out_init( &pin_dc, cfg->rs );
+    digital_out_init( &pin_bck, cfg->bck );
+    CS_DEACTIVE();
 }
 
-void st7789_write_command(uint8_t command)
+void st7789_write_command( uint8_t command )
 {
     CS_ACTIVE();
     COMMAND_SELECT();
-
-    spi_send(&command, 1);
-
+    spi_master_write( &display_spi, &command, 1 );
     CS_DEACTIVE();
 }
 
-void st7789_write_param(uint8_t param)
+void st7789_write_param( uint8_t param )
 {
     CS_ACTIVE();
     DATA_SELECT();
-
-    spi_send(&param, 1);
-
+    spi_master_write( &display_spi, &param, 1 );
     CS_DEACTIVE();
 }
 
-void st7789_write_pixels(const uint8_t *data, uint32_t length)
+void st7789_reset()
 {
-    spi_send((uint8_t *)data, length);
+    RESET_ACTIVE();
+    Delay_1ms();
+    RESET_DEACTIVE();
+    Delay_100ms();
+    Delay_100ms();
 }
 
-void st7789_rotate(uint8_t rotation)
+void st7789_set_backlight( uint8_t intensity )
 {
-    uint8_t madctl;
-    uint8_t landscape;
-    uint16_t column_offset;
-    uint16_t row_offset;
-
-    switch (rotation)
-    {
-        case 1:  madctl = ST7789_MADCTL_MX | ST7789_MADCTL_MV; landscape = 1; break;   // 90 degrees.
-        case 2:  madctl = ST7789_MADCTL_MY | ST7789_MADCTL_MX; landscape = 0; break;   // 180 degrees.
-        case 3:  madctl = ST7789_MADCTL_MY | ST7789_MADCTL_MV; landscape = 1; break;   // 270 degrees.
-        default: madctl = 0x00; landscape = 0; break;                                  // 0 degrees.
-    }
-
-    st7789_write_command(ST7789_CMD_MADCTL);
-    st7789_write_param(madctl);
-    // A panel smaller than the controller memory sits at the end of the memory
-    // when the order of that axis is reversed, so the window has to be shifted.
-    column_offset = (madctl & ST7789_MADCTL_MX) ? (ST7789_RAM_WIDTH - native_width) : 0;
-    row_offset = (madctl & ST7789_MADCTL_MY) ? (ST7789_RAM_HEIGHT - native_height) : 0;
-    if(madctl & ST7789_MADCTL_MV)
-    {
-        offset_x = row_offset;
-        offset_y = column_offset;
-    }
-    else
-    {
-        offset_x = column_offset;
-        offset_y = row_offset;
-    }
-
-    display_width  = landscape ? native_height : native_width;
-    display_height = landscape ? native_width : native_height;
-
-    if (current_gl_driver)
-    {
-        current_gl_driver->display_width  = display_width;
-        current_gl_driver->display_height = display_height;
-
-        // Graphic library keeps its own copy of the driver, so update it.
-        gl_set_driver(current_gl_driver);
-    }
+    digital_out_write( &pin_bck, intensity );
 }
 
-void st7789_display_power(uint8_t state)
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_err_t tp_st7789_process( tp_st7789_t *ctx )
 {
-    if (state)
-    {
-        st7789_write_command(ST7789_CMD_DISPON);
-    }
-    else
-    {
-        st7789_write_command(ST7789_CMD_DISPOFF);
-    }
+    return TP_OK;
 }
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_event_t tp_st7789_press_detect( tp_st7789_t *ctx )
+{
+    return TP_EVENT_PRESS_NOT_DET;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_st7789_gesture( tp_st7789_t *ctx, tp_event_t *event )
+{
+    *event = TP_EVENT_GEST_NONE;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_st7789_coord( void *ctx, tp_touch_item_t *coord )
+{
+    coord->n_touches = 0;
+    return;
+}
+
+tp_err_t tp_st7789_init( tp_st7789_t *ctx, tp_st7789_cfg_t *cfg, tp_drv_t *drv )
+{
+    drv->tp_press_detect_f = tp_st7789_press_detect;
+    drv->tp_press_coordinates_f = tp_st7789_coord;
+    drv->tp_gesture_f = tp_st7789_gesture;
+    drv->tp_process_f = tp_st7789_process;
+    return TP_OK;
+}
+
+void tp_st7789_cfg_setup( tp_st7789_cfg_t *cfg )
+{
+}
+
+void tp_st7789_default_cfg( tp_st7789_t *ctx )
+{
+}
+
+// ------------------------------------------------------------------------- END

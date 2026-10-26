@@ -16,5 +16,5 @@ target_link_libraries(test_st7789 PUBLIC
     MikroC.Core
     MikroSDK.Board
     MikroSDK.GraphicLibrary
-    MikroSDK.St7789
+    MikroSDK.ST7789
 )

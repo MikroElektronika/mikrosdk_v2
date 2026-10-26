@@ -11,7 +11,7 @@
 #include "board.h"
 #include "delays.h"
 #include "gl.h"
-#include "st7789.h"
+#include "st7789_gl.h"
 
 // -------------------------------------------------------------------- MACROS
 
@@ -50,7 +50,7 @@
 // ---------------------------------------------------------------- APPLICATION
 
 static gl_driver_t gl_driver;   // Graphic library driver.
-static st7789_cfg_t st7789_cfg; // ST7789 configuration.
+static st7789_gl_cfg_t st7789_cfg; // ST7789 configuration.
 
 // GMT130 manufacturer power, voltage and gamma settings: command, number of parameters, parameters. Ends with 0.
 static const uint8_t gmt130_init[] =
@@ -86,7 +86,7 @@ int main()
     st7789_cfg.soft_spi = TEST_ST7789_SOFT_SPI;
     st7789_cfg.init_seq = TEST_ST7789_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
-    st7789_init(&st7789_cfg, &gl_driver);
+    st7789_gl_init(&st7789_cfg, &gl_driver);
     gl_set_driver(&gl_driver);
 
     // Fill the whole screen with basic colors, one after another.
@@ -123,7 +123,7 @@ int main()
     // Test display rotation.
     for (uint8_t rot = 0; rot < 4; rot++)
     {
-        st7789_rotate(rot);
+        st7789_gl_rotate(rot);
         gl_clear(GL_BLACK);
 
         gl_set_brush_style(GL_BRUSH_STYLE_FILL);
@@ -134,12 +134,12 @@ int main()
     }
 
     // Test display power off/on control.
-    st7789_display_power(0);
+    st7789_gl_display_power(0);
     Delay_ms(1500);
-    st7789_display_power(1);
+    st7789_gl_display_power(1);
     Delay_ms(1500);
 
-    st7789_rotate(0);
+    st7789_gl_rotate(0);
     gl_clear(GL_BLACK);
 
     return 0;

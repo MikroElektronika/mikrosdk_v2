@@ -52,7 +52,7 @@ extern "C"{
 #include <stdbool.h>
 #include "board.h"
 #include "gl.h"
-#include "st7789.h"
+#include "st7789_gl.h"
 
 /*!
  * @addtogroup middlewaregroup Middleware
@@ -99,7 +99,7 @@ extern "C"{
 #define TFT_SOFT_SPI 0
 #endif
 
-// Optional extra init commands (see st7789_cfg_t). Can be overridden by the project.
+// Optional extra init commands (see st7789_gl_cfg_t). Can be overridden by the project.
 #ifndef TFT_INIT_SEQ
 #define TFT_INIT_SEQ NULL
 #endif
@@ -122,7 +122,7 @@ extern "C"{
 static gl_driver_t display_driver;
 
 /*!< Display configuration. */
-static st7789_cfg_t display_cfg;
+static st7789_gl_cfg_t display_cfg;
 
 /**
  * @brief Initializes control pins, SPI and display to default state.
@@ -144,7 +144,7 @@ static inline void display_configure(void)
     display_cfg.soft_spi = TFT_SOFT_SPI;
     display_cfg.init_seq = TFT_INIT_SEQ;
 
-    st7789_init(&display_cfg, &display_driver);
+    st7789_gl_init(&display_cfg, &display_driver);
 }
 
 /**
@@ -180,7 +180,7 @@ static inline void frame_start(uint32_t start_column, uint32_t end_column,
  */
 static inline void write_array_data(uint16_t *array, uint16_t length)
 {
-    st7789_write_pixels((const uint8_t *)array, (uint32_t)length * 2);
+    st7789_gl_write_pixels((const uint8_t *)array, (uint32_t)length * 2);
 }
 
 /**

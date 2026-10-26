@@ -21,7 +21,7 @@ target_link_libraries(test_st7789_lvgl PUBLIC
     MikroC.Core
     MikroSDK.Board
     MikroSDK.GraphicLibrary
-    MikroSDK.St7789
+    MikroSDK.ST7789
     MikroSDK.St7789.LVGL.Common
     MikroSDK.LVGL
 )
