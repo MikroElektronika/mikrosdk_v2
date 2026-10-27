@@ -500,6 +500,28 @@
  */
 #define ST7789_CMD_PROMACT                 0xFE
 
+/**
+ * @brief COLMOD parameter: 65K colors, 16 bits per pixel (RGB565).
+ */
+#define ST7789_COLMOD_16BIT                0x55
+
+/**
+ * @brief MADCTL bits: row address order, column address order and row/column exchange.
+ */
+#define ST7789_MADCTL_MY                   0x80
+#define ST7789_MADCTL_MX                   0x40
+#define ST7789_MADCTL_MV                   0x20
+
+/**
+ * @brief Time to wait after Software Reset, in milliseconds.
+ */
+#define ST7789_DELAY_SWRESET_MS            120
+
+/**
+ * @brief Time to wait after Sleep Out, in milliseconds.
+ */
+#define ST7789_DELAY_SLPOUT_MS             120
+
 /*! @} */ // st7789
 /*! @} */ // st7789
 /*! @} */ // mwgroup

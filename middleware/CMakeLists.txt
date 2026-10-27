@@ -31,7 +31,6 @@ if(${MSDK_BUILD_TFT_MODULES})
         add_subdirectory(ft5xx6)
         add_subdirectory(stmpe811)
         add_subdirectory(tsc2003)
-        add_subdirectory(st7789)
         if(NOT(${TOOLCHAIN_ID} STREQUAL "mikrocavr"))
             add_subdirectory(ft800)
         endif()
@@ -53,3 +52,24 @@ add_subdirectory(lcd)
 
 ## GLCD library.
 add_subdirectory(glcd)
+
+## ST7789 display library (SPI).
+add_subdirectory(st7789)
+
+## ST7525I display library (SPI).
+add_subdirectory(st7525i)
+
+## SSD1312 display library (I2C).
+add_subdirectory(ssd1312)
+
+## UC1609C display library (SPI).
+add_subdirectory(uc1609c)
+
+## SH1107 display library (SPI).
+add_subdirectory(sh1107)
+
+## ST7796 display library (SPI).
+add_subdirectory(st7796)
+
+## ST7735S display library (SPI).
+add_subdirectory(st7735s)
