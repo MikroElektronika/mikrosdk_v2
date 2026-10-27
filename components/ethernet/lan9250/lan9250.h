@@ -38,229 +38,122 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet_lan9250.h
+ * @file lan9250.h
  * @brief SPI Ethernet Microchip LAN9250 Driver.
+ * @details Several devices can be used at the same time: give each
+ * eth_transport_t its own lan9250_ctx_t through driver_ctx before calling
+ * lan9250_configure(). Without it, a built-in context is used.
  */
 
 #ifndef SPI_ETHERNET_LAN9250_H
 #define SPI_ETHERNET_LAN9250_H
 
-#include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "eth_bus_spi.h"
 #include <stdint.h>
-#include <stdbool.h>
 
 #define LAN9250_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
-    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
-    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+    ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
+    ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
 
+/**
+ * @brief LAN9250 configuration: SPI bus and device settings.
+ */
 typedef struct {
-    pin_name_t miso;
-    pin_name_t mosi;
-    pin_name_t sck;
-    pin_name_t cs;
-    pin_name_t rst;
-
-    uint32_t spi_speed;
-    spi_master_mode_t spi_mode;
-
-    uint8_t mac[ 6 ];
-    uint8_t ip[ 4 ];
-    uint8_t full_duplex;
+    eth_bus_spi_cfg_t   bus;    // SPI pins, speed and mode
+    eth_transport_cfg_t eth;    // Reset pin, MAC, IP, duplex
 } lan9250_cfg_t;
 
 /**
- * @brief Initialize the LAN9250 SPI Ethernet driver.
- *
- * @details Resets the LAN9250, waits for the device to become ready,
- * performs the required digital reset, reads the chip identification,
- * configures the TX FIFO, initializes the MAC address and enables
- * Ethernet transmission and reception.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param drv Pointer to the SPI Ethernet driver structure.
- *
- * @pre lan9250_configure() must have been called beforehand.
- *
- * @return void
+ * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
  */
-void     lan9250_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+typedef struct {
+    uint32_t id_rev;            // ID_REV read during initialization
+} lan9250_ctx_t;
 
 /**
  * @brief Initialize the LAN9250 configuration structure with default values.
- *
- * @details Sets all GPIO pins to HAL_PIN_NC, configures SPI mode 0,
- * sets the default SPI speed to 1 MHz and disables full-duplex mode.
- *
- * @param cfg Pointer to the LAN9250 configuration structure.
- *
- * @return void
+ * @param[out] cfg LAN9250 configuration structure.
+ * @return Nothing.
  */
 void     lan9250_cfg_setup( lan9250_cfg_t *cfg );
 
 /**
- * @brief Configure the SPI interface and GPIO pins for the LAN9250.
- *
- * @details Configures the SPI peripheral, initializes the chip select and
- * reset pins, and copies the MAC address, IP address and duplex setting
- * into the SPI Ethernet instance.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param spi Pointer to the SPI master instance.
- * @param cfg Pointer to the LAN9250 configuration structure.
- *
- * @pre lan9250_cfg_setup() should be called before this function.
- *
- * @return 0 if the configuration is successful.
+ * @brief Configure the SPI interface and the control pins for the LAN9250.
+ * @param[in,out] eth Ethernet transport instance. If eth->driver_ctx is NULL
+ *                    the built-in context is used, otherwise it must point to
+ *                    a lan9250_ctx_t owned by the caller (one per device).
+ * @param[out] bus SPI bus object for this device, must stay valid while it is used.
+ * @param[in] cfg LAN9250 configuration structure.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
  */
-uint8_t  lan9250_configure( spi_ethernet_t *eth, spi_master_t *spi, lan9250_cfg_t *cfg );
-
+err_t    lan9250_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan9250_cfg_t *cfg );
 
 /**
- * @brief Send an Ethernet frame through the LAN9250.
- *
- * @details Checks the available TX FIFO space, writes the LAN9250 TX
- * command words and copies the Ethernet frame into the TX data FIFO.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param buf Pointer to the Ethernet frame buffer.
- * @param len Length of the Ethernet frame in bytes.
- *
- * @pre lan9250_init() must have been called beforehand.
- * @pre @p buf must point to a buffer containing at least @p len bytes.
- *
- * @return Number of bytes written to the TX FIFO, or 0 if there is not
- * enough available FIFO space.
+ * @brief Initialize the LAN9250.
+ * @details Resets the LAN9250, waits for the device to become ready, performs
+ * the digital reset, reads the chip identification, configures the TX FIFO,
+ * programs the MAC address and enables transmission and reception.
+ * @param[in] eth Ethernet transport instance.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @pre lan9250_configure() must have been called beforehand.
  */
-uint16_t lan9250_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+err_t    lan9250_init( eth_transport_t *eth );
 
 /**
- * @brief Read an Ethernet frame received by the LAN9250.
- *
- * @details Reads the next packet status from the RX status FIFO, checks
- * the packet status and length, and copies the received frame from the
- * RX data FIFO into the provided buffer.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param buf Pointer to the destination buffer.
- * @param len Maximum number of bytes that can be copied into @p buf.
- *
- * @pre lan9250_init() must have been called beforehand.
- * @pre @p buf must point to a buffer large enough to hold @p len bytes.
- *
- * @return Number of bytes copied into @p buf, or 0 if no valid packet
- * is available.
+ * @brief Send an Ethernet frame through the TX data FIFO.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] buf Ethernet frame (without FCS).
+ * @param[in] len Frame length in bytes, at most LAN9250_FRAME_SIZE.
+ * @return Number of bytes sent, 0 if the frame is too long or the TX FIFO is full.
  */
-uint16_t lan9250_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Check whether an Ethernet packet is available.
- *
- * @details Reads the LAN9250 RX FIFO information register and returns
- * the number of received packets waiting in the RX FIFO.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- *
- * @return Number of packets available, limited to 255.
+ * @brief Read the next Ethernet frame from the RX data FIFO.
+ * @param[in] eth Ethernet transport instance.
+ * @param[out] buf Buffer receiving the frame.
+ * @param[in] len Size of @p buf in bytes, longer frames are truncated.
+ * @return Number of bytes read, 0 if no valid frame is available.
  */
-uint8_t  lan9250_packet_available( spi_ethernet_t *eth );
+uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Get the number of frames waiting in the RX FIFO.
+ * @param[in] eth Ethernet transport instance.
+ * @return Number of frames waiting, limited to 255.
+ */
+uint8_t  lan9250_packet_available( eth_transport_t *eth );
 
 /**
  * @brief Get the current Ethernet link status.
- *
- * @details Reads the internal PHY basic status register and checks
- * the link status bit.
- *
- * @pre lan9250_init() must have been called beforehand.
- *
- * @return 1 if the Ethernet link is active, otherwise 0.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if the link is up, otherwise 0.
  */
-uint8_t  lan9250_get_link_status( void );
-
+uint8_t  lan9250_get_link_status( eth_transport_t *eth );
 
 /**
- * @brief Get the LAN9250 revision number.
- *
- * @details Returns the least significant byte of the LAN9250 ID_REV
- * register.
- *
- * @pre lan9250_init() must have been called beforehand.
- *
- * @return LAN9250 revision value.
- *
- * @note This function returns only the low byte of ID_REV for compatibility
- * with the generic SPI Ethernet interface.
+ * @brief Get the LAN9250 revision (low byte of ID_REV).
+ * @param[in] eth Ethernet transport instance.
+ * @return Revision value.
  */
-uint8_t  lan9250_get_rev( void );               // low byte of ID_REV (compat spi_eth_get_rev)
+uint8_t  lan9250_get_rev( eth_transport_t *eth );
 
 /**
- * @brief Get the complete LAN9250 chip identification and revision value.
- *
- * @details Returns the complete 32-bit ID_REV register value read during
- * driver initialization.
- *
- * @pre lan9250_init() must have been called beforehand.
- *
- * @return 32-bit LAN9250 ID_REV value.
- *
- * @note The expected chip identification is 0x9250 in bits 31:16.
+ * @brief Get the complete ID_REV value read during initialization.
+ * @param[in] eth Ethernet transport instance.
+ * @return ID_REV value, 0x9250 expected in bits 31:16.
  */
-uint32_t lan9250_get_id_rev( void );            // full 32-bit ID_REV : 0x9250xxxx expected
+uint32_t lan9250_get_id_rev( eth_transport_t *eth );
 
 /**
- * @brief Set the Ethernet MAC address.
- *
- * @details Stores the MAC address locally and programs it into the
- * LAN9250 host MAC address registers.
- *
- * @param mac Pointer to the 6-byte MAC address.
- *
- * @pre lan9250_init() must have been called beforehand.
- *
- * @return 1 if the MAC address was set successfully.
+ * @brief Program the host MAC address registers.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] mac 6-byte MAC address.
+ * @return ETH_TRANSPORT_SUCCESS.
  */
-int      lan9250_set_mac( uint8_t mac[ 6 ] );
+err_t    lan9250_set_mac( eth_transport_t *eth, uint8_t *mac );
 
-/**
- * @brief Get the configured Ethernet MAC address.
- *
- * @details Copies the currently configured MAC address into the
- * provided buffer.
- *
- * @param mac Pointer to the destination buffer for the 6-byte MAC address.
- *
- * @return 1 if the MAC address was copied successfully.
- */
-int      lan9250_get_mac( uint8_t mac[ 6 ] );
-
-/**
- * @brief Set the IPv4 address.
- *
- * @details Stores the IPv4 address in the LAN9250 driver configuration.
- *
- * @param ip Pointer to the 4-byte IPv4 address.
- *
- * @return 1 if the IP address was set successfully.
- */
-int      lan9250_set_ip( uint8_t ip[ 4 ] );
-
-/**
- * @brief Get the configured IPv4 address.
- *
- * @details Copies the currently configured IPv4 address into the
- * provided buffer.
- *
- * @param ip Pointer to the destination buffer for the 4-byte IPv4 address.
- *
- * @return 1 if the IP address was copied successfully.
- */
-int      lan9250_get_ip( uint8_t ip[ 4 ] );
-
-extern spi_ethernet_driver_t lan9250_driver;
-extern pin_name_t            lan9250_cs_pin;
+extern eth_transport_driver_t lan9250_driver;
 
 // SPI instructions (datasheet DS00001913, System CSR interface)
 #define LAN9250_SPI_INSTR_READ       0x03   // byte/word/dword read,  no dummy, up to 80 MHz in FASTREAD mode

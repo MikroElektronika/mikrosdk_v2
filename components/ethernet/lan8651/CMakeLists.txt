@@ -10,7 +10,7 @@ target_include_directories(lib_lan8651
 
 target_link_libraries(lib_lan8651 PUBLIC
     MikroC.Core
+    MikroSDK.Ethernet.Transport
     MikroSDK.Ethernet.Spi
-    MikroSDK.Driver.SPI.Master
     MikroSDK.Driver.GPIO.Out
 )

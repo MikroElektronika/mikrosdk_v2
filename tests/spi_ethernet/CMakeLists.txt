@@ -23,7 +23,9 @@ target_link_libraries(test_spi_ethernet PUBLIC MikroSDK.Log)
 ############################ test_spi_ethernet GENERATED CODE END ###########################
 target_link_libraries(test_spi_ethernet PUBLIC
     MikroC.Core
+    MikroSDK.Ethernet.Transport
     MikroSDK.Ethernet.Spi
+    MikroSDK.Ethernet.Net
     MikroSDK.Ethernet.ENC28J60
     MikroSDK.Ethernet.LAN8651
     MikroSDK.Ethernet.LAN9250

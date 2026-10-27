@@ -22,7 +22,9 @@ target_link_libraries(test_spi_ethernet_two_wire PUBLIC MikroSDK.Log)
 ############################ test_spi_ethernet_two_wire GENERATED CODE END ###########################
 target_link_libraries(test_spi_ethernet_two_wire PUBLIC
     MikroC.Core
+    MikroSDK.Ethernet.Transport
     MikroSDK.Ethernet.Spi
+    MikroSDK.Ethernet.Net
     MikroSDK.Ethernet.LAN8651
     MikroSDK.Driver.GPIO.Out
     MikroSDK.Board

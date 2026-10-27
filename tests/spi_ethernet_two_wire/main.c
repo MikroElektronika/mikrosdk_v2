@@ -2,9 +2,8 @@
 #include "preinit.h"
 #endif
 
-#include "transport.h"
 #include "lan8651.h"
-#include "drv_spi_master.h"
+#include "eth_net.h"
 #include "log.h"
 #include <delays.h>
 #include "board.h"
@@ -21,8 +20,8 @@
 
 typedef struct {
     char tag;
-    spi_ethernet_t eth;
-    spi_master_t   spi;
+    eth_transport_t eth;
+    eth_bus_spi_t  bus;
     lan8651_ctx_t  ctx;
     uint8_t mac[ 6 ];
     uint8_t ip[ 4 ];
@@ -85,7 +84,7 @@ static uint16_t wait_frame( node_t *node, uint16_t etype ) {
     uint16_t t, len;
 
     for ( t = 0; t < RX_TIMEOUT_MS; t++ ) {
-        len = spi_ethernet_receive( &node->eth, rx_buf, sizeof( rx_buf ) );
+        len = eth_transport_receive( &node->eth, rx_buf, sizeof( rx_buf ) );
         if ( len >= 14 && ( ( ( uint16_t )rx_buf[ 12 ] << 8 ) | rx_buf[ 13 ] ) == etype )
             return len;
         Delay_ms( 1 );
@@ -98,22 +97,21 @@ static uint8_t node_init( node_t *node, lan8651_cfg_t *cfg, uint8_t plca_id ) {
     uint32_t phy_id;
     int8_t k;
 
-    memcpy( cfg->mac, node->mac, 6 );
-    memcpy( cfg->ip, node->ip, 4 );
+    memcpy( cfg->eth.mac, node->mac, 6 );
+    memcpy( cfg->eth.ip, node->ip, 4 );
     cfg->plca_enable     = USE_PLCA;
     cfg->plca_node_id    = plca_id;
     cfg->plca_node_count = 2;
 
     node->eth.driver_ctx = &node->ctx;      // own driver state for each click
     log_printf( &logger, "NODE %c: SPI INIT...", node->tag );
-    if ( lan8651_configure( &node->eth, &node->spi, cfg ) != 0 ) {
+    if ( lan8651_configure( &node->eth, &node->bus, cfg ) != ETH_TRANSPORT_SUCCESS ||
+         eth_transport_init( &node->eth, &lan8651_driver ) != ETH_TRANSPORT_SUCCESS ) {
         log_printf( &logger, " FAILED\r\n" );
         return 0;
     }
-    spi_ethernet_init( &node->eth, &lan8651_driver );
 
-    lan8651_set_active( &node->eth );
-    phy_id = lan8651_get_phy_id( );
+    phy_id = lan8651_get_phy_id( &node->eth );
     log_printf( &logger, " OA_PHYID = 0x" );
     for ( k = 3; k >= 0; k-- )
         log_hex8( ( uint8_t )( phy_id >> ( 8 * k ) ) );
@@ -129,8 +127,7 @@ static uint8_t node_init( node_t *node, lan8651_cfg_t *cfg, uint8_t plca_id ) {
 }
 
 static uint8_t node_link( node_t *node ) {
-    lan8651_set_active( &node->eth );
-    return spi_ethernet_get_link_status( &node->eth );
+    return eth_transport_get_link_status( &node->eth );
 }
 
 // Raw frame with custom EtherType from one node to the other
@@ -142,7 +139,7 @@ static uint8_t test_raw( node_t *src, node_t *dst, uint16_t payload_len ) {
         tx_buf[ 14 + i ] = ( uint8_t )( i * 7 + src->tag );
 
     log_printf( &logger, "RAW %c -> %c, %u bytes", src->tag, dst->tag, ( uint16_t )( 14 + payload_len ) );
-    if ( !spi_ethernet_send( &src->eth, tx_buf, 14 + payload_len ) ) {
+    if ( !eth_transport_send( &src->eth, tx_buf, 14 + payload_len ) ) {
         log_printf( &logger, " (send failed)" );
         return 0;
     }
@@ -160,7 +157,7 @@ static uint8_t test_raw( node_t *src, node_t *dst, uint16_t payload_len ) {
     return 1;
 }
 
-// Broadcast ARP request from src, dst answers through the transport helper
+// Broadcast ARP request from src, dst answers through the eth_net helper
 static uint8_t test_arp( node_t *src, node_t *dst ) {
     static uint8_t broadcast[ 6 ] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
     uint16_t len;
@@ -176,14 +173,14 @@ static uint8_t test_arp( node_t *src, node_t *dst ) {
     memcpy( &tx_buf[ 38 ], dst->ip, 4 );
 
     log_printf( &logger, "ARP %c who-has %u.%u.%u.%u", src->tag, dst->ip[ 0 ], dst->ip[ 1 ], dst->ip[ 2 ], dst->ip[ 3 ] );
-    spi_ethernet_send( &src->eth, tx_buf, 42 );
+    eth_transport_send( &src->eth, tx_buf, 42 );
 
     len = wait_frame( dst, 0x0806 );
     if ( !len ) {
         log_printf( &logger, " (request not received)" );
         return 0;
     }
-    spi_ethernet_handle_arp( &dst->eth, dst->mac, dst->ip, rx_buf, len );
+    eth_net_handle_arp( &dst->eth, dst->mac, dst->ip, rx_buf, len );
 
     // Skip any ARP frame that is not the reply (e.g. own broadcast)
     do {
@@ -198,7 +195,7 @@ static uint8_t test_arp( node_t *src, node_t *dst ) {
     return 1;
 }
 
-// ICMP echo request from src, dst answers through the transport helper
+// ICMP echo request from src, dst answers through the eth_net helper
 static uint8_t ping( node_t *src, node_t *dst, uint16_t seq ) {
     uint8_t *ip = &tx_buf[ 14 ];
     uint8_t *icmp = &tx_buf[ 34 ];
@@ -225,12 +222,12 @@ static uint8_t ping( node_t *src, node_t *dst, uint16_t seq ) {
     ck = inet_checksum( icmp, 8 + 32 );
     icmp[ 2 ] = ( uint8_t )( ck >> 8 ); icmp[ 3 ] = ( uint8_t )ck;
 
-    spi_ethernet_send( &src->eth, tx_buf, 14 + 20 + 8 + 32 );
+    eth_transport_send( &src->eth, tx_buf, 14 + 20 + 8 + 32 );
 
     len = wait_frame( dst, 0x0800 );
     if ( !len )
         return 0;
-    spi_ethernet_handle_icmp( &dst->eth, dst->mac, dst->ip, rx_buf, len );
+    eth_net_handle_icmp( &dst->eth, dst->mac, dst->ip, rx_buf, len );
 
     len = wait_frame( src, 0x0800 );
     if ( len < 14 + 20 + 8 + 32 )

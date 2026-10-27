@@ -38,242 +38,143 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet_enc28j60.h
- * @brief SPI Ethernet ENC28J60 Driver.
+ * @file enc28j60.h
+ * @brief SPI Ethernet Microchip ENC28J60 Driver.
+ * @details Several devices can be used at the same time: give each
+ * eth_transport_t its own enc28j60_ctx_t through driver_ctx before calling
+ * enc28j60_configure(). Without it, a built-in context is used.
  */
 
 #ifndef SPI_ETHERNET_ENC28J60_H
 #define SPI_ETHERNET_ENC28J60_H
 
-#include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "eth_bus_spi.h"
 #include <stdint.h>
-#include <stdbool.h>
 
 #define ENC28J60_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
-    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
-    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+    ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
+    ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
 
+/**
+ * @brief ENC28J60 configuration: SPI bus and device settings.
+ */
 typedef struct {
-    // Communication gpio pins
-    pin_name_t miso;
-    pin_name_t mosi;
-    pin_name_t sck;
-    pin_name_t cs;
-    pin_name_t rst;
-
-    // static config
-    uint32_t spi_speed;
-    spi_master_mode_t spi_mode;
-
-    uint8_t mac[ 6 ];
-    uint8_t ip[ 4 ];
-    uint8_t full_duplex;
+    eth_bus_spi_cfg_t   bus;    // SPI pins, speed and mode
+    eth_transport_cfg_t eth;    // Reset pin, MAC, IP, duplex
 } enc28j60_cfg_t;
 
 /**
- * @brief Initialize the ENC28J60 Ethernet controller.
- *
- * @details Performs hardware and software reset, initializes the receive and
- * transmit buffers, configures the receive filter and MAC, initializes the
- * PHY, reads the chip revision and enables Ethernet packet reception.
- *
- * @param[in] eth Pointer to the SPI Ethernet instance.
- * @param[in] drv Pointer to the Ethernet driver structure.
- *
- * @pre enc28j60_configure() must have been called beforehand.
+ * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
  */
-void     enc28j60_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+typedef struct {
+    uint8_t  current_bank;      // Currently selected register bank
+    uint16_t next_ptr;          // Start of the next packet in the RX buffer
+    uint8_t  hw_rev;            // EREVID read during initialization
+} enc28j60_ctx_t;
 
 /**
- * @brief Initialize the ENC28J60 PHY.
- *
- * @details Resets the PHY, switches it to normal operating mode and disables
- * PHY loopback.
- *
- * @return void
- */
-void     enc28j60_phy_init( void );
-
-/**
- * @brief Write a value to an ENC28J60 PHY register.
- *
- * @details Writes a 16-bit value to the specified PHY register and waits
- * until the MII operation is completed.
- *
- * @param[in] phy_reg PHY register address.
- * @param[in] value Value to write to the PHY register.
- *
- * @return void
- */
-void     enc28j60_phy_write( uint8_t phy_reg, uint16_t value );
-
-/**
- * @brief Read a value from an ENC28J60 PHY register.
- *
- * @details Starts an MII read operation and returns the resulting 16-bit
- * value through two output parameters.
- *
- * @param[in] reg PHY register address.
- * @param[out] low Pointer to the variable receiving the low byte.
- * @param[out] high Pointer to the variable receiving the high byte.
- *
- * @pre @p low and @p high must point to valid memory locations.
- *
- * @return void
- */
-void     enc28j60_phy_read( uint8_t reg, uint8_t *low, uint8_t *high );
-
-/**
- * @brief Initialize the ENC28J60 configuration structure.
- *
- * @details Sets the pin assignments to HAL_PIN_NC, configures the default
- * SPI speed and mode, and disables full-duplex operation.
- *
- * @param[out] cfg Pointer to the ENC28J60 configuration structure.
- *
- * @pre @p cfg must point to a valid configuration structure.
- *
- * @return void
+ * @brief Initialize the ENC28J60 configuration structure with default values.
+ * @param[out] cfg ENC28J60 configuration structure.
+ * @return Nothing.
  */
 void     enc28j60_cfg_setup( enc28j60_cfg_t *cfg );
 
 /**
- * @brief Configure the ENC28J60 SPI interface and GPIO pins.
- *
- * @details Configures the SPI peripheral using the provided settings,
- * initializes the chip-select and reset pins, and associates the SPI,
- * MAC address, IP address and duplex configuration with the Ethernet
- * instance.
- *
- * @param[in,out] eth Pointer to the SPI Ethernet instance.
- * @param[in] spi Pointer to the SPI master instance.
- * @param[in] cfg Pointer to the ENC28J60 configuration structure.
- *
- * @pre @p eth, @p spi and @p cfg must point to valid structures.
- * @pre enc28j60_cfg_setup() should be called before modifying the
- * configuration structure.
- *
- * @return 0 if the configuration is successful.
+ * @brief Configure the SPI interface and the control pins for the ENC28J60.
+ * @param[in,out] eth Ethernet transport instance. If eth->driver_ctx is NULL
+ *                    the built-in context is used, otherwise it must point to
+ *                    an enc28j60_ctx_t owned by the caller (one per device).
+ * @param[out] bus SPI bus object for this device, must stay valid while it is used.
+ * @param[in] cfg ENC28J60 configuration structure.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
  */
-uint8_t  enc28j60_configure( spi_ethernet_t *eth, spi_master_t *spi, enc28j60_cfg_t *cfg );
+err_t    enc28j60_configure( eth_transport_t *eth, eth_bus_spi_t *bus, enc28j60_cfg_t *cfg );
 
 /**
- * @brief Send an Ethernet packet through the ENC28J60.
- *
- * @details Writes the packet to the ENC28J60 transmit buffer and starts
- * transmission. The function waits until transmission is completed or
- * the transmission timeout is reached.
- *
- * @param[in] eth Pointer to the SPI Ethernet instance.
- * @param[in] buf Pointer to the packet data.
- * @param[in] len Length of the packet in bytes.
- *
- * @pre enc28j60_init() must have been called beforehand.
- * @pre @p buf must point to a buffer containing at least @p len bytes.
- *
- * @return Number of bytes requested for transmission.
+ * @brief Initialize the ENC28J60 Ethernet controller.
+ * @details Performs hardware and software reset, initializes the receive and
+ * transmit buffers, the receive filter, the MAC and the PHY, reads the chip
+ * revision and enables reception.
+ * @param[in] eth Ethernet transport instance.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @pre enc28j60_configure() must have been called beforehand.
  */
-uint16_t enc28j60_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+err_t    enc28j60_init( eth_transport_t *eth );
 
 /**
- * @brief Read an Ethernet packet from the ENC28J60.
- *
- * @details Reads the next available packet from the ENC28J60 receive
- * buffer. The packet is copied to the provided buffer and the receive
- * buffer pointers are updated.
- *
- * @param[in] eth Pointer to the SPI Ethernet instance.
- * @param[out] buf Pointer to the buffer receiving the packet data.
- * @param[in] len Maximum number of bytes to copy to @p buf.
- *
- * @pre enc28j60_init() must have been called beforehand.
- * @pre @p buf must point to a buffer of at least @p len bytes.
- *
- * @return Number of bytes read, or 0 if no valid packet is available.
+ * @brief Send an Ethernet frame through the ENC28J60.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] buf Ethernet frame (without FCS).
+ * @param[in] len Frame length in bytes, at most ENC28J60_FRAME_SIZE.
+ * @return Number of bytes sent, 0 if the frame is too long.
  */
-uint16_t enc28j60_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+uint16_t enc28j60_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Read the next Ethernet frame from the ENC28J60 receive buffer.
+ * @param[in] eth Ethernet transport instance.
+ * @param[out] buf Buffer receiving the frame (without FCS).
+ * @param[in] len Size of @p buf in bytes, longer frames are truncated.
+ * @return Number of bytes read, 0 if no valid frame is available.
+ */
+uint16_t enc28j60_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
+
+/**
+ * @brief Get the number of frames waiting in the receive buffer.
+ * @param[in] eth Ethernet transport instance.
+ * @return Number of frames waiting.
+ */
+uint8_t  enc28j60_packet_available( eth_transport_t *eth );
 
 /**
  * @brief Get the current Ethernet link status.
- *
- * @details Reads the PHY link status from the ENC28J60.
- *
- * @pre enc28j60_init() must have been called beforehand.
- *
- * @return 1 if the Ethernet link is up, otherwise 0.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if the link is up, otherwise 0.
  */
-uint8_t  enc28j60_get_link_status( void );
+uint8_t  enc28j60_get_link_status( eth_transport_t *eth );
 
 /**
- * @brief Get the ENC28J60 silicon revision.
- *
- * @details Returns the revision identifier previously read during
- * ENC28J60 initialization.
- *
- * @pre enc28j60_init() must have been called beforehand.
- *
- * @return ENC28J60 silicon revision identifier.
+ * @brief Program the MAC address registers.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] mac 6-byte MAC address.
+ * @return ETH_TRANSPORT_SUCCESS.
  */
-uint8_t  enc28j60_get_rev( void );
+err_t    enc28j60_set_mac( eth_transport_t *eth, uint8_t *mac );
 
 /**
- * @brief Set the ENC28J60 MAC address.
- *
- * @details Updates the stored MAC address and writes the new address to
- * the ENC28J60 MAC address registers.
- *
- * @param[in] mac Pointer to the 6-byte MAC address.
- *
- * @pre @p mac must point to a valid 6-byte MAC address.
- *
- * @return 1 if the MAC address was set successfully.
+ * @brief Get the ENC28J60 silicon revision read during initialization.
+ * @param[in] eth Ethernet transport instance.
+ * @return EREVID value.
  */
-int      enc28j60_set_mac( uint8_t mac[ 6 ] );
+uint8_t  enc28j60_get_rev( eth_transport_t *eth );
 
 /**
- * @brief Get the current MAC address.
- *
- * @details Copies the stored MAC address to the provided buffer.
- *
- * @param[out] mac Pointer to the 6-byte buffer receiving the MAC address.
- *
- * @pre @p mac must point to a valid 6-byte buffer.
- *
- * @return 1 if the MAC address was retrieved successfully.
+ * @brief Initialize the ENC28J60 PHY (reset, normal mode, no loopback).
+ * @param[in] eth Ethernet transport instance.
+ * @return Nothing.
  */
-int      enc28j60_get_mac( uint8_t mac[ 6 ] );
+void     enc28j60_phy_init( eth_transport_t *eth );
 
 /**
- * @brief Set the IPv4 address.
- *
- * @details Updates the stored IPv4 address used by the Ethernet instance.
- *
- * @param[in] ip Pointer to the 4-byte IPv4 address.
- *
- * @pre @p ip must point to a valid 4-byte IPv4 address.
- *
- * @return 1 if the IP address was set successfully.
+ * @brief Write a 16-bit value to a PHY register.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] phy_reg PHY register address.
+ * @param[in] value Value to write.
+ * @return Nothing.
  */
-int      enc28j60_set_ip( uint8_t ip[ 4 ] );
+void     enc28j60_phy_write( eth_transport_t *eth, uint8_t phy_reg, uint16_t value );
 
 /**
- * @brief Get the current IPv4 address.
- *
- * @details Copies the stored IPv4 address to the provided buffer.
- *
- * @param[out] ip Pointer to the 4-byte buffer receiving the IPv4 address.
- *
- * @pre @p ip must point to a valid 4-byte buffer.
- *
- * @return 1 if the IP address was retrieved successfully.
+ * @brief Read a 16-bit value from a PHY register.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] reg PHY register address.
+ * @param[out] low Low byte of the register value.
+ * @param[out] high High byte of the register value.
+ * @return Nothing.
  */
-int      enc28j60_get_ip( uint8_t ip[ 4 ] );
+void     enc28j60_phy_read( eth_transport_t *eth, uint8_t reg, uint8_t *low, uint8_t *high );
 
-extern spi_ethernet_driver_t enc28j60_driver;
+extern eth_transport_driver_t enc28j60_driver;
 
 // ENC28J60 register addresses and bit positions
 #define MICMD_MIIRD    0x01
@@ -397,12 +298,6 @@ extern spi_ethernet_driver_t enc28j60_driver;
 // Bits 0 to 15 are assigned for Received Byte Count
 #define ENC28J60_RSV_RECEIVED_OK       0x80    // Frame received OK (bit 23 out of 31)
 
-// Receive and transmit buffers
-#define ENC28J60_RX_BUFFER_START 0x0000
-#define ENC28J60_RX_BUFFER_STOP  0x17FF
-#define ENC28J60_TX_BUFFER_START 0x1800
-#define ENC28J60_TX_BUFFER_STOP  0x1FFF
-
 // Memory allocation
 #define RAM_SIZE ( 8192 )                                             // 8kb RAM available
 #define TRANSMIT_START ( RAM_SIZE - ( ENC28J60_FRAME_SIZE + 100 ) )   // Transmit buffer start address, a few more bytes for padding pseudo header + transmit status : Even memory address
@@ -411,16 +306,6 @@ extern spi_ethernet_driver_t enc28j60_driver;
 #define REPLY_START ( TRANSMIT_START + 1 )                            // Reply buffer starts after per packet control byte
 #define RECEIVE_SIZE ( RECEIVE_END - RECEIVE_START + 1 )              // Receive buffer size
 #define NO_ADDR ( 0xFFFF )
-
-// ARP cache structure
-typedef struct {
-    bool valid;             // valid/invalid entry flag
-    unsigned long time;     // timestamp
-    uint8_t ip[ 4 ];        // IP address
-    uint8_t mac[ 6 ];       // MAC address behind the IP address
-} enc28j60_arp_cache_t;
-
-void enc28j60_delay( );
 
 #endif
 
