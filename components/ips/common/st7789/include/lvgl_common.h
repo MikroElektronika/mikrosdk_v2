@@ -51,6 +51,7 @@ extern "C"
 
 #include "board.h"
 #include "st7789_cmd.h"
+#include "st7789.h"
 #include "drv_digital_out.h"
 #include "drv_digital_in.h"
 #include "drv_spi_master.h"
@@ -184,20 +185,6 @@ static inline void write_array_data( uint16_t *array, uint16_t length )
  */
 static inline void display_configure( void )
 {
-    spi_master_config_t spi_cfg;
-
-    // Initialize communication pins.
-    spi_master_configure_default( &spi_cfg );
-
-    spi_cfg.sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );
-    spi_cfg.miso = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO );
-    spi_cfg.mosi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI );
-
-    spi_master_open( &disp_spi, &spi_cfg );
-    spi_master_set_default_write_data( &disp_spi, SPI_DUMMY );
-    spi_master_set_mode( &disp_spi, SPI_MASTER_MODE_0 );
-    spi_master_set_speed( &disp_spi, 5000000 );
-
     // Initialize control pins.
     digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
     digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
@@ -206,8 +193,11 @@ static inline void display_configure( void )
     digital_out_high( &pin_bck );
     CS_HIGH;
 
-    // Initialize touch controller.
+    // Initialize touch controller. This also opens the SPI through ips_init and st7789_init.
     touch_controller_init( &display_driver, TFT_MAX_BACKLIGHT );
+
+    // Reuse the SPI handle opened by the ST7789 driver instead of opening SPI again.
+    disp_spi = *st7789_get_spi();
 }
 
 /**
