@@ -107,22 +107,22 @@ typedef struct eth_bus_ops eth_bus_ops_t;
  */
 struct eth_bus_ops {
     /**
-     * Send @p hdr then @p data (may be NULL / 0) in one transaction.
+     * Send @p hdr then @p data_buf (may be NULL / 0) in one transaction.
      * SPI: one chip select assertion. I2C: one write to the device address.
      * UART: the bytes back to back.
      */
-    err_t ( *write )( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len );
+    err_t ( *write )( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len );
     /**
-     * Send @p hdr, then receive @p data_len bytes into @p data, in one transaction.
+     * Send @p hdr, then receive @p data_len bytes into @p data_buf, in one transaction.
      * SPI: write then read under one chip select. I2C: write, repeated start, read.
      * UART: send, then wait for the reply bytes.
      */
-    err_t ( *read )( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len );
+    err_t ( *read )( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len );
     /**
      * Optional full duplex exchange of @p len bytes (SPI only), NULL if the
      * bus cannot do it. Only controllers that need it (e.g. LAN8651) use it.
      */
-    err_t ( *transfer )( void *bus, uint8_t *tx, uint8_t *rx, uint16_t len );
+    err_t ( *transfer )( void *bus, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len );
 };
 
 /**
@@ -196,35 +196,35 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
  * @param[in] eth Ethernet transport instance.
  * @param[in] hdr Bytes sent first (command / address).
  * @param[in] hdr_len Number of header bytes.
- * @param[in] data Bytes sent after the header, NULL if none.
+ * @param[in] data_buf Bytes sent after the header, NULL if none.
  * @param[in] data_len Number of data bytes.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached.
  */
 err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
-                               uint8_t *data, uint16_t data_len );
+                               uint8_t *data_buf, uint16_t data_len );
 
 /**
  * @brief Bus access for controller drivers: one write-then-read transaction.
  * @param[in] eth Ethernet transport instance.
  * @param[in] hdr Bytes sent first (command / address).
  * @param[in] hdr_len Number of header bytes.
- * @param[out] data Buffer receiving the reply.
+ * @param[out] data_buf Buffer receiving the reply.
  * @param[in] data_len Number of bytes to read.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached.
  */
 err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
-                              uint8_t *data, uint16_t data_len );
+                              uint8_t *data_buf, uint16_t data_len );
 
 /**
  * @brief Bus access for controller drivers: one full duplex exchange.
  * @param[in] eth Ethernet transport instance.
- * @param[in] tx Bytes to send.
- * @param[out] rx Buffer receiving the same number of bytes.
+ * @param[in] tx_buf Bytes to send.
+ * @param[out] rx_buf Buffer receiving the same number of bytes.
  * @param[in] len Number of bytes.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached or the bus
  * does not support full duplex transfers.
  */
-err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx, uint8_t *rx, uint16_t len );
+err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len );
 
 /**
  * @brief Initialize the Ethernet controller.

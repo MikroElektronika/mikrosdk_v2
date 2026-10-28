@@ -73,20 +73,20 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
 
 /* --- Bus access (used by controller drivers) --- */
 err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
-                               uint8_t *data, uint16_t data_len ) {
+                               uint8_t *data_buf, uint16_t data_len ) {
     if ( !eth || !eth->bus_ops || !eth->bus_ops->write ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->write( eth->bus, hdr, hdr_len, data, data_len );
+    return eth->bus_ops->write( eth->bus, hdr, hdr_len, data_buf, data_len );
 }
 
 err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
-                              uint8_t *data, uint16_t data_len ) {
+                              uint8_t *data_buf, uint16_t data_len ) {
     if ( !eth || !eth->bus_ops || !eth->bus_ops->read ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->read( eth->bus, hdr, hdr_len, data, data_len );
+    return eth->bus_ops->read( eth->bus, hdr, hdr_len, data_buf, data_len );
 }
 
-err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx, uint8_t *rx, uint16_t len ) {
+err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len ) {
     if ( !eth || !eth->bus_ops || !eth->bus_ops->transfer ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->transfer( eth->bus, tx, rx, len );
+    return eth->bus_ops->transfer( eth->bus, tx_buf, rx_buf, len );
 }
 
 /* --- Initialization --- */

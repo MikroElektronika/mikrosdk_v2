@@ -44,9 +44,9 @@
 
 #include "eth_bus_spi.h"
 
-static err_t eth_bus_spi_write( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len );
-static err_t eth_bus_spi_read( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len );
-static err_t eth_bus_spi_transfer( void *bus, uint8_t *tx, uint8_t *rx, uint16_t len );
+static err_t eth_bus_spi_write( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len );
+static err_t eth_bus_spi_read( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len );
+static err_t eth_bus_spi_transfer( void *bus, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len );
 
 eth_bus_ops_t eth_bus_spi_ops = {
     .write    = eth_bus_spi_write,
@@ -55,36 +55,36 @@ eth_bus_ops_t eth_bus_spi_ops = {
 };
 
 // Bus operations, each one is a single chip select assertion
-static err_t eth_bus_spi_write( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len ) {
+static err_t eth_bus_spi_write( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len ) {
     eth_bus_spi_t *spi_bus = ( eth_bus_spi_t * )bus;
     err_t err;
 
     spi_master_select_device( spi_bus->cs );
     err = spi_master_write( &spi_bus->spi, hdr, hdr_len );
-    if ( err == SPI_MASTER_SUCCESS && data && data_len )
-        err = spi_master_write( &spi_bus->spi, data, data_len );
+    if ( err == SPI_MASTER_SUCCESS && data_buf && data_len )
+        err = spi_master_write( &spi_bus->spi, data_buf, data_len );
     spi_master_deselect_device( spi_bus->cs );
 
     return ( err == SPI_MASTER_SUCCESS ) ? ETH_TRANSPORT_SUCCESS : ETH_TRANSPORT_ERROR;
 }
 
-static err_t eth_bus_spi_read( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data, uint16_t data_len ) {
+static err_t eth_bus_spi_read( void *bus, uint8_t *hdr, uint16_t hdr_len, uint8_t *data_buf, uint16_t data_len ) {
     eth_bus_spi_t *spi_bus = ( eth_bus_spi_t * )bus;
     err_t err;
 
     spi_master_select_device( spi_bus->cs );
-    err = spi_master_write_then_read( &spi_bus->spi, hdr, hdr_len, data, data_len );
+    err = spi_master_write_then_read( &spi_bus->spi, hdr, hdr_len, data_buf, data_len );
     spi_master_deselect_device( spi_bus->cs );
 
     return ( err == SPI_MASTER_SUCCESS ) ? ETH_TRANSPORT_SUCCESS : ETH_TRANSPORT_ERROR;
 }
 
-static err_t eth_bus_spi_transfer( void *bus, uint8_t *tx, uint8_t *rx, uint16_t len ) {
+static err_t eth_bus_spi_transfer( void *bus, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len ) {
     eth_bus_spi_t *spi_bus = ( eth_bus_spi_t * )bus;
     err_t err;
 
     spi_master_select_device( spi_bus->cs );
-    err = spi_master_transfer( &spi_bus->spi, tx, rx, len );
+    err = spi_master_transfer( &spi_bus->spi, tx_buf, rx_buf, len );
     spi_master_deselect_device( spi_bus->cs );
 
     return ( err == SPI_MASTER_SUCCESS ) ? ETH_TRANSPORT_SUCCESS : ETH_TRANSPORT_ERROR;
