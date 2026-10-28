@@ -92,6 +92,15 @@
     ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
 
 /*!
+ * \brief Display controller used by the IPS Click Board.
+ */
+typedef enum
+{
+    IPS_CONTROLLER_ST7789 = 0, /*!< ST7789 controller (IPS Display Click and IPS Display 2 Click). */
+    IPS_CONTROLLER_GC9107      /*!< GC9107 controller (IPS Display 3 Click). */
+} ips_controller_t;
+
+/*!
  * \brief IPS SPI Display definition structure.
  */
 typedef struct ips_display_s
@@ -100,6 +109,8 @@ typedef struct ips_display_s
     uint16_t display_height; /*!< Display height resolution in pixels. */
 
     void ( *reset_procedure )( void );
+
+    ips_controller_t controller; /*!< Display controller. */
 } ips_display_t;
 
 /// Definition constant for IPS_DISPLAY_CLICK display Click Board.
@@ -107,6 +118,9 @@ extern const ips_display_t IPS_DISPLAY_1_CLICK;
 
 /// Definition constant for IPS_DISPLAY_2_CLICK display Click Board.
 extern const ips_display_t IPS_DISPLAY_2_CLICK;
+
+/// Definition constant for IPS_DISPLAY_3_CLICK display Click Board.
+extern const ips_display_t IPS_DISPLAY_3_CLICK;
 
 /*!
  * \brief IPS SPI Display library configuration structure.

@@ -22,6 +22,7 @@ target_link_libraries(lib_ips
         MikroSDK.Driver.GPIO.Out
         MikroSDK.Driver.SPI.Master
         MikroSDK.ST7789
+        MikroSDK.GC9107
         MikroSDK.GraphicLibrary
 )
 target_compile_definitions(lib_ips
