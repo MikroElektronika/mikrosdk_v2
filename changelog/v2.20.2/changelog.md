@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [New features](#new-features)
     - [Added SPI Ethernet library](#added-spi-ethernet-library)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -32,6 +33,10 @@ Added a new SPI Ethernet library to mikroSDK.
 + Adds protocol helpers for ARP, ICMP, and basic TCP frame handling.
 + Integrates the library into the SDK build and includes a dedicated validation test under `tests/spi_ethernet`.
 + Broadly validated across supported toolchains and target devices.
+
+### Fixes
+
++ Fixed type incompatibilities in the ST7789 display driver that caused build failures on some architectures (e.g. PIC)
 
 ### NEW HARDWARE
 
