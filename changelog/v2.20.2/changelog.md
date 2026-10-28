@@ -41,7 +41,8 @@ Added a new SPI Ethernet library to mikroSDK.
   + Pixel data is now sent in the byte order the display is configured for, fixing incorrect colors
   + Driver now uses the opened SPI object directly instead of a copy of it
   + Fixed type incompatibilities that caused build failures on some architectures (e.g. PIC)
-+ Fixed Graphic Library gradients rendering as repeating color bands when built with mikroC
++ Fixed Graphic Library gradients rendering as repeating color bands or stripes when built with mikroC
+  + Color component macros (`GL_RED_OF`, `GL_GREEN_OF`, `GL_BLUE_OF`) now mask out neighbouring color bits, which also fixes `GL_LUMA_OF`
 
 ### NEW HARDWARE
 
