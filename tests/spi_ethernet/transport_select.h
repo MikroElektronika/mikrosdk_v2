@@ -20,6 +20,7 @@
 #if SPI_ETH_CHIP == SPI_ETH_CHIP_ENC28J60
     #include "enc28j60.h"
     #define SPI_ETH_DRIVER                          enc28j60_driver
+    #define SPI_ETH_CHIP_NAME                       "ENC28J60"
     #define SPI_ETH_MAP_MIKROBUS( cfg, mikrobus )   ENC28J60_MAP_MIKROBUS( cfg, mikrobus )
     #define spi_eth_cfg_setup                       enc28j60_cfg_setup
     #define spi_eth_configure                       enc28j60_configure
@@ -29,6 +30,7 @@
 #elif SPI_ETH_CHIP == SPI_ETH_CHIP_W5500
     #include "w5500.h"
     #define SPI_ETH_DRIVER                          w5500_driver
+    #define SPI_ETH_CHIP_NAME                       "W5500"
     #define SPI_ETH_MAP_MIKROBUS( cfg, mikrobus )   W5500_MAP_MIKROBUS( cfg, mikrobus )
     #define spi_eth_cfg_setup                       w5500_cfg_setup
     #define spi_eth_configure                       w5500_configure
@@ -37,6 +39,7 @@
 #elif SPI_ETH_CHIP == SPI_ETH_CHIP_LAN9250
     #include "lan9250.h"
     #define SPI_ETH_DRIVER                          lan9250_driver
+    #define SPI_ETH_CHIP_NAME                       "LAN9250"
     #define SPI_ETH_MAP_MIKROBUS( cfg, mikrobus )   LAN9250_MAP_MIKROBUS( cfg, mikrobus )
     #define spi_eth_cfg_setup                       lan9250_cfg_setup
     #define spi_eth_configure                       lan9250_configure
@@ -45,6 +48,7 @@
 #elif SPI_ETH_CHIP == SPI_ETH_CHIP_W6100
     #include "w6100.h"
     #define SPI_ETH_DRIVER                          w6100_driver
+    #define SPI_ETH_CHIP_NAME                       "W6100"
     #define SPI_ETH_MAP_MIKROBUS( cfg, mikrobus )   W6100_MAP_MIKROBUS( cfg, mikrobus )
     #define spi_eth_cfg_setup                       w6100_cfg_setup
     #define spi_eth_configure                       w6100_configure
@@ -53,6 +57,7 @@
 #elif SPI_ETH_CHIP == SPI_ETH_CHIP_LAN8651
     #include "lan8651.h"
     #define SPI_ETH_DRIVER                          lan8651_driver
+    #define SPI_ETH_CHIP_NAME                       "LAN8651"
     #define SPI_ETH_MAP_MIKROBUS( cfg, mikrobus )   LAN8651_MAP_MIKROBUS( cfg, mikrobus )
     #define spi_eth_cfg_setup                       lan8651_cfg_setup
     #define spi_eth_configure                       lan8651_configure

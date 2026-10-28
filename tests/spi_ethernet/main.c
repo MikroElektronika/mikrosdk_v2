@@ -2,7 +2,7 @@
 #include "preinit.h"
 #endif
 
-#define SPI_ETH_CHIP    SPI_ETH_CHIP_ENC28J60   // Define your chip (SPI_ETH_CHIP_* in transport_select.h)
+#define SPI_ETH_CHIP    SPI_ETH_CHIP_LAN9250   // Define your chip (SPI_ETH_CHIP_* in transport_select.h)
 #define USE_DHCP        1                       // Define your mode (1 = DHCP; 0 = local static ip)
 
 #include "transport_select.h"
@@ -65,7 +65,7 @@ static char http_response[ ] =
     "Connection: close\r\n"
     "\r\n"
     "<!DOCTYPE html><html><body>"
-    "<h1>Hello from ETH Click chip!</h1>"
+    "<h1>Hello from " SPI_ETH_CHIP_NAME " chip!</h1>"
     "<p>MikroE SPI-ETHERNET library test works!</p>"
     "</body></html>\r\n";
 
@@ -78,14 +78,14 @@ static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
     uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
     uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
                 ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian)
+    uint32_t our_seq = ( ( uint32_t )tcp[ 8 ] << 24 ) | ( ( uint32_t )tcp[ 9 ] << 16 ) |
+                ( ( uint32_t )tcp[ 10 ] << 8 ) | tcp[ 11 ];             // bytes 8-11 = ack number = our next seq for this connection
     uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset: upper 4 bits, converted to bytes
     uint8_t  flags = tcp[ 13 ];                     // TCP flags
     uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total IP packet length
     uint16_t tcp_payload_len;
     uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address
     uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source
-
-    static uint32_t our_seq = 0x12345678;
 
     if ( len < 14 + ihl + 20 || ip_total < ihl + tcp_hlen || ip_total > len - 14 )
         return;                                         // Truncated or malformed segment
@@ -97,8 +97,7 @@ static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
     if ( flags & ETH_NET_TCP_FLAG_SYN ) {               // SYN: request to establish a connection
         log_printf( &logger, "TCP SYN received -> SYN-ACK\r\n" );
         eth_net_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
-                our_seq, seq + 1, ETH_NET_TCP_FLAG_SYN | ETH_NET_TCP_FLAG_ACK, NULL, 0 );   // ACK the client's SYN
-        our_seq++;
+                0x12345678, seq + 1, ETH_NET_TCP_FLAG_SYN | ETH_NET_TCP_FLAG_ACK, NULL, 0 );    // ACK the client's SYN
         return;
     }
 
@@ -113,7 +112,6 @@ static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
         eth_net_send_tcp( eth, local_mac, local_ip, src_mac_addr, src_ip_addr, 80, src_port,
                 our_seq, new_ack, ETH_NET_TCP_FLAG_ACK | ETH_NET_TCP_FLAG_FIN,
                 ( uint8_t* )http_response, resp_len );          // HTTP response + close connection (END)
-        our_seq += resp_len + 1;                                // +1 because FIN consumes a sequence number
         return;
     }
 
