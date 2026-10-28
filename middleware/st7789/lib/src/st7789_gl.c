@@ -86,20 +86,20 @@ static uint16_t offset_y;
 #define ST7789_RAM_WIDTH 240 //Size of the controller memory, in pixels
 #define ST7789_RAM_HEIGHT 320
 
-static void spi_send(uint8_t *data, uint32_t length)
+static void spi_send(uint8_t *bytes, uint32_t length)
 {
     if (!soft_spi)
     {
-        spi_master_write(&spi_master, data, length);
+        spi_master_write(&spi_master, bytes, length);
         return;
     }
 
     while (length--)
     {
-        uint8_t value = *data++;
-        uint8_t bit;
+        uint8_t value = *bytes++;
+        uint8_t bit_index;
 
-        for (bit = 0; bit < 8; bit++)
+        for (bit_index = 0; bit_index < 8; bit_index++)
         {
             if (value & 0x80)
             {
@@ -222,7 +222,7 @@ static void send_init_sequence(const uint8_t *sequence)
     }
 }
 
-void st7789_gl_init(st7789_gl_cfg_t *cfg, gl_driver_t * __generic_ptr driver)
+void st7789_gl_init(st7789_gl_cfg_t *cfg, gl_driver_t *driver)
 {
     spi_master_config_t spi_cfg;
 
@@ -327,9 +327,9 @@ void st7789_gl_write_param(uint8_t param)
     CS_DEACTIVE();
 }
 
-void st7789_gl_write_pixels(const uint8_t *data, uint32_t length)
+void st7789_gl_write_pixels(uint8_t *pixels, uint32_t length)
 {
-    spi_send((uint8_t *)data, length);
+    spi_send(pixels, length);
 }
 
 void st7789_gl_rotate(uint8_t rotation)
