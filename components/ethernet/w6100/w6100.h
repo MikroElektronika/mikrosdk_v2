@@ -38,159 +38,134 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet_w6100.h
+ * @file w6100.h
  * @brief SPI Ethernet WIZnet W6100 Driver.
+ * @details The W6100 is used in MACRAW mode on socket 0. Several devices can
+ * be used at the same time: give each eth_transport_t its own w6100_ctx_t
+ * through driver_ctx before calling w6100_configure(). Without it, a built-in
+ * context is used.
  */
 
 #ifndef SPI_ETHERNET_W6100_H
 #define SPI_ETHERNET_W6100_H
 
-#include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "eth_bus_spi.h"
 #include <stdint.h>
-#include <stdbool.h>
 
 #define W6100_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
-    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
-    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+    ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
+    ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
 
+/**
+ * @brief W6100 configuration: SPI bus and device settings.
+ */
 typedef struct {
-    pin_name_t miso;
-    pin_name_t mosi;
-    pin_name_t sck;
-    pin_name_t cs;
-    pin_name_t rst;
-
-    uint32_t spi_speed;
-    spi_master_mode_t spi_mode;
-
-    uint8_t mac[ 6 ];
-    uint8_t ip[ 4 ];
-    uint8_t full_duplex;
+    eth_bus_spi_cfg_t   bus;    // SPI pins, speed and mode
+    eth_transport_cfg_t eth;    // Reset pin, MAC, IP, duplex
 } w6100_cfg_t;
 
 /**
- * @brief Initializes the W6100 Ethernet controller.
- *
- * Performs hardware reset, configures the network parameters and
- * initializes socket 0 in MACRAW mode.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[in] drv W6100 driver instance.
+ * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
  */
-void     w6100_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+typedef struct {
+    uint8_t hw_rev;             // VERSIONR read during initialization
+} w6100_ctx_t;
 
 /**
- * @brief Initializes the W6100 configuration structure with default values.
- *
+ * @brief Initialize the W6100 configuration structure with default values.
  * @param[out] cfg W6100 configuration structure.
+ * @return Nothing.
  */
 void     w6100_cfg_setup( w6100_cfg_t *cfg );
 
 /**
- * @brief Configures the SPI interface and W6100 control pins.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[in] spi SPI master instance.
+ * @brief Configure the SPI interface and the control pins for the W6100.
+ * @param[in,out] eth Ethernet transport instance. If eth->driver_ctx is NULL
+ *                    the built-in context is used, otherwise it must point to
+ *                    a w6100_ctx_t owned by the caller (one per device).
+ * @param[out] bus SPI bus object for this device, must stay valid while it is used.
  * @param[in] cfg W6100 configuration structure.
- *
- * @return Configuration status.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
  */
-uint8_t  w6100_configure( spi_ethernet_t *eth, spi_master_t *spi, w6100_cfg_t *cfg );
+err_t    w6100_configure( eth_transport_t *eth, eth_bus_spi_t *bus, w6100_cfg_t *cfg );
 
 /**
- * @brief Sends an Ethernet frame through W6100 socket 0 in MACRAW mode.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[in] buf Ethernet frame buffer.
- * @param[in] len Ethernet frame length in bytes.
- *
- * @return Number of bytes sent.
+ * @brief Initialize the W6100.
+ * @details Performs a hardware reset, programs the MAC and IP addresses and
+ * opens socket 0 in MACRAW mode.
+ * @param[in] eth Ethernet transport instance.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @pre w6100_configure() must have been called beforehand.
  */
-uint16_t w6100_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+err_t    w6100_init( eth_transport_t *eth );
 
 /**
- * @brief Reads an Ethernet frame from W6100 socket 0.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[out] buf Buffer receiving the Ethernet frame.
- * @param[in] len Maximum number of bytes to read.
- *
- * @return Number of bytes read.
+ * @brief Send an Ethernet frame through socket 0.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] buf Ethernet frame (without FCS).
+ * @param[in] len Frame length in bytes, at most W6100_FRAME_SIZE.
+ * @return Number of bytes sent, 0 if the frame is too long.
  */
-uint16_t w6100_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+uint16_t w6100_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Checks whether an Ethernet frame is available.
- *
- * @param[in] eth SPI Ethernet instance.
- *
- * @return 1 if a packet is available, otherwise 0.
+ * @brief Read the next Ethernet frame from socket 0.
+ * @param[in] eth Ethernet transport instance.
+ * @param[out] buf Buffer receiving the frame.
+ * @param[in] len Size of @p buf in bytes, longer frames are truncated.
+ * @return Number of bytes read, 0 if no valid frame is available.
  */
-uint8_t  w6100_packet_available( spi_ethernet_t *eth );
+uint16_t w6100_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Gets the Ethernet link status.
- *
- * @return 1 if the Ethernet link is up, otherwise 0.
+ * @brief Check whether a frame is waiting in the socket 0 RX buffer.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if a frame is available, otherwise 0.
  */
-uint8_t  w6100_get_link_status( void );
+uint8_t  w6100_packet_available( eth_transport_t *eth );
 
 /**
- * @brief Gets the W6100 hardware revision.
- *
- * @return W6100 hardware revision.
+ * @brief Get the current Ethernet link status.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if the link is up, otherwise 0.
  */
-uint8_t  w6100_get_rev( void );
+uint8_t  w6100_get_link_status( eth_transport_t *eth );
 
 /**
- * @brief Reopens W6100 socket 0 in MACRAW mode.
- *
- * @return Socket 0 status after attempting to reopen it.
+ * @brief Get the W6100 revision read during initialization.
+ * @param[in] eth Ethernet transport instance.
+ * @return VERSIONR value.
  */
-uint8_t  w6100_reopen_socket0_macraw( void );
+uint8_t  w6100_get_rev( eth_transport_t *eth );
 
 /**
- * @brief Sets the Ethernet MAC address.
- *
- * @param[in] mac MAC address to configure.
- *
- * @return 1 on success.
+ * @brief Reopen socket 0 in MACRAW mode.
+ * @param[in] eth Ethernet transport instance.
+ * @return Socket 0 status (Sn_SR) after the attempt, W6100_SOCK_MACRAW on success.
  */
-int      w6100_set_mac( uint8_t mac[ 6 ] );
+uint8_t  w6100_reopen_socket0_macraw( eth_transport_t *eth );
 
 /**
- * @brief Gets the configured Ethernet MAC address.
- *
- * @param[out] mac Buffer receiving the MAC address.
- *
- * @return 1 on success.
+ * @brief Program the source hardware address register (SHAR).
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] mac 6-byte MAC address.
+ * @return ETH_TRANSPORT_SUCCESS.
+ * @note The network registers must be unlocked (NETLCKR), this is done
+ * during w6100_init().
  */
-int      w6100_get_mac( uint8_t mac[ 6 ] );
+err_t    w6100_set_mac( eth_transport_t *eth, uint8_t *mac );
 
 /**
- * @brief Sets the IPv4 address.
- *
- * @param[in] ip IPv4 address to configure.
- *
- * @return 1 on success.
+ * @brief Program the source IP address register (SIPR).
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] ip 4-byte IPv4 address.
+ * @return ETH_TRANSPORT_SUCCESS.
+ * @note The network registers must be unlocked (NETLCKR), this is done
+ * during w6100_init().
  */
-int      w6100_set_ip( uint8_t ip[ 4 ] );
+err_t    w6100_set_ip( eth_transport_t *eth, uint8_t *ip );
 
-/**
- * @brief Gets the configured IPv4 address.
- *
- * @param[out] ip Buffer receiving the IPv4 address.
- *
- * @return 1 on success.
- */
-int      w6100_get_ip( uint8_t ip[ 4 ] );
-
-extern spi_ethernet_driver_t    w6100_driver;
-extern pin_name_t               w6100_cs_pin;
+extern eth_transport_driver_t w6100_driver;
 
 // Control byte: OM (operation mode) bits [1:0]
 #define W6100_OM_VDM        0x00

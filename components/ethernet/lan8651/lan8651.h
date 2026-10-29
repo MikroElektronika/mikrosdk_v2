@@ -46,180 +46,145 @@
  * and Ethernet frames through 64-byte data chunks.
  *
  * Several devices can be used at the same time (e.g. one click per mikroBUS):
- * give each spi_ethernet_t its own lan8651_ctx_t through driver_ctx before
+ * give each eth_transport_t its own lan8651_ctx_t through driver_ctx before
  * calling lan8651_configure(). Without it, a built-in context is used.
  */
 
 #ifndef SPI_ETHERNET_LAN8651_H
 #define SPI_ETHERNET_LAN8651_H
 
-#include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "eth_bus_spi.h"
 #include <stdint.h>
-#include <stdbool.h>
 
 #define LAN8651_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
-    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
-    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+    ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
+    ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
 
+/**
+ * @brief LAN8651 configuration: SPI bus, device settings and PLCA.
+ * @details 10BASE-T1S is half duplex only, eth.full_duplex is ignored.
+ */
 typedef struct {
-    pin_name_t miso;
-    pin_name_t mosi;
-    pin_name_t sck;
-    pin_name_t cs;
-    pin_name_t rst;
-
-    uint32_t spi_speed;
-    spi_master_mode_t spi_mode;
-
-    uint8_t mac[ 6 ];
-    uint8_t ip[ 4 ];
+    eth_bus_spi_cfg_t   bus;    // SPI pins, speed and mode
+    eth_transport_cfg_t eth;    // Reset pin, MAC, IP
 
     uint8_t plca_enable;        // 0 = CSMA/CD (default), 1 = PLCA
     uint8_t plca_node_id;       // PLCA local node ID (0 = coordinator)
     uint8_t plca_node_count;    // PLCA node count (used by the coordinator only)
 } lan8651_cfg_t;
 
-/**
- * @brief Initializes the LAN8651 Ethernet controller.
- *
- * Performs hardware and software reset, applies the AN1760 configuration
- * fixups, configures PLCA/CSMA-CD, programs the MAC address and enables
- * the MAC transmitter and receiver.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[in] drv LAN8651 driver instance.
- */
-void     lan8651_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+#define LAN8651_CHUNK_PAYLOAD_SIZE  64
+#define LAN8651_CHUNK_SIZE          ( LAN8651_CHUNK_PAYLOAD_SIZE + 4 )
+#define LAN8651_FCS_SIZE            4
+#define LAN8651_MIN_FRAME_SIZE      60
+#define LAN8651_FRAME_SIZE          1518
 
 /**
- * @brief Initializes the LAN8651 configuration structure with default values.
- *
+ * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
+ */
+typedef struct {
+    uint32_t phy_id;
+    uint8_t  plca_enable;
+    uint8_t  plca_node_id;
+    uint8_t  plca_node_count;
+
+    uint8_t  rx_frame[ LAN8651_FRAME_SIZE + LAN8651_FCS_SIZE ];
+    uint16_t rx_len;
+    uint8_t  rx_in_progress;    // frame start received, end not yet
+    uint8_t  rx_ready;          // complete frame waiting in rx_frame
+    uint8_t  tx_credits;
+    uint8_t  rx_chunks;
+} lan8651_ctx_t;
+
+/**
+ * @brief Initialize the LAN8651 configuration structure with default values.
+ * @details SPI pins not connected, 1 MHz, mode 0, CSMA/CD, PLCA node count 8.
  * @param[out] cfg LAN8651 configuration structure.
+ * @return Nothing.
  */
 void     lan8651_cfg_setup( lan8651_cfg_t *cfg );
 
 /**
- * @brief Configures the SPI interface and LAN8651 control pins.
- *
- * @param[in] eth SPI Ethernet instance. If eth->driver_ctx is NULL the
- *                built-in context is used, otherwise it must point to a
- *                lan8651_ctx_t owned by the caller (one per device).
- * @param[in] spi SPI master instance.
+ * @brief Configure the SPI interface and the control pins for the LAN8651.
+ * @param[in,out] eth Ethernet transport instance. If eth->driver_ctx is NULL
+ *                    the built-in context is used, otherwise it must point to
+ *                    a lan8651_ctx_t owned by the caller (one per device).
+ * @param[out] bus SPI bus object for this device, must stay valid while it is used.
  * @param[in] cfg LAN8651 configuration structure.
- *
- * @return Configuration status.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @note The SPI bus must support full duplex transfers (TC6 protocol).
  */
-uint8_t  lan8651_configure( spi_ethernet_t *eth, spi_master_t *spi, lan8651_cfg_t *cfg );
+err_t    lan8651_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan8651_cfg_t *cfg );
 
 /**
- * @brief Selects the device used by driver functions without an instance argument.
- *
- * @details get_link_status, set_mac, get_mac, set_ip, get_ip, get_rev and
- * get_phy_id act on the active device. It is updated automatically by
- * init/send/read/available; call this before the others when more than
- * one LAN8651 is used.
- *
- * @param[in] eth SPI Ethernet instance to make active.
+ * @brief Initialize the LAN8651.
+ * @details Performs hardware and software reset, applies the AN1760
+ * configuration fixups, configures PLCA/CSMA-CD, programs the MAC address
+ * and enables the MAC transmitter and receiver.
+ * @param[in] eth Ethernet transport instance.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @pre lan8651_configure() must have been called beforehand.
  */
-void     lan8651_set_active( spi_ethernet_t *eth );
+err_t    lan8651_init( eth_transport_t *eth );
 
 /**
- * @brief Sends an Ethernet frame as a sequence of TC6 data chunks.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[in] buf Ethernet frame buffer (without FCS).
- * @param[in] len Ethernet frame length in bytes.
- *
+ * @brief Send an Ethernet frame as a sequence of TC6 data chunks.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] buf Ethernet frame (without FCS), runt frames are padded.
+ * @param[in] len Frame length in bytes, at most LAN8651_FRAME_SIZE.
  * @return Number of bytes sent, 0 on failure.
  */
-uint16_t lan8651_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Reads an Ethernet frame from the LAN8651 receive buffer.
- *
- * @param[in] eth SPI Ethernet instance.
- * @param[out] buf Buffer receiving the Ethernet frame (without FCS).
- * @param[in] len Maximum number of bytes to read.
- *
+ * @brief Read an Ethernet frame from the LAN8651 receive buffer.
+ * @param[in] eth Ethernet transport instance.
+ * @param[out] buf Buffer receiving the frame (without FCS).
+ * @param[in] len Size of @p buf in bytes, longer frames are truncated.
  * @return Number of bytes read, 0 if no frame is available.
  */
-uint16_t lan8651_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+uint16_t lan8651_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Checks whether an Ethernet frame is available.
- *
- * @param[in] eth SPI Ethernet instance.
- *
- * @return 1 if a packet is available, otherwise 0.
+ * @brief Check whether an Ethernet frame is available.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if a frame is available, otherwise 0.
  */
-uint8_t  lan8651_packet_available( spi_ethernet_t *eth );
+uint8_t  lan8651_packet_available( eth_transport_t *eth );
 
 /**
- * @brief Gets the Ethernet link status.
- *
+ * @brief Get the Ethernet link status.
  * @details 10BASE-T1S has no link pulses in CSMA/CD mode, so the link is
  * reported up while the MAC-PHY responds and its configuration is
  * synchronized. In PLCA mode the PLCA status (beacons seen) is reported.
- *
- * @return 1 if the Ethernet link is up, otherwise 0.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if the link is up, otherwise 0.
  */
-uint8_t  lan8651_get_link_status( void );
+uint8_t  lan8651_get_link_status( eth_transport_t *eth );
 
 /**
- * @brief Gets the LAN8651 model/revision byte (lowest byte of OA PHYID).
- *
- * @return LAN8651 model/revision byte.
+ * @brief Get the LAN8651 model/revision byte (lowest byte of OA_PHYID).
+ * @param[in] eth Ethernet transport instance.
+ * @return Model/revision byte.
  */
-uint8_t  lan8651_get_rev( void );
+uint8_t  lan8651_get_rev( eth_transport_t *eth );
 
 /**
- * @brief Gets the full OPEN Alliance PHY identification register.
- *
- * @return OA_PHYID register value.
+ * @brief Get the full OPEN Alliance PHY identification register.
+ * @param[in] eth Ethernet transport instance.
+ * @return OA_PHYID value read during initialization.
  */
-uint32_t lan8651_get_phy_id( void );
+uint32_t lan8651_get_phy_id( eth_transport_t *eth );
 
 /**
- * @brief Sets the Ethernet MAC address.
- *
- * @param[in] mac MAC address to configure.
- *
- * @return 1 on success.
+ * @brief Program the MAC address filter (SAB1/SAT1).
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] mac 6-byte MAC address.
+ * @return ETH_TRANSPORT_SUCCESS.
  */
-int      lan8651_set_mac( uint8_t mac[ 6 ] );
+err_t    lan8651_set_mac( eth_transport_t *eth, uint8_t *mac );
 
-/**
- * @brief Gets the configured Ethernet MAC address.
- *
- * @param[out] mac Buffer receiving the MAC address.
- *
- * @return 1 on success.
- */
-int      lan8651_get_mac( uint8_t mac[ 6 ] );
-
-/**
- * @brief Sets the IPv4 address.
- *
- * @param[in] ip IPv4 address to configure.
- *
- * @return 1 on success.
- */
-int      lan8651_set_ip( uint8_t ip[ 4 ] );
-
-/**
- * @brief Gets the configured IPv4 address.
- *
- * @param[out] ip Buffer receiving the IPv4 address.
- *
- * @return 1 on success.
- */
-int      lan8651_get_ip( uint8_t ip[ 4 ] );
-
-extern spi_ethernet_driver_t    lan8651_driver;
+extern eth_transport_driver_t lan8651_driver;
 
 // Memory map selectors
 #define LAN8651_MMS_OA              0x00    // OPEN Alliance standard registers
@@ -284,30 +249,6 @@ extern spi_ethernet_driver_t    lan8651_driver;
 #define LAN8651_PLCA_CTRL1          0xCA02
 #define LAN8651_PLCA_STS            0xCA03
 #define LAN8651_PLCA_STS_PST        0x00008000UL
-
-#define LAN8651_CHUNK_PAYLOAD_SIZE  64
-#define LAN8651_CHUNK_SIZE          ( LAN8651_CHUNK_PAYLOAD_SIZE + 4 )
-#define LAN8651_FCS_SIZE            4
-#define LAN8651_MIN_FRAME_SIZE      60
-#define LAN8651_FRAME_SIZE          1518
-
-// Per-device driver state, referenced through spi_ethernet_t.driver_ctx
-typedef struct {
-    pin_name_t cs_pin;
-    uint8_t  mac[ 6 ];
-    uint8_t  ip[ 4 ];
-    uint32_t phy_id;
-    uint8_t  plca_enable;
-    uint8_t  plca_node_id;
-    uint8_t  plca_node_count;
-
-    uint8_t  rx_frame[ LAN8651_FRAME_SIZE + LAN8651_FCS_SIZE ];
-    uint16_t rx_len;
-    uint8_t  rx_in_progress;    // frame start received, end not yet
-    uint8_t  rx_ready;          // complete frame waiting in rx_frame
-    uint8_t  tx_credits;
-    uint8_t  rx_chunks;
-} lan8651_ctx_t;
 
 #endif
 

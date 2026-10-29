@@ -42,14 +42,9 @@
  * @brief SPI Ethernet Microchip LAN8651 10BASE-T1S MAC-PHY Driver.
  */
 
-#include "transport.h"
 #include "lan8651.h"
-#include "drv_spi_master.h"
 #include <delays.h>
 #include <string.h>
-
-#define SPI_ETH_OK           0x00
-#define SPI_ETH_INIT_ERROR   0xFF
 
 #define LAN8651_RESET_TIMEOUT_MS    1000
 #define LAN8651_TX_CREDIT_TRIES     1000
@@ -57,8 +52,7 @@
 
 #define LAN8651_CTX( eth )          ( ( lan8651_ctx_t * )( eth )->driver_ctx )
 
-static spi_ethernet_t *current_eth = NULL;
-static lan8651_ctx_t  lan8651_default_ctx;
+static lan8651_ctx_t lan8651_default_ctx;
 
 // TC6 data chunk buffers, only used within a single call so shared by all devices
 static uint8_t lan8651_chunk_tx[ LAN8651_CHUNK_SIZE ];
@@ -87,30 +81,27 @@ static const uint16_t lan8651_sqi_vals[ 12 ] = {
 static uint32_t lan8651_add_parity( uint32_t word );
 static void     lan8651_put_be32( uint8_t *buf, uint32_t val );
 static uint32_t lan8651_get_be32( uint8_t *buf );
-static uint8_t  lan8651_ctrl( spi_ethernet_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val );
-static uint32_t lan8651_read_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr );
-static void     lan8651_write_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr, uint32_t val );
-static void     lan8651_modify_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr, uint32_t mask, uint32_t val );
-static int8_t   lan8651_indirect_read( spi_ethernet_t *eth, uint16_t addr );
-static void     lan8651_apply_config_fixups( spi_ethernet_t *eth );
-static void     lan8651_clear_status( spi_ethernet_t *eth );
-static uint8_t  lan8651_wait_reset_complete( spi_ethernet_t *eth );
-static void     lan8651_hw_reset( spi_ethernet_t *eth );
-static uint8_t  lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data, uint16_t len );
+static uint8_t  lan8651_ctrl( eth_transport_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val );
+static uint32_t lan8651_read_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr );
+static void     lan8651_write_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr, uint32_t val );
+static void     lan8651_modify_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr, uint32_t mask, uint32_t val );
+static int8_t   lan8651_indirect_read( eth_transport_t *eth, uint16_t addr );
+static void     lan8651_apply_config_fixups( eth_transport_t *eth );
+static void     lan8651_clear_status( eth_transport_t *eth );
+static uint8_t  lan8651_wait_reset_complete( eth_transport_t *eth );
+static void     lan8651_hw_reset( eth_transport_t *eth );
+static uint8_t  lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data_buf, uint16_t len );
 static void     lan8651_rx_finish( lan8651_ctx_t *ctx );
 static void     lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer );
-static uint8_t  lan8651_data_chunk( spi_ethernet_t *eth, uint8_t *tx_data, uint8_t tx_len, uint8_t start, uint8_t end );
+static uint8_t  lan8651_data_chunk( eth_transport_t *eth, uint8_t *tx_data, uint8_t tx_len, uint8_t start, uint8_t end );
 
-spi_ethernet_driver_t lan8651_driver = {
+eth_transport_driver_t lan8651_driver = {
     .init            = lan8651_init,
     .send_packet     = lan8651_send_packet,
     .read_packet     = lan8651_read_packet,
     .available       = lan8651_packet_available,
     .get_link_status = lan8651_get_link_status,
-    .set_mac         = lan8651_set_mac,
-    .get_mac         = lan8651_get_mac,
-    .set_ip          = lan8651_set_ip,
-    .get_ip          = lan8651_get_ip
+    .set_mac         = lan8651_set_mac
 };
 
 // Helpers (TC6 headers are 32-bit big-endian words with odd parity in bit 0)
@@ -139,9 +130,9 @@ static uint32_t lan8651_get_be32( uint8_t *buf ) {
 }
 
 // Low-level SPI access (TC6 control transaction, one register)
-static uint8_t lan8651_ctrl( spi_ethernet_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val ) {
-    uint8_t tx[ 12 ];
-    uint8_t rx[ 12 ];
+static uint8_t lan8651_ctrl( eth_transport_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val ) {
+    uint8_t tx_buf[ 12 ];
+    uint8_t rx_buf[ 12 ];
     uint32_t header;
 
     header = ( write ? LAN8651_CTRL_HDR_WNR : 0 ) |
@@ -149,40 +140,39 @@ static uint8_t lan8651_ctrl( spi_ethernet_t *eth, uint8_t write, uint8_t mms, ui
              ( ( uint32_t )addr << LAN8651_CTRL_HDR_ADDR_SHIFT );   // LEN = 0 -> one register
     header = lan8651_add_parity( header );
 
-    memset( tx, 0, sizeof( tx ) );
-    lan8651_put_be32( &tx[ 0 ], header );
+    memset( tx_buf, 0, sizeof( tx_buf ) );
+    lan8651_put_be32( &tx_buf[ 0 ], header );
     if ( write )
-        lan8651_put_be32( &tx[ 4 ], *val );
+        lan8651_put_be32( &tx_buf[ 4 ], *val );
 
-    spi_master_select_device( LAN8651_CTX( eth )->cs_pin );
-    ( void )spi_master_transfer( eth->spi, tx, rx, sizeof( tx ) );
-    spi_master_deselect_device( LAN8651_CTX( eth )->cs_pin );
+    if ( eth_transport_bus_transfer( eth, tx_buf, rx_buf, sizeof( tx_buf ) ) != ETH_TRANSPORT_SUCCESS )
+        return 0;                       // bus error or bus without full duplex support
 
     // Reply is delayed by one word: [ ignored ][ echoed header ][ register value ]
-    if ( lan8651_get_be32( &rx[ 4 ] ) != header )
+    if ( lan8651_get_be32( &rx_buf[ 4 ] ) != header )
         return 0;
     if ( !write )
-        *val = lan8651_get_be32( &rx[ 8 ] );
+        *val = lan8651_get_be32( &rx_buf[ 8 ] );
     return 1;
 }
 
-static uint32_t lan8651_read_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr ) {
+static uint32_t lan8651_read_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr ) {
     uint32_t val = 0;
     ( void )lan8651_ctrl( eth, 0, mms, addr, &val );
     return val;
 }
 
-static void lan8651_write_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr, uint32_t val ) {
+static void lan8651_write_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr, uint32_t val ) {
     ( void )lan8651_ctrl( eth, 1, mms, addr, &val );
 }
 
-static void lan8651_modify_reg( spi_ethernet_t *eth, uint8_t mms, uint16_t addr, uint32_t mask, uint32_t val ) {
+static void lan8651_modify_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr, uint32_t mask, uint32_t val ) {
     uint32_t reg = lan8651_read_reg( eth, mms, addr );
     lan8651_write_reg( eth, mms, addr, ( reg & ~mask ) | ( val & mask ) );
 }
 
 // AN1760 'indirect read', returns the 5-bit signed trim value
-static int8_t lan8651_indirect_read( spi_ethernet_t *eth, uint16_t addr ) {
+static int8_t lan8651_indirect_read( eth_transport_t *eth, uint16_t addr ) {
     uint8_t val;
 
     lan8651_write_reg( eth, LAN8651_MMS_PHY_VS_PLCA, LAN8651_VS_CFGPARAM_ADDR, addr );
@@ -194,7 +184,7 @@ static int8_t lan8651_indirect_read( spi_ethernet_t *eth, uint16_t addr ) {
     return ( int8_t )val;
 }
 
-static void lan8651_apply_config_fixups( spi_ethernet_t *eth ) {
+static void lan8651_apply_config_fixups( eth_transport_t *eth ) {
     int8_t offset1 = lan8651_indirect_read( eth, 0x0004 );
     int8_t offset2 = lan8651_indirect_read( eth, 0x0008 );
     uint8_t i;
@@ -221,7 +211,7 @@ static void lan8651_apply_config_fixups( spi_ethernet_t *eth ) {
         lan8651_write_reg( eth, LAN8651_MMS_PHY_VS_PLCA, lan8651_sqi_regs[ i ], lan8651_sqi_vals[ i ] );
 }
 
-static void lan8651_clear_status( spi_ethernet_t *eth ) {
+static void lan8651_clear_status( eth_transport_t *eth ) {
     uint32_t status = lan8651_read_reg( eth, LAN8651_MMS_OA, LAN8651_OA_STATUS0 );
 
     if ( !status )
@@ -233,7 +223,7 @@ static void lan8651_clear_status( spi_ethernet_t *eth ) {
 }
 
 // Init
-static uint8_t lan8651_wait_reset_complete( spi_ethernet_t *eth ) {
+static uint8_t lan8651_wait_reset_complete( eth_transport_t *eth ) {
     uint16_t tries = 0;
     uint32_t status = 0;
 
@@ -247,25 +237,25 @@ static uint8_t lan8651_wait_reset_complete( spi_ethernet_t *eth ) {
     return 1;
 }
 
-static void lan8651_hw_reset( spi_ethernet_t *eth ) {
+static void lan8651_hw_reset( eth_transport_t *eth ) {
     // RST also drives the click CS multiplexer, it must stay high for SPI access
     digital_out_high( &eth->reset ); Delay_ms( 10 );
     digital_out_low( &eth->reset );  Delay_ms( 10 );
     digital_out_high( &eth->reset ); Delay_ms( 50 );
 }
 
-void lan8651_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
-    lan8651_ctx_t *ctx = LAN8651_CTX( eth );
+err_t lan8651_init( eth_transport_t *eth ) {
+    lan8651_ctx_t *ctx;
     uint32_t bufsts;
 
-    current_eth = eth;
+    if ( !eth || !eth->driver_ctx ) return ETH_TRANSPORT_ERROR;
+    if ( !eth->bus_ops || !eth->bus_ops->transfer )
+        return ETH_TRANSPORT_ERROR;     // TC6 needs a full duplex bus
+    ctx = LAN8651_CTX( eth );
 
     ctx->rx_len = 0;
     ctx->rx_in_progress = 0;
     ctx->rx_ready = 0;
-
-    memcpy( ctx->mac, eth->mac, 6 );
-    memcpy( ctx->ip, &eth->ip, 4 );
 
     lan8651_hw_reset( eth );
     lan8651_wait_reset_complete( eth );
@@ -292,7 +282,7 @@ void lan8651_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
         lan8651_modify_reg( eth, LAN8651_MMS_PHY_VS_PLCA, LAN8651_VS_CDCTL0, LAN8651_VS_CDCTL0_CDEN, 0 );
     }
 
-    lan8651_set_mac( ctx->mac );
+    lan8651_set_mac( eth, eth->mac );
 
     lan8651_modify_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_NCR,
                         LAN8651_MAC_NCR_TXEN | LAN8651_MAC_NCR_RXEN,
@@ -309,15 +299,17 @@ void lan8651_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
 
     // IRQ_N stays asserted after reset until the first data chunk is exchanged
     ( void )lan8651_data_chunk( eth, NULL, 0, 0, 0 );
+
+    return ETH_TRANSPORT_SUCCESS;
 }
 
 // Data transfer (TC6 data chunks)
-static uint8_t lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data, uint16_t len ) {
+static uint8_t lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data_buf, uint16_t len ) {
     if ( ctx->rx_len + len > sizeof( ctx->rx_frame ) ) {
         ctx->rx_in_progress = 0;        // oversized frame, drop it
         return 0;
     }
-    memcpy( &ctx->rx_frame[ ctx->rx_len ], data, len );
+    memcpy( &ctx->rx_frame[ ctx->rx_len ], data_buf, len );
     ctx->rx_len += len;
     return 1;
 }
@@ -364,7 +356,7 @@ static void lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer ) {
 }
 
 // Exchanges one data chunk; tx_data == NULL sends an empty chunk (RX/status poll)
-static uint8_t lan8651_data_chunk( spi_ethernet_t *eth, uint8_t *tx_data, uint8_t tx_len, uint8_t start, uint8_t end ) {
+static uint8_t lan8651_data_chunk( eth_transport_t *eth, uint8_t *tx_data, uint8_t tx_len, uint8_t start, uint8_t end ) {
     lan8651_ctx_t *ctx = LAN8651_CTX( eth );
     uint32_t header = LAN8651_DATA_HDR_DNC;
     uint32_t footer;
@@ -382,9 +374,10 @@ static uint8_t lan8651_data_chunk( spi_ethernet_t *eth, uint8_t *tx_data, uint8_
         header |= LAN8651_DATA_HDR_NORX;
     lan8651_put_be32( lan8651_chunk_tx, lan8651_add_parity( header ) );
 
-    spi_master_select_device( ctx->cs_pin );
-    ( void )spi_master_transfer( eth->spi, lan8651_chunk_tx, lan8651_chunk_rx, LAN8651_CHUNK_SIZE );
-    spi_master_deselect_device( ctx->cs_pin );
+    if ( eth_transport_bus_transfer( eth, lan8651_chunk_tx, lan8651_chunk_rx, LAN8651_CHUNK_SIZE ) != ETH_TRANSPORT_SUCCESS ) {
+        ctx->rx_in_progress = 0;
+        return 0;
+    }
 
     // TX header goes first, RX footer comes last: [ 64 B payload ][ footer ]
     footer = lan8651_get_be32( &lan8651_chunk_rx[ LAN8651_CHUNK_PAYLOAD_SIZE ] );
@@ -403,13 +396,11 @@ static uint8_t lan8651_data_chunk( spi_ethernet_t *eth, uint8_t *tx_data, uint8_
     return 1;
 }
 
-uint16_t lan8651_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) {
+uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len ) {
     uint8_t  pad[ LAN8651_MIN_FRAME_SIZE ];
     uint16_t offset = 0;
     uint16_t tries;
     uint8_t  chunk_len;
-
-    current_eth = eth;
 
     if ( !buf || !len || len > LAN8651_FRAME_SIZE )
         return 0;
@@ -439,11 +430,10 @@ uint16_t lan8651_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) 
     return len;
 }
 
-uint8_t lan8651_packet_available( spi_ethernet_t *eth ) {
+uint8_t lan8651_packet_available( eth_transport_t *eth ) {
     lan8651_ctx_t *ctx;
 
     if ( !eth ) return 0;
-    current_eth = eth;
     ctx = LAN8651_CTX( eth );
 
     if ( ctx->rx_ready )
@@ -453,12 +443,10 @@ uint8_t lan8651_packet_available( spi_ethernet_t *eth ) {
     return ( ctx->rx_chunks > 0 ) ? 1 : 0;
 }
 
-uint16_t lan8651_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len ) {
+uint16_t lan8651_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_len ) {
     lan8651_ctx_t *ctx = LAN8651_CTX( eth );
     uint16_t chunks = 0;
     uint16_t copy_len;
-
-    current_eth = eth;
 
     if ( !ctx->rx_ready ) {
         if ( !lan8651_packet_available( eth ) )
@@ -483,120 +471,73 @@ uint16_t lan8651_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_le
 }
 
 // Link / identification
-void lan8651_set_active( spi_ethernet_t *eth ) {
-    current_eth = eth;
-}
-
-uint8_t lan8651_get_link_status( void ) {
+uint8_t lan8651_get_link_status( eth_transport_t *eth ) {
     uint32_t val = 0;
 
-    if ( !current_eth ) return 0;
+    if ( !eth || !eth->driver_ctx ) return 0;
 
-    if ( LAN8651_CTX( current_eth )->plca_enable )
-        return ( lan8651_read_reg( current_eth, LAN8651_MMS_PHY_VS_PLCA, LAN8651_PLCA_STS ) &
+    if ( LAN8651_CTX( eth )->plca_enable )
+        return ( lan8651_read_reg( eth, LAN8651_MMS_PHY_VS_PLCA, LAN8651_PLCA_STS ) &
                  LAN8651_PLCA_STS_PST ) ? 1 : 0;
 
     // CSMA/CD: no link indication on 10BASE-T1S, report whether the MAC-PHY is alive and configured
-    if ( !lan8651_ctrl( current_eth, 0, LAN8651_MMS_OA, LAN8651_OA_CONFIG0, &val ) )
+    if ( !lan8651_ctrl( eth, 0, LAN8651_MMS_OA, LAN8651_OA_CONFIG0, &val ) )
         return 0;
     return ( val & LAN8651_OA_CONFIG0_SYNC ) ? 1 : 0;
 }
 
-uint8_t lan8651_get_rev( void ) {
-    if ( !current_eth ) return 0;
-    return ( uint8_t )( LAN8651_CTX( current_eth )->phy_id & 0xFF );
+uint8_t lan8651_get_rev( eth_transport_t *eth ) {
+    return ( uint8_t )( lan8651_get_phy_id( eth ) & 0xFF );
 }
 
-uint32_t lan8651_get_phy_id( void ) {
-    if ( !current_eth ) return 0;
-    return LAN8651_CTX( current_eth )->phy_id;
+uint32_t lan8651_get_phy_id( eth_transport_t *eth ) {
+    if ( !eth || !eth->driver_ctx ) return 0;
+    return LAN8651_CTX( eth )->phy_id;
 }
 
 // Addressing
-int lan8651_set_mac( uint8_t mac[ 6 ] ) {
-    if ( !current_eth ) return 0;
-    memcpy( LAN8651_CTX( current_eth )->mac, mac, 6 );
-
+err_t lan8651_set_mac( eth_transport_t *eth, uint8_t *mac ) {
     // Bottom half first: writing it disables the filter until the top half is written
-    lan8651_write_reg( current_eth, LAN8651_MMS_MAC, LAN8651_MAC_SAB1,
+    lan8651_write_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_SAB1,
                        ( uint32_t )mac[ 0 ] | ( ( uint32_t )mac[ 1 ] << 8 ) |
                        ( ( uint32_t )mac[ 2 ] << 16 ) | ( ( uint32_t )mac[ 3 ] << 24 ) );
-    lan8651_write_reg( current_eth, LAN8651_MMS_MAC, LAN8651_MAC_SAT1,
+    lan8651_write_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_SAT1,
                        ( uint32_t )mac[ 4 ] | ( ( uint32_t )mac[ 5 ] << 8 ) );
-    return 1;
-}
-
-int lan8651_get_mac( uint8_t mac[ 6 ] ) {
-    if ( !current_eth ) return 0;
-    memcpy( mac, LAN8651_CTX( current_eth )->mac, 6 );
-    return 1;
-}
-
-int lan8651_set_ip( uint8_t ip[ 4 ] ) {
-    if ( !current_eth ) return 0;
-    memcpy( LAN8651_CTX( current_eth )->ip, ip, 4 );
-    return 1;
-}
-
-int lan8651_get_ip( uint8_t ip[ 4 ] ) {
-    if ( !current_eth ) return 0;
-    memcpy( ip, LAN8651_CTX( current_eth )->ip, 4 );
-    return 1;
+    return ETH_TRANSPORT_SUCCESS;
 }
 
 // Config / setup
 void lan8651_cfg_setup( lan8651_cfg_t *cfg ) {
-    cfg->miso = HAL_PIN_NC;
-    cfg->mosi = HAL_PIN_NC;
-    cfg->sck  = HAL_PIN_NC;
-    cfg->cs   = HAL_PIN_NC;
-    cfg->rst  = HAL_PIN_NC;
-
-    cfg->spi_speed = 1000000;
-    cfg->spi_mode  = SPI_MASTER_MODE_0;
+    eth_bus_spi_cfg_setup( &cfg->bus );
+    eth_transport_cfg_setup( &cfg->eth );
 
     cfg->plca_enable     = 0;
     cfg->plca_node_id    = 0;
     cfg->plca_node_count = 8;
 }
 
-uint8_t lan8651_configure( spi_ethernet_t *eth, spi_master_t *spi, lan8651_cfg_t *cfg ) {
-    spi_master_config_t spi_cfg;
+err_t lan8651_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan8651_cfg_t *cfg ) {
     lan8651_ctx_t *ctx;
 
-    spi_master_configure_default( &spi_cfg );
+    if ( !eth || !cfg ) return ETH_TRANSPORT_ERROR;
 
-    spi_cfg.sck   = cfg->sck;
-    spi_cfg.miso  = cfg->miso;
-    spi_cfg.mosi  = cfg->mosi;
-    spi_cfg.speed = cfg->spi_speed;
-    spi_cfg.mode  = cfg->spi_mode;
-
-    if ( spi_master_open( spi, &spi_cfg ) == SPI_MASTER_ERROR ) {
-        return SPI_ETH_INIT_ERROR;
-    }
+    cfg->eth.full_duplex = 0;   // 10BASE-T1S is half duplex only
 
     if ( !eth->driver_ctx )
         eth->driver_ctx = &lan8651_default_ctx;
-    ctx = LAN8651_CTX( eth );
 
-    digital_out_init( &eth->cs, cfg->cs );
-    digital_out_init( &eth->reset, cfg->rst );
+    if ( eth_bus_spi_configure( eth, bus, &cfg->bus, &cfg->eth ) != ETH_TRANSPORT_SUCCESS )
+        return ETH_TRANSPORT_ERROR;
+
+    // RST also drives the click CS multiplexer, it must stay high for SPI access
     digital_out_high( &eth->reset );
 
-    ctx->cs_pin = cfg->cs;
-    spi_master_deselect_device( ctx->cs_pin );
-
+    ctx = LAN8651_CTX( eth );
     ctx->plca_enable     = cfg->plca_enable;
     ctx->plca_node_id    = cfg->plca_node_id;
     ctx->plca_node_count = cfg->plca_node_count;
 
-    eth->spi = spi;
-    memcpy( eth->mac, cfg->mac, 6 );
-    memcpy( &eth->ip, cfg->ip, 4 );
-    eth->fullDuplex = 0;    // 10BASE-T1S is half duplex only
-
-    return 0;
+    return ETH_TRANSPORT_SUCCESS;
 }
 
 // ----------------------------------------------------------------------- END
