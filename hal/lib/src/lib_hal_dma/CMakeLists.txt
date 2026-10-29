@@ -1,6 +1,7 @@
 ## ./hal/lib/src/lib_hal_dma/CMakeLists.txt
 mikrosdk_add_library(lib_hal_dma MikroSDK.Hal.DMA
     hal_dma.c
+    hal_dma_irq.c
 
     ../../include/hal_dma.h
 )

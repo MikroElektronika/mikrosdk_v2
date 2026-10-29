@@ -789,6 +789,92 @@ err_t dma_transfer_abort( dma_t *obj );
  */
 err_t dma_close( dma_t *obj );
 
+/**
+ * @details DMA event flags: interrupt enable mask (#dma_set_interrupts),
+ *          status (#dma_get_status / #dma_clear_status) and callback argument.
+ */
+#define DMA_EVENT_TRANSFER_COMPLETE (0x01U) /*!< Transfer complete. */
+#define DMA_EVENT_HALF_TRANSFER     (0x02U) /*!< Half of the transfer done. */
+#define DMA_EVENT_TRANSFER_ERROR    (0x04U) /*!< Bus error during the transfer. */
+#define DMA_EVENT_DIRECT_MODE_ERROR (0x08U) /*!< Direct mode: a peripheral request arrived
+                                                 before the previous one was served. */
+#define DMA_EVENT_FIFO_ERROR        (0x10U) /*!< FIFO under/overrun. */
+
+/**
+ * @brief DMA interrupt callback, called from the DMA interrupt.
+ * @param[in] context Context given to #dma_register_irq_handler.
+ * @param[in] events Events that caused the interrupt (DMA_EVENT_*), already cleared.
+ */
+typedef void ( *dma_isr_t )( void *context, uint8_t events );
+
+/**
+ * @brief Enables DMA interrupts.
+ * @details Enables the given events (DMA_EVENT_*) for the stream and its NVIC
+ *          line; 0 disables them. The setting is kept across
+ *          #dma_set_transfer_config, #dma_set_mode, #dma_set_direction and
+ *          #dma_set_priority, which reconfigure the stream.
+ * @param[in] obj DMA driver object.
+ * @param[in] events Event mask.
+ * @return DMA_SUCCESS, or DMA_ERROR (also on targets without support).
+ * @note Supported on STM32F2/F4/F7.
+ *
+ * @b Example
+ * @code
+ *   static void on_dma( void *context, uint8_t events ) {
+ *       if ( events & DMA_EVENT_TRANSFER_COMPLETE ) { ... }
+ *   }
+ *   dma_register_irq_handler( &dma, on_dma, NULL );
+ *   dma_set_interrupts( &dma, DMA_EVENT_TRANSFER_COMPLETE | DMA_EVENT_TRANSFER_ERROR );
+ * @endcode
+ */
+err_t dma_set_interrupts( dma_t *obj, uint8_t events );
+
+/**
+ * @brief Registers the DMA interrupt callback.
+ * @details The SDK then provides the stream's interrupt handler (e.g.
+ *          DMA2_Stream5_IRQHandler), which clears the reported events and calls
+ *          @p handler. Do not define that handler in the application as well.
+ *          Applications that never call this function keep full control of the
+ *          DMA interrupt handlers.
+ * @param[in] obj DMA driver object.
+ * @param[in] handler Callback, or NULL to unregister.
+ * @param[in] context Passed back to the callback.
+ * @return DMA_SUCCESS, or DMA_ERROR (also on targets without support).
+ * @note Supported on STM32F2/F4/F7.
+ */
+err_t dma_register_irq_handler( dma_t *obj, dma_isr_t handler, void *context );
+
+/**
+ * @brief Returns the pending DMA events (DMA_EVENT_*).
+ * @param[in] obj DMA driver object.
+ * @return Event mask; 0 on targets without support.
+ * @note Supported on STM32F2/F4/F7.
+ */
+uint8_t dma_get_status( dma_t *obj );
+
+/**
+ * @brief Clears the given DMA events (DMA_EVENT_*).
+ * @details A stream cannot be started while any of its events is pending.
+ * @param[in] obj DMA driver object.
+ * @param[in] events Event mask.
+ * @return DMA_SUCCESS, or DMA_ERROR (also on targets without support).
+ * @note Supported on STM32F2/F4/F7.
+ */
+err_t dma_clear_status( dma_t *obj, uint8_t events );
+
+/**
+ * @brief Selects FIFO or direct mode.
+ * @details Memory-to-peripheral and peripheral-to-memory transfers use the FIFO
+ *          by default. Direct mode (@p enable false) moves exactly one item per
+ *          peripheral request, as timer-paced transfers need. The setting is
+ *          kept across reconfiguration. Call while the transfer is stopped.
+ * @param[in] obj DMA driver object.
+ * @param[in] enable true: FIFO mode, false: direct mode.
+ * @return DMA_SUCCESS, or DMA_ERROR (also on targets without support).
+ * @note Supported on STM32F2/F4/F7.
+ */
+err_t dma_set_fifo( dma_t *obj, bool enable );
+
 /*! @} */ // drvdmagroup
 /*! @} */ // drvgroup
 /*! @} */ // pergroup

@@ -100,34 +100,40 @@ extern "C"{
 /*!< Check if touch was detected. */
 #define check_touchpad() return (tp.touch.n_touches > 0)
 
+/*
+ * Shared display/touch state, defined once in lvgl_common.c.
+ * (These used to be `static` in this header, which gave every source file that
+ * included it its own, uninitialized copy - e.g. a second .c file could not see
+ * the pins display_configure() had set up.)
+ */
+
 /*!< CS pin handle. */
-static digital_out_t pin_cs;
+extern digital_out_t pin_cs;
 /*!< WR pin handle. */
-static digital_out_t pin_wr;
+extern digital_out_t pin_wr;
 /*!< DC pin handle. */
-static digital_out_t pin_dc;
+extern digital_out_t pin_dc;
 
 /*!< Data port handle. */
-static port_t port_high;
-static port_t port_low;
+extern port_t port_high;
+extern port_t port_low;
 
 /*!< Display driver handle. */
-static gl_driver_t display_driver;
+extern gl_driver_t display_driver;
 
 /*!< Touch panel handle. */
-static tp_drv_t tp_interface;
-static tp_t tp;
+extern tp_drv_t tp_interface;
+extern tp_t tp;
 
-/*!< Initial value for 16-bit port check. */
-static volatile bool port_16bit_single = false;
-static volatile bool port_16bit_dual = false;
+/*!< 16-bit port layout, set by display_configure(). */
+extern volatile bool port_16bit_single;
+extern volatile bool port_16bit_dual;
 
-/*!< Initial value for data shifting. Some MCUs
-     have data pins routed on upper 8 pins.
-     E.G. data pins 0-7 are on PORTD pins 8-15,
-     so we need to shift the data. */
-static volatile uint8_t shift_data_port_low = 0;
-static volatile uint8_t shift_data_port_high = 0;
+/*!< Data shifting. Some MCUs have data pins routed on upper 8 pins.
+     E.G. data pins 0-7 are on PORTD pins 8-15, so we need to shift the data.
+     Set by display_configure(). */
+extern volatile uint8_t shift_data_port_low;
+extern volatile uint8_t shift_data_port_high;
 
 /**
  * @brief Writes @ref command to TFT board.
