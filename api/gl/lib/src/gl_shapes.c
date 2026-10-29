@@ -81,9 +81,10 @@ gl_color_t gl_gradient(gl_color_t from, gl_color_t to, float ratio)
     uint8_t b_from = GL_BLUE_OF(from);
     uint8_t b_to = GL_BLUE_OF(to);
 
-    r_to = (float)r_from + (r_to - r_from) * ratio;
-    g_to = (float)g_from + (g_to - g_from) * ratio;
-    b_to = (float)b_from + (b_to - b_from) * ratio;
+    // Subtract in float; mikroC treats uint8_t - uint8_t as unsigned and loses the sign.
+    r_to = (float)r_from + ((float)r_to - (float)r_from) * ratio;
+    g_to = (float)g_from + ((float)g_to - (float)g_from) * ratio;
+    b_to = (float)b_from + ((float)b_to - (float)b_from) * ratio;
 
     return GL_RGB2COLOR(r_to, g_to, b_to);
 }
