@@ -4,19 +4,7 @@
 
 #include "transport.h"
 
-// Supported SPI Ethernet controllers, select one with SPI_ETH_CHIP
-#define SPI_ETH_CHIP_ENC28J60   0
-#define SPI_ETH_CHIP_W5500      1
-#define SPI_ETH_CHIP_WIZ_IP55   SPI_ETH_CHIP_W5500
-#define SPI_ETH_CHIP_LAN9250    2
-#define SPI_ETH_CHIP_W6100      3
-#define SPI_ETH_CHIP_LAN8651    4
-
-#ifndef SPI_ETH_CHIP
-    #error "Define SPI_ETH_CHIP (one of SPI_ETH_CHIP_*) before including transport_select.h"
-#endif
-
-#if SPI_ETH_CHIP == SPI_ETH_CHIP_ENC28J60
+#if SPI_ETH_CHIP == ENC28J60
     #include "enc28j60.h"
     #define SPI_ETH_DRIVER                          enc28j60_driver
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )   ENC28J60_MAP_MIKROBUS( eth, mikrobus )
@@ -25,7 +13,7 @@
     #define spi_eth_get_rev                         enc28j60_get_rev
     #define spi_eth_phy_read                        enc28j60_phy_read
     typedef enc28j60_cfg_t                          spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == SPI_ETH_CHIP_W5500
+#elif SPI_ETH_CHIP == W5500
     #include "w5500.h"
     #define SPI_ETH_DRIVER                          w5500_driver
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )   W5500_MAP_MIKROBUS( eth, mikrobus )
@@ -33,7 +21,7 @@
     #define spi_eth_configure                       w5500_configure
     #define spi_eth_get_rev                         w5500_get_rev
     typedef w5500_cfg_t                             spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == SPI_ETH_CHIP_LAN9250
+#elif SPI_ETH_CHIP == LAN9250
     #include "lan9250.h"
     #define SPI_ETH_DRIVER                          lan9250_driver
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )   LAN9250_MAP_MIKROBUS( eth, mikrobus )
@@ -41,7 +29,7 @@
     #define spi_eth_configure                       lan9250_configure
     #define spi_eth_get_rev                         lan9250_get_rev
     typedef lan9250_cfg_t                           spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == SPI_ETH_CHIP_W6100
+#elif SPI_ETH_CHIP == W6100
     #include "w6100.h"
     #define SPI_ETH_DRIVER                          w6100_driver
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )   W6100_MAP_MIKROBUS( eth, mikrobus )
@@ -49,7 +37,7 @@
     #define spi_eth_configure                       w6100_configure
     #define spi_eth_get_rev                         w6100_get_rev
     typedef w6100_cfg_t                             spi_eth_cfg_t;
-#elif SPI_ETH_CHIP == SPI_ETH_CHIP_LAN8651
+#elif SPI_ETH_CHIP == LAN8651
     #include "lan8651.h"
     #define SPI_ETH_DRIVER                          lan8651_driver
     #define SPI_ETH_MAP_MIKROBUS( eth, mikrobus )   LAN8651_MAP_MIKROBUS( eth, mikrobus )

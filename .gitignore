@@ -1,5 +1,4 @@
 *.asm
-.mikrobus
 .vscode
 output
 __pycache__

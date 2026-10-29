@@ -96,7 +96,7 @@ static void     lan8651_apply_config_fixups( spi_ethernet_t *eth );
 static void     lan8651_clear_status( spi_ethernet_t *eth );
 static uint8_t  lan8651_wait_reset_complete( spi_ethernet_t *eth );
 static void     lan8651_hw_reset( spi_ethernet_t *eth );
-static uint8_t  lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data_buf, uint16_t len );
+static uint8_t  lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data, uint16_t len );
 static void     lan8651_rx_finish( lan8651_ctx_t *ctx );
 static void     lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer );
 static uint8_t  lan8651_data_chunk( spi_ethernet_t *eth, uint8_t *tx_data, uint8_t tx_len, uint8_t start, uint8_t end );
@@ -140,8 +140,8 @@ static uint32_t lan8651_get_be32( uint8_t *buf ) {
 
 // Low-level SPI access (TC6 control transaction, one register)
 static uint8_t lan8651_ctrl( spi_ethernet_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val ) {
-    uint8_t tx_buf[ 12 ];
-    uint8_t rx_buf[ 12 ];
+    uint8_t tx[ 12 ];
+    uint8_t rx[ 12 ];
     uint32_t header;
 
     header = ( write ? LAN8651_CTRL_HDR_WNR : 0 ) |
@@ -149,20 +149,20 @@ static uint8_t lan8651_ctrl( spi_ethernet_t *eth, uint8_t write, uint8_t mms, ui
              ( ( uint32_t )addr << LAN8651_CTRL_HDR_ADDR_SHIFT );   // LEN = 0 -> one register
     header = lan8651_add_parity( header );
 
-    memset( tx_buf, 0, sizeof( tx_buf ) );
-    lan8651_put_be32( &tx_buf[ 0 ], header );
+    memset( tx, 0, sizeof( tx ) );
+    lan8651_put_be32( &tx[ 0 ], header );
     if ( write )
-        lan8651_put_be32( &tx_buf[ 4 ], *val );
+        lan8651_put_be32( &tx[ 4 ], *val );
 
     spi_master_select_device( LAN8651_CTX( eth )->cs_pin );
-    ( void )spi_master_transfer( eth->spi, tx_buf, rx_buf, sizeof( tx_buf ) );
+    ( void )spi_master_transfer( eth->spi, tx, rx, sizeof( tx ) );
     spi_master_deselect_device( LAN8651_CTX( eth )->cs_pin );
 
     // Reply is delayed by one word: [ ignored ][ echoed header ][ register value ]
-    if ( lan8651_get_be32( &rx_buf[ 4 ] ) != header )
+    if ( lan8651_get_be32( &rx[ 4 ] ) != header )
         return 0;
     if ( !write )
-        *val = lan8651_get_be32( &rx_buf[ 8 ] );
+        *val = lan8651_get_be32( &rx[ 8 ] );
     return 1;
 }
 
@@ -312,12 +312,12 @@ void lan8651_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
 }
 
 // Data transfer (TC6 data chunks)
-static uint8_t lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data_buf, uint16_t len ) {
+static uint8_t lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data, uint16_t len ) {
     if ( ctx->rx_len + len > sizeof( ctx->rx_frame ) ) {
         ctx->rx_in_progress = 0;        // oversized frame, drop it
         return 0;
     }
-    memcpy( &ctx->rx_frame[ ctx->rx_len ], data_buf, len );
+    memcpy( &ctx->rx_frame[ ctx->rx_len ], data, len );
     ctx->rx_len += len;
     return 1;
 }
