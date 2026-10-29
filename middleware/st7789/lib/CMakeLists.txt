@@ -8,6 +8,7 @@ mikrosdk_add_library(lib_st7789 MikroSDK.ST7789
 
 target_link_libraries(lib_st7789  PUBLIC
     MikroC.Core
+    MikroSDK.GenericPointer
     MikroSDK.TouchPanel
     MikroSDK.GraphicLibrary
     MikroSDK.Driver.GPIO.In
