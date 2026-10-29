@@ -2,10 +2,8 @@
 #include "preinit.h"
 #endif
 
-#define SPI_ETH_CHIP    ENC28J60        // Define your chip
-#define USE_DHCP        1               // Define your mode (1 = DHCP; 0 = local static ip)
-
-#define SPI_ETH_CHIP    ENC28J60      // Define your chip
+#define SPI_ETH_CHIP    SPI_ETH_CHIP_ENC28J60   // Define your chip (SPI_ETH_CHIP_* in transport_select.h)
+#define USE_DHCP        1                       // Define your mode (1 = DHCP; 0 = local static ip)
 
 #include "transport_select.h"
 #include "drv_spi_master.h"
