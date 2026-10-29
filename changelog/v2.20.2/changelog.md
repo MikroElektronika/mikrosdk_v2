@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [New features](#new-features)
     - [Added SPI Ethernet library](#added-spi-ethernet-library)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -32,6 +33,16 @@ Added a new SPI Ethernet library to mikroSDK.
 + Adds protocol helpers for ARP, ICMP, and basic TCP frame handling.
 + Integrates the library into the SDK build and includes a dedicated validation test under `tests/spi_ethernet`.
 + Broadly validated across supported toolchains and target devices.
+
+### Fixes
+
++ Fixed ST7789 display driver not drawing anything when used with the Graphic Library / Visual TFT (IPS Display Click and IPS Display 2 Click)
+  + Driver now registers its drawing functions (fill, begin frame, frame data, end frame) and display dimensions with the Graphic Library
+  + Pixel data is now sent in the byte order the display is configured for, fixing incorrect colors
+  + Driver now uses the opened SPI object directly instead of a copy of it
+  + Fixed type incompatibilities that caused build failures on some architectures (e.g. PIC)
++ Fixed Graphic Library gradients rendering as repeating color bands or stripes when built with mikroC
+  + Color component macros (`GL_RED_OF`, `GL_GREEN_OF`, `GL_BLUE_OF`) now mask out neighbouring color bits, which also fixes `GL_LUMA_OF`
 
 ### NEW HARDWARE
 
