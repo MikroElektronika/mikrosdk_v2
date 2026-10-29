@@ -45,6 +45,8 @@
 #define ST7789_H
 
 #include "drv_spi_master.h"
+#include "generic_pointer.h"
+#include "gl_types.h"
 #include "tp.h"
 
 /**
@@ -128,17 +130,17 @@ typedef struct
 /**
  * @brief ST7789 Display Controller initialization.
  * @details This function initializes ST7789 Display Controller context object to
- *          default values and allows driver interface object to be linked with
- *          ST7789 Display Controller driver functions.
+ *          default values and links the Graphic Library driver interface object
+ *          with ST7789 Display Controller driver functions.
  * @param[out] ctx : ST7789 context object. See #st7789_t structure definition
  *                   for detailed explanation.
  * @param[in] cfg : ST7789 configuration object. See #st7789_cfg_t structure
  *                  definition for detailed explanation.
- * @param[out] drv : TP driver interface object. See #tp_drv_t structure
- *                   definition for detailed explanation (uninmplemented).
+ * @param[out] driver : Graphic Library driver interface object. See #gl_driver_t
+ *                      structure definition for detailed explanation.
  * @return Nothing.
  */
-void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv );
+void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, gl_driver_t *__generic_ptr driver );
 
 /**
  * @brief Send command to ST7789 Display Controller.
