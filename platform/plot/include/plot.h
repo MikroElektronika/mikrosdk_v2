@@ -105,6 +105,34 @@ static inline int plot( const char * __generic_ptr name, double value ) {
     }
 }
 
+/**
+ * @brief Number of characters a timestamp adds to the template: up to 10 digits and '|'.
+ */
+#define PLOT_CHAR_NUM_TIMESTAMP 11U
+
+/**
+ * @brief Timestamped plot log API.
+ * @details Like @ref plot, with the time the value was taken on the device. NECTO Studio
+ * places the value at that time rather than at the time the debugger delivered it, so values
+ * keep their real spacing. Any free-running microsecond counter will do; it may wrap at
+ * 2^32 (about 71 minutes), NECTO Studio unwraps it.
+ * @param[in] *name Chart name.
+ * @param[in] value Value to send to plot.
+ * @param[in] time_us Device time in microseconds.
+ * @return If successful, the total number of characters written is returned.
+ * On failure, a negative number is returned.
+ * @warning @ref name must be @ref PLOT_CHAR_NUM_TIMESTAMP characters shorter than for
+ * @ref plot: the record must fit in @ref PLOT_BUFF_SIZE.
+ */
+static inline int plot_ts( const char * __generic_ptr name, double value, uint32_t time_us ) {
+    size_t length = PLOT_CHAR_NUM_TEMPLATE + PLOT_CHAR_NUM_TIMESTAMP + strlen( name );
+    if ( length > PLOT_BUFF_SIZE ) {
+        return printf_me( "Chart name too long. Reduce by %u characters.\n",
+                          (unsigned int)( length - PLOT_BUFF_SIZE ) );
+    }
+    return printf_me( "CH:|%s|%.3f|%lu|\n", name, value, (unsigned long)time_us );
+}
+
 /*! @} */ // plot
 /*! @} */ // platform
 

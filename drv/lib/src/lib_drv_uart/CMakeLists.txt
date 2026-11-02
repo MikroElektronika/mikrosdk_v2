@@ -3,6 +3,7 @@ mikrosdk_add_library(lib_drv_uart MikroSDK.Driver.UART
     drv_uart.c
 
     ../../include/drv_uart.h
+    ../../include/drv_trace.h
     ../../include/drv_name.h
 )
 
@@ -23,4 +24,4 @@ target_include_directories(lib_drv_uart
 resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.UART)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.UART ../../include/drv_uart.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.UART ../../include/drv_uart.h ../../include/drv_trace.h)

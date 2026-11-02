@@ -43,6 +43,20 @@
 
 #include "drv_digital_in.h"
 
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
+{
+}
+
+DRV_TRACE_WEAK uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
+{
+    return level;
+}
+#endif
+
 err_t digital_in_init( digital_in_t *in, pin_name_t name )
 {
     if ( HAL_PIN_NC == name )
@@ -51,6 +65,9 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name )
     }
 
     hal_gpio_configure_pin( &in->pin, name, (hal_gpio_direction_t)GPIO_DIGITAL_INPUT );
+    #if DRV_TRACE_ENABLED
+    DRV_TRACE( drv_trace_gpio_init( in, name, 0 ) );
+    #endif
     return DIGITAL_IN_SUCCESS;
 }
 
@@ -59,7 +76,13 @@ uint8_t digital_in_read( digital_in_t *in )
 {
     if ( in->pin.base )
     {
+        #if DRV_TRACE_ENABLED
+        uint8_t level = hal_gpio_read_pin_input( &in->pin );
+        DRV_TRACE( drv_trace_gpio_in( in, level ) );
+        return level;
+        #else
         return hal_gpio_read_pin_input( &in->pin );
+        #endif
     } else {
         return 0;
     }

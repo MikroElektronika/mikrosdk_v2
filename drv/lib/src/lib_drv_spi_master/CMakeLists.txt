@@ -3,6 +3,7 @@ mikrosdk_add_library(lib_drv_spi_master MikroSDK.Driver.SPI.Master
     drv_spi_master.c
 
     ../../include/drv_spi_master.h
+    ../../include/drv_trace.h
     ../../include/drv_name.h
 )
 
@@ -24,4 +25,4 @@ target_include_directories(lib_drv_spi_master
 resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.SPI.Master)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.SPI.Master ../../include/drv_spi_master.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.SPI.Master ../../include/drv_spi_master.h ../../include/drv_trace.h)

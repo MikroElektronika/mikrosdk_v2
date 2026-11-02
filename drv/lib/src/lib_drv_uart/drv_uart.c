@@ -42,8 +42,32 @@
  */
 
 #include "drv_uart.h"
+#include "drv_trace.h"
 
 static uart_t *_owner = NULL;
+
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK uint32_t drv_trace_now( void )
+{
+    return 0;
+}
+
+DRV_TRACE_WEAK void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
+{
+}
+
+// The UART functions return the number of bytes, or a negative error.
+static void trace_uart( const uart_t *obj, uint8_t is_tx, const void *buf, err_t result, uint32_t start )
+{
+    if ( drv_trace_present && ( result > 0 ) )
+    {
+        drv_trace_uart( obj, is_tx, (const uint8_t *)buf, (size_t)result, start );
+    }
+}
+#endif
 
 #if !DRV_TO_HAL
 extern hal_uart_handle_register_t DRV_TO_HAL_PREFIXED(uart, hal_module_state)[ UART_MODULE_COUNT ];
@@ -306,7 +330,7 @@ void uart_set_blocking( uart_t *obj, bool blocking )
     }
 }
 
-err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
+static err_t _uart_write( uart_t *obj, uint8_t *buffer, size_t size )
 {
     size_t data_written = 0;
 
@@ -374,7 +398,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
     }
 }
 
-err_t uart_print( uart_t *obj, char *text )
+static err_t _uart_print( uart_t *obj, char *text )
 {
     size_t data_written = 0;
 
@@ -410,7 +434,7 @@ err_t uart_print( uart_t *obj, char *text )
     }
 }
 
-err_t uart_println( uart_t *obj, char *text )
+static err_t _uart_println( uart_t *obj, char *text )
 {
     size_t data_written = 0;
 
@@ -437,7 +461,7 @@ err_t uart_println( uart_t *obj, char *text )
     }
 }
 
-err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
+static err_t _uart_read( uart_t *obj, uint8_t *buffer, size_t size )
 {
     size_t data_read = 0;
 
@@ -512,6 +536,72 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
     } else {
         return UART_ERROR;
     }
+}
+
+err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _uart_write( obj, buffer, size );
+    trace_uart( obj, 1, buffer, result, trace_start );
+    return result;
+    #else
+    return _uart_write( obj, buffer, size );
+    #endif
+}
+
+err_t uart_print( uart_t *obj, char *text )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _uart_print( obj, text );
+    trace_uart( obj, 1, text, result, trace_start );
+    return result;
+    #else
+    return _uart_print( obj, text );
+    #endif
+}
+
+err_t uart_println( uart_t *obj, char *text )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _uart_println( obj, text );
+    // The result counts the "\r\n" too, which is not in the text: the trace gets what was
+    // sent, put together here, and never reads past the end of the text. 16 bytes is the
+    // most the trace keeps of a transfer.
+    uint8_t sent[ 16 ];
+    size_t count = 0;
+    while ( ( count < sizeof( sent ) ) && text[ count ] )
+    {
+        sent[ count ] = (uint8_t)text[ count ];
+        count++;
+    }
+    if ( count < sizeof( sent ) )
+    {
+        sent[ count++ ] = '\r';
+    }
+    if ( count < sizeof( sent ) )
+    {
+        sent[ count++ ] = '\n';
+    }
+    trace_uart( obj, 1, sent, result, trace_start );
+    return result;
+    #else
+    return _uart_println( obj, text );
+    #endif
+}
+
+err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _uart_read( obj, buffer, size );
+    trace_uart( obj, 0, buffer, result, trace_start );
+    return result;
+    #else
+    return _uart_read( obj, buffer, size );
+    #endif
 }
 
 size_t uart_bytes_available( uart_t *obj )

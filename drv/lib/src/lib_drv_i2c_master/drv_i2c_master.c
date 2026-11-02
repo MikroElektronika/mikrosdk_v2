@@ -42,8 +42,24 @@
  */
 
 #include "drv_i2c_master.h"
+#include "drv_trace.h"
 
 static i2c_master_t *_owner = NULL;
+
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK uint32_t drv_trace_now( void )
+{
+    return 0;
+}
+
+DRV_TRACE_WEAK void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
+                                   const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
+{
+}
+#endif
 
 #if !DRV_TO_HAL
 extern hal_i2c_master_handle_register_t DRV_TO_HAL_PREFIXED(i2c, hal_module_state)[ I2C_MODULE_COUNT ];
@@ -197,7 +213,7 @@ err_t i2c_master_set_slave_address( i2c_master_t *obj, uint8_t address )
     }
 }
 
-err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
+static err_t _i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
 {
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -248,7 +264,7 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
     }
 }
 
-err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
+static err_t _i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -299,8 +315,8 @@ err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read
     }
 }
 
-err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
-                                                     uint8_t *read_data_buf, size_t len_read_data )
+static err_t _i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
+                                                             uint8_t *read_data_buf, size_t len_read_data )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -351,6 +367,46 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
     } else {
         return I2C_MASTER_ERROR;
     }
+}
+
+err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _i2c_master_write( obj, write_data_buf, len_write_data );
+    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE, write_data_buf, len_write_data, NULL, 0, result, trace_start ) );
+    return result;
+    #else
+    return _i2c_master_write( obj, write_data_buf, len_write_data );
+    #endif
+}
+
+err_t i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _i2c_master_read( obj, read_data_buf, len_read_data );
+    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_READ, NULL, 0, read_data_buf, len_read_data, result, trace_start ) );
+    return result;
+    #else
+    return _i2c_master_read( obj, read_data_buf, len_read_data );
+    #endif
+}
+
+err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
+                                                     uint8_t *read_data_buf, size_t len_read_data )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
+                                                read_data_buf, len_read_data );
+    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE_THEN_READ, write_data_buf, len_write_data,
+                              read_data_buf, len_read_data, result, trace_start ) );
+    return result;
+    #else
+    return _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
+                                        read_data_buf, len_read_data );
+    #endif
 }
 
 err_t i2c_master_close( i2c_master_t *obj )

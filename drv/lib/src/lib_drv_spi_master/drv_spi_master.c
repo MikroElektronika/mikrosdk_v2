@@ -42,8 +42,24 @@
  */
 
 #include "drv_spi_master.h"
+#include "drv_trace.h"
 
 static spi_master_t *_owner = NULL;
+
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK uint32_t drv_trace_now( void )
+{
+    return 0;
+}
+
+DRV_TRACE_WEAK void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
+                                   const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
+{
+}
+#endif
 
 #if !DRV_TO_HAL
 extern hal_spi_master_handle_register_t DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ SPI_MODULE_COUNT ];
@@ -267,7 +283,7 @@ err_t spi_master_set_default_write_data( spi_master_t *obj, uint8_t default_writ
     }
 }
 
-err_t spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length )
+static err_t _spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -318,7 +334,7 @@ err_t spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_bu
     }
 }
 
-err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer, size_t read_data_length )
+static err_t _spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer, size_t read_data_length )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -369,10 +385,10 @@ err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer, size_t read
     }
 }
 
-err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
-                                                      size_t length_write_data,
-                                                     uint8_t *read_data_buffer,
-                                                      size_t length_read_data )
+static err_t _spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
+                                                              size_t length_write_data,
+                                                             uint8_t *read_data_buffer,
+                                                              size_t length_read_data )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -429,9 +445,9 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
     }
 }
 
-err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
-                                              uint8_t *read_data_buffer,
-                                              size_t data_length ) {
+static err_t _spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
+                                                      uint8_t *read_data_buffer,
+                                                      size_t data_length ) {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL ) {
         #if DRV_TO_HAL
         return hal_spi_master_transfer( &obj->handle, write_data_buffer,
@@ -482,6 +498,63 @@ err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
     } else {
         return SPI_MASTER_ERROR;
     }
+}
+
+err_t spi_master_write( spi_master_t *obj, uint8_t * __generic_ptr write_data_buffer, size_t write_data_length )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _spi_master_write( obj, write_data_buffer, write_data_length );
+    DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_WRITE, write_data_buffer, write_data_length, NULL, 0, result, trace_start ) );
+    return result;
+    #else
+    return _spi_master_write( obj, write_data_buffer, write_data_length );
+    #endif
+}
+
+err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer, size_t read_data_length )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _spi_master_read( obj, read_data_buffer, read_data_length );
+    DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_READ, NULL, 0, read_data_buffer, read_data_length, result, trace_start ) );
+    return result;
+    #else
+    return _spi_master_read( obj, read_data_buffer, read_data_length );
+    #endif
+}
+
+err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
+                                                      size_t length_write_data,
+                                                     uint8_t *read_data_buffer,
+                                                      size_t length_read_data )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _spi_master_write_then_read( obj, write_data_buffer, length_write_data,
+                                                read_data_buffer, length_read_data );
+    DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_WRITE_THEN_READ, write_data_buffer, length_write_data,
+                              read_data_buffer, length_read_data, result, trace_start ) );
+    return result;
+    #else
+    return _spi_master_write_then_read( obj, write_data_buffer, length_write_data,
+                                        read_data_buffer, length_read_data );
+    #endif
+}
+
+err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
+                                              uint8_t *read_data_buffer,
+                                              size_t data_length )
+{
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _spi_master_transfer( obj, write_data_buffer, read_data_buffer, data_length );
+    DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_TRANSFER, write_data_buffer, data_length,
+                              read_data_buffer, data_length, result, trace_start ) );
+    return result;
+    #else
+    return _spi_master_transfer( obj, write_data_buffer, read_data_buffer, data_length );
+    #endif
 }
 
 err_t spi_master_close( spi_master_t *obj )

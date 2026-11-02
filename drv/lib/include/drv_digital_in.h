@@ -50,6 +50,7 @@ extern "C"{
 
 #include "drv_name.h"
 #include "hal_gpio.h"
+#include "drv_trace.h"
 
 /**
  * @details Return values.
@@ -143,7 +144,11 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name );
  * @endcode
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#if defined(MIKROSDK_TRACE) && DRV_TRACE_ENABLED
+#define digital_in_read(_handle) drv_trace_gpio_in( _handle, hal_gpio_read_pin_input( (hal_gpio_pin_t *)_handle ) )
+#else
 #define digital_in_read(_handle) hal_gpio_read_pin_input( (hal_gpio_pin_t *)_handle )
+#endif
 #else
 uint8_t digital_in_read( digital_in_t *in );
 #endif

@@ -50,6 +50,7 @@ extern "C"{
 
 #include "drv_name.h"
 #include "hal_gpio.h"
+#include "drv_trace.h"
 
 /**
  * @details Return values.
@@ -144,7 +145,12 @@ err_t digital_out_init( digital_out_t *out, pin_name_t name );
  * @endcode
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#if defined(MIKROSDK_TRACE) && DRV_TRACE_ENABLED
+#define digital_out_high(_handle) ( drv_trace_gpio_out( _handle, 1 ), \
+                                    hal_gpio_set_pin_output( (hal_gpio_pin_t *)_handle ) )
+#else
 #define digital_out_high(_handle) hal_gpio_set_pin_output( (hal_gpio_pin_t *)_handle )
+#endif
 #else
 err_t digital_out_high( digital_out_t *out );
 #endif
@@ -171,7 +177,12 @@ err_t digital_out_high( digital_out_t *out );
  * @endcode
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#if defined(MIKROSDK_TRACE) && DRV_TRACE_ENABLED
+#define digital_out_low(_handle) ( drv_trace_gpio_out( _handle, 0 ), \
+                                   hal_gpio_clear_pin_output( (hal_gpio_pin_t *)_handle ) )
+#else
 #define digital_out_low(_handle) hal_gpio_clear_pin_output( (hal_gpio_pin_t *)_handle )
+#endif
 #else
 err_t digital_out_low( digital_out_t *out );
 #endif
@@ -198,7 +209,12 @@ err_t digital_out_low( digital_out_t *out );
  * @endcode
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#if defined(MIKROSDK_TRACE) && DRV_TRACE_ENABLED
+#define digital_out_toggle(_handle) ( drv_trace_gpio_out( _handle, !hal_gpio_read_pin_output( (hal_gpio_pin_t *)_handle ) ), \
+                                      hal_gpio_toggle_pin_output( (hal_gpio_pin_t *)_handle ) )
+#else
 #define digital_out_toggle(_handle) hal_gpio_toggle_pin_output( (hal_gpio_pin_t *)_handle )
+#endif
 #else
 err_t digital_out_toggle( digital_out_t *out );
 #endif
@@ -227,7 +243,12 @@ err_t digital_out_toggle( digital_out_t *out );
  * @endcode
  */
 #if defined(FLATTEN_ME) && (FLATTEN_ME_LEVEL >= FLATTEN_ME_LEVEL_HIGH)
+#if defined(MIKROSDK_TRACE) && DRV_TRACE_ENABLED
+#define digital_out_write(_handle,_value) ( drv_trace_gpio_out( _handle, _value ), \
+                                            hal_gpio_write_pin_output( (hal_gpio_pin_t *)_handle, _value ) )
+#else
 #define digital_out_write(_handle,_value) hal_gpio_write_pin_output( (hal_gpio_pin_t *)_handle, _value )
+#endif
 #else
 err_t digital_out_write( digital_out_t *out, uint8_t value );
 #endif
