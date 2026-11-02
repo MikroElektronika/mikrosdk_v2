@@ -180,7 +180,7 @@ static inline void frame_start(uint32_t start_column, uint32_t end_column,
  */
 static inline void write_array_data(uint16_t *array, uint16_t length)
 {
-    st7789_gl_write_pixels((const uint8_t *)array, (uint32_t)length * 2);
+    st7789_gl_write_pixels((uint8_t *)array, (uint32_t)length * 2);
 }
 
 /**
