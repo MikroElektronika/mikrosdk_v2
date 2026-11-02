@@ -241,6 +241,21 @@
 #define GC9107_MADCTL_DEFAULT              0x00
 
 /**
+ * @brief MADCTL row address order (mirror Y).
+ */
+#define GC9107_MADCTL_MY                   0x80
+
+/**
+ * @brief MADCTL column address order (mirror X).
+ */
+#define GC9107_MADCTL_MX                   0x40
+
+/**
+ * @brief MADCTL row/column exchange (swap X and Y).
+ */
+#define GC9107_MADCTL_MV                   0x20
+
+/**
  * @brief COLMOD 16 bit per pixel (RGB565).
  */
 #define GC9107_COLMOD_16BIT                0x05

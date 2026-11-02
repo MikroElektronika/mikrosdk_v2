@@ -99,6 +99,15 @@ extern "C"
 /*!< Set SPI dummy write data. */
 #define SPI_DUMMY          0x00
 
+/* The visible area of the IPS Display 3 Click starts 13 rows below the beginning
+ * of the controller memory. Added to the area in frame_start(). */
+#ifndef GC9107_COL_OFFSET
+#define GC9107_COL_OFFSET    0
+#endif
+#ifndef GC9107_ROW_OFFSET
+#define GC9107_ROW_OFFSET    13
+#endif
+
 /*!< Set CS pin high. */
 #define CS_HIGH            ( digital_out_high( &pin_cs ) )
 /*!< Set CS pin low. */
@@ -171,6 +180,13 @@ static inline void write_array_data( uint16_t *array, uint16_t length )
 {
     /* LVGL v9 gives pixels as a byte pointer. For SPI treat it as uint8_t */
     uint8_t *data = (uint8_t *)array;
+    /* GC9107 expects the high byte first, LVGL stores RGB565 low byte first. */
+    for ( uint16_t i = 0; i < length; i++ )
+    {
+        uint8_t tmp = data[ 2 * i ];
+        data[ 2 * i ] = data[ 2 * i + 1 ];
+        data[ 2 * i + 1 ] = tmp;
+    }
 
     /*Write px data*/
     CS_LOW;
@@ -189,7 +205,7 @@ static inline void display_configure( void )
     digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
     digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
     digital_out_init( &pin_dc, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) );
-    digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ) );
+    digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_PWM ) );
     digital_out_high( &pin_bck );
     CS_HIGH;
 
@@ -211,17 +227,22 @@ static inline void display_configure( void )
 static inline void frame_start( uint32_t start_column, uint32_t end_column,
                                 uint32_t start_page, uint32_t end_page )
 {
+    uint32_t col_start = start_column + GC9107_COL_OFFSET;
+    uint32_t col_end = end_column + GC9107_COL_OFFSET;
+    uint32_t row_start = start_page + GC9107_ROW_OFFSET;
+    uint32_t row_end = end_page + GC9107_ROW_OFFSET;
+
     write_command( GC9107_CMD_CASET );
-    write_param( Hi( start_column ) );
-    write_param( Lo( start_column ) );
-    write_param( Hi( end_column ) );
-    write_param( Lo( end_column ) );
+    write_param( Hi( col_start ) );
+    write_param( Lo( col_start ) );
+    write_param( Hi( col_end ) );
+    write_param( Lo( col_end ) );
 
     write_command( GC9107_CMD_RASET );
-    write_param( Hi( start_page ) );
-    write_param( Lo( start_page ) );
-    write_param( Hi( end_page ) );
-    write_param( Lo( end_page ) );
+    write_param( Hi( row_start ) );
+    write_param( Lo( row_start ) );
+    write_param( Hi( row_end ) );
+    write_param( Lo( row_end ) );
 
     write_command( GC9107_CMD_RAMWR );
 

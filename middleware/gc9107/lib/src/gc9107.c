@@ -87,19 +87,19 @@ static uint16_t display_height;
 /**
  * @brief Gamma set 0 values, from the MikroE IPS Display 3 Click library.
  */
-static const uint8_t gamma0[ 14 ] = { 0x05, 0x1D, 0x51, 0x2F, 0x85, 0x2A, 0x11,
-                                      0x62, 0x00, 0x07, 0x07, 0x0F, 0x08, 0x1F };
+static uint8_t gamma0[ 14 ] = { 0x05, 0x1D, 0x51, 0x2F, 0x85, 0x2A, 0x11,
+                                0x62, 0x00, 0x07, 0x07, 0x0F, 0x08, 0x1F };
 
 /**
  * @brief Gamma set 1 values, from the MikroE IPS Display 3 Click library.
  */
-static const uint8_t gamma1[ 14 ] = { 0x2E, 0x41, 0x62, 0x56, 0xA5, 0x3A, 0x3F,
-                                      0x60, 0x0F, 0x07, 0x0A, 0x18, 0x18, 0x1D };
+static uint8_t gamma1[ 14 ] = { 0x2E, 0x41, 0x62, 0x56, 0xA5, 0x3A, 0x3F,
+                                0x60, 0x0F, 0x07, 0x0A, 0x18, 0x18, 0x1D };
 
 /**
  * @brief Send a command followed by its parameters.
  */
-static void write_command_params( uint8_t command, const uint8_t *params, uint8_t length )
+static void write_command_params( uint8_t command, uint8_t *params, uint8_t length )
 {
     gc9107_write_command( command );
 

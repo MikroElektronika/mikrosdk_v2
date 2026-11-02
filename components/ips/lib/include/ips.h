@@ -84,6 +84,7 @@
 
 #define IPS_MAP_PINOUTS( ips_cfg )                                     \
     ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
+    ips_cfg.ips_pwm = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_PWM );  \
     ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
     ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
     ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
@@ -130,6 +131,7 @@ typedef struct
     const ips_display_t *board; /*!< Board definition constant. */
 
     hal_pin_name_t ips_bck;     /*!< BCK pin name. */
+    hal_pin_name_t ips_pwm;     /*!< PWM pin name (BCK pin of IPS Display 3 Click). */
     hal_pin_name_t ips_rst;     /*!< RST pin name. */
     hal_pin_name_t ips_cs;      /*!< CS pin name. */
     hal_pin_name_t ips_sck;     /*!< SCK pin name. */

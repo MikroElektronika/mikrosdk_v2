@@ -271,7 +271,8 @@ void ips_init( ips_cfg_t *cfg, gl_driver_t *driver )
     if ( active_controller == IPS_CONTROLLER_GC9107 )
     {
         gc9107_cfg_t gc9107_cfg;
-        gc9107_cfg.bck = cfg->ips_bck;
+        // IPS Display 3 Click has the backlight on the PWM pin.
+        gc9107_cfg.bck = cfg->ips_pwm;
         gc9107_cfg.rst = cfg->ips_rst;
         gc9107_cfg.cs = cfg->ips_cs;
         gc9107_cfg.sck = cfg->ips_sck;
@@ -322,7 +323,8 @@ uint16_t ips_display_height()
 {
     if ( active_controller == IPS_CONTROLLER_GC9107 )
     {
-        return gc9107_get_display
+        return gc9107_get_display_height();
+    }
 
     return st7789_get_display_height();
 }
