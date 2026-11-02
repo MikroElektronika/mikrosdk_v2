@@ -46,8 +46,14 @@
  * buffer, empties it and lets the firmware continue. Without a debugger the records are
  * dropped and counted.
  *
- * Applications built with flattened drivers (FLATTEN_ME_LEVEL_HIGH) also need the
- * MIKROSDK_TRACE compile definition, for the GPIO macros.
+ * A pin written very fast (a display strobe, a bit-banged bus) would fill the buffer with its
+ * levels and stop the program over and over. After 16 writes in a row less than 20 us apart,
+ * the writes of that pin are only counted until it pauses: the timeline shows one burst with
+ * the number of level changes. Needs a time base (#trace_tick_hz).
+ *
+ * Linking MikroSDK.Trace is all an application needs: the library is always linked in
+ * (not only when something calls it), it starts with the first recorded event, and it defines
+ * MIKROSDK_TRACE for the application, which flattened GPIO macros (FLATTEN_ME_LEVEL_HIGH) need.
  */
 
 #ifndef _TRACE_H_
@@ -95,8 +101,9 @@ extern "C"{
 
 /**
  * @brief Start recording.
- * @details Call early in main. Transfers before the call are not recorded; the pins of
- * drivers initialized before it are still known.
+ * @details Optional: the first recorded event starts the trace by itself, and linking
+ * MikroSDK.Trace is all an application needs. Call it to start the time base at a known point;
+ * later calls do nothing.
  */
 void trace_init( void );
 

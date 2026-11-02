@@ -74,11 +74,18 @@
 // META, DROPPED, the largest LANE_DEF and the largest event must fit after a flush.
 #define TRACE_MIN_BUFF_SIZE (128)
 
+// A pin written this many times in a row, each write within TRACE_BURST_GAP_US of the one
+// before, is in a burst (a display strobe, a bit-banged bus): its writes are counted, not
+// recorded, until a pause longer than the gap. One BURST record then stands for all of them.
+#define TRACE_BURST_WRITES (16)
+#define TRACE_BURST_GAP_US (20)
+
 typedef enum
 {
     TRACE_RECORD_META = 0x01,
     TRACE_RECORD_LANE_DEF = 0x02,
     TRACE_RECORD_LEVEL = 0x10,
+    TRACE_RECORD_BURST = 0x11,
     TRACE_RECORD_I2C = 0x20,
     TRACE_RECORD_SPI = 0x21,
     TRACE_RECORD_UART_TX = 0x22,
@@ -105,7 +112,14 @@ typedef struct
     uint8_t pin_count;
     uint8_t kind;
     bool defined;       // LANE_DEF written since the last loss
-    uint8_t level;      // last level read, for digital_in
+    uint8_t level;      // last level written or read
+    // Burst detection, for pins (TRACE_BURST_WRITES).
+    bool written;           // last_write is valid
+    bool bursting;
+    uint8_t fast_writes;    // writes in a row within the gap
+    uint32_t last_write;
+    uint32_t burst_start;
+    uint32_t burst_changes;
 } trace_lane_t;
 
 typedef struct
@@ -135,6 +149,8 @@ static bool trace_started = false;
 static bool trace_resync = false;    // META (and DROPPED) needed before the next record
 static uint32_t trace_flush_ticks = 0;    // automatic flush interval, 0: only when full
 static uint32_t trace_last_flush = 0;
+static uint32_t trace_burst_gap = 0;      // TRACE_BURST_GAP_US in ticks, 0: no bursts
+static uint8_t trace_bursts = 0;          // lanes in a burst
 
 // --------------------------------------------------------------- Time base
 
@@ -366,7 +382,7 @@ static void trace_write_resync( void )
 
 // Writes an event record with what it depends on: META after a loss, the lane definition.
 // Space for all of it is made first, so that a flush cannot separate them.
-static void trace_emit( uint8_t id, trace_lane_t *lane, const trace_record_t *event )
+static void trace_write( uint8_t id, trace_lane_t *lane, const trace_record_t *event )
 {
     for ( uint8_t attempt = 0; attempt < 2; attempt++ )
     {
@@ -396,13 +412,72 @@ static void trace_emit( uint8_t id, trace_lane_t *lane, const trace_record_t *ev
         trace_write_lane_def( id, lane );
     }
     trace_commit( event );
+}
 
-    // Records reach the debugger at least every interval of program time, not only when the
-    // buffer is full: the timeline stays live, and the time base never wraps unseen.
-    if ( trace_flush_ticks && ( ( trace_ticks() - trace_last_flush ) >= trace_flush_ticks ) )
+// Ends the burst of a lane. The record is stamped now, so that record times never go back
+// (the debugger takes a step back as a wrap of the time base); it says how long ago the burst
+// started and ended.
+static void trace_write_burst( uint8_t id, trace_lane_t *lane, uint32_t now )
+{
+    trace_record_t record;
+
+    record_header( &record, TRACE_RECORD_BURST, id, now );
+    record_u32( &record, lane->last_write - lane->burst_start );
+    record_u32( &record, now - lane->last_write );
+    record_u32( &record, lane->burst_changes );
+    record_u8( &record, lane->level );
+    trace_write( id, lane, &record );
+    lane->bursting = false;
+    trace_bursts--;
+}
+
+// Ends the bursts that paused for longer than the gap by now, or all of them.
+static void trace_end_bursts( uint32_t now, bool all )
+{
+    for ( uint8_t i = 0; trace_bursts && ( i < trace_lane_count ); i++ )
     {
+        trace_lane_t *lane = &trace_lanes[ i ];
+        // Signed: an event stamped at its start (a transfer) can be older than the last write.
+        if ( lane->bursting &&
+             ( all || ( (int32_t)( now - lane->last_write ) > (int32_t)trace_burst_gap ) ) )
+        {
+            trace_write_burst( i, lane, now );
+        }
+    }
+}
+
+// Records reach the debugger at least every interval of program time, not only when the
+// buffer is full: the timeline stays live, and the time base never wraps unseen.
+static void trace_auto_flush( void )
+{
+    if ( !trace_flush_ticks )
+    {
+        return;
+    }
+    uint32_t now = trace_ticks();
+    if ( ( now - trace_last_flush ) >= trace_flush_ticks )
+    {
+        // A burst still going on is cut here, so that the timeline shows it.
+        trace_end_bursts( now, true );
         trace_flush_locked();
     }
+}
+
+static uint32_t record_ticks( const trace_record_t *record )
+{
+    return (uint32_t)record->data[ 2 ] | ( (uint32_t)record->data[ 3 ] << 8 ) |
+           ( (uint32_t)record->data[ 4 ] << 16 ) | ( (uint32_t)record->data[ 5 ] << 24 );
+}
+
+static void trace_emit( uint8_t id, trace_lane_t *lane, const trace_record_t *event )
+{
+    // A burst that ended goes first: the timeline then shows it before this event.
+    if ( trace_bursts )
+    {
+        trace_end_bursts( record_ticks( event ), false );
+    }
+    trace_write( id, lane, event );
+    trace_auto_flush();
 }
 
 // --------------------------------------------------------------- Lanes
@@ -456,10 +531,19 @@ void trace_init( void )
     }
 
     uint32_t primask = trace_lock();
+    // Started already, by an earlier call or by the first recorded event: restarting would
+    // reset the time base under the records already made.
+    if ( trace_started )
+    {
+        trace_unlock( primask );
+        return;
+    }
     #if TRACE_HAS_CYCCNT
     trace_cyccnt_start();
     #endif
     trace_hz = trace_tick_hz();
+    // Bursts need a time base too.
+    trace_burst_gap = (uint32_t)( ( (uint64_t)trace_hz * TRACE_BURST_GAP_US ) / 1000000U );
     trace_set_flush_interval_locked( TRACE_FLUSH_INTERVAL_MS );
     trace_last_flush = trace_ticks();
     trace_started = true;
@@ -467,16 +551,27 @@ void trace_init( void )
     trace_unlock( primask );
 }
 
+// The first recorded event starts the trace: linking the library is all an application needs.
+static bool trace_ensure_started( void )
+{
+    if ( !trace_started )
+    {
+        trace_init();
+    }
+    return trace_started;
+}
+
 void trace_flush( void )
 {
     uint32_t primask = trace_lock();
+    trace_end_bursts( trace_ticks(), true );
     trace_flush_locked();
     trace_unlock( primask );
 }
 
 void trace_value( const char *name, float value )
 {
-    if ( !trace_started || !name )
+    if ( !name || !trace_ensure_started() )
     {
         return;
     }
@@ -523,13 +618,13 @@ static void record_transfer( trace_record_t *record, uint8_t op, const uint8_t *
 
 uint32_t drv_trace_now( void )
 {
-    return trace_started ? trace_ticks() : 0;
+    return trace_ensure_started() ? trace_ticks() : 0;
 }
 
 void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
-    if ( !trace_started )
+    if ( !trace_ensure_started() )
     {
         return;
     }
@@ -558,7 +653,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
 void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
-    if ( !trace_started )
+    if ( !trace_ensure_started() )
     {
         return;
     }
@@ -585,7 +680,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
 
 void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
 {
-    if ( !trace_started )
+    if ( !trace_ensure_started() )
     {
         return;
     }
@@ -621,13 +716,65 @@ void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
     trace_lane_t *lane = trace_lane( obj, is_output ? TRACE_LANE_GPIO_OUT : TRACE_LANE_GPIO_IN, &id );
     if ( lane )
     {
+        // A driver object used again for another pin: its burst belongs to the old one.
+        if ( lane->bursting )
+        {
+            trace_write_burst( id, lane, trace_ticks() );
+        }
         lane->kind = is_output ? TRACE_LANE_GPIO_OUT : TRACE_LANE_GPIO_IN;
         lane->pins[ 0 ] = pin;
         lane->pin_count = 1;
         lane->level = TRACE_LEVEL_UNKNOWN;
         lane->defined = false;
+        lane->written = false;
+        lane->fast_writes = 0;
     }
     trace_unlock( primask );
+}
+
+// Counts a write into the burst of its lane, starting or ending the burst. True when the write
+// is counted and needs no record of its own.
+static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, uint32_t now )
+{
+    if ( !trace_burst_gap )
+    {
+        return false;
+    }
+
+    bool fast = lane->written && ( ( now - lane->last_write ) <= trace_burst_gap );
+    if ( lane->bursting && !fast )
+    {
+        trace_write_burst( id, lane, now );
+    }
+    lane->written = true;
+    lane->last_write = now;
+    if ( !fast )
+    {
+        lane->fast_writes = 0;
+        return false;
+    }
+
+    if ( lane->fast_writes < TRACE_BURST_WRITES )
+    {
+        lane->fast_writes++;
+    }
+    if ( !lane->bursting )
+    {
+        if ( lane->fast_writes < TRACE_BURST_WRITES )
+        {
+            return false;
+        }
+        lane->bursting = true;
+        lane->burst_start = now;
+        lane->burst_changes = 0;
+        trace_bursts++;
+    }
+    if ( lane->level != level )
+    {
+        lane->level = level;
+        lane->burst_changes++;
+    }
+    return true;
 }
 
 static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only )
@@ -635,15 +782,26 @@ static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool chan
     uint32_t primask = trace_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, kind, &id );
+    uint32_t now = trace_ticks();
     level = level ? 1 : 0;
-    if ( !changes_only || !lane || ( lane->level != level ) )
+    if ( lane && changes_only && ( lane->level == level ) )
+    {
+        trace_unlock( primask );
+        return;
+    }
+
+    if ( lane && trace_burst_write( id, lane, level, now ) )
+    {
+        trace_auto_flush();
+    }
+    else
     {
         trace_record_t record;
         if ( lane )
         {
             lane->level = level;
         }
-        record_header( &record, TRACE_RECORD_LEVEL, id, trace_ticks() );
+        record_header( &record, TRACE_RECORD_LEVEL, id, now );
         record_u8( &record, level );
         trace_emit( id, lane, &record );
     }
@@ -652,7 +810,7 @@ static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool chan
 
 void drv_trace_gpio_out( const void *obj, uint8_t level )
 {
-    if ( trace_started )
+    if ( trace_ensure_started() )
     {
         trace_level( obj, TRACE_LANE_GPIO_OUT, level, false );
     }
@@ -661,7 +819,7 @@ void drv_trace_gpio_out( const void *obj, uint8_t level )
 uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
 {
     // Polling loops read the same level again and again: only changes are recorded.
-    if ( trace_started )
+    if ( trace_ensure_started() )
     {
         trace_level( obj, TRACE_LANE_GPIO_IN, level, true );
     }
