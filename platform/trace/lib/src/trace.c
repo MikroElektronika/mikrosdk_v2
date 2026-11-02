@@ -108,7 +108,7 @@ typedef struct
 {
     const void *key;    // driver object, or the name of a value
     const char *name;
-    pin_name_t pins[ 3 ];
+    pin_name_t pins[ 4 ];    // SPI: SCK, MISO, MOSI and the chip select, once known
     uint8_t pin_count;
     uint8_t kind;
     bool defined;       // LANE_DEF written since the last loss
@@ -151,6 +151,14 @@ static uint32_t trace_flush_ticks = 0;    // automatic flush interval, 0: only w
 static uint32_t trace_last_flush = 0;
 static uint32_t trace_burst_gap = 0;      // TRACE_BURST_GAP_US in ticks, 0: no bursts
 static uint8_t trace_bursts = 0;          // lanes in a burst
+
+// Chip select pins seen by spi_master_select_device(). Their lanes are keyed by the entries,
+// as other lanes are by their driver object.
+#define TRACE_MAX_CS (8)
+static pin_name_t trace_cs_pins[ TRACE_MAX_CS ];
+static uint8_t trace_cs_count = 0;
+static bool trace_cs_selected = false;
+static pin_name_t trace_cs_pin;    // selected chip select, while trace_cs_selected
 
 // --------------------------------------------------------------- Time base
 
@@ -670,6 +678,14 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
         lane->pins[ 2 ] = spi->config.mosi;
         lane->pin_count = 3;
     }
+    // The chip select tells the device, and so the mikroBUS socket, when several share the bus.
+    // A driver object is one device in Click libraries: its first chip select stays.
+    if ( lane && ( 3 == lane->pin_count ) && trace_cs_selected )
+    {
+        lane->pins[ 3 ] = trace_cs_pin;
+        lane->pin_count = 4;
+        lane->defined = false;
+    }
 
     trace_record_t record;
     record_header( &record, TRACE_RECORD_SPI, id, start );
@@ -824,6 +840,53 @@ uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
         trace_level( obj, TRACE_LANE_GPIO_IN, level, true );
     }
     return level;
+}
+
+void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
+{
+    if ( ( HAL_PIN_NC == chip_select ) || !trace_ensure_started() )
+    {
+        return;
+    }
+
+    uint32_t primask = trace_lock();
+    if ( selected )
+    {
+        trace_cs_pin = chip_select;
+        trace_cs_selected = true;
+    }
+    else if ( trace_cs_selected && ( trace_cs_pin == chip_select ) )
+    {
+        trace_cs_selected = false;
+    }
+
+    const void *key = NULL;
+    for ( uint8_t i = 0; i < trace_cs_count; i++ )
+    {
+        if ( trace_cs_pins[ i ] == chip_select )
+        {
+            key = &trace_cs_pins[ i ];
+        }
+    }
+    if ( !key && ( trace_cs_count < TRACE_MAX_CS ) )
+    {
+        trace_cs_pins[ trace_cs_count ] = chip_select;
+        key = &trace_cs_pins[ trace_cs_count++ ];
+    }
+
+    uint8_t id;
+    trace_lane_t *lane = key ? trace_lane( key, TRACE_LANE_GPIO_OUT, &id ) : NULL;
+    if ( lane && !lane->pin_count )
+    {
+        lane->pins[ 0 ] = chip_select;
+        lane->pin_count = 1;
+    }
+    trace_unlock( primask );
+
+    if ( lane )
+    {
+        trace_level( key, TRACE_LANE_GPIO_OUT, level, false );
+    }
 }
 
 // ------------------------------------------------------------------------- END

@@ -123,10 +123,19 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
 /**
  * @brief SPI transfer finished.
  * @details Same parameters as #drv_trace_i2c; @p obj is the SPI Master driver object
- * (spi_master_t). Chip select is not part of the record: it is driven outside the driver.
+ * (spi_master_t). The chip select of the transfer is the one #drv_trace_spi_cs last reported
+ * as selected.
  */
 void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start );
+
+/**
+ * @brief Chip select driven by spi_master_select_device() or spi_master_deselect_device().
+ * @param[in] chip_select Chip select pin.
+ * @param[in] selected 1 for select, 0 for deselect.
+ * @param[in] level Pin level written, after the chip select polarity.
+ */
+void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level );
 
 /**
  * @brief UART data written or read.

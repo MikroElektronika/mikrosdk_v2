@@ -59,6 +59,20 @@ DRV_TRACE_WEAK void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *w
                                    const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
 }
+
+DRV_TRACE_WEAK void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
+{
+}
+
+// Defined by the HAL in both driver modes.
+extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;
+
+static void _trace_chip_select( pin_name_t chip_select, uint8_t selected )
+{
+    uint8_t active_high =
+        ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH );
+    DRV_TRACE( drv_trace_spi_cs( chip_select, selected, ( selected == active_high ) ? 1 : 0 ) );
+}
 #endif
 
 #if !DRV_TO_HAL
@@ -155,6 +169,9 @@ void spi_master_select_device( pin_name_t chip_select )
         }
     }
     #endif
+    #if DRV_TRACE_ENABLED
+    _trace_chip_select( chip_select, 1 );
+    #endif
 }
 
 void spi_master_deselect_device( pin_name_t chip_select )
@@ -174,6 +191,9 @@ void spi_master_deselect_device( pin_name_t chip_select )
             hal_gpio_set_pin_output( &struct_cs );
         }
     }
+    #endif
+    #if DRV_TRACE_ENABLED
+    _trace_chip_select( chip_select, 0 );
     #endif
 }
 
