@@ -42,8 +42,18 @@
  */
 
 #include "drv_analog_in.h"
+#include "drv_trace.h"
 
 static analog_in_t *_owner = NULL;
+
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
+{
+}
+#endif
 
 #if !DRV_TO_HAL
 extern hal_adc_handle_register_t DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ADC_MODULE_COUNT];
@@ -202,7 +212,7 @@ err_t analog_in_set_vref_value( analog_in_t *obj, float vref_value )
     }
 }
 
-err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
+static err_t _analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -241,7 +251,7 @@ err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
     }
 }
 
-err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
+static err_t _analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -312,6 +322,34 @@ err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
     } else {
         return ADC_ERROR;
     }
+}
+
+err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
+{
+    #if DRV_TRACE_ENABLED
+    err_t result = _analog_in_read( obj, readDatabuf );
+    if ( ADC_SUCCESS == result )
+    {
+        DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 0, (float)*readDatabuf ) );
+    }
+    return result;
+    #else
+    return _analog_in_read( obj, readDatabuf );
+    #endif
+}
+
+err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
+{
+    #if DRV_TRACE_ENABLED
+    err_t result = _analog_in_read_voltage( obj, readDatabuf );
+    if ( ADC_SUCCESS == result )
+    {
+        DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 1, *readDatabuf ) );
+    }
+    return result;
+    #else
+    return _analog_in_read_voltage( obj, readDatabuf );
+    #endif
 }
 
 err_t analog_in_close( analog_in_t *obj )

@@ -28,11 +28,12 @@
   + Records driver activity on the device and hands it to the debugger, so NECTO Studio can show it on a timeline.
   + Key changes:
     + Added the `MikroSDK.Trace` platform library (`trace.h`); linking it is all an application needs, the trace starts with the first recorded event.
-    + Recorded events: I2C Master and SPI Master transfers, SPI chip select changes, UART writes and reads, GPIO output writes and GPIO input level changes, plus named values through `trace_value()`.
+    + Recorded events: I2C Master and SPI Master transfers, SPI chip select changes, UART writes and reads, 1-Wire operations (reset, ROM commands, byte writes and reads), ADC reads (raw and voltage), GPIO output writes and GPIO input level changes, plus named values through `trace_value()`.
+    + Trace format version 2 (1-Wire records); NECTO Studio needs a trace decoder that reads version 2.
     + Records are kept in a RAM buffer (512 bytes by default, `TRACE_BUFFER( size )` to change it) and handed to the debugger when the buffer is full, on `trace_flush()`, or every 500 ms of program time (`trace_set_flush_interval()`).
     + Fast GPIO writes (a display strobe, a bit-banged bus) are coalesced into bursts, so they do not stop the program over and over.
     + Time base: the DWT cycle counter on Cortex-M3 and newer; other cores keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
-    + Added trace hooks to the GPIO Out, GPIO In, I2C Master, SPI Master and UART drivers (`drv_trace.h`). Without the trace library the hooks cost one load and a branch per call.
+    + Added trace hooks to the GPIO Out, GPIO In, I2C Master, SPI Master, UART, ADC and 1-Wire drivers (`drv_trace.h`). Without the trace library the hooks cost one load and a branch per call.
     + The library is built for ARM with GCC and Clang. With mikroC and XC8 the drivers are built without hooks.
     + Added validation test under `tests/trace`.
 + **Timestamped plot**

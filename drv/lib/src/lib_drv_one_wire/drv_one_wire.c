@@ -42,6 +42,7 @@
  */
 
 #include "drv_one_wire.h"
+#include "drv_trace.h"
 
 // TODO - Redefined for OW, as 
 // there is no real benefit at the moment
@@ -52,6 +53,26 @@
 
 #if !DRV_TO_HAL
 extern handle_t *hal_owner;
+#endif
+
+#if DRV_TRACE_ENABLED
+// Empty unless the MikroSDK.Trace library is linked.
+DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
+
+DRV_TRACE_WEAK uint32_t drv_trace_now( void ) {
+    return 0;
+}
+
+DRV_TRACE_WEAK void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
+                                        err_t result, uint32_t start ) {
+}
+
+static void _trace_one_wire( one_wire_t *obj, uint8_t op, const uint8_t *buf, size_t len,
+                             err_t result, uint32_t start ) {
+    if ( drv_trace_present && obj ) {
+        drv_trace_one_wire( obj, obj->data_pin, op, buf, len, result, start );
+    }
+}
 #endif
 
 err_t one_wire_open( one_wire_t *obj ) {
@@ -77,7 +98,7 @@ void one_wire_configure_default( one_wire_t *obj ) {
     }
 }
 
-err_t one_wire_reset( one_wire_t *obj ) {
+static err_t _one_wire_reset( one_wire_t *obj ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_reset( obj ) ) {
         return ONE_WIRE_ERROR;
@@ -105,7 +126,7 @@ err_t one_wire_reset( one_wire_t *obj ) {
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
+static err_t _one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_read_rom( obj, device_rom_address ) ) {
         return ONE_WIRE_ERROR;
@@ -137,7 +158,7 @@ err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_add
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_skip_rom( one_wire_t *obj ) {
+static err_t _one_wire_skip_rom( one_wire_t *obj ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_skip_rom( obj ) ) {
         return ONE_WIRE_ERROR;
@@ -165,7 +186,7 @@ err_t one_wire_skip_rom( one_wire_t *obj ) {
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
+static err_t _one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_match_rom( obj, device_rom_address ) ) {
         return ONE_WIRE_ERROR;
@@ -197,7 +218,7 @@ err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_ad
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
+static err_t _one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_search_first_device( obj, one_wire_device_list ) ) {
         return ONE_WIRE_ERROR;
@@ -225,7 +246,7 @@ err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
+static err_t _one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_search_next_device( obj, one_wire_device_list ) ) {
         return ONE_WIRE_ERROR;
@@ -253,7 +274,7 @@ err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length ) {
+static err_t _one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_write_byte( obj, write_data_buffer, write_data_length ) ) {
         return ONE_WIRE_ERROR;
@@ -285,7 +306,7 @@ err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t w
     return ONE_WIRE_SUCCESS;
 }
 
-err_t one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length ) {
+static err_t _one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length ) {
     #if DRV_TO_HAL
     if ( hal_one_wire_read_byte( obj, read_data_buffer, read_data_length ) ) {
         return ONE_WIRE_ERROR;
@@ -315,6 +336,94 @@ err_t one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t rea
     #endif
 
     return ONE_WIRE_SUCCESS;
+}
+
+err_t one_wire_reset( one_wire_t *obj ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_reset( obj );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_RESET, NULL, 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_reset( obj );
+    #endif
+}
+
+err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_read_rom( obj, device_rom_address );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_READ_ROM, device_rom_address ? device_rom_address->address : NULL, device_rom_address ? sizeof( device_rom_address->address ) : 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_read_rom( obj, device_rom_address );
+    #endif
+}
+
+err_t one_wire_skip_rom( one_wire_t *obj ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_skip_rom( obj );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SKIP_ROM, NULL, 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_skip_rom( obj );
+    #endif
+}
+
+err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_match_rom( obj, device_rom_address );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_MATCH_ROM, device_rom_address ? device_rom_address->address : NULL, device_rom_address ? sizeof( device_rom_address->address ) : 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_match_rom( obj, device_rom_address );
+    #endif
+}
+
+err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_search_first_device( obj, one_wire_device_list );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SEARCH_FIRST, one_wire_device_list ? one_wire_device_list->address : NULL, one_wire_device_list ? sizeof( one_wire_device_list->address ) : 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_search_first_device( obj, one_wire_device_list );
+    #endif
+}
+
+err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_search_next_device( obj, one_wire_device_list );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SEARCH_NEXT, one_wire_device_list ? one_wire_device_list->address : NULL, one_wire_device_list ? sizeof( one_wire_device_list->address ) : 0, result, trace_start );
+    return result;
+    #else
+    return _one_wire_search_next_device( obj, one_wire_device_list );
+    #endif
+}
+
+err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_write_byte( obj, write_data_buffer, write_data_length );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_WRITE, write_data_buffer, write_data_length, result, trace_start );
+    return result;
+    #else
+    return _one_wire_write_byte( obj, write_data_buffer, write_data_length );
+    #endif
+}
+
+err_t one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length ) {
+    #if DRV_TRACE_ENABLED
+    uint32_t trace_start = DRV_TRACE_NOW();
+    err_t result = _one_wire_read_byte( obj, read_data_buffer, read_data_length );
+    _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_READ, read_data_buffer, read_data_length, result, trace_start );
+    return result;
+    #else
+    return _one_wire_read_byte( obj, read_data_buffer, read_data_length );
+    #endif
 }
 
 // ------------------------------------------------------------------------- END

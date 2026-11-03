@@ -99,6 +99,21 @@ typedef enum
     DRV_TRACE_OP_TRANSFER = 3 /*!< Full duplex: the same number of bytes written and read. */
 } drv_trace_op_t;
 
+/**
+ * @brief 1-Wire operations of #drv_trace_one_wire.
+ */
+typedef enum
+{
+    DRV_TRACE_ONE_WIRE_RESET = 0,        /*!< Reset pulse; an error means no presence pulse. */
+    DRV_TRACE_ONE_WIRE_READ_ROM = 1,     /*!< Read ROM (0x33): the ROM address read. */
+    DRV_TRACE_ONE_WIRE_SKIP_ROM = 2,     /*!< Skip ROM (0xCC), no data. */
+    DRV_TRACE_ONE_WIRE_MATCH_ROM = 3,    /*!< Match ROM (0x55): the ROM address written. */
+    DRV_TRACE_ONE_WIRE_SEARCH_FIRST = 4, /*!< Search ROM (0xF0), first device: its ROM address. */
+    DRV_TRACE_ONE_WIRE_SEARCH_NEXT = 5,  /*!< Search ROM, next device: its ROM address. */
+    DRV_TRACE_ONE_WIRE_WRITE = 6,        /*!< Bytes written. */
+    DRV_TRACE_ONE_WIRE_READ = 7          /*!< Bytes read. */
+} drv_trace_one_wire_op_t;
+
 #if DRV_TRACE_ENABLED
 
 /**
@@ -190,6 +205,30 @@ void drv_trace_gpio_out( const void *obj, uint8_t level );
  * @return @p level, so that the hook can wrap the read in an expression.
  */
 uint8_t drv_trace_gpio_in( const void *obj, uint8_t level );
+
+/**
+ * @brief Analog input read.
+ * @details Called only for successful reads. Raw counts and voltages of one driver object are
+ * kept apart, so that the units of a lane never mix.
+ * @param[in] obj Analog input driver object (analog_in_t).
+ * @param[in] pin Analog input pin.
+ * @param[in] is_voltage 1 for analog_in_read_voltage(), 0 for analog_in_read().
+ * @param[in] value Value read: volts, or the raw count.
+ */
+void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value );
+
+/**
+ * @brief 1-Wire operation finished.
+ * @param[in] obj 1-Wire driver object (one_wire_t).
+ * @param[in] pin 1-Wire data pin.
+ * @param[in] op Operation, see #drv_trace_one_wire_op_t.
+ * @param[in] buf Bytes written or read (a ROM address for the ROM operations), NULL when none.
+ * @param[in] len Number of bytes.
+ * @param[in] result Driver result, 0 on success.
+ * @param[in] start Time of the operation start, from #drv_trace_now.
+ */
+void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
+                         err_t result, uint32_t start );
 
 #endif
 

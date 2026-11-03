@@ -60,7 +60,8 @@
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-#define TRACE_FORMAT_VERSION (1)
+// 2: ONE_WIRE records and lanes.
+#define TRACE_FORMAT_VERSION (2)
 #define TRACE_MAX_LANES (32)
 // The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
 #define TRACE_MAX_DATA (16)
@@ -112,6 +113,7 @@ typedef enum
     TRACE_RECORD_SPI = 0x21,
     TRACE_RECORD_UART_TX = 0x22,
     TRACE_RECORD_UART_RX = 0x23,
+    TRACE_RECORD_ONE_WIRE = 0x24,
     TRACE_RECORD_VALUE = 0x30,
     TRACE_RECORD_DROPPED = 0x3F
 } trace_record_type_t;
@@ -123,7 +125,8 @@ typedef enum
     TRACE_LANE_I2C = 3,
     TRACE_LANE_SPI = 4,
     TRACE_LANE_UART = 5,
-    TRACE_LANE_VALUE = 6
+    TRACE_LANE_VALUE = 6,
+    TRACE_LANE_ONE_WIRE = 7
 } trace_lane_kind_t;
 
 typedef struct
@@ -600,6 +603,17 @@ static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool chan
     trace_unlock( primask );
 }
 
+static void trace_emit_value( uint8_t id, trace_lane_t *lane, float value )
+{
+    uint32_t raw;
+    trace_record_t record;
+
+    memcpy( &raw, &value, sizeof( raw ) );
+    record_header( &record, TRACE_RECORD_VALUE, id, trace_ticks() );
+    record_u32( &record, raw );
+    trace_emit( id, lane, &record );
+}
+
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
 __attribute__((weak)) uint32_t trace_tick_hz( void )
@@ -684,14 +698,8 @@ void trace_value( const char *name, float value )
     trace_lane_t *lane = trace_lane( name, TRACE_LANE_VALUE, &id );
     if ( lane )
     {
-        uint32_t raw;
-        trace_record_t record;
-
         lane->name = name;
-        memcpy( &raw, &value, sizeof( raw ) );
-        record_header( &record, TRACE_RECORD_VALUE, id, trace_ticks() );
-        record_u32( &record, raw );
-        trace_emit( id, lane, &record );
+        trace_emit_value( id, lane, value );
     }
     trace_unlock( primask );
 }
@@ -883,6 +891,66 @@ void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
     {
         trace_level( key, TRACE_LANE_GPIO_OUT, level, false );
     }
+}
+
+void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
+{
+    if ( !trace_ensure_started() )
+    {
+        return;
+    }
+
+    // Raw counts and volts of one input are two lanes, so that a lane never mixes units. The
+    // volts lane is keyed one byte into the driver object: no other object starts there.
+    const void *key = is_voltage ? (const void *)( (const uint8_t *)obj + 1 ) : obj;
+    uint32_t primask = trace_lock();
+    uint8_t id;
+    trace_lane_t *lane = trace_lane( key, TRACE_LANE_VALUE, &id );
+    if ( lane )
+    {
+        if ( !lane->pin_count )
+        {
+            lane->name = is_voltage ? "ADC V" : "ADC";
+            lane->pins[ 0 ] = pin;
+            lane->pin_count = 1;
+        }
+        trace_emit_value( id, lane, value );
+    }
+    trace_unlock( primask );
+}
+
+void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
+                         err_t result, uint32_t start )
+{
+    if ( !trace_ensure_started() )
+    {
+        return;
+    }
+
+    uint32_t duration = trace_ticks() - start;
+    uint32_t primask = trace_lock();
+    uint8_t id;
+    trace_lane_t *lane = trace_lane( obj, TRACE_LANE_ONE_WIRE, &id );
+    if ( lane && !lane->pin_count )
+    {
+        lane->pins[ 0 ] = pin;
+        lane->pin_count = 1;
+    }
+
+    // Data read by a failed operation is not valid; data written is kept.
+    bool is_read = ( DRV_TRACE_ONE_WIRE_READ_ROM == op ) || ( DRV_TRACE_ONE_WIRE_SEARCH_FIRST == op ) ||
+                   ( DRV_TRACE_ONE_WIRE_SEARCH_NEXT == op ) || ( DRV_TRACE_ONE_WIRE_READ == op );
+    uint8_t kept = ( result && is_read ) ? 0 : kept_bytes( buf, len );
+    trace_record_t record;
+    record_header( &record, TRACE_RECORD_ONE_WIRE, id, start );
+    record_u8( &record, op );
+    record_u8( &record, result ? 1 : 0 );
+    record_u32( &record, duration );
+    record_u16( &record, clamp_u16( len ) );
+    record_u8( &record, kept );
+    record_bytes( &record, buf, kept );
+    trace_emit( id, lane, &record );
+    trace_unlock( primask );
 }
 
 // ------------------------------------------------------------------------- END
