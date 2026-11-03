@@ -53,6 +53,11 @@ DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
 DRV_TRACE_WEAK void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
 {
 }
+
+DRV_TRACE_WEAK uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value )
+{
+    return 0;
+}
 #endif
 
 #if !DRV_TO_HAL
@@ -327,7 +332,16 @@ static err_t _analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
 err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
 {
     #if DRV_TRACE_ENABLED
-    err_t result = _analog_in_read( obj, readDatabuf );
+    // A value forced by fault injection is given without reading the input.
+    float forced;
+    err_t result;
+    if ( readDatabuf && DRV_TRACE_FAULT( drv_trace_fault_adc( obj, obj->config.input_pin, 0, &forced ) ) )
+    {
+        *readDatabuf = (uint16_t)forced;
+        result = ADC_SUCCESS;
+    } else {
+        result = _analog_in_read( obj, readDatabuf );
+    }
     if ( ADC_SUCCESS == result )
     {
         DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 0, (float)*readDatabuf ) );
@@ -341,7 +355,13 @@ err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
 err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
 {
     #if DRV_TRACE_ENABLED
-    err_t result = _analog_in_read_voltage( obj, readDatabuf );
+    err_t result;
+    if ( readDatabuf && DRV_TRACE_FAULT( drv_trace_fault_adc( obj, obj->config.input_pin, 1, readDatabuf ) ) )
+    {
+        result = ADC_SUCCESS;
+    } else {
+        result = _analog_in_read_voltage( obj, readDatabuf );
+    }
     if ( ADC_SUCCESS == result )
     {
         DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 1, *readDatabuf ) );

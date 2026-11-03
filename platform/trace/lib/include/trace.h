@@ -52,6 +52,13 @@
  * the writes of that pin are only counted until it pauses: the timeline shows one burst with
  * the number of level changes. Needs a time base (#trace_tick_hz).
  *
+ * Fault injection: while debugging, NECTO Studio can make an I2C device stop answering, hold
+ * an SPI bus's MISO at a byte, an input pin at a level or an analog input at a value, and take
+ * the devices off a 1-Wire bus, to show how the application copes. The debugger writes the
+ * faults while the program is stopped, at the latest when it next hands over the trace; the
+ * drivers then fail or change the calls they apply to, and the timeline marks those calls.
+ * Only calls through the drivers see the faults.
+ *
  * Linking MikroSDK.Trace is all an application needs: the library is always linked in
  * (not only when something calls it), it starts with the first recorded event, and it defines
  * MIKROSDK_TRACE for the application, which flattened GPIO macros (FLATTEN_ME_LEVEL_HIGH) need.

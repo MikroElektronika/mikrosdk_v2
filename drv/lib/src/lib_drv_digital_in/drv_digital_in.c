@@ -77,9 +77,9 @@ uint8_t digital_in_read( digital_in_t *in )
     if ( in->pin.base )
     {
         #if DRV_TRACE_ENABLED
+        // The hook gives the level back, or the level of a fault holding the pin.
         uint8_t level = hal_gpio_read_pin_input( &in->pin );
-        DRV_TRACE( drv_trace_gpio_in( in, level ) );
-        return level;
+        return drv_trace_present ? drv_trace_gpio_in( in, level ) : level;
         #else
         return hal_gpio_read_pin_input( &in->pin );
         #endif

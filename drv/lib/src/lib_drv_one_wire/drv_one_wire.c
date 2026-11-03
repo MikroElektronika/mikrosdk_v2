@@ -67,11 +67,36 @@ DRV_TRACE_WEAK void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t
                                         err_t result, uint32_t start ) {
 }
 
+DRV_TRACE_WEAK uint8_t drv_trace_fault_one_wire( const void *obj, pin_name_t pin ) {
+    return 0;
+}
+
 static void _trace_one_wire( one_wire_t *obj, uint8_t op, const uint8_t *buf, size_t len,
                              err_t result, uint32_t start ) {
     if ( drv_trace_present && obj ) {
         drv_trace_one_wire( obj, obj->data_pin, op, buf, len, result, start );
     }
+}
+
+// No device answers while fault injection says so, and the operation is skipped as on an empty
+// bus: what starts with a reset fails for the missing presence pulse, reads see the idle bus
+// (0xFF), writes go nowhere. True when the operation is skipped; *result is then its result.
+static bool _trace_one_wire_fault( one_wire_t *obj, uint8_t op, uint8_t *buf, size_t len,
+                                   err_t *result ) {
+    if ( !obj || !DRV_TRACE_FAULT( drv_trace_fault_one_wire( obj, obj->data_pin ) ) ) {
+        return false;
+    }
+    if ( DRV_TRACE_ONE_WIRE_READ == op ) {
+        for ( size_t i = 0; buf && ( i < len ); i++ ) {
+            buf[ i ] = 0xFF;
+        }
+        *result = ONE_WIRE_SUCCESS;
+    } else if ( DRV_TRACE_ONE_WIRE_WRITE == op ) {
+        *result = ONE_WIRE_SUCCESS;
+    } else {
+        *result = ONE_WIRE_ERROR;
+    }
+    return true;
 }
 #endif
 
@@ -341,7 +366,10 @@ static err_t _one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, si
 err_t one_wire_reset( one_wire_t *obj ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_reset( obj );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_RESET, NULL, 0, &result ) ) {
+        result = _one_wire_reset( obj );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_RESET, NULL, 0, result, trace_start );
     return result;
     #else
@@ -352,7 +380,10 @@ err_t one_wire_reset( one_wire_t *obj ) {
 err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_read_rom( obj, device_rom_address );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_READ_ROM, NULL, 0, &result ) ) {
+        result = _one_wire_read_rom( obj, device_rom_address );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_READ_ROM, device_rom_address ? device_rom_address->address : NULL, device_rom_address ? sizeof( device_rom_address->address ) : 0, result, trace_start );
     return result;
     #else
@@ -363,7 +394,10 @@ err_t one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_add
 err_t one_wire_skip_rom( one_wire_t *obj ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_skip_rom( obj );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_SKIP_ROM, NULL, 0, &result ) ) {
+        result = _one_wire_skip_rom( obj );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SKIP_ROM, NULL, 0, result, trace_start );
     return result;
     #else
@@ -374,7 +408,10 @@ err_t one_wire_skip_rom( one_wire_t *obj ) {
 err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_match_rom( obj, device_rom_address );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_MATCH_ROM, NULL, 0, &result ) ) {
+        result = _one_wire_match_rom( obj, device_rom_address );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_MATCH_ROM, device_rom_address ? device_rom_address->address : NULL, device_rom_address ? sizeof( device_rom_address->address ) : 0, result, trace_start );
     return result;
     #else
@@ -385,7 +422,10 @@ err_t one_wire_match_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_ad
 err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_search_first_device( obj, one_wire_device_list );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_SEARCH_FIRST, NULL, 0, &result ) ) {
+        result = _one_wire_search_first_device( obj, one_wire_device_list );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SEARCH_FIRST, one_wire_device_list ? one_wire_device_list->address : NULL, one_wire_device_list ? sizeof( one_wire_device_list->address ) : 0, result, trace_start );
     return result;
     #else
@@ -396,7 +436,10 @@ err_t one_wire_search_first_device( one_wire_t *obj, one_wire_rom_address_t *one
 err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_wire_device_list ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_search_next_device( obj, one_wire_device_list );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_SEARCH_NEXT, NULL, 0, &result ) ) {
+        result = _one_wire_search_next_device( obj, one_wire_device_list );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_SEARCH_NEXT, one_wire_device_list ? one_wire_device_list->address : NULL, one_wire_device_list ? sizeof( one_wire_device_list->address ) : 0, result, trace_start );
     return result;
     #else
@@ -407,7 +450,10 @@ err_t one_wire_search_next_device( one_wire_t *obj, one_wire_rom_address_t *one_
 err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t write_data_length ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_write_byte( obj, write_data_buffer, write_data_length );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_WRITE, NULL, 0, &result ) ) {
+        result = _one_wire_write_byte( obj, write_data_buffer, write_data_length );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_WRITE, write_data_buffer, write_data_length, result, trace_start );
     return result;
     #else
@@ -418,7 +464,10 @@ err_t one_wire_write_byte( one_wire_t *obj, uint8_t *write_data_buffer, size_t w
 err_t one_wire_read_byte( one_wire_t *obj, uint8_t *read_data_buffer, size_t read_data_length ) {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _one_wire_read_byte( obj, read_data_buffer, read_data_length );
+    err_t result;
+    if ( !_trace_one_wire_fault( obj, DRV_TRACE_ONE_WIRE_READ, read_data_buffer, read_data_length, &result ) ) {
+        result = _one_wire_read_byte( obj, read_data_buffer, read_data_length );
+    }
     _trace_one_wire( obj, DRV_TRACE_ONE_WIRE_READ, read_data_buffer, read_data_length, result, trace_start );
     return result;
     #else

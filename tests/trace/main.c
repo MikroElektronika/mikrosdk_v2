@@ -9,6 +9,7 @@
 #endif
 
 #include "drv_digital_out.h"
+#include "drv_digital_in.h"
 #include "trace.h"
 #include "board.h"
 #include "delays.h"
@@ -16,6 +17,9 @@
 
 // TODO Define a free pin. Its writes are the traced events.
 #define TEST_PIN_TRACE HAL_PIN_NC
+
+// TODO Define another free pin. It is read as an input while a fault holds it.
+#define TEST_PIN_INPUT HAL_PIN_NC
 
 // TODO Define test pins according to hardware.
 // The pin of the first failed check goes high, see ReadMe.txt.
@@ -25,6 +29,7 @@
 #define TEST_PIN_4  HAL_PIN_NC
 #define TEST_PIN_5  HAL_PIN_NC
 #define TEST_PIN_6  HAL_PIN_NC
+#define TEST_PIN_7  HAL_PIN_NC
 #define TEST_PIN_SUCCESS HAL_PIN_NC
 
 // Number of fast writes for the burst check (TEST_PIN_6).
@@ -38,6 +43,11 @@
 #define RECORD_BURST    0x11
 #define RECORD_VALUE    0x30
 #define RECORD_DROPPED  0x3F
+#define RECORD_INJECTED 0x80
+
+// Fault table entry (trace.c): kind, address, 2 reserved bytes, pin and value, little-endian.
+#define FAULT_GPIO_IN   3
+#define FAULT_SIZE      12
 
 #define META_SIZE         13
 #define GPIO_LANE_DEF_SIZE 13
@@ -48,6 +58,8 @@
                                  digital_out_high( &test_pin ); \
                                  while(1)
 
+#define signal_error_unless(condition,pin) if ( !( condition ) ) { signal_error( pin ); }
+
 #define signal_success(port,pin) digital_out_init( &port, pin ); \
                                  digital_out_write( &port, 1 )
 // ----------------------------------------------------------------- VARIABLES
@@ -56,12 +68,27 @@
 extern volatile uint8_t __traceBuffer[];
 extern volatile uint16_t __traceLen;
 extern volatile uint32_t __traceDropped;
+// Fault table, written by the debugger (trace.c).
+extern volatile uint8_t __traceFaults[];
 
 static digital_out_t test_pin, trace_pin, success_pin;
+static digital_in_t input_pin;
 
 static uint32_t dropped;
 static uint16_t len;
 static uint16_t i;
+
+// Injects a fault as the debugger does: into the first entry of the table.
+static void set_fault( uint8_t kind, uint32_t pin, uint32_t value ) {
+    for ( i = 0; i < FAULT_SIZE; i++ ) {
+        __traceFaults[ i ] = 0;
+    }
+    for ( i = 0; i < 4; i++ ) {
+        __traceFaults[ 4 + i ] = (uint8_t)( pin >> ( 8 * i ) );
+        __traceFaults[ 8 + i ] = (uint8_t)( value >> ( 8 * i ) );
+    }
+    __traceFaults[ 0 ] = kind;
+}
 // ----------------------------------------------------------------- USER CODE
 int main( void ) {
     /* Do not remove this line or clock might not be set correctly. */
@@ -134,6 +161,23 @@ int main( void ) {
             signal_error( TEST_PIN_6 );
         }
     }
+
+    // Fault injection: an input held at a level reads that level, and its record is marked
+    // injected. Letting it go records the level read again, not marked.
+    if ( DIGITAL_IN_SUCCESS != digital_in_init( &input_pin, TEST_PIN_INPUT ) ) {
+        signal_error( TEST_PIN_7 );
+    }
+    trace_flush();
+    set_fault( FAULT_GPIO_IN, TEST_PIN_INPUT, 1 );
+    signal_error_unless( 1 == digital_in_read( &input_pin ), TEST_PIN_7 );
+    signal_error_unless( ( RECORD_LEVEL | RECORD_INJECTED ) == __traceBuffer[ __traceLen - LEVEL_SIZE ], TEST_PIN_7 );
+    signal_error_unless( 1 == __traceBuffer[ __traceLen - LEVEL_SIZE + LEVEL_OFFSET ], TEST_PIN_7 );
+    set_fault( FAULT_GPIO_IN, TEST_PIN_INPUT, 0 );
+    signal_error_unless( 0 == digital_in_read( &input_pin ), TEST_PIN_7 );
+    signal_error_unless( 0 == __traceBuffer[ __traceLen - LEVEL_SIZE + LEVEL_OFFSET ], TEST_PIN_7 );
+    __traceFaults[ 0 ] = 0;
+    digital_in_read( &input_pin );
+    signal_error_unless( RECORD_LEVEL == __traceBuffer[ __traceLen - LEVEL_SIZE ], TEST_PIN_7 );
 
     signal_success( success_pin, TEST_PIN_SUCCESS );
 

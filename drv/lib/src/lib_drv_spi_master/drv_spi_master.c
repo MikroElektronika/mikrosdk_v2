@@ -64,6 +64,10 @@ DRV_TRACE_WEAK void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, 
 {
 }
 
+DRV_TRACE_WEAK void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
+{
+}
+
 // Defined by the HAL in both driver modes.
 extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;
 
@@ -537,6 +541,8 @@ err_t spi_master_read( spi_master_t *obj, uint8_t *read_data_buffer, size_t read
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _spi_master_read( obj, read_data_buffer, read_data_length );
+    // MISO held stuck (fault injection): the bytes read are replaced.
+    DRV_TRACE( drv_trace_fault_spi( obj, read_data_buffer, read_data_length ) );
     DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_READ, NULL, 0, read_data_buffer, read_data_length, result, trace_start ) );
     return result;
     #else
@@ -553,6 +559,7 @@ err_t spi_master_write_then_read( spi_master_t *obj, uint8_t *write_data_buffer,
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _spi_master_write_then_read( obj, write_data_buffer, length_write_data,
                                                 read_data_buffer, length_read_data );
+    DRV_TRACE( drv_trace_fault_spi( obj, read_data_buffer, length_read_data ) );
     DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_WRITE_THEN_READ, write_data_buffer, length_write_data,
                               read_data_buffer, length_read_data, result, trace_start ) );
     return result;
@@ -569,6 +576,7 @@ err_t spi_master_transfer( spi_master_t *obj, uint8_t *write_data_buffer,
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _spi_master_transfer( obj, write_data_buffer, read_data_buffer, data_length );
+    DRV_TRACE( drv_trace_fault_spi( obj, read_data_buffer, data_length ) );
     DRV_TRACE( drv_trace_spi( obj, DRV_TRACE_OP_TRANSFER, write_data_buffer, data_length,
                               read_data_buffer, data_length, result, trace_start ) );
     return result;

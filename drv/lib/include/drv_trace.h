@@ -134,6 +134,11 @@ extern const volatile uint8_t drv_trace_present;
 #define DRV_TRACE_NOW() ( drv_trace_present ? drv_trace_now() : 0 )
 
 /**
+ * @brief Asks a fault hook only when the trace library is linked; 0 otherwise.
+ */
+#define DRV_TRACE_FAULT( call ) ( drv_trace_present && ( call ) )
+
+/**
  * @brief Current trace time, in ticks of the trace time base.
  * @details Taken before a transfer starts, so that the record carries its start time.
  */
@@ -202,7 +207,8 @@ void drv_trace_gpio_out( const void *obj, uint8_t level );
  * @brief Input pin read.
  * @param[in] obj Digital input driver object (digital_in_t).
  * @param[in] level Level read.
- * @return @p level, so that the hook can wrap the read in an expression.
+ * @return The level the read gives: @p level, or the level of an injected fault holding the
+ * pin (see #drv_trace_fault_i2c).
  */
 uint8_t drv_trace_gpio_in( const void *obj, uint8_t level );
 
@@ -229,6 +235,48 @@ void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float v
  */
 void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
                          err_t result, uint32_t start );
+
+/**
+ * @brief I2C transfer about to start.
+ * @details Fault injection: NECTO Studio makes a device stop answering, a bus read a fixed
+ * value, a pin stick at a level, to show how the application copes. The debugger writes the
+ * faults to the trace library while the program is stopped; the drivers ask these hooks
+ * whether one applies to a call. The trace marks the calls a fault changed.
+ * @param[in] obj I2C Master driver object (i2c_master_t).
+ * @return 1 when the device at the address of @p obj is not to answer: the driver then fails
+ * the transfer without starting it, as for a NACK.
+ */
+uint8_t drv_trace_fault_i2c( const void *obj );
+
+/**
+ * @brief SPI transfer finished: the bytes read are replaced while MISO is held stuck.
+ * @details See #drv_trace_fault_i2c.
+ * @param[in] obj SPI Master driver object (spi_master_t).
+ * @param[in,out] read_buf Bytes read, NULL when none.
+ * @param[in] read_len Number of bytes read.
+ */
+void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len );
+
+/**
+ * @brief Analog input about to be read.
+ * @details See #drv_trace_fault_i2c.
+ * @param[in] obj Analog input driver object (analog_in_t).
+ * @param[in] pin Analog input pin.
+ * @param[in] is_voltage 1 for analog_in_read_voltage(), 0 for analog_in_read().
+ * @param[out] value The value the read is to give: volts, or the raw count.
+ * @return 1 when the value is forced: the driver then gives @p value without reading.
+ */
+uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value );
+
+/**
+ * @brief 1-Wire operation about to start.
+ * @details See #drv_trace_fault_i2c.
+ * @param[in] obj 1-Wire driver object (one_wire_t).
+ * @param[in] pin 1-Wire data pin.
+ * @return 1 when no device is to answer on the pin: the driver then skips the operation, as
+ * on an empty bus.
+ */
+uint8_t drv_trace_fault_one_wire( const void *obj, pin_name_t pin );
 
 #endif
 

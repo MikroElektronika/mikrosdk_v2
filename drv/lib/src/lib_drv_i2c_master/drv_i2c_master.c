@@ -59,6 +59,11 @@ DRV_TRACE_WEAK void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *w
                                    const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
 }
+
+DRV_TRACE_WEAK uint8_t drv_trace_fault_i2c( const void *obj )
+{
+    return 0;
+}
 #endif
 
 #if !DRV_TO_HAL
@@ -373,7 +378,9 @@ err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_w
 {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _i2c_master_write( obj, write_data_buf, len_write_data );
+    // A device made not to answer (fault injection) fails the transfer before it starts.
+    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
+                   _i2c_master_write( obj, write_data_buf, len_write_data );
     DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE, write_data_buf, len_write_data, NULL, 0, result, trace_start ) );
     return result;
     #else
@@ -385,7 +392,8 @@ err_t i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_rea
 {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _i2c_master_read( obj, read_data_buf, len_read_data );
+    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
+                   _i2c_master_read( obj, read_data_buf, len_read_data );
     DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_READ, NULL, 0, read_data_buf, len_read_data, result, trace_start ) );
     return result;
     #else
@@ -398,7 +406,8 @@ err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, si
 {
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
+    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
+                   _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
                                                 read_data_buf, len_read_data );
     DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE_THEN_READ, write_data_buf, len_write_data,
                               read_data_buf, len_read_data, result, trace_start ) );

@@ -41,8 +41,8 @@
  * @brief Firmware trace implementation.
  *
  * @details Record format and debugger contract: docs/design/firmware_trace_v1.md in the NECTO
- * Studio repository. The names of __traceBuffer, __traceLen, __traceDropped and
- * traceBuffFullBreak are read by the debugger and must not change.
+ * Studio repository. The names of __traceBuffer, __traceLen, __traceDropped, __traceFaults and
+ * traceBuffFullBreak are read or written by the debugger and must not change.
  */
 
 #include "trace.h"
@@ -60,8 +60,8 @@
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-// 2: ONE_WIRE records and lanes.
-#define TRACE_FORMAT_VERSION (2)
+// 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED.
+#define TRACE_FORMAT_VERSION (3)
 #define TRACE_MAX_LANES (32)
 // The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
 #define TRACE_MAX_DATA (16)
@@ -86,6 +86,9 @@
 // Chip select pins seen by spi_master_select_device(). Their lanes are keyed by the entries,
 // as other lanes are by their driver object.
 #define TRACE_MAX_CS (8)
+
+// Faults the debugger can inject at once.
+#define TRACE_MAX_FAULTS (8)
 
 #if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
 #define TRACE_HAS_CYCCNT 1
@@ -115,8 +118,32 @@ typedef enum
     TRACE_RECORD_UART_RX = 0x23,
     TRACE_RECORD_ONE_WIRE = 0x24,
     TRACE_RECORD_VALUE = 0x30,
-    TRACE_RECORD_DROPPED = 0x3F
+    TRACE_RECORD_DROPPED = 0x3F,
+    // Set in the type of an event that an injected fault changed.
+    TRACE_RECORD_INJECTED = 0x80
 } trace_record_type_t;
+
+// Faults the debugger injects; the values are part of the debugger contract.
+typedef enum
+{
+    TRACE_FAULT_NONE = 0,
+    TRACE_FAULT_I2C_NO_ANSWER = 1,      // pin: SCL; address: the device that stops answering
+    TRACE_FAULT_SPI_MISO = 2,           // pin: SCK; value: the byte every read gives
+    TRACE_FAULT_GPIO_IN = 3,            // pin: the input; value: the level it is held at
+    TRACE_FAULT_ADC = 4,                // pin: the input; value: the raw count, a float
+    TRACE_FAULT_ADC_VOLTAGE = 5,        // pin: the input; value: the volts, a float
+    TRACE_FAULT_ONE_WIRE_NO_DEVICE = 6  // pin: the data pin
+} trace_fault_kind_t;
+
+// One entry of __traceFaults, 12 bytes, little-endian on the targets.
+typedef struct
+{
+    uint8_t kind;    // trace_fault_kind_t
+    uint8_t address;
+    uint16_t reserved;
+    uint32_t pin;    // pin_name_t
+    uint32_t value;
+} trace_fault_t;
 
 typedef enum
 {
@@ -138,6 +165,7 @@ typedef struct
     uint8_t kind;
     bool defined;       // LANE_DEF written since the last loss
     uint8_t level;      // last level written or read
+    uint8_t injected;   // TRACE_RECORD_INJECTED when a fault gave that level
     // Burst detection, for pins (TRACE_BURST_WRITES).
     bool written;           // last_write is valid
     bool bursting;
@@ -165,6 +193,9 @@ __attribute__((weak)) volatile uint8_t __traceBuffer[ TRACE_BUFF_SIZE ];
 __attribute__((weak)) const volatile uint16_t __traceBufferSize = TRACE_BUFF_SIZE;
 volatile uint16_t __traceLen = 0;
 volatile uint32_t __traceDropped = 0;
+// Written by the debugger while the program is stopped, the faults packed from the start: the
+// first entry of kind TRACE_FAULT_NONE ends the list.
+__attribute__((used)) volatile trace_fault_t __traceFaults[ TRACE_MAX_FAULTS ];
 
 static trace_lane_t trace_lanes[ TRACE_MAX_LANES ];
 static uint8_t trace_lane_count = 0;
@@ -183,6 +214,9 @@ static pin_name_t trace_cs_pins[ TRACE_MAX_CS ];
 static uint8_t trace_cs_count = 0;
 static bool trace_cs_selected = false;
 static pin_name_t trace_cs_pin;    // selected chip select, while trace_cs_selected
+
+// Driver object whose call a fault just changed: its record is marked injected.
+static const void *trace_injected = NULL;
 
 #if TRACE_HAS_CYCCNT
 static bool trace_cyccnt_running = false;
@@ -509,6 +543,32 @@ static bool trace_ensure_started( void )
     return trace_started;
 }
 
+// The fault of this kind on this pin (and I2C address), or NULL.
+static const volatile trace_fault_t *trace_fault( uint8_t kind, pin_name_t pin, uint8_t address )
+{
+    for ( uint8_t i = 0; ( i < TRACE_MAX_FAULTS ) && ( TRACE_FAULT_NONE != __traceFaults[ i ].kind ); i++ )
+    {
+        const volatile trace_fault_t *fault = &__traceFaults[ i ];
+        if ( ( kind == fault->kind ) && ( (uint32_t)pin == fault->pin ) &&
+             ( ( TRACE_FAULT_I2C_NO_ANSWER != kind ) || ( address == fault->address ) ) )
+        {
+            return fault;
+        }
+    }
+    return NULL;
+}
+
+// TRACE_RECORD_INJECTED for the record of the call a fault changed, once; 0 otherwise.
+static uint8_t trace_take_injected( const void *obj )
+{
+    if ( !trace_injected || ( trace_injected != obj ) )
+    {
+        return 0;
+    }
+    trace_injected = NULL;
+    return TRACE_RECORD_INJECTED;
+}
+
 // SPI and I2C records share their tail: op, result, duration, lengths, kept bytes.
 static void record_transfer( trace_record_t *record, uint8_t op, const uint8_t *write_buf,
                              size_t write_len, const uint8_t *read_buf, size_t read_len,
@@ -574,14 +634,17 @@ static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, ui
     return true;
 }
 
-static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only )
+// injected: TRACE_RECORD_INJECTED when a fault gave the level. A level held by a fault and
+// then let go is a change even when the level stays.
+static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only,
+                         uint8_t injected )
 {
     uint32_t primask = trace_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, kind, &id );
     uint32_t now = trace_ticks();
     level = level ? 1 : 0;
-    if ( lane && changes_only && ( lane->level == level ) )
+    if ( lane && changes_only && ( lane->level == level ) && ( lane->injected == injected ) )
     {
         trace_unlock( primask );
         return;
@@ -595,21 +658,22 @@ static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool chan
         if ( lane )
         {
             lane->level = level;
+            lane->injected = injected;
         }
-        record_header( &record, TRACE_RECORD_LEVEL, id, now );
+        record_header( &record, TRACE_RECORD_LEVEL | injected, id, now );
         record_u8( &record, level );
         trace_emit( id, lane, &record );
     }
     trace_unlock( primask );
 }
 
-static void trace_emit_value( uint8_t id, trace_lane_t *lane, float value )
+static void trace_emit_value( uint8_t id, trace_lane_t *lane, float value, uint8_t injected )
 {
     uint32_t raw;
     trace_record_t record;
 
     memcpy( &raw, &value, sizeof( raw ) );
-    record_header( &record, TRACE_RECORD_VALUE, id, trace_ticks() );
+    record_header( &record, TRACE_RECORD_VALUE | injected, id, trace_ticks() );
     record_u32( &record, raw );
     trace_emit( id, lane, &record );
 }
@@ -699,7 +763,7 @@ void trace_value( const char *name, float value )
     if ( lane )
     {
         lane->name = name;
-        trace_emit_value( id, lane, value );
+        trace_emit_value( id, lane, value, 0 );
     }
     trace_unlock( primask );
 }
@@ -731,7 +795,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     }
 
     trace_record_t record;
-    record_header( &record, TRACE_RECORD_I2C, id, start );
+    record_header( &record, TRACE_RECORD_I2C | trace_take_injected( obj ), id, start );
     record_u8( &record, i2c->config.addr );
     record_transfer( &record, op, write_buf, write_len, read_buf, read_len, result, duration );
     trace_emit( id, lane, &record );
@@ -768,7 +832,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     }
 
     trace_record_t record;
-    record_header( &record, TRACE_RECORD_SPI, id, start );
+    record_header( &record, TRACE_RECORD_SPI | trace_take_injected( obj ), id, start );
     record_transfer( &record, op, write_buf, write_len, read_buf, read_len, result, duration );
     trace_emit( id, lane, &record );
     trace_unlock( primask );
@@ -821,6 +885,7 @@ void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
         lane->pins[ 0 ] = pin;
         lane->pin_count = 1;
         lane->level = TRACE_LEVEL_UNKNOWN;
+        lane->injected = 0;
         lane->defined = false;
         lane->written = false;
         lane->fast_writes = 0;
@@ -832,17 +897,33 @@ void drv_trace_gpio_out( const void *obj, uint8_t level )
 {
     if ( trace_ensure_started() )
     {
-        trace_level( obj, TRACE_LANE_GPIO_OUT, level, false );
+        trace_level( obj, TRACE_LANE_GPIO_OUT, level, false, 0 );
     }
 }
 
 uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
 {
-    // Polling loops read the same level again and again: only changes are recorded.
-    if ( trace_ensure_started() )
+    if ( !trace_ensure_started() )
     {
-        trace_level( obj, TRACE_LANE_GPIO_IN, level, true );
+        return level;
     }
+
+    // A fault holding the pin gives its level instead of the one read.
+    uint8_t injected = 0;
+    uint32_t primask = trace_lock();
+    uint8_t id;
+    trace_lane_t *lane = trace_lane( obj, TRACE_LANE_GPIO_IN, &id );
+    const volatile trace_fault_t *fault =
+        ( lane && lane->pin_count ) ? trace_fault( TRACE_FAULT_GPIO_IN, lane->pins[ 0 ], 0 ) : NULL;
+    if ( fault )
+    {
+        level = fault->value ? 1 : 0;
+        injected = TRACE_RECORD_INJECTED;
+    }
+    trace_unlock( primask );
+
+    // Polling loops read the same level again and again: only changes are recorded.
+    trace_level( obj, TRACE_LANE_GPIO_IN, level, true, injected );
     return level;
 }
 
@@ -889,7 +970,7 @@ void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
 
     if ( lane )
     {
-        trace_level( key, TRACE_LANE_GPIO_OUT, level, false );
+        trace_level( key, TRACE_LANE_GPIO_OUT, level, false, 0 );
     }
 }
 
@@ -914,7 +995,7 @@ void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float v
             lane->pins[ 0 ] = pin;
             lane->pin_count = 1;
         }
-        trace_emit_value( id, lane, value );
+        trace_emit_value( id, lane, value, trace_take_injected( obj ) );
     }
     trace_unlock( primask );
 }
@@ -942,7 +1023,7 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
                    ( DRV_TRACE_ONE_WIRE_SEARCH_NEXT == op ) || ( DRV_TRACE_ONE_WIRE_READ == op );
     uint8_t kept = ( result && is_read ) ? 0 : kept_bytes( buf, len );
     trace_record_t record;
-    record_header( &record, TRACE_RECORD_ONE_WIRE, id, start );
+    record_header( &record, TRACE_RECORD_ONE_WIRE | trace_take_injected( obj ), id, start );
     record_u8( &record, op );
     record_u8( &record, result ? 1 : 0 );
     record_u32( &record, duration );
@@ -951,6 +1032,58 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     record_bytes( &record, buf, kept );
     trace_emit( id, lane, &record );
     trace_unlock( primask );
+}
+
+uint8_t drv_trace_fault_i2c( const void *obj )
+{
+    const i2c_master_t *i2c = (const i2c_master_t *)obj;
+    if ( !trace_fault( TRACE_FAULT_I2C_NO_ANSWER, i2c->config.scl, i2c->config.addr ) )
+    {
+        return 0;
+    }
+    trace_injected = obj;
+    return 1;
+}
+
+void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
+{
+    // MISO is shared by the devices of the bus: the fault holds the bus, by its clock pin.
+    const spi_master_t *spi = (const spi_master_t *)obj;
+    const volatile trace_fault_t *fault = trace_fault( TRACE_FAULT_SPI_MISO, spi->config.sck, 0 );
+    if ( fault && read_buf && read_len )
+    {
+        memset( read_buf, (uint8_t)fault->value, read_len );
+        trace_injected = obj;
+    }
+}
+
+uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value )
+{
+    const volatile trace_fault_t *fault =
+        trace_fault( is_voltage ? TRACE_FAULT_ADC_VOLTAGE : TRACE_FAULT_ADC, pin, 0 );
+    if ( !fault )
+    {
+        return 0;
+    }
+    uint32_t raw = fault->value;
+    memcpy( value, &raw, sizeof( raw ) );
+    // A raw count is what a 16-bit read can give.
+    if ( !is_voltage )
+    {
+        *value = ( *value < 0.0f ) ? 0.0f : ( ( *value > 65535.0f ) ? 65535.0f : *value );
+    }
+    trace_injected = obj;
+    return 1;
+}
+
+uint8_t drv_trace_fault_one_wire( const void *obj, pin_name_t pin )
+{
+    if ( !trace_fault( TRACE_FAULT_ONE_WIRE_NO_DEVICE, pin, 0 ) )
+    {
+        return 0;
+    }
+    trace_injected = obj;
+    return 1;
 }
 
 // ------------------------------------------------------------------------- END

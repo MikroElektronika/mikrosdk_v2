@@ -8,5 +8,6 @@ target_link_libraries(test_trace PUBLIC
     MikroC.Core
     MikroSDK.Board
     MikroSDK.Driver.GPIO.Out
+    MikroSDK.Driver.GPIO.In
     MikroSDK.Trace
 )
