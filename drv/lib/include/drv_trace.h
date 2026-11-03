@@ -58,6 +58,24 @@ extern "C"{
 #include <stddef.h>
 #include "drv_name.h"
 
+/*!
+ * @addtogroup pergroup Microcontroller Peripherals
+ * @{
+ */
+
+/*!
+ * @addtogroup drvgroup Driver Layer
+ * @{
+ */
+
+/*!
+ * @addtogroup drvtracegroup Firmware Trace Hooks
+ * @brief Firmware Trace Hooks API Reference.
+ * @details The drivers report transfers and pin changes to these hooks; the MikroSDK.Trace
+ * library implements them. Applications do not call them.
+ * @{
+ */
+
 /**
  * @brief Trace hooks are compiled in.
  * @details Weak symbols are needed to let the trace library replace the empty hooks;
@@ -174,6 +192,10 @@ void drv_trace_gpio_out( const void *obj, uint8_t level );
 uint8_t drv_trace_gpio_in( const void *obj, uint8_t level );
 
 #endif
+
+/*! @} */ // drvtracegroup
+/*! @} */ // drvgroup
+/*! @} */ // pergroup
 
 #ifdef __cplusplus
 }

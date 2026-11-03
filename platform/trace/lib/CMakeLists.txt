@@ -1,3 +1,4 @@
+## ./platform/trace/lib/CMakeLists.txt
 mikrosdk_add_library(lib_trace MikroSDK.Trace
     src/trace.c
     include/trace.h

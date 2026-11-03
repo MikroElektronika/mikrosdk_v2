@@ -58,6 +58,8 @@
 #error "The firmware trace needs a toolchain with weak symbols."
 #endif
 
+// ------------------------------------------------------------- PRIVATE MACROS
+
 #define TRACE_FORMAT_VERSION (1)
 #define TRACE_MAX_LANES (32)
 // The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
@@ -79,6 +81,26 @@
 // recorded, until a pause longer than the gap. One BURST record then stands for all of them.
 #define TRACE_BURST_WRITES (16)
 #define TRACE_BURST_GAP_US (20)
+
+// Chip select pins seen by spi_master_select_device(). Their lanes are keyed by the entries,
+// as other lanes are by their driver object.
+#define TRACE_MAX_CS (8)
+
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
+#define TRACE_HAS_CYCCNT 1
+#define TRACE_DEMCR (*(volatile uint32_t *)0xE000EDFCUL)
+#define TRACE_DEMCR_TRCENA (1UL << 24)
+#define TRACE_DWT_CTRL (*(volatile uint32_t *)0xE0001000UL)
+#define TRACE_DWT_CTRL_CYCCNTENA (1UL << 0)
+#define TRACE_DWT_CYCCNT (*(volatile uint32_t *)0xE0001004UL)
+// Cortex-M7 keeps the DWT locked until this key is written; other cores have no such register.
+#define TRACE_DWT_LAR (*(volatile uint32_t *)0xE0001FB0UL)
+#define TRACE_DWT_LAR_KEY (0xC5ACCE55UL)
+#else
+#define TRACE_HAS_CYCCNT 0
+#endif
+
+// -------------------------------------------------------------- PRIVATE TYPES
 
 typedef enum
 {
@@ -128,6 +150,8 @@ typedef struct
     uint8_t len;
 } trace_record_t;
 
+// ------------------------------------------------------------------ VARIABLES
+
 // Tells the drivers that their hooks are here (drv_trace.h).
 const volatile uint8_t drv_trace_present = 1;
 
@@ -152,29 +176,18 @@ static uint32_t trace_last_flush = 0;
 static uint32_t trace_burst_gap = 0;      // TRACE_BURST_GAP_US in ticks, 0: no bursts
 static uint8_t trace_bursts = 0;          // lanes in a burst
 
-// Chip select pins seen by spi_master_select_device(). Their lanes are keyed by the entries,
-// as other lanes are by their driver object.
-#define TRACE_MAX_CS (8)
 static pin_name_t trace_cs_pins[ TRACE_MAX_CS ];
 static uint8_t trace_cs_count = 0;
 static bool trace_cs_selected = false;
 static pin_name_t trace_cs_pin;    // selected chip select, while trace_cs_selected
 
-// --------------------------------------------------------------- Time base
-
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
-#define TRACE_HAS_CYCCNT 1
-#define TRACE_DEMCR (*(volatile uint32_t *)0xE000EDFCUL)
-#define TRACE_DEMCR_TRCENA (1UL << 24)
-#define TRACE_DWT_CTRL (*(volatile uint32_t *)0xE0001000UL)
-#define TRACE_DWT_CTRL_CYCCNTENA (1UL << 0)
-#define TRACE_DWT_CYCCNT (*(volatile uint32_t *)0xE0001004UL)
-// Cortex-M7 keeps the DWT locked until this key is written; other cores have no such register.
-#define TRACE_DWT_LAR (*(volatile uint32_t *)0xE0001FB0UL)
-#define TRACE_DWT_LAR_KEY (0xC5ACCE55UL)
-
+#if TRACE_HAS_CYCCNT
 static bool trace_cyccnt_running = false;
+#endif
 
+// ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+
+#if TRACE_HAS_CYCCNT
 static void trace_cyccnt_start( void )
 {
     TRACE_DEMCR |= TRACE_DEMCR_TRCENA;
@@ -189,33 +202,7 @@ static void trace_cyccnt_start( void )
     __asm volatile ( "nop\n\tnop\n\tnop\n\tnop" );
     trace_cyccnt_running = ( TRACE_DWT_CYCCNT != first );
 }
-#else
-#define TRACE_HAS_CYCCNT 0
 #endif
-
-__attribute__((weak)) uint32_t trace_tick_hz( void )
-{
-    #if TRACE_HAS_CYCCNT && defined(FOSC_KHZ_VALUE)
-    if ( trace_cyccnt_running )
-    {
-        return (uint32_t)FOSC_KHZ_VALUE * 1000UL;
-    }
-    #endif
-    return 0;
-}
-
-__attribute__((weak)) uint32_t trace_ticks( void )
-{
-    #if TRACE_HAS_CYCCNT
-    if ( trace_cyccnt_running )
-    {
-        return TRACE_DWT_CYCCNT;
-    }
-    #endif
-    return trace_sequence++;
-}
-
-// --------------------------------------------------------------- Locking
 
 // Hooks run in interrupts too (UART callbacks). The previous state is restored, so that a
 // hook called inside a critical section of the application does not enable interrupts.
@@ -230,8 +217,6 @@ static inline void trace_unlock( uint32_t primask )
 {
     __asm volatile ( "msr primask, %0" :: "r" ( primask ) : "memory" );
 }
-
-// --------------------------------------------------------------- Records
 
 static void record_u8( trace_record_t *record, uint8_t value )
 {
@@ -282,13 +267,6 @@ static uint8_t kept_bytes( const uint8_t *buffer, size_t len )
     return ( len > TRACE_MAX_DATA ) ? TRACE_MAX_DATA : (uint8_t)len;
 }
 
-// --------------------------------------------------------------- Buffer
-
-void __attribute__((noinline, used)) traceBuffFullBreak( void )
-{
-    __asm volatile ( "nop" );
-}
-
 static void trace_flush_locked( void )
 {
     if ( 0 == __traceLen )
@@ -326,9 +304,7 @@ static void trace_commit( const trace_record_t *record )
         memmove( (uint8_t *)__traceBuffer, (uint8_t *)&__traceBuffer[ pos ], record->len );
         __traceLen = record->len;
         trace_records = 1;
-    }
-    else
-    {
+    } else {
         __traceLen = pos + record->len;
         trace_records++;
     }
@@ -488,8 +464,6 @@ static void trace_emit( uint8_t id, trace_lane_t *lane, const trace_record_t *ev
     trace_auto_flush();
 }
 
-// --------------------------------------------------------------- Lanes
-
 static trace_lane_t *trace_lane( const void *key, uint8_t kind, uint8_t *id )
 {
     for ( uint8_t i = 0; i < trace_lane_count; i++ )
@@ -516,12 +490,143 @@ static trace_lane_t *trace_lane( const void *key, uint8_t kind, uint8_t *id )
     return lane;
 }
 
-// --------------------------------------------------------------- Public API
-
 static void trace_set_flush_interval_locked( uint32_t ms )
 {
     // Needs a time base; a record counter gives none.
     trace_flush_ticks = trace_hz ? (uint32_t)( ( (uint64_t)trace_hz * ms ) / 1000U ) : 0;
+}
+
+// The first recorded event starts the trace: linking the library is all an application needs.
+static bool trace_ensure_started( void )
+{
+    if ( !trace_started )
+    {
+        trace_init();
+    }
+    return trace_started;
+}
+
+// SPI and I2C records share their tail: op, result, duration, lengths, kept bytes.
+static void record_transfer( trace_record_t *record, uint8_t op, const uint8_t *write_buf,
+                             size_t write_len, const uint8_t *read_buf, size_t read_len,
+                             err_t result, uint32_t duration )
+{
+    // Data read by a failed transfer is not valid.
+    uint8_t write_kept = kept_bytes( write_buf, write_len );
+    uint8_t read_kept = result ? 0 : kept_bytes( read_buf, read_len );
+
+    record_u8( record, op );
+    record_u8( record, result ? 1 : 0 );
+    record_u32( record, duration );
+    record_u16( record, clamp_u16( write_len ) );
+    record_u16( record, clamp_u16( read_len ) );
+    record_u8( record, write_kept );
+    record_u8( record, read_kept );
+    record_bytes( record, write_buf, write_kept );
+    record_bytes( record, read_buf, read_kept );
+}
+
+// Counts a write into the burst of its lane, starting or ending the burst. True when the write
+// is counted and needs no record of its own.
+static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, uint32_t now )
+{
+    if ( !trace_burst_gap )
+    {
+        return false;
+    }
+
+    bool fast = lane->written && ( ( now - lane->last_write ) <= trace_burst_gap );
+    if ( lane->bursting && !fast )
+    {
+        trace_write_burst( id, lane, now );
+    }
+    lane->written = true;
+    lane->last_write = now;
+    if ( !fast )
+    {
+        lane->fast_writes = 0;
+        return false;
+    }
+
+    if ( lane->fast_writes < TRACE_BURST_WRITES )
+    {
+        lane->fast_writes++;
+    }
+    if ( !lane->bursting )
+    {
+        if ( lane->fast_writes < TRACE_BURST_WRITES )
+        {
+            return false;
+        }
+        lane->bursting = true;
+        lane->burst_start = now;
+        lane->burst_changes = 0;
+        trace_bursts++;
+    }
+    if ( lane->level != level )
+    {
+        lane->level = level;
+        lane->burst_changes++;
+    }
+    return true;
+}
+
+static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only )
+{
+    uint32_t primask = trace_lock();
+    uint8_t id;
+    trace_lane_t *lane = trace_lane( obj, kind, &id );
+    uint32_t now = trace_ticks();
+    level = level ? 1 : 0;
+    if ( lane && changes_only && ( lane->level == level ) )
+    {
+        trace_unlock( primask );
+        return;
+    }
+
+    if ( lane && trace_burst_write( id, lane, level, now ) )
+    {
+        trace_auto_flush();
+    } else {
+        trace_record_t record;
+        if ( lane )
+        {
+            lane->level = level;
+        }
+        record_header( &record, TRACE_RECORD_LEVEL, id, now );
+        record_u8( &record, level );
+        trace_emit( id, lane, &record );
+    }
+    trace_unlock( primask );
+}
+
+// ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
+
+__attribute__((weak)) uint32_t trace_tick_hz( void )
+{
+    #if TRACE_HAS_CYCCNT && defined(FOSC_KHZ_VALUE)
+    if ( trace_cyccnt_running )
+    {
+        return (uint32_t)FOSC_KHZ_VALUE * 1000UL;
+    }
+    #endif
+    return 0;
+}
+
+__attribute__((weak)) uint32_t trace_ticks( void )
+{
+    #if TRACE_HAS_CYCCNT
+    if ( trace_cyccnt_running )
+    {
+        return TRACE_DWT_CYCCNT;
+    }
+    #endif
+    return trace_sequence++;
+}
+
+void __attribute__((noinline, used)) traceBuffFullBreak( void )
+{
+    __asm volatile ( "nop" );
 }
 
 void trace_set_flush_interval( uint32_t ms )
@@ -559,16 +664,6 @@ void trace_init( void )
     trace_unlock( primask );
 }
 
-// The first recorded event starts the trace: linking the library is all an application needs.
-static bool trace_ensure_started( void )
-{
-    if ( !trace_started )
-    {
-        trace_init();
-    }
-    return trace_started;
-}
-
 void trace_flush( void )
 {
     uint32_t primask = trace_lock();
@@ -600,29 +695,6 @@ void trace_value( const char *name, float value )
     }
     trace_unlock( primask );
 }
-
-// --------------------------------------------------------------- Driver hooks
-
-// SPI and I2C records share their tail: op, result, duration, lengths, kept bytes.
-static void record_transfer( trace_record_t *record, uint8_t op, const uint8_t *write_buf,
-                             size_t write_len, const uint8_t *read_buf, size_t read_len,
-                             err_t result, uint32_t duration )
-{
-    // Data read by a failed transfer is not valid.
-    uint8_t write_kept = kept_bytes( write_buf, write_len );
-    uint8_t read_kept = result ? 0 : kept_bytes( read_buf, read_len );
-
-    record_u8( record, op );
-    record_u8( record, result ? 1 : 0 );
-    record_u32( record, duration );
-    record_u16( record, clamp_u16( write_len ) );
-    record_u16( record, clamp_u16( read_len ) );
-    record_u8( record, write_kept );
-    record_u8( record, read_kept );
-    record_bytes( record, write_buf, write_kept );
-    record_bytes( record, read_buf, read_kept );
-}
-
 
 uint32_t drv_trace_now( void )
 {
@@ -744,82 +816,6 @@ void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
         lane->defined = false;
         lane->written = false;
         lane->fast_writes = 0;
-    }
-    trace_unlock( primask );
-}
-
-// Counts a write into the burst of its lane, starting or ending the burst. True when the write
-// is counted and needs no record of its own.
-static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, uint32_t now )
-{
-    if ( !trace_burst_gap )
-    {
-        return false;
-    }
-
-    bool fast = lane->written && ( ( now - lane->last_write ) <= trace_burst_gap );
-    if ( lane->bursting && !fast )
-    {
-        trace_write_burst( id, lane, now );
-    }
-    lane->written = true;
-    lane->last_write = now;
-    if ( !fast )
-    {
-        lane->fast_writes = 0;
-        return false;
-    }
-
-    if ( lane->fast_writes < TRACE_BURST_WRITES )
-    {
-        lane->fast_writes++;
-    }
-    if ( !lane->bursting )
-    {
-        if ( lane->fast_writes < TRACE_BURST_WRITES )
-        {
-            return false;
-        }
-        lane->bursting = true;
-        lane->burst_start = now;
-        lane->burst_changes = 0;
-        trace_bursts++;
-    }
-    if ( lane->level != level )
-    {
-        lane->level = level;
-        lane->burst_changes++;
-    }
-    return true;
-}
-
-static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only )
-{
-    uint32_t primask = trace_lock();
-    uint8_t id;
-    trace_lane_t *lane = trace_lane( obj, kind, &id );
-    uint32_t now = trace_ticks();
-    level = level ? 1 : 0;
-    if ( lane && changes_only && ( lane->level == level ) )
-    {
-        trace_unlock( primask );
-        return;
-    }
-
-    if ( lane && trace_burst_write( id, lane, level, now ) )
-    {
-        trace_auto_flush();
-    }
-    else
-    {
-        trace_record_t record;
-        if ( lane )
-        {
-            lane->level = level;
-        }
-        record_header( &record, TRACE_RECORD_LEVEL, id, now );
-        record_u8( &record, level );
-        trace_emit( id, lane, &record );
     }
     trace_unlock( primask );
 }

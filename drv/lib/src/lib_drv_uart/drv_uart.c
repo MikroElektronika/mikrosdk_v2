@@ -60,7 +60,7 @@ DRV_TRACE_WEAK void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_
 }
 
 // The UART functions return the number of bytes, or a negative error.
-static void trace_uart( const uart_t *obj, uint8_t is_tx, const void *buf, err_t result, uint32_t start )
+static void _trace_uart( const uart_t *obj, uint8_t is_tx, const void *buf, err_t result, uint32_t start )
 {
     if ( drv_trace_present && ( result > 0 ) )
     {
@@ -543,7 +543,7 @@ err_t uart_write( uart_t *obj, uint8_t *buffer, size_t size )
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _uart_write( obj, buffer, size );
-    trace_uart( obj, 1, buffer, result, trace_start );
+    _trace_uart( obj, 1, buffer, result, trace_start );
     return result;
     #else
     return _uart_write( obj, buffer, size );
@@ -555,7 +555,7 @@ err_t uart_print( uart_t *obj, char *text )
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _uart_print( obj, text );
-    trace_uart( obj, 1, text, result, trace_start );
+    _trace_uart( obj, 1, text, result, trace_start );
     return result;
     #else
     return _uart_print( obj, text );
@@ -585,7 +585,7 @@ err_t uart_println( uart_t *obj, char *text )
     {
         sent[ count++ ] = '\n';
     }
-    trace_uart( obj, 1, sent, result, trace_start );
+    _trace_uart( obj, 1, sent, result, trace_start );
     return result;
     #else
     return _uart_println( obj, text );
@@ -597,7 +597,7 @@ err_t uart_read( uart_t *obj, uint8_t *buffer, size_t size )
     #if DRV_TRACE_ENABLED
     uint32_t trace_start = DRV_TRACE_NOW();
     err_t result = _uart_read( obj, buffer, size );
-    trace_uart( obj, 0, buffer, result, trace_start );
+    _trace_uart( obj, 0, buffer, result, trace_start );
     return result;
     #else
     return _uart_read( obj, buffer, size );
