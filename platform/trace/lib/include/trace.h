@@ -104,6 +104,12 @@ extern "C"{
  * @details Optional: the first recorded event starts the trace by itself, and linking
  * MikroSDK.Trace is all an application needs. Call it to start the time base at a known point;
  * later calls do nothing.
+ *
+ * @b Example
+ * @code
+ *   // Start the trace time base before the first driver is used.
+ *   trace_init();
+ * @endcode
  */
 void trace_init( void );
 
@@ -112,6 +118,13 @@ void trace_init( void );
  * @details Records otherwise wait for the automatic flush (#trace_set_flush_interval), a full
  * buffer, or a stop of the program. Each call stops the program while the debugger reads
  * the buffer: calling it in a fast loop slows the program down a lot.
+ *
+ * @b Example
+ * @code
+ *   // Show the records of one measurement right away.
+ *   i2c_master_write_then_read( &i2c_master, &reg, 1, data_buf, 6 );
+ *   trace_flush();
+ * @endcode
  */
 void trace_flush( void );
 
@@ -123,6 +136,13 @@ void trace_flush( void );
  * slower. 0 flushes only when the buffer is full. Has no effect without a timer. Call it
  * after #trace_init, which sets the default.
  * @param[in] ms Interval in milliseconds, #TRACE_FLUSH_INTERVAL_MS by default.
+ *
+ * @b Example
+ * @code
+ *   trace_init();
+ *   // Hand the records over every 2 seconds: fewer stops, a less live timeline.
+ *   trace_set_flush_interval( 2000 );
+ * @endcode
  */
 void trace_set_flush_interval( uint32_t ms );
 
@@ -130,6 +150,13 @@ void trace_set_flush_interval( uint32_t ms );
  * @brief Record a named value.
  * @param[in] name Value name: a string literal, it is kept as a pointer.
  * @param[in] value Value.
+ *
+ * @b Example
+ * @code
+ *   // Show the measured temperature on the timeline.
+ *   float temperature = 23.5;
+ *   trace_value( "temperature", temperature );
+ * @endcode
  */
 void trace_value( const char *name, float value );
 
@@ -138,11 +165,29 @@ void trace_value( const char *name, float value );
  * @details Cortex-M3 and newer: the DWT cycle counter. Other cores: a record counter, which
  * keeps the order but not the timing. Weak: an application can supply its own free-running
  * timer together with #trace_tick_hz.
+ * @return Current time, in ticks.
+ *
+ * @b Example
+ * @code
+ *   // Application time base: a free-running 32-bit timer, here STM32 TIM2
+ *   // already set up to count at 1 MHz.
+ *   uint32_t trace_ticks( void )
+ *   {
+ *       return TIM2->CNT;
+ *   }
+ *
+ *   uint32_t trace_tick_hz( void )
+ *   {
+ *       return 1000000;
+ *   }
+ * @endcode
  */
 uint32_t trace_ticks( void );
 
 /**
- * @brief Frequency of #trace_ticks, 0 when it counts records and not time.
+ * @brief Frequency of #trace_ticks.
+ * @details Weak, see #trace_ticks.
+ * @return Ticks per second, 0 when #trace_ticks counts records and not time.
  */
 uint32_t trace_tick_hz( void );
 

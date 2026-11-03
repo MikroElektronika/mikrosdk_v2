@@ -193,3 +193,15 @@ endif()
 add_subdirectory(sprint)
 
 add_subdirectory(conversions)
+
+## 16K Flash and 4K RAM minimum for this test.
+memory_sdk_test_check(memory_issue 16384 4096)
+
+find_package(MikroSDK.Trace)
+if(MikroSDK.Trace\_FOUND)
+    if (${memory_issue} STREQUAL "FALSE")
+        add_subdirectory(trace)
+    else()
+        message(INFO ": ${MCU_NAME} does not have enough memory for \"trace\" test.")
+    endif()
+endif()
