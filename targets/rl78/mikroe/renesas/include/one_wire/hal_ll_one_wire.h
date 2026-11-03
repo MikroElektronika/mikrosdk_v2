@@ -65,11 +65,9 @@ typedef struct {
  * writing data directly from a control structure by user should be avoided.
  */
 typedef struct {
-    hal_ll_pin_name_t data_pin; // One Wire data pin.
-    volatile uint32_t direction; // Register for altering GPIO pin direction.
-    volatile uint32_t output_set; // Register for GPIO port bit set.
-    volatile uint32_t output_clear; // Register for GPIO port bit reset.
-    volatile uint32_t input; // Register for reading current GPIO pin state.
+    uint8_t data_pin; // One Wire data pin mask within its port.
+    hal_ll_base_addr_t direction; // PMxx register, 0 drives the line low (latch is kept at 0), 1 releases it.
+    hal_ll_base_addr_t input; // Pxx register, reads the line level while it is released.
 } hal_ll_one_wire_local_t;
 
 /**
