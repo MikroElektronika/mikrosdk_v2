@@ -84,9 +84,9 @@ static uint16_t frame_y;
 #define CS_ACTIVE() digital_out_low(&pin_cs)
 #define CS_DEACTIVE() digital_out_high(&pin_cs)
 
-static void spi_send(uint8_t *data, uint32_t length)
+static void spi_send(uint8_t *buffer, uint32_t length)
 {
-    spi_master_write(&spi_master, data, length);
+    spi_master_write(&spi_master, buffer, length);
 }
 
 uint16_t sh1107_get_display_width()

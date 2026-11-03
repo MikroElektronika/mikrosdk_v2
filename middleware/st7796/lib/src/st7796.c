@@ -79,9 +79,9 @@ static uint8_t bgr_order;
 #define CS_DEACTIVE() digital_out_high(&pin_cs)
 #define ST7796_FILL_CHUNK 64   // Number of pixels sent with one SPI write.
 
-static void spi_send(uint8_t *data, uint32_t length)
+static void spi_send(uint8_t *buffer, uint32_t length)
 {
-    spi_master_write(&spi_master, data, length);
+    spi_master_write(&spi_master, buffer, length);
 }
 
 uint16_t st7796_get_display_width()
@@ -278,9 +278,9 @@ void st7796_write_param(uint8_t param)
     CS_DEACTIVE();
 }
 
-void st7796_write_pixels(const uint8_t *data, uint32_t length)
+void st7796_write_pixels(const uint8_t *pixels, uint32_t length)
 {
-    spi_send((uint8_t *)data, length);
+    spi_send((uint8_t *)pixels, length);
 }
 
 void st7796_rotate(uint8_t rotation)
