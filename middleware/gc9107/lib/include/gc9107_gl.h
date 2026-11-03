@@ -103,11 +103,11 @@ void gc9107_gl_display_power( uint8_t state );
  * @brief Send pixel data to GC9107 Display Controller.
  * @details Call it after the window is set (begin frame) and before end frame.
  * Data is sent as is, high byte of each RGB565 pixel first.
- * @param[in] data : pixel bytes.
+ * @param[in] pixels : pixel bytes.
  * @param[in] length : number of bytes to send.
  * @return Nothing.
  */
-void gc9107_gl_write_pixels( uint8_t *data, uint32_t length );
+void gc9107_gl_write_pixels( uint8_t *pixels, uint32_t length );
 
 /*! @} */ // gc9107_gl
 /*! @} */ // middlewaregroup

@@ -88,9 +88,9 @@ static gl_driver_t *current_gl_driver = NULL;
 #define CS_ACTIVE()    digital_out_low( &pin_cs )
 #define CS_DEACTIVE()  digital_out_high( &pin_cs )
 
-static void spi_send( uint8_t *data, uint32_t length )
+static void spi_send( uint8_t *pixels, uint32_t length )
 {
-    spi_master_write( spi, data, length );
+    spi_master_write( spi, pixels, length );
 }
 
 uint16_t gc9107_gl_get_display_width()
@@ -256,9 +256,9 @@ void gc9107_gl_init( gc9107_cfg_t *cfg, gl_driver_t *driver )
     gc9107_set_backlight( 1 );
 }
 
-void gc9107_gl_write_pixels( uint8_t *data, uint32_t length )
+void gc9107_gl_write_pixels( uint8_t *pixels, uint32_t length )
 {
-    spi_send( data, length );
+    spi_send( pixels, length );
 }
 
 void gc9107_gl_rotate( uint8_t rotation )
