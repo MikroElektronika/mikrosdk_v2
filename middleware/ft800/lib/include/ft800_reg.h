@@ -320,7 +320,7 @@
  * @brief FT800 Touch Mode Register.
  * @details Configures the overall operating mode of the touch screen.
  */
-#define FT800_REG_TOUCH_MODE       (0x102104UL)
+#define FT800_REG_TOUCH_MODE       (0x1024F0UL)
 
 /**
  * @brief FT800 Touch Press Detect Register.
@@ -538,6 +538,13 @@
  * commands are stored.
  */
 #define FT800_RAM_DL               (0x100000UL)
+
+/**
+ * @brief FT800 General Purpose Graphics RAM Address.
+ * @details Base address of the 256KB general purpose graphics memory, used for
+ * bitmaps and the display frame buffer.
+ */
+#define FT800_RAM_G                (0x000000UL)
 
   /*! @} */ // ft800_registers
  /*! @} */ // ft800

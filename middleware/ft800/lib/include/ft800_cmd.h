@@ -556,6 +556,18 @@
 #define FT800_RGB565                        (7)
 
 /**
+ * @brief FT800 Select Nearest Bitmap Filter.
+ * @details The value sent to the function for selecting nearest bitmap filtering.
+ */
+#define FT800_NEAREST                       (0)
+
+/**
+ * @brief FT800 Select Border Bitmap Wrap.
+ * @details The value sent to the function for selecting border bitmap wrapping.
+ */
+#define FT800_BORDER                        (0)
+
+/**
  * @brief FT800 Select Paletted Bitmap Layout.
  * @details The value sent to the function for selecting Paletted bitmap layout.
  */
@@ -768,6 +780,13 @@
  * calibration routine.
  */
 #define FT800_CMD_CALIBRATE                 (0xFFFFFF15UL)
+
+/**
+ * @brief FT800 Co-Processor Memory Zero Command.
+ * @details When the co-processor engine executes this command, it will write
+ * zero to a block of memory.
+ */
+#define FT800_CMD_MEMZERO                   (0xFFFFFF1CUL)
 
 /**
  * @brief FT800 Co-Processor Text Command.

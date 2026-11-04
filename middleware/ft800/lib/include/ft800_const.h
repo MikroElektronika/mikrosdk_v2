@@ -1100,6 +1100,42 @@
  */
 #define FT800_GESTURE_ITEMS_MAX                                (7)
 
+/**
+ * @brief FT800 Chip ID Value.
+ * @details Value of FT800_REG_ID register when FT800 series controller is
+ * ready after power up.
+ */
+#define FT800_ID_VALUE                                         (0x7C)
+
+/**
+ * @brief FT800 Chip ID Read Retries.
+ * @details Maximum number of FT800_REG_ID reads while waiting for FT800 series
+ * controller to become ready.
+ */
+#define FT800_ID_READ_RETRIES                                  (60)
+
+/**
+ * @brief FT800 Co-Processor Fault Value.
+ * @details Value of FT800_REG_CMD_READ register when co-processor engine of
+ * FT800 series controller detected an error.
+ */
+#define FT800_CMD_FAULT                                        (0xFFF)
+
+/**
+ * @brief FT800 Frame Buffer Pixel Size.
+ * @details Number of bytes used for one RGB565 frame buffer pixel for FT800
+ * series controllers.
+ */
+#define FT800_FRAME_BUFFER_PIXEL_SIZE                          (2)
+
+/**
+ * @brief FT800 Frame Buffer Pixel Address.
+ * @details Address in FT800_RAM_G of the frame buffer pixel at @b x, @b y for
+ * a display which is @b width pixels wide for FT800 series controllers.
+ */
+#define FT800_FRAME_BUFFER_ADDRESS(x, y, width) \
+            (FT800_RAM_G + ((uint32_t)(y) * (width) + (x)) * FT800_FRAME_BUFFER_PIXEL_SIZE)
+
   /*! @} */ // ft800_constants
  /*! @} */ // ft800
 /*! @} */ // mwgroup

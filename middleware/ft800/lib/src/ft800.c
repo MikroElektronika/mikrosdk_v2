@@ -88,8 +88,48 @@ static void ft800_write_address( ft800_t *ctx, uint32_t address );
  */
 static void ft800_read_address( ft800_t *ctx, uint32_t address );
 
+/**
+ * @brief FT800 Power Up Function.
+ * @details This function initializes pins and SPI interface, resets and
+ * configures FT800 controller.
+ * @param[out] ctx : FT800 context object. See #ft800_t structure definition
+ *                   for detailed explanation.
+ * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
+ *                  definition for detailed explanation.
+ * @return None
+ */
+static void ft800_power_up( ft800_t *ctx, ft800_cfg_t *cfg );
+
+/**
+ * @brief FT800 Show Frame Buffer Function.
+ * @details This function writes and swaps the display list which draws the
+ * RGB565 frame buffer from FT800_RAM_G on the whole display.
+ * @param[in] ctx : FT800 context object. See #ft800_t structure definition
+ *                   for detailed explanation.
+ * @return None
+ */
+static void ft800_show_frame_buffer( ft800_t *ctx );
+
 // Global variable to track FT800 command offset.
 uint16_t cmdOffset = 0;
+
+/**
+ * @remark FT800 context opened in ft800_display_init, API was
+ * built for single display applications which covers most use-cases.
+ * Touch panel interface uses the same context as the display.
+ */
+static ft800_t *display_ctx;
+
+static uint16_t display_width;
+static uint16_t display_height;
+
+// Frame buffer window and position used by Graphic Library frame transfer.
+static uint16_t frame_x;
+static uint16_t frame_y;
+static uint16_t frame_width;
+static uint16_t frame_height;
+static uint16_t frame_column;
+static uint16_t frame_row;
 
 const ft800_controller_t FT800_CONTROLLER =
 {
@@ -228,12 +268,29 @@ void ft800_default_cfg( ft800_cfg_t *cfg ) {
 }
 
 void ft800_cfg( ft800_t *ctx, ft800_cfg_t *cfg ) {
-    // Send "ACTIVE" host command.
+    uint8_t cnt;
+
+    // Send "ACTIVE" host command and wait for FT800 to wake up.
     ft800_host_command( ctx, FT800_ACTIVE );
+    Delay_ms( 20 );
     // Send "CLKEXT" host command.
     ft800_host_command( ctx, FT800_CLKEXT );
+    Delay_ms( 10 );
     // Send "CLK48" host command.
     ft800_host_command( ctx, FT800_CLK48M );
+    Delay_ms( 10 );
+    // Reset FT800 core so it starts cleanly with the new clock.
+    ft800_host_command( ctx, FT800_CORERST );
+    Delay_ms( 20 );
+    ft800_host_command( ctx, FT800_ACTIVE );
+
+    // Wait until FT800 is ready (REG_ID reads 0x7C).
+    for ( cnt = 0; ( cnt < FT800_ID_READ_RETRIES ) && \
+          ( FT800_ID_VALUE != ft800_read_8_bits( ctx, FT800_REG_ID )); cnt++ )
+        Delay_ms( 5 );
+
+    // Core reset cleared co-processor command FIFO offsets.
+    cmdOffset = 0;
 
     // Set number of horizontal cycles for the display.
     ft800_write_16_bits( ctx, FT800_REG_HCYCLE, FT800_HCYCLE_VALUE );
@@ -298,24 +355,8 @@ void ft800_press_coordinates( ft800_t *ctx, tp_touch_item_t *touch_item ) {
 }
 
 void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv ) {
-    // Initialize GPIO pins to control FT800 chip.
-    digital_out_init( &ctx->cs_pin, cfg->cs_pin );
-    digital_out_init( &ctx->pd_pin, cfg->pd_pin );
-
-    // Initialize SPI interface.
-    spi_master_open( &ctx->spi_master, &cfg->spi_master_cfg );
-
-    // Set SPI speed.
-    spi_master_set_speed( &ctx->spi_master, cfg->spi_master_cfg.speed );
-
-    // Reset FT800 controller.
-    digital_out_low( &ctx->pd_pin );
-    Delay_ms( 20 );
-    digital_out_high( &ctx->pd_pin );
-    Delay_ms( 20 );
-
-    // Configure FT800 controller.
-    ft800_cfg( ctx, cfg );
+    // Initialize, reset and configure FT800 controller.
+    ft800_power_up( ctx, cfg );
 
     // Initialize touch screen.
     ft800_init_touch_screen( ctx, true );
@@ -329,8 +370,8 @@ void ft800_init( ft800_t *ctx, ft800_cfg_t *cfg, tp_drv_t *drv ) {
 
 void ft800_init_touch_screen( ft800_t *ctx, bool run_calibration )
 {
-    // Request touch calibration from FT800 controller.
-    ft800_write_8_bits( ctx, FT800_REG_TOUCH_MODE, 0x00 );
+    // Touch engine has to sample continuously, calibration reads the touches.
+    ft800_write_8_bits( ctx, FT800_REG_TOUCH_MODE, FT800_TOUCH_ACTIVATION_VALUE );
     Delay_ms( 10 );
 
     if ( run_calibration ) {
@@ -398,7 +439,18 @@ void ft800_wait_coprocessor( ft800_t *ctx )
     uint16_t write_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_WRITE );
 
     // Wait while FT800 command offset is the same as for host commands.
-    while ( ft800_read_16_bits( ctx, FT800_REG_CMD_READ ) != write_cmdOffset );
+    while ( read_cmdOffset != write_cmdOffset ) {
+        // Co-processor fault, reset co-processor instead of waiting forever.
+        if ( FT800_CMD_FAULT == read_cmdOffset ) {
+            ft800_write_8_bits( ctx, FT800_REG_CPURESET, 1 );
+            ft800_write_16_bits( ctx, FT800_REG_CMD_READ, 0 );
+            ft800_write_16_bits( ctx, FT800_REG_CMD_WRITE, 0 );
+            cmdOffset = 0;
+            ft800_write_8_bits( ctx, FT800_REG_CPURESET, 0 );
+            return;
+        }
+        read_cmdOffset = ft800_read_16_bits( ctx, FT800_REG_CMD_READ );
+    }
 }
 
 void ft800_write_ram_g( ft800_t *ctx, \
@@ -432,6 +484,204 @@ void ft800_end_display_list( ft800_t *ctx )
     // FT800 has only 4KB of internal RAM memory.
     if ( 4095 <= cmdOffset )
         cmdOffset = 4095;
+}
+
+static void ft800_frame_row_start( void )
+{
+    // Select FT800 display.
+    digital_out_low( &display_ctx->cs_pin );
+
+    // Send address of the first pixel in the current frame row.
+    ft800_write_address( display_ctx, \
+        FT800_FRAME_BUFFER_ADDRESS( frame_x, frame_y + frame_row, display_width ));
+}
+
+static void ft800_begin_frame( gl_rectangle_t *rect )
+{
+    frame_x = rect->top_left.x;
+    frame_y = rect->top_left.y;
+    frame_width = rect->width;
+    frame_height = rect->height;
+    frame_column = 0;
+    frame_row = 0;
+
+    if ( frame_width && frame_height )
+        ft800_frame_row_start();
+}
+
+static void ft800_end_frame()
+{
+    // Deselect FT800 display.
+    digital_out_high( &display_ctx->cs_pin );
+}
+
+static void ft800_frame_data( gl_color_t color )
+{
+    uint8_t color_bytes[ FT800_FRAME_BUFFER_PIXEL_SIZE ];
+
+    if ( frame_row >= frame_height )
+        return;
+
+    // FT800 RGB565 bitmaps are little endian, send low byte first.
+    color_bytes[ 0 ] = FT800_VALUE_BYTE_1( color );
+    color_bytes[ 1 ] = FT800_VALUE_BYTE_2( color );
+    spi_master_write( &display_ctx->spi_master, color_bytes, FT800_FRAME_BUFFER_PIXEL_SIZE );
+
+    // Frame rows are not contiguous in RAM_G, start a new transfer for each row.
+    if ( ++frame_column >= frame_width )
+    {
+        frame_column = 0;
+        digital_out_high( &display_ctx->cs_pin );
+
+        if ( ++frame_row < frame_height )
+            ft800_frame_row_start();
+    }
+}
+
+static void ft800_fill( gl_rectangle_t *rect, gl_color_t color )
+{
+    uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+
+    if ( !length )
+        return;
+
+    ft800_begin_frame( rect );
+
+    while ( length-- )
+        ft800_frame_data( color );
+
+    ft800_end_frame();
+}
+
+void ft800_display_init( ft800_t *ctx, ft800_cfg_t *cfg, gl_driver_t *__generic_ptr driver )
+{
+    // Initialize, reset and configure FT800 controller.
+    ft800_power_up( ctx, cfg );
+
+    display_ctx = ctx;
+    display_width = cfg->width;
+    display_height = cfg->height;
+
+    // Clear frame buffer so no random data is shown.
+    ft800_cmd( ctx, FT800_CMD_MEMZERO );
+    ft800_cmd( ctx, FT800_RAM_G );
+    ft800_cmd( ctx, FT800_FRAME_BUFFER_ADDRESS( 0, display_height, display_width ));
+    ft800_wait_coprocessor( ctx );
+
+    ft800_show_frame_buffer( ctx );
+
+    // Link Graphic Library driver interface.
+    driver->display_width = cfg->width;
+    driver->display_height = cfg->height;
+    driver->fill_f = ft800_fill;
+    driver->begin_frame_f = ft800_begin_frame;
+    driver->frame_data_f = ft800_frame_data;
+    driver->end_frame_f = ft800_end_frame;
+}
+
+void ft800_set_backlight( ft800_t *ctx, uint8_t duty )
+{
+    if ( FT800_PWM_DUTY_VALUE < duty )
+        duty = FT800_PWM_DUTY_VALUE;
+
+    ft800_write_8_bits( ctx, FT800_REG_PWM_DUTY, duty );
+}
+
+/**
+ * @note @b FT800 hardware does not support gestures.
+ */
+static void tp_ft800_gesture( tp_ft800_t *ctx, tp_event_t *event )
+{
+    *event = TP_EVENT_GEST_NONE;
+}
+
+static tp_event_t tp_ft800_press_detect( tp_ft800_t *ctx )
+{
+    return ft800_press_detect( display_ctx );
+}
+
+static void tp_ft800_press_coordinates( tp_ft800_t *ctx, tp_touch_item_t *touch_item )
+{
+    ft800_press_coordinates( display_ctx, touch_item );
+}
+
+static tp_err_t tp_ft800_process( tp_ft800_t *ctx )
+{
+    return ft800_process( display_ctx );
+}
+
+tp_err_t tp_ft800_init( tp_ft800_t *ctx, tp_ft800_cfg_t *cfg, tp_drv_t *drv )
+{
+    // Touch panel is a part of FT800 display, so display has to be initialized first.
+    if ( !display_ctx )
+        return TP_ERR_INIT_DRV;
+
+    ft800_init_touch_screen( display_ctx, true );
+
+    // Calibration replaced the display list, show the frame buffer again.
+    ft800_show_frame_buffer( display_ctx );
+
+    drv->tp_press_detect_f      = tp_ft800_press_detect;
+    drv->tp_press_coordinates_f = tp_ft800_press_coordinates;
+    drv->tp_gesture_f           = tp_ft800_gesture;
+    drv->tp_process_f           = tp_ft800_process;
+
+    return TP_OK;
+}
+
+void tp_ft800_cfg_setup( tp_ft800_cfg_t *cfg )
+{
+}
+
+void tp_ft800_default_cfg( tp_ft800_t *ctx )
+{
+}
+
+static void ft800_power_up( ft800_t *ctx, ft800_cfg_t *cfg ) {
+    // Initialize GPIO pins to control FT800 chip.
+    digital_out_init( &ctx->cs_pin, cfg->cs_pin );
+    digital_out_init( &ctx->pd_pin, cfg->pd_pin );
+
+    // Initialize SPI interface.
+    spi_master_open( &ctx->spi_master, &cfg->spi_master_cfg );
+
+    // Set SPI speed.
+    spi_master_set_speed( &ctx->spi_master, cfg->spi_master_cfg.speed );
+
+    // Reset FT800 controller.
+    digital_out_low( &ctx->pd_pin );
+    Delay_ms( 20 );
+    digital_out_high( &ctx->pd_pin );
+    Delay_ms( 20 );
+
+    // Configure FT800 controller.
+    ft800_cfg( ctx, cfg );
+}
+
+static void ft800_show_frame_buffer( ft800_t *ctx ) {
+    uint32_t address = FT800_RAM_DL;
+    uint8_t cnt;
+    uint32_t display_list[ 9 ];
+
+    display_list[ 0 ] = FT800_BACKGROUND_BLACK;
+    display_list[ 1 ] = FT800_FULL_CLEAR;
+    display_list[ 2 ] = FT800_BITMAP_SOURCE( FT800_RAM_G );
+    display_list[ 3 ] = FT800_BITMAP_LAYOUT( FT800_RGB565, \
+        ( uint32_t )display_width * FT800_FRAME_BUFFER_PIXEL_SIZE, display_height );
+    display_list[ 4 ] = FT800_BITMAP_SIZE( FT800_NEAREST, FT800_BORDER, FT800_BORDER, \
+        display_width, display_height );
+    display_list[ 5 ] = FT800_BEGIN( FT800_BITMAPS );
+    display_list[ 6 ] = FT800_VERTEX2II( 0, 0, 0, 0 );
+    display_list[ 7 ] = FT800_END();
+    display_list[ 8 ] = FT800_DISPLAY();
+
+    for ( cnt = 0; cnt < 9; cnt++ ) {
+        ft800_write_32_bits( ctx, address, display_list[ cnt ] );
+        address += FT800_RAM_DL_OFFSET_4;
+    }
+
+    // Swap display list.
+    ft800_write_8_bits( ctx, FT800_REG_DLSWAP, FT800_DLSWAP_VALUE );
 }
 
 static void ft800_transmit_byte( ft800_t *ctx, uint8_t value ) {

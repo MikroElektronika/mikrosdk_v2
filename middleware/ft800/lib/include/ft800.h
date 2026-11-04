@@ -78,6 +78,38 @@
 //     cfg.pd_pin = FT800_PD;
 
 /**
+ * @brief FT800 Touch Panel Pin Mapping.
+ * @details Touch panel is a part of FT800 display controller, it uses the pins
+ * mapped for the display, so there is nothing to map.
+ */
+#define TP_FT800_MAP_PINS( cfg ) \
+    do                           \
+    {                            \
+    } while ( 0 )
+
+/**
+ * @brief FT800 Touch Panel Configuration Object.
+ * @details Configuration object used by touch controller middleware when FT800
+ * is used as display controller.
+ */
+typedef struct
+{
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
+} tp_ft800_cfg_t;
+
+/**
+ * @brief FT800 Touch Panel Context Object.
+ * @details Context object used by touch controller middleware when FT800 is
+ * used as display controller.
+ */
+typedef struct
+{
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
+} tp_ft800_t;
+
+/**
  * @brief FT800 Configuration Object Setup Function.
  * @details This function initializes FT800 configuration structure to default
  * values.
@@ -1681,6 +1713,76 @@ void ft800_draw_aligned_text( ft800_t *ctx, uint16_t x, uint16_t y, \
 void ft800_draw_vertical_text( ft800_t *ctx, uint16_t x , uint16_t y, \
      uint16_t width, uint16_t height, uint16_t text_height, uint16_t text_width, \
      uint16_t pen, ft800_text_alignment alignment, char *text );
+
+/**
+ * @brief FT800 Display Initialization Function.
+ * @details This function initializes FT800 controller as a frame buffer
+ * display. RGB565 frame buffer is placed in FT800_RAM_G and drawn by a static
+ * display list, so the display can be used with Graphic Library and LVGL.
+ * @param[out] ctx : FT800 context object. See #ft800_t structure definition
+ * for detailed explanation.
+ * @param[in] cfg : FT800 configuration object. See #ft800_cfg_t structure
+ * definition for detailed explanation.
+ * @param[out] driver : Graphic Library driver object. See #gl_driver_t
+ * structure definition for detailed explanation.
+ * @return Nothing.
+ * @note Frame buffer takes width * height * 2 bytes of FT800_RAM_G (256KB),
+ * which limits the display resolution to 480x272.
+ *
+ * @b Example
+ * @code
+ *    ft800_t ft800;
+ *    ft800_cfg_t ft800_cfg;
+ *    gl_driver_t display_driver;
+ *
+ *    ft800_cfg_setup( &ft800_cfg, &FT800_CONTROLLER );
+ *    FT800_MAP_MIKROBUS( ft800_cfg, MIKROBUS_1 );
+ *    ft800_default_cfg( &ft800_cfg );
+ *    ft800_display_init( &ft800, &ft800_cfg, &display_driver );
+ *    gl_set_driver( &display_driver );
+ * @endcode
+ */
+void ft800_display_init( ft800_t *ctx, ft800_cfg_t *cfg, gl_driver_t *__generic_ptr driver );
+
+/**
+ * @brief FT800 Set Backlight Function.
+ * @details This function sets FT800 backlight PWM duty cycle.
+ * @param[in] ctx : FT800 context object. See #ft800_t structure definition
+ * for detailed explanation.
+ * @param[in] duty : Backlight PWM duty cycle, from 0 (off) to 128 (full).
+ * @return Nothing.
+ */
+void ft800_set_backlight( ft800_t *ctx, uint8_t duty );
+
+/**
+ * @brief FT800 Touch Panel Initialization Function.
+ * @details This function calibrates FT800 touch panel and links the touch
+ * panel interface to the FT800 display initialized by #ft800_display_init.
+ * @param[out] ctx : FT800 touch panel context object.
+ * @param[in] cfg : FT800 touch panel configuration object.
+ * @param[out] drv : TP driver interface object. See #tp_drv_t structure
+ * definition for detailed explanation.
+ * @return @li @c TP_OK - Successful initialization,
+ *         @li @c TP_ERR_INIT_DRV - FT800 display is not initialized.
+ * @note #ft800_display_init has to be called before this function.
+ */
+tp_err_t tp_ft800_init( tp_ft800_t *ctx, tp_ft800_cfg_t *cfg, tp_drv_t *drv );
+
+/**
+ * @brief FT800 Touch Panel Configuration Object Setup Function.
+ * @details Nothing to setup, touch panel uses FT800 display configuration.
+ * @param[out] cfg : FT800 touch panel configuration object.
+ * @return Nothing.
+ */
+void tp_ft800_cfg_setup( tp_ft800_cfg_t *cfg );
+
+/**
+ * @brief FT800 Touch Panel Default Configuration Function.
+ * @details Nothing to configure, touch panel is configured by #tp_ft800_init.
+ * @param[in] ctx : FT800 touch panel context object.
+ * @return Nothing.
+ */
+void tp_ft800_default_cfg( tp_ft800_t *ctx );
 
 #endif // FT800_H
 
