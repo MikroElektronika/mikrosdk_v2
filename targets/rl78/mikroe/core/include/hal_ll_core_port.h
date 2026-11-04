@@ -51,6 +51,40 @@ extern "C"
 #endif
 
 #include "stdint.h"
+#include <stdbool.h>
+
+/**
+ * @brief  Sets or clears the interrupt mask flag (MKxx) of an interrupt source.
+ *
+ * @param[in] IRQn Vector table address of the interrupt source.
+ * @param[in] mask True masks (disables) the source, false unmasks it.
+ *
+ * @return void None.
+ */
+void hal_ll_core_port_irq_mask( uint8_t IRQn, bool mask );
+
+/**
+ * @brief  Sets or clears the interrupt request flag (IFxx) of an interrupt source.
+ *
+ * Setting the flag from software requests the interrupt
+ * the same way the peripheral would.
+ *
+ * @param[in] IRQn Vector table address of the interrupt source.
+ * @param[in] state True sets the request flag, false clears it.
+ *
+ * @return void None.
+ */
+void hal_ll_core_port_irq_flag( uint8_t IRQn, bool state );
+
+/**
+ * @brief  Sets the priority level (PR1xx:PR0xx) of an interrupt source.
+ *
+ * @param[in] IRQn Vector table address of the interrupt source.
+ * @param[in] IRQn_priority One of hal_ll_core_irq_priority_levels, 0 is the highest.
+ *
+ * @return void None.
+ */
+void hal_ll_core_port_irq_priority( uint8_t IRQn, uint8_t IRQn_priority );
 
 #ifdef __cplusplus
 }

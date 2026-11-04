@@ -46,6 +46,7 @@
 #include "hal_ll_core.h"
 #include "hal_ll_per.h"
 #include "hal_ll_core_defines.h"
+#include "hal_ll_core_port.h"
 #include "hal_ll_uart_pin_map.h"
 #include "hal_ll_pior_defines.h"
 
@@ -101,6 +102,7 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_SMR_STS             ( 0x0100U )
 #define HAL_LL_UART_SMR_FIXED           ( 0x0020U ) // Bit 5 must be 1.
 #define HAL_LL_UART_SMR_MD_UART         ( 0x0002U )
+#define HAL_LL_UART_SMR_MD_BUF_EMPTY    ( 0x0001U ) // INTSTq on buffer empty, allows continuous transmission.
 #define HAL_LL_UART_SMR_RESET           ( 0x0020U )
 
 /*!< @brief SCRmn bits. */
@@ -223,6 +225,10 @@ static volatile hal_ll_uart_hw_specifics_map_t *hal_ll_uart_hw_specifics_map_loc
 /*!< @brief Global interrupt handlers used in functions. */
 static hal_ll_uart_isr_t irq_handler;
 static handle_t objects[UART_MODULE_COUNT];
+
+/*!< @brief TX/RX interrupt vectors, indexed by UART module number. */
+static const uint8_t hal_ll_uart_irq_tx[] = { UART0_TX_IVT, UART1_TX_IVT, UART2_TX_IVT, UART3_TX_IVT };
+static const uint8_t hal_ll_uart_irq_rx[] = { UART0_RX_IVT, UART1_RX_IVT, UART2_RX_IVT, UART3_RX_IVT };
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
@@ -572,15 +578,58 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     objects[ hal_ll_uart_find_index( handle ) ] = obj;
 }
 
-// Interrupts (INTSTq/INTSRq) are not implemented yet, only polling mode is supported.
 void hal_ll_uart_irq_enable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    uint8_t module_index = hal_ll_uart_hw_specifics_map_local->module_index;
+    volatile hal_ll_uart_base_handle_t *hal_ll_hw_reg;
+
+    if ( hal_ll_uart_hw_specifics_map_local->base == HAL_LL_MODULE_ERROR ) {
+        return;
+    }
+
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            // A pending INTSRq is kept, the received byte is still in SDRmn.
+            hal_ll_core_enable_irq( hal_ll_uart_irq_rx[ module_index ] );
+            break;
+
+        case HAL_LL_UART_IRQ_TX:
+            hal_ll_hw_reg = hal_ll_uart_get_base_struct( hal_ll_uart_hw_specifics_map_local->sau_base );
+            // INTSTq is only raised when SDRmn empties, so an idle transmitter never requests it.
+            // Request it from software if the buffer is already empty. Clearing first drops a
+            // stale request that would otherwise overwrite a byte still pending in SDRmn.
+            hal_ll_core_port_irq_flag( hal_ll_uart_irq_tx[ module_index ], false );
+            if ( !check_reg_bit( &hal_ll_hw_reg->ssr[ hal_ll_uart_tx_channel( module_index ) ], HAL_LL_UART_SSR_BFF ) ) {
+                hal_ll_core_port_irq_flag( hal_ll_uart_irq_tx[ module_index ], true );
+            }
+            hal_ll_core_enable_irq( hal_ll_uart_irq_tx[ module_index ] );
+            break;
+
+        default:
+            break;
+    }
 }
 
 void hal_ll_uart_irq_disable( handle_t *handle, hal_ll_uart_irq_t irq ) {
-    low_level_handle = hal_ll_uart_get_handle;
     hal_ll_uart_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_uart_get_module_state_address );
+    uint8_t module_index = hal_ll_uart_hw_specifics_map_local->module_index;
+
+    if ( hal_ll_uart_hw_specifics_map_local->base == HAL_LL_MODULE_ERROR ) {
+        return;
+    }
+
+    switch ( irq ) {
+        case HAL_LL_UART_IRQ_RX:
+            hal_ll_core_disable_irq( hal_ll_uart_irq_rx[ module_index ] );
+            break;
+
+        case HAL_LL_UART_IRQ_TX:
+            hal_ll_core_disable_irq( hal_ll_uart_irq_tx[ module_index ] );
+            break;
+
+        default:
+            break;
+    }
 }
 
 void hal_ll_uart_write( handle_t *handle, uint8_t wr_data ) {
@@ -638,7 +687,101 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
 }
 
 // ------------------------------------------------------------- DEFAULT EXCEPTION HANDLERS
+/*!< @brief Strong definitions replace the weak INT_* handlers of the core vector table. */
+#ifndef NECTO_HOST_SYNTAX_CHECK
+#define HAL_LL_UART_ISR __attribute__((interrupt))
+#else
+#define HAL_LL_UART_ISR
+#endif
 
+/**
+ * @brief  Common INTSTq handling.
+ *
+ * INTSTq is only unmasked while the HAL layer has data to send.
+ *
+ * @param[in]  module_index UART module number.
+ *
+ * @return void None.
+ */
+static void hal_ll_uart_tx_isr( uint8_t module_index ) {
+    if ( irq_handler && objects[ module_index ] ) {
+        irq_handler( objects[ module_index ], HAL_LL_UART_IRQ_TX );
+    }
+}
+
+/**
+ * @brief  Common INTSRq handling.
+ *
+ * With EOCmn = 0 a reception error also raises INTSRq, the
+ * error flags are cleared after the HAL layer has read SDRmn.
+ *
+ * @param[in]  module_index UART module number.
+ * @param[in]  sau_base SAU unit register block of the UART.
+ *
+ * @return void None.
+ */
+static void hal_ll_uart_rx_isr( uint8_t module_index, hal_ll_base_addr_t sau_base ) {
+    volatile hal_ll_uart_base_handle_t *hal_ll_hw_reg = hal_ll_uart_get_base_struct( sau_base );
+    uint8_t rx_channel = hal_ll_uart_rx_channel( module_index );
+    uint16_t errors;
+
+    if ( irq_handler && objects[ module_index ] ) {
+        irq_handler( objects[ module_index ], HAL_LL_UART_IRQ_RX );
+    }
+
+    errors = read_reg_bits( &hal_ll_hw_reg->ssr[ rx_channel ], HAL_LL_UART_SSR_ERR_MASK );
+    if ( errors ) {
+        write_reg( &hal_ll_hw_reg->sir[ rx_channel ], errors );
+    }
+}
+
+#if defined (UART_MODULE_0)
+void INT_ST0( void ) HAL_LL_UART_ISR;
+void INT_ST0( void ) {
+    hal_ll_uart_tx_isr( hal_ll_uart_module_num( UART_MODULE_0 ) );
+}
+
+void INT_SR0( void ) HAL_LL_UART_ISR;
+void INT_SR0( void ) {
+    hal_ll_uart_rx_isr( hal_ll_uart_module_num( UART_MODULE_0 ), HAL_LL_SAU0_BASE_ADDR );
+}
+#endif
+
+#if defined (UART_MODULE_1)
+void INT_ST1( void ) HAL_LL_UART_ISR;
+void INT_ST1( void ) {
+    hal_ll_uart_tx_isr( hal_ll_uart_module_num( UART_MODULE_1 ) );
+}
+
+void INT_SR1( void ) HAL_LL_UART_ISR;
+void INT_SR1( void ) {
+    hal_ll_uart_rx_isr( hal_ll_uart_module_num( UART_MODULE_1 ), HAL_LL_SAU0_BASE_ADDR );
+}
+#endif
+
+#if defined (UART_MODULE_2)
+void INT_ST2( void ) HAL_LL_UART_ISR;
+void INT_ST2( void ) {
+    hal_ll_uart_tx_isr( hal_ll_uart_module_num( UART_MODULE_2 ) );
+}
+
+void INT_SR2( void ) HAL_LL_UART_ISR;
+void INT_SR2( void ) {
+    hal_ll_uart_rx_isr( hal_ll_uart_module_num( UART_MODULE_2 ), HAL_LL_SAU1_BASE_ADDR );
+}
+#endif
+
+#if defined (UART_MODULE_3)
+void INT_ST3( void ) HAL_LL_UART_ISR;
+void INT_ST3( void ) {
+    hal_ll_uart_tx_isr( hal_ll_uart_module_num( UART_MODULE_3 ) );
+}
+
+void INT_SR3( void ) HAL_LL_UART_ISR;
+void INT_SR3( void ) {
+    hal_ll_uart_rx_isr( hal_ll_uart_module_num( UART_MODULE_3 ), HAL_LL_SAU1_BASE_ADDR );
+}
+#endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
 static uint8_t hal_ll_uart_find_index( handle_t *handle ) {
@@ -887,11 +1030,12 @@ static void hal_ll_uart_hw_init( hal_ll_uart_hw_specifics_map_t *map ) {
     set_reg_bits( &hal_ll_hw_reg->sps, ( uint16_t )( prs << ( cks << 2 ) ) );
 
     // The RX channel's SMR must be set too, with the TX channel in UART transmission mode.
-    write_reg( &hal_ll_hw_reg->smr[ tx_channel ], ( cks << HAL_LL_UART_SMR_CKS ) | HAL_LL_UART_SMR_FIXED | HAL_LL_UART_SMR_MD_UART );
+    write_reg( &hal_ll_hw_reg->smr[ tx_channel ], ( cks << HAL_LL_UART_SMR_CKS ) | HAL_LL_UART_SMR_FIXED |
+                                                  HAL_LL_UART_SMR_MD_UART | HAL_LL_UART_SMR_MD_BUF_EMPTY );
     write_reg( &hal_ll_hw_reg->smr[ rx_channel ], ( cks << HAL_LL_UART_SMR_CKS ) | HAL_LL_UART_SMR_STS |
                                                   HAL_LL_UART_SMR_FIXED | HAL_LL_UART_SMR_MD_UART );
 
-    // LSB first, error interrupt masked (EOCmn = 0) for polling.
+    // LSB first, EOCmn = 0: no INTSREq, reception errors are reported through INTSRq and SSRmn.
     format = ( hal_ll_uart_set_parity_bare_metal( map ) << HAL_LL_UART_SCR_PTC_SHIFT ) |
              HAL_LL_UART_SCR_DIR_LSB | HAL_LL_UART_SCR_FIXED |
              hal_ll_uart_set_data_bits_bare_metal( map );

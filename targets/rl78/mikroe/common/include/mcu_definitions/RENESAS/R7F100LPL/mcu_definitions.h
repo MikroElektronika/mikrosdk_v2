@@ -250,5 +250,17 @@
 #define TIM_MODULE_COUNT 4
 //EOF TIM
 
+//IVT_TABLE
+// Vector table address of the interrupt source, used as IRQn (R01UH1082 Table 25-1).
+#define UART2_TX_IVT    0x14 // INTST2
+#define UART2_RX_IVT    0x16 // INTSR2
+#define UART0_TX_IVT    0x1E // INTST0
+#define UART1_TX_IVT    0x24 // INTST1
+#define UART1_RX_IVT    0x26 // INTSR1
+#define UART0_RX_IVT    0x2C // INTSR0
+#define UART3_TX_IVT    0x3C // INTST3
+#define UART3_RX_IVT    0x3E // INTSR3
+//EOF IVT_TABLE
+
 #endif // _MCU_DEFINITIONS_H_
 // ------------------------------------------------------------------------- END

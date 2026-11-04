@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_core.c
- * @brief This file contains all CORE functionalities for RISC-V chips.
+ * @brief This file contains all CORE functionalities for RL78 chips.
  */
 
 #include "hal_ll_core_defines.h"
@@ -47,31 +47,26 @@
 #include <stdbool.h>
 
 bool hal_ll_core_implemented( void ) {
-    return 0;
+    return true;
 }
 
-void hal_ll_core_enable_interrupts( void )
-{
-    return;
+void hal_ll_core_enable_interrupts( void ) {
+    hal_ll_core_enable_int_asm;
 }
 
-void hal_ll_core_disable_interrupts( void )
-{
-    return;
+void hal_ll_core_disable_interrupts( void ) {
+    hal_ll_core_disable_int_asm;
 }
 
-void hal_ll_core_enable_irq( uint8_t IRQn )
-{
-    return;
+void hal_ll_core_enable_irq( uint8_t IRQn ) {
+    hal_ll_core_port_irq_mask( IRQn, false );
 }
 
-void hal_ll_core_disable_irq( uint8_t IRQn )
-{
-    return;
+void hal_ll_core_disable_irq( uint8_t IRQn ) {
+    hal_ll_core_port_irq_mask( IRQn, true );
 }
 
-void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority )
-{
-    return;
+void hal_ll_core_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority ) {
+    hal_ll_core_port_irq_priority( IRQn, IRQn_priority );
 }
 // ------------------------------------------------------------------------- END

@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_core_defines.h
- * @brief Core specific defines and enums used for RISC-V chips.
+ * @brief Core specific defines and enums used for RL78 chips.
  */
 
 #ifndef _HAL_LL_CORE_DEFINES_H_
@@ -50,90 +50,45 @@ extern "C"{
 
 #include <stdint.h>
 
-#define MSTATUS_MIE                      (0x00000008)
-#define ECLIC_ADDR_BASE                  (0xD2000000)
-#define CLIC_CFG_NLBITS_MASK             (0x1E)
-#define CLIC_CFG_NLBITS_SHIFT            (1)
-#define CLIC_INFO_CLICINTCTLBITS_MASK    (0x01E00000)
-#define CLIC_INFO_CLICINTCTLBITS_SHIFT   (21)
-#define MTVEC_CLIC_INTERRUPT_MODE        (0x00000003)
-#define MTVEC_CLIC_INTERRUPT_MODE_MASK   (0xFFFFFFC0)
-#define CLICINT_ATTR_VECTORED_INTERRUPT  (0x1)
+/*!< @brief Vector table addresses usable as IRQn (R01UH1082 Table 25-1).
+ *          Vector address 0x04 (INTWDTI) is interrupt source 0, every
+ *          following vector adds one source. BRK (0x7E) can't be masked. */
+#define HAL_LL_CORE_IRQ_VECTOR_FIRST        ( 0x04 )
+#define HAL_LL_CORE_IRQ_VECTOR_LAST         ( 0x7C )
 
-#define ECLIC_INT_IP_OFFSET              (0x1000UL)
-#define ECLIC_INT_IE_OFFSET              (0x1001UL)
-#define ECLIC_INT_ATTR_OFFSET            (0x1002UL)
-#define ECLIC_INT_CTL_OFFSET             (0x1003UL)
+/*!< @brief Interrupt source number and bit position within the 8-bit flag registers. */
+#define hal_ll_core_irq_source(_irqn)       ( ( uint8_t )( ( ( _irqn ) - HAL_LL_CORE_IRQ_VECTOR_FIRST ) >> 1 ) )
+#define hal_ll_core_irq_bit(_irqn)          ( hal_ll_core_irq_source( _irqn ) & 0x07 )
 
-#define SET_ECLIC_CLICINT_IP(IRQn,val)   (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_IP_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_IP(IRQn)       (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_IP_OFFSET+IRQn*4)
+/*!< @brief Request flag registers (R01UH1082 Table 25-2, Figures 25-2 to 25-4): IF0L-IF1H at FFFE0H-FFFE3H, IF2L-IF3H at FFFD0H-FFFD3H.
+ *          Mask (MKxx), priority 0 (PR0xx) and priority 1 (PR1xx) registers
+ *          follow at +4, +8 and +12 from the matching IFxx. */
+#define HAL_LL_CORE_IF0L_ADDR               ( 0xFFFE0UL )
+#define HAL_LL_CORE_IF2L_ADDR               ( 0xFFFD0UL )
+#define HAL_LL_CORE_IRQ_MK_OFFSET           ( 0x04UL )
+#define HAL_LL_CORE_IRQ_PR0_OFFSET          ( 0x08UL )
+#define HAL_LL_CORE_IRQ_PR1_OFFSET          ( 0x0CUL )
+#define hal_ll_core_irq_if_addr(_irqn)      ( ( hal_ll_core_irq_source( _irqn ) < 32 ) ? \
+                                              ( HAL_LL_CORE_IF0L_ADDR + ( hal_ll_core_irq_source( _irqn ) >> 3 ) ) : \
+                                              ( HAL_LL_CORE_IF2L_ADDR + ( ( hal_ll_core_irq_source( _irqn ) - 32 ) >> 3 ) ) )
+#define hal_ll_core_irq_reg(_irqn,_offset)  ( ( volatile uint8_t * )( hal_ll_core_irq_if_addr( _irqn ) + ( _offset ) ) )
 
-#define SET_ECLIC_CLICINT_IE(IRQn,val)   (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_IE_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_IE(IRQn)       (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_IE_OFFSET+IRQn*4)
+/*!< @brief Program status word, IE is bit 7. */
+#define HAL_LL_CORE_PSW_ADDR                ( 0xFFFFAUL )
+#define HAL_LL_CORE_PSW_IE                  ( 0x80U )
 
-#define SET_ECLIC_CLICINT_ATTR(IRQn,val) (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_ATTR_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_ATTR(IRQn)     (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_ATTR_OFFSET+IRQn*4)
+/*!< @brief Global interrupt enable/disable (EI/DI instructions). */
+#define hal_ll_core_enable_int_asm          __builtin_rl78_ei()
+#define hal_ll_core_disable_int_asm         __builtin_rl78_di()
 
-#define SET_ECLIC_CLICINT_CTL(IRQn,val)  (*(volatile uint8_t*)(ECLIC_ADDR_BASE+ECLIC_INT_CTL_OFFSET+IRQn*4)=val)
-#define GET_ECLIC_CLICINT_CTL(IRQn)      (*(volatile uint8_t*)ECLIC_ADDR_BASE+ECLIC_INT_CTL_OFFSET+IRQn*4)
-
-typedef struct {
-    volatile uint8_t cfg;               // Global configuration register
-    uint8_t _unused1[3];
-    const uint32_t info;                // Global info register
-    uint8_t _unused2[3];
-    volatile uint8_t mth;               // Target threshold level register
-} eclic;
-
-#define __weak __attribute__((weak))
-
-#define set_csr(reg, bit) ({ unsigned long __tmp; \
-                             if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-                                 asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
-                             else \
-                                 asm volatile ("csrrs %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
-                             __tmp; })
-#define clear_csr(reg, bit) ({ unsigned long __tmp; \
-                               if (__builtin_constant_p(bit) && (unsigned long)(bit) < 32) \
-                                   asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "i"(bit)); \
-                               else \
-                                   asm volatile ("csrrc %0, " #reg ", %1" : "=r"(__tmp) : "r"(bit)); \
-                               __tmp; })
-
-#define read_csr(reg) ({ unsigned long __tmp; \
-                         asm volatile ("csrr %0, " #reg : "=r"(__tmp)); \
-                         __tmp; })
-
-#define write_csr(reg, val) ({ \
-                               if (__builtin_constant_p(val) && (unsigned long)(val) < 32) \
-                                   asm volatile ("csrw " #reg ", %0" :: "i"(val)); \
-                               else \
-                                   asm volatile ("csrw " #reg ", %0" :: "r"(val)); })
-
-#if defined(gigadevice)
-#if defined(__core_bumblebee__)
-    typedef enum
-    {
-        HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
-        HAL_LL_IVT_PRIORITY_LEVEL_1,
-        HAL_LL_IVT_PRIORITY_LEVEL_2,
-        HAL_LL_IVT_PRIORITY_LEVEL_3,
-        HAL_LL_IVT_PRIORITY_LEVEL_4,
-        HAL_LL_IVT_PRIORITY_LEVEL_5,
-        HAL_LL_IVT_PRIORITY_LEVEL_6,
-        HAL_LL_IVT_PRIORITY_LEVEL_7,
-        HAL_LL_IVT_PRIORITY_LEVEL_8,
-        HAL_LL_IVT_PRIORITY_LEVEL_9,
-        HAL_LL_IVT_PRIORITY_LEVEL_10,
-        HAL_LL_IVT_PRIORITY_LEVEL_11,
-        HAL_LL_IVT_PRIORITY_LEVEL_12,
-        HAL_LL_IVT_PRIORITY_LEVEL_13,
-        HAL_LL_IVT_PRIORITY_LEVEL_14,
-        HAL_LL_IVT_PRIORITY_LEVEL_15
-    } hal_ll_core_irq_priority_levels;
-
-#endif
-#endif
+/*!< @brief Interrupt priority levels, level 0 is the highest. Out of reset all sources are level 3. */
+typedef enum
+{
+    HAL_LL_IVT_PRIORITY_LEVEL_0 = 0,
+    HAL_LL_IVT_PRIORITY_LEVEL_1,
+    HAL_LL_IVT_PRIORITY_LEVEL_2,
+    HAL_LL_IVT_PRIORITY_LEVEL_3
+} hal_ll_core_irq_priority_levels;
 
 #ifdef __cplusplus
 }

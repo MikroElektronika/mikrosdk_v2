@@ -39,54 +39,71 @@
 /*!
  * @file  hal_ll_core_port.c
  * @brief This file contains all low level function definitions for chip specific core functionality.
- * @note  Refers to all BumbleBee RISC-V core chips.
+ * @note  Refers to all RL78 chips.
  */
 
 #include "hal_ll_core_defines.h"
+#include "hal_ll_core_port.h"
 #include "hal_ll_bit_control.h"
 
-void hal_ll_core_port_clic_mode_enable() {
-    return;
+/**
+ * @brief  Read-modify-write of an interrupt control register bit.
+ *
+ * The MKxx/IFxx/PRxx registers are shared by eight interrupt sources and
+ * may also be changed from interrupt handlers, so the update runs with
+ * interrupts disabled. The previous IE state is restored afterwards.
+ *
+ * @param[in] reg Register address.
+ * @param[in] bit Bit position.
+ * @param[in] state True sets the bit, false clears it.
+ *
+ * @return void None.
+ */
+static void hal_ll_core_port_write_bit( volatile uint8_t *reg, uint8_t bit, bool state ) {
+    uint8_t ie = *( volatile uint8_t * )HAL_LL_CORE_PSW_ADDR & HAL_LL_CORE_PSW_IE;
+
+    hal_ll_core_disable_int_asm;
+
+    if ( state ) {
+        set_reg_bit( reg, bit );
+    } else {
+        clear_reg_bit( reg, bit );
+    }
+
+    if ( ie ) {
+        hal_ll_core_enable_int_asm;
+    }
 }
 
-void hal_ll_core_port_eclic_set_vectored_mode( uint32_t IRQn ) {
-    return;
+void hal_ll_core_port_irq_mask( uint8_t IRQn, bool mask ) {
+    if ( ( IRQn < HAL_LL_CORE_IRQ_VECTOR_FIRST ) || ( IRQn > HAL_LL_CORE_IRQ_VECTOR_LAST ) ) {
+        return;
+    }
+
+    hal_ll_core_port_write_bit( hal_ll_core_irq_reg( IRQn, HAL_LL_CORE_IRQ_MK_OFFSET ),
+                                hal_ll_core_irq_bit( IRQn ), mask );
 }
 
-void hal_ll_core_port_eclic_init ( uint32_t IRQn ) {
-    return;
+void hal_ll_core_port_irq_flag( uint8_t IRQn, bool state ) {
+    if ( ( IRQn < HAL_LL_CORE_IRQ_VECTOR_FIRST ) || ( IRQn > HAL_LL_CORE_IRQ_VECTOR_LAST ) ) {
+        return;
+    }
+
+    hal_ll_core_port_write_bit( hal_ll_core_irq_reg( IRQn, 0 ),
+                                hal_ll_core_irq_bit( IRQn ), state );
 }
 
-void hal_ll_core_port_eclic_enable_irq( uint8_t IRQn ) {
-    return;
-}
+void hal_ll_core_port_irq_priority( uint8_t IRQn, uint8_t IRQn_priority ) {
+    if ( ( IRQn < HAL_LL_CORE_IRQ_VECTOR_FIRST ) || ( IRQn > HAL_LL_CORE_IRQ_VECTOR_LAST ) ||
+         ( IRQn_priority > HAL_LL_IVT_PRIORITY_LEVEL_3 ) ) {
+        return;
+    }
 
-void hal_ll_core_port_eclic_disable_irq( uint8_t IRQn ) {
-    return;
-}
-
-uint8_t hal_ll_core_port_eclic_get_cfg_nlbits() {
-    return 0;
-}
-
-uint8_t hal_ll_core_port_eclic_get_info_clicintctlbits() {
-    return 0;
-}
-
-void hal_ll_core_port_eclic_set_irq_lvl_abs( uint32_t IRQn, uint8_t IRQn_level ) {
-    return;
-}
-
-void hal_ll_core_port_eclic_set_priority_irq( uint8_t IRQn, uint8_t IRQn_priority ) {
-    return;
-}
-
-void hal_ll_core_port_eclic_set_priority_level( uint32_t IRQn, uint8_t IRQn_level, uint8_t IRQn_priority ) {
-    return;
-}
-
-void hal_ll_core_port_eclic_priority_group_set( uint32_t prigroup ) {
-    return;
+    // Level = PR1xx:PR0xx.
+    hal_ll_core_port_write_bit( hal_ll_core_irq_reg( IRQn, HAL_LL_CORE_IRQ_PR0_OFFSET ),
+                                hal_ll_core_irq_bit( IRQn ), IRQn_priority & 0x01 );
+    hal_ll_core_port_write_bit( hal_ll_core_irq_reg( IRQn, HAL_LL_CORE_IRQ_PR1_OFFSET ),
+                                hal_ll_core_irq_bit( IRQn ), IRQn_priority & 0x02 );
 }
 
 // ------------------------------------------------------------------------- END
