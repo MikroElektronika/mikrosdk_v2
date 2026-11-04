@@ -102,7 +102,6 @@ typedef struct
  */
 void gc9107_init( gc9107_t *ctx, gc9107_cfg_t *cfg );
 
-
 /**
  * @brief Send command to GC9107 Display Controller.
  * @details This function sends command to GC9107 Display Controller.
