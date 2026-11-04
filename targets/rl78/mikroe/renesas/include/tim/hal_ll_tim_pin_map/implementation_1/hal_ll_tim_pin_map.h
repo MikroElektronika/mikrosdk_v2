@@ -55,28 +55,27 @@ extern "C"{
 /*!< @brief Helper macro for getting adequate module index number */
 #define hal_ll_tim_module_num(_module_num) (_module_num - 1)
 
-typedef enum {
-    HAL_LL_TIM_PIN_A = 0,
-    HAL_LL_TIM_PIN_B,
-    HAL_LL_TIM_PIN_NONE
-} hal_ll_tim_pin_type_t;
-
 /*!< @brief TIM pin structure. */
 typedef struct {
     hal_ll_pin_name_t pin;
     hal_ll_base_addr_t base;
-    uint8_t af;
+    uint8_t af; /*!< PIOR0/PIOR1/PIOR2 field value routing this pin. */
     hal_ll_pin_name_t module_index;
-    hal_ll_tim_pin_type_t pin_type;
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
-    #ifdef TIM0_P010_CH1_AF2
-    {GPIO_P010, HAL_LL_TIM0_BASE_ADDR, 2, hal_ll_tim_module_num( TIM_MODULE_0 ), HAL_LL_TIM_PIN_NONE},
+    #ifdef TIM1_P064_CH3_AF4
+    {GPIO_P064, HAL_LL_TIM1_BASE_ADDR, 4, hal_ll_tim_module_num( TIM_MODULE_1 )},
+    #endif
+    #ifdef TIM2_P065_CH5_AF5
+    {GPIO_P065, HAL_LL_TIM2_BASE_ADDR, 5, hal_ll_tim_module_num( TIM_MODULE_2 )},
+    #endif
+    #ifdef TIM3_P077_CH7_AF3
+    {GPIO_P077, HAL_LL_TIM3_BASE_ADDR, 3, hal_ll_tim_module_num( TIM_MODULE_3 )},
     #endif
 
-    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
+    { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };
 
 #ifdef __cplusplus

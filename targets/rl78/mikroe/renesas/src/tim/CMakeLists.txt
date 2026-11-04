@@ -14,6 +14,7 @@ mikrosdk_add_library(lib_hal_ll_tim MikroSDK.HalLowLevel.TIM
     ${tim_subimplementation}
 
     ../../include/hal_ll_target.h
+    ../../include/pior/hal_ll_pior_defines.h
     #  BEGIN TIM
     ../../include/tim/hal_ll_tim.h
     ../../include/tim/${tim_pin_map}/hal_ll_tim_pin_map.h
@@ -35,6 +36,7 @@ target_include_directories(lib_hal_ll_tim
     PRIVATE
         ../../include
         ../../include/gpio
+        ../../include/pior
     #  BEGIN TIM
         ../../include/tim
         ../../include/tim/${tim_pin_map}
