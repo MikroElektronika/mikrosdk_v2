@@ -41,11 +41,15 @@
 
 #include "st7789_cmd.h"
 #include "st7789.h"
+#include "gc9107.h"
 #include "delays.h"
 
 static st7789_t display_ctx; /*!< Display Context Object. */
+static gc9107_t gc9107_ctx;                /*!< GC9107 Display Context Object. */
+static ips_controller_t active_controller; /*!< Controller of the display in use. */
 static void _reset_st7789_ips_display_1_click_135x240();
 static void _reset_st7789_ips_display_2_click_240x240();
+static void _reset_gc9107_ips_display_3_click_128x115();
 
 /**
  * @brief IPS
@@ -60,6 +64,12 @@ const ips_display_t IPS_DISPLAY_2_CLICK = {
     240, // display_width
     240, // display_height
     _reset_st7789_ips_display_2_click_240x240 };
+
+const ips_display_t IPS_DISPLAY_3_CLICK = {
+    128, // display_width
+    115, // display_height
+    _reset_gc9107_ips_display_3_click_128x115,
+    IPS_CONTROLLER_GC9107 };
 
 static void _reset_st7789_ips_display_1_click_135x240()
 {
@@ -249,8 +259,37 @@ static void _reset_st7789_ips_display_2_click_240x240()
     st7789_write_command( ST7789_CMD_DISPON );
 }
 
+static void _reset_gc9107_ips_display_3_click_128x115()
+{
+    gc9107_configure();
+}
+
 void ips_init( ips_cfg_t *cfg, gl_driver_t *driver )
 {
+    active_controller = cfg->board->controller;
+
+    if ( active_controller == IPS_CONTROLLER_GC9107 )
+    {
+        gc9107_cfg_t gc9107_cfg;
+        // IPS Display 3 Click has the backlight on the PWM pin.
+        gc9107_cfg.bck = cfg->ips_pwm;
+        gc9107_cfg.rst = cfg->ips_rst;
+        gc9107_cfg.cs = cfg->ips_cs;
+        gc9107_cfg.sck = cfg->ips_sck;
+        gc9107_cfg.sdi = cfg->ips_sdi;
+        gc9107_cfg.sdo = cfg->ips_sdo;
+        gc9107_cfg.rs = cfg->ips_dc;
+
+        gc9107_cfg.width = cfg->board->display_width;
+        gc9107_cfg.height = cfg->board->display_height;
+
+        gc9107_init( &gc9107_ctx, &gc9107_cfg );
+        cfg->board->reset_procedure();
+
+        // Set backlight.
+        ips_set_backlight( 0xFF );
+        return;
+    }
     st7789_cfg_t st7789_cfg;
     st7789_cfg.bck = cfg->ips_bck;
     st7789_cfg.rst = cfg->ips_rst;
@@ -272,15 +311,31 @@ void ips_init( ips_cfg_t *cfg, gl_driver_t *driver )
 
 uint16_t ips_display_width()
 {
+    if ( active_controller == IPS_CONTROLLER_GC9107 )
+    {
+        return gc9107_get_display_width();
+    }
+
     return st7789_get_display_width();
 }
 
 uint16_t ips_display_height()
 {
+    if ( active_controller == IPS_CONTROLLER_GC9107 )
+    {
+        return gc9107_get_display_height();
+    }
+
     return st7789_get_display_height();
 }
 
 void ips_set_backlight( uint8_t intensity )
 {
+    if ( active_controller == IPS_CONTROLLER_GC9107 )
+    {
+        gc9107_set_backlight( intensity );
+        return;
+    }
+
     st7789_set_backlight( intensity );
 }

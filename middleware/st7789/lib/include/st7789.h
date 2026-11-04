@@ -158,6 +158,14 @@ void st7789_write_command( uint8_t command );
 void st7789_write_param( uint8_t param );
 
 /**
+ * @brief Get SPI handle used by ST7789 driver.
+ * @details This function returns the SPI handle opened by @ref st7789_init, so other
+ * code talking to the same display can reuse it instead of opening SPI again.
+ * @return Pointer to the SPI handle.
+ */
+spi_master_t *st7789_get_spi( void );
+
+/**
  * @brief Get display width.
  * @details This function returns the width of the ST7789 controller based display.
  * @return Display width.
