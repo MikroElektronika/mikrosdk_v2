@@ -50,7 +50,10 @@
  * A pin written very fast (a display strobe, a bit-banged bus) would fill the buffer with its
  * levels and stop the program over and over. After 16 writes in a row less than 20 us apart,
  * the writes of that pin are only counted until it pauses: the timeline shows one burst with
- * the number of level changes. Needs a time base (#trace_tick_hz).
+ * the number of level changes. A bus the same way: after 16 transfers in a row, each starting
+ * less than 100 us after the one before (a display filled pixel by pixel), its transfers are
+ * counted with their bytes until it pauses, and the timeline shows one burst. Both need a time
+ * base (#trace_tick_hz).
  *
  * Fault injection: while debugging, NECTO Studio can make an I2C device stop answering, hold
  * an SPI bus's MISO at a byte, an input pin at a level or an analog input at a value, and take

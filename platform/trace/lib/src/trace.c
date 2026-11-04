@@ -60,8 +60,8 @@
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-// 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED.
-#define TRACE_FORMAT_VERSION (3)
+// 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED. 4: BUS_BURST records.
+#define TRACE_FORMAT_VERSION (4)
 #define TRACE_MAX_LANES (32)
 // The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
 #define TRACE_MAX_DATA (16)
@@ -82,6 +82,12 @@
 // recorded, until a pause longer than the gap. One BURST record then stands for all of them.
 #define TRACE_BURST_WRITES (16)
 #define TRACE_BURST_GAP_US (20)
+
+// The same for a bus: this many transfers in a row, each starting within TRACE_BUS_BURST_GAP_US
+// of the one before (a display filled pixel by pixel), and the transfers after them are counted,
+// not recorded, until a pause: one BUS_BURST record stands for them.
+#define TRACE_BUS_BURST_TRANSFERS (16)
+#define TRACE_BUS_BURST_GAP_US (100)
 
 // Chip select pins seen by spi_master_select_device(). Their lanes are keyed by the entries,
 // as other lanes are by their driver object.
@@ -112,6 +118,7 @@ typedef enum
     TRACE_RECORD_LANE_DEF = 0x02,
     TRACE_RECORD_LEVEL = 0x10,
     TRACE_RECORD_BURST = 0x11,
+    TRACE_RECORD_BUS_BURST = 0x12,
     TRACE_RECORD_I2C = 0x20,
     TRACE_RECORD_SPI = 0x21,
     TRACE_RECORD_UART_TX = 0x22,
@@ -172,7 +179,12 @@ typedef struct
     uint8_t fast_writes;    // writes in a row within the gap
     uint32_t last_write;
     uint32_t burst_start;
-    uint32_t burst_changes;
+    uint32_t burst_changes;    // level changes; transfers, on a bus
+    // A bus's burst: when its last transfer ended, the bytes and the failures.
+    uint32_t burst_end;
+    uint32_t burst_written;
+    uint32_t burst_read;
+    uint16_t burst_failed;
 } trace_lane_t;
 
 typedef struct
@@ -208,6 +220,7 @@ static bool trace_resync = false;    // META (and DROPPED) needed before the nex
 static uint32_t trace_flush_ticks = 0;    // automatic flush interval, 0: only when full
 static uint32_t trace_last_flush = 0;
 static uint32_t trace_burst_gap = 0;      // TRACE_BURST_GAP_US in ticks, 0: no bursts
+static uint32_t trace_bus_burst_gap = 0;  // TRACE_BUS_BURST_GAP_US in ticks
 static uint8_t trace_bursts = 0;          // lanes in a burst
 
 static pin_name_t trace_cs_pins[ TRACE_MAX_CS ];
@@ -438,15 +451,32 @@ static void trace_write( uint8_t id, trace_lane_t *lane, const trace_record_t *e
 // Ends the burst of a lane. The record is stamped now, so that record times never go back
 // (the debugger takes a step back as a wrap of the time base); it says how long ago the burst
 // started and ended.
+static bool trace_is_bus( const trace_lane_t *lane )
+{
+    return ( TRACE_LANE_I2C == lane->kind ) || ( TRACE_LANE_SPI == lane->kind ) ||
+           ( TRACE_LANE_UART == lane->kind ) || ( TRACE_LANE_ONE_WIRE == lane->kind );
+}
+
 static void trace_write_burst( uint8_t id, trace_lane_t *lane, uint32_t now )
 {
     trace_record_t record;
 
-    record_header( &record, TRACE_RECORD_BURST, id, now );
-    record_u32( &record, lane->last_write - lane->burst_start );
-    record_u32( &record, now - lane->last_write );
-    record_u32( &record, lane->burst_changes );
-    record_u8( &record, lane->level );
+    if ( trace_is_bus( lane ) )
+    {
+        record_header( &record, TRACE_RECORD_BUS_BURST, id, now );
+        record_u32( &record, lane->burst_end - lane->burst_start );
+        record_u32( &record, now - lane->burst_end );
+        record_u32( &record, lane->burst_changes );
+        record_u32( &record, lane->burst_written );
+        record_u32( &record, lane->burst_read );
+        record_u16( &record, lane->burst_failed );
+    } else {
+        record_header( &record, TRACE_RECORD_BURST, id, now );
+        record_u32( &record, lane->last_write - lane->burst_start );
+        record_u32( &record, now - lane->last_write );
+        record_u32( &record, lane->burst_changes );
+        record_u8( &record, lane->level );
+    }
     trace_write( id, lane, &record );
     lane->bursting = false;
     trace_bursts--;
@@ -459,8 +489,9 @@ static void trace_end_bursts( uint32_t now, bool all )
     {
         trace_lane_t *lane = &trace_lanes[ i ];
         // Signed: an event stamped at its start (a transfer) can be older than the last write.
+        uint32_t gap = trace_is_bus( lane ) ? trace_bus_burst_gap : trace_burst_gap;
         if ( lane->bursting &&
-             ( all || ( (int32_t)( now - lane->last_write ) > (int32_t)trace_burst_gap ) ) )
+             ( all || ( (int32_t)( now - lane->last_write ) > (int32_t)gap ) ) )
         {
             trace_write_burst( i, lane, now );
         }
@@ -636,6 +667,58 @@ static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, ui
 
 // injected: TRACE_RECORD_INJECTED when a fault gave the level. A level held by a fault and
 // then let go is a change even when the level stays.
+// Counts a transfer into the burst of its bus lane, starting or ending the burst, as
+// trace_burst_write() does for pins. True when the transfer is counted and needs no record.
+static bool trace_bus_burst( uint8_t id, trace_lane_t *lane, uint32_t start, uint32_t end,
+                             size_t written, size_t read, err_t result )
+{
+    if ( !trace_bus_burst_gap )
+    {
+        return false;
+    }
+
+    bool fast = lane->written && ( ( start - lane->last_write ) <= trace_bus_burst_gap );
+    if ( lane->bursting && !fast )
+    {
+        trace_write_burst( id, lane, start );
+    }
+    lane->written = true;
+    lane->last_write = start;
+    if ( !fast )
+    {
+        lane->fast_writes = 0;
+        return false;
+    }
+
+    if ( lane->fast_writes < TRACE_BUS_BURST_TRANSFERS )
+    {
+        lane->fast_writes++;
+    }
+    if ( !lane->bursting )
+    {
+        if ( lane->fast_writes < TRACE_BUS_BURST_TRANSFERS )
+        {
+            return false;
+        }
+        lane->bursting = true;
+        lane->burst_start = start;
+        lane->burst_changes = 0;
+        lane->burst_written = 0;
+        lane->burst_read = 0;
+        lane->burst_failed = 0;
+        trace_bursts++;
+    }
+    lane->burst_changes++;
+    lane->burst_written += (uint32_t)written;
+    lane->burst_read += (uint32_t)read;
+    if ( result && ( lane->burst_failed < 0xFFFFU ) )
+    {
+        lane->burst_failed++;
+    }
+    lane->burst_end = end;
+    return true;
+}
+
 static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only,
                          uint8_t injected )
 {
@@ -735,6 +818,7 @@ void trace_init( void )
     trace_hz = trace_tick_hz();
     // Bursts need a time base too.
     trace_burst_gap = (uint32_t)( ( (uint64_t)trace_hz * TRACE_BURST_GAP_US ) / 1000000U );
+    trace_bus_burst_gap = (uint32_t)( ( (uint64_t)trace_hz * TRACE_BUS_BURST_GAP_US ) / 1000000U );
     trace_set_flush_interval_locked( TRACE_FLUSH_INTERVAL_MS );
     trace_last_flush = trace_ticks();
     trace_started = true;
@@ -794,6 +878,15 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
         lane->pin_count = 2;
     }
 
+    // Transfers too fast to record each (a display filled pixel by pixel) are counted.
+    if ( lane && trace_bus_burst( id, lane, start, start + duration, write_len, read_len, result ) )
+    {
+        (void)trace_take_injected( obj );
+        trace_auto_flush();
+        trace_unlock( primask );
+        return;
+    }
+
     trace_record_t record;
     record_header( &record, TRACE_RECORD_I2C | trace_take_injected( obj ), id, start );
     record_u8( &record, i2c->config.addr );
@@ -831,6 +924,15 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
         lane->defined = false;
     }
 
+    // Transfers too fast to record each (a display filled pixel by pixel) are counted.
+    if ( lane && trace_bus_burst( id, lane, start, start + duration, write_len, read_len, result ) )
+    {
+        (void)trace_take_injected( obj );
+        trace_auto_flush();
+        trace_unlock( primask );
+        return;
+    }
+
     trace_record_t record;
     record_header( &record, TRACE_RECORD_SPI | trace_take_injected( obj ), id, start );
     record_transfer( &record, op, write_buf, write_len, read_buf, read_len, result, duration );
@@ -855,6 +957,15 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
         lane->pins[ 0 ] = uart->config.tx_pin;
         lane->pins[ 1 ] = uart->config.rx_pin;
         lane->pin_count = 2;
+    }
+
+    // Transfers too fast to record each (a display filled pixel by pixel) are counted.
+    if ( lane && trace_bus_burst( id, lane, start, start + duration, is_tx ? len : 0, is_tx ? 0 : len, 0 ) )
+    {
+        (void)trace_take_injected( obj );
+        trace_auto_flush();
+        trace_unlock( primask );
+        return;
     }
 
     uint8_t kept = kept_bytes( buf, len );
@@ -1021,6 +1132,15 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     // Data read by a failed operation is not valid; data written is kept.
     bool is_read = ( DRV_TRACE_ONE_WIRE_READ_ROM == op ) || ( DRV_TRACE_ONE_WIRE_SEARCH_FIRST == op ) ||
                    ( DRV_TRACE_ONE_WIRE_SEARCH_NEXT == op ) || ( DRV_TRACE_ONE_WIRE_READ == op );
+    // Transfers too fast to record each (a display filled pixel by pixel) are counted.
+    if ( lane && trace_bus_burst( id, lane, start, start + duration, is_read ? 0 : len, is_read ? len : 0, result ) )
+    {
+        (void)trace_take_injected( obj );
+        trace_auto_flush();
+        trace_unlock( primask );
+        return;
+    }
+
     uint8_t kept = ( result && is_read ) ? 0 : kept_bytes( buf, len );
     trace_record_t record;
     record_header( &record, TRACE_RECORD_ONE_WIRE | trace_take_injected( obj ), id, start );
