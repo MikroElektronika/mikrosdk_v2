@@ -38,214 +38,124 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet_w5500.h
- * @brief SPI Ethernet WIZnet W5500 Driver.
+ * @file w5500.h
+ * @brief SPI Ethernet WIZnet W5500 Driver (also used on WIZ_IP55).
+ * @details The W5500 is used in MACRAW mode on socket 0, so frames go through
+ * the eth_net helpers like on any other controller. Several devices can be
+ * used at the same time: give each eth_transport_t its own w5500_ctx_t
+ * through driver_ctx before calling w5500_configure(). Without it, a built-in
+ * context is used.
  */
 
 #ifndef SPI_ETHERNET_W5500_H
 #define SPI_ETHERNET_W5500_H
 
-#include "drv_digital_out.h"
-#include "drv_spi_master.h"
+#include "eth_bus_spi.h"
 #include <stdint.h>
-#include <stdbool.h>
 
 #define W5500_MAP_MIKROBUS( cfg, mikrobus ) \
-    cfg.miso  = MIKROBUS( mikrobus, MIKROBUS_MISO ); \
-    cfg.mosi  = MIKROBUS( mikrobus, MIKROBUS_MOSI ); \
-    cfg.sck   = MIKROBUS( mikrobus, MIKROBUS_SCK );  \
-    cfg.cs    = MIKROBUS( mikrobus, MIKROBUS_CS );   \
-    cfg.rst   = MIKROBUS( mikrobus, MIKROBUS_RST );
+    ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
+    ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
 
+/**
+ * @brief W5500 configuration: SPI bus and device settings.
+ */
 typedef struct {
-    pin_name_t miso;
-    pin_name_t mosi;
-    pin_name_t sck;
-    pin_name_t cs;
-    pin_name_t rst;
-
-    uint32_t spi_speed;
-    spi_master_mode_t spi_mode;
-
-    uint8_t mac[ 6 ];
-    uint8_t ip[ 4 ];
-    uint8_t full_duplex;
+    eth_bus_spi_cfg_t   bus;    // SPI pins, speed and mode
+    eth_transport_cfg_t eth;    // Reset pin, MAC, IP, duplex
 } w5500_cfg_t;
 
 /**
- * @brief Initialize the W5500 SPI Ethernet driver.
- *
- * @details Resets the W5500, reads its hardware revision, configures
- * the MAC and IP addresses, and opens socket 0 in MACRAW mode for
- * raw Ethernet frame transmission and reception.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param drv Pointer to the SPI Ethernet driver structure.
- *
- * @pre w5500_configure() must have been called beforehand.
- *
- * @return void
+ * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
  */
-void     w5500_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv );
+typedef struct {
+    uint8_t hw_rev;             // VERSIONR read during initialization
+} w5500_ctx_t;
 
 /**
  * @brief Initialize the W5500 configuration structure with default values.
- *
- * @details Sets all GPIO pins to HAL_PIN_NC, configures SPI mode 0,
- * sets the default SPI speed to 1 MHz and disables full-duplex mode.
- *
- * @param cfg Pointer to the W5500 configuration structure.
- *
- * @return void
+ * @param[out] cfg W5500 configuration structure.
+ * @return Nothing.
  */
 void     w5500_cfg_setup( w5500_cfg_t *cfg );
 
 /**
- * @brief Configure the SPI interface and GPIO pins for the W5500.
- *
- * @details Configures the SPI peripheral, initializes the chip select
- * and reset pins, and copies the MAC address, IP address and duplex
- * configuration into the SPI Ethernet instance.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param spi Pointer to the SPI master instance.
- * @param cfg Pointer to the W5500 configuration structure.
- *
- * @pre w5500_cfg_setup() should be called before this function.
- *
- * @return 0 if the configuration is successful.
+ * @brief Configure the SPI interface and the control pins for the W5500.
+ * @param[in,out] eth Ethernet transport instance. If eth->driver_ctx is NULL
+ *                    the built-in context is used, otherwise it must point to
+ *                    a w5500_ctx_t owned by the caller (one per device).
+ * @param[out] bus SPI bus object for this device, must stay valid while it is used.
+ * @param[in] cfg W5500 configuration structure.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
  */
-uint8_t  w5500_configure( spi_ethernet_t *eth, spi_master_t *spi, w5500_cfg_t *cfg );
+err_t    w5500_configure( eth_transport_t *eth, eth_bus_spi_t *bus, w5500_cfg_t *cfg );
 
 /**
- * @brief Send an Ethernet frame through the W5500.
- *
- * @details Writes the Ethernet frame to the socket 0 TX buffer,
- * updates the TX write pointer and issues the SEND command.
- * Socket 0 operates in MACRAW mode.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param buf Pointer to the Ethernet frame buffer.
- * @param len Length of the Ethernet frame in bytes.
- *
- * @pre w5500_init() must have been called beforehand.
- * @pre @p buf must point to a buffer containing at least @p len bytes.
- *
- * @return Number of bytes sent.
+ * @brief Initialize the W5500.
+ * @details Resets the W5500, reads its revision, programs the MAC and IP
+ * addresses and opens socket 0 in MACRAW mode.
+ * @param[in] eth Ethernet transport instance.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @pre w5500_configure() must have been called beforehand.
  */
-uint16_t w5500_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
+err_t    w5500_init( eth_transport_t *eth );
 
 /**
- * @brief Read an Ethernet frame received by the W5500.
- *
- * @details Reads the next frame from the socket 0 RX buffer in MACRAW
- * mode, removes the two-byte frame length header and copies the frame
- * into the provided buffer.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- * @param buf Pointer to the destination buffer.
- * @param len Maximum number of bytes that can be copied into @p buf.
- *
- * @pre w5500_init() must have been called beforehand.
- * @pre @p buf must point to a buffer large enough to hold @p len bytes.
- *
- * @return Number of bytes copied into @p buf, or 0 if no valid packet
- * is available.
+ * @brief Send an Ethernet frame through socket 0.
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] buf Ethernet frame (without FCS).
+ * @param[in] len Frame length in bytes, at most W5500_FRAME_SIZE.
+ * @return Number of bytes sent, 0 if the frame is too long.
  */
-uint16_t w5500_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
-
+uint16_t w5500_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
 /**
- * @brief Check whether an Ethernet packet is available.
- *
- * @details Reads the socket 0 RX Received Size Register and checks
- * whether at least one Ethernet frame is waiting in the RX buffer.
- *
- * @param eth Pointer to the SPI Ethernet instance.
- *
- * @return 1 if a packet is available, otherwise 0.
+ * @brief Read the next Ethernet frame from socket 0.
+ * @param[in] eth Ethernet transport instance.
+ * @param[out] buf Buffer receiving the frame.
+ * @param[in] len Size of @p buf in bytes, longer frames are truncated.
+ * @return Number of bytes read, 0 if no valid frame is available.
  */
-uint8_t  w5500_packet_available( spi_ethernet_t *eth );
+uint16_t w5500_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
+/**
+ * @brief Check whether a frame is waiting in the socket 0 RX buffer.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if a frame is available, otherwise 0.
+ */
+uint8_t  w5500_packet_available( eth_transport_t *eth );
 
 /**
  * @brief Get the current Ethernet link status.
- *
- * @details Verifies the W5500 hardware revision and reads the PHY
- * configuration register to determine whether the Ethernet link is active.
- *
- * @pre w5500_init() must have been called beforehand.
- *
- * @return 1 if the Ethernet link is active, otherwise 0.
+ * @param[in] eth Ethernet transport instance.
+ * @return 1 if the link is up, 0 if it is down or the chip does not respond.
  */
-uint8_t  w5500_get_link_status( void );
+uint8_t  w5500_get_link_status( eth_transport_t *eth );
 
 /**
- * @brief Get the W5500 hardware revision.
- *
- * @details Returns the hardware revision value read from the W5500
- * VERSIONR register during initialization.
- *
- * @pre w5500_init() must have been called beforehand.
- *
- * @return W5500 hardware revision value.
+ * @brief Get the W5500 revision read during initialization.
+ * @param[in] eth Ethernet transport instance.
+ * @return VERSIONR value (0x04 for W5500).
  */
-uint8_t  w5500_get_rev( void );
+uint8_t  w5500_get_rev( eth_transport_t *eth );
 
 /**
- * @brief Set the Ethernet MAC address.
- *
- * @details Stores the MAC address locally and writes it to the W5500
- * Source Hardware Address Register.
- *
- * @param mac Pointer to the 6-byte MAC address.
- *
- * @pre w5500_init() must have been called beforehand.
- *
- * @return 1 if the MAC address was set successfully.
+ * @brief Program the source hardware address register (SHAR).
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] mac 6-byte MAC address.
+ * @return ETH_TRANSPORT_SUCCESS.
  */
-int      w5500_set_mac( uint8_t mac[ 6 ] );
+err_t    w5500_set_mac( eth_transport_t *eth, uint8_t *mac );
 
 /**
- * @brief Get the configured Ethernet MAC address.
- *
- * @details Copies the currently configured MAC address into the
- * provided buffer.
- *
- * @param mac Pointer to the destination buffer for the 6-byte MAC address.
- *
- * @return 1 if the MAC address was copied successfully.
+ * @brief Program the source IP address register (SIPR).
+ * @param[in] eth Ethernet transport instance.
+ * @param[in] ip 4-byte IPv4 address.
+ * @return ETH_TRANSPORT_SUCCESS.
  */
-int      w5500_get_mac( uint8_t mac[ 6 ] );
+err_t    w5500_set_ip( eth_transport_t *eth, uint8_t *ip );
 
-/**
- * @brief Set the IPv4 address.
- *
- * @details Stores the IPv4 address locally and writes it to the W5500
- * Source IP Address Register.
- *
- * @param ip Pointer to the 4-byte IPv4 address.
- *
- * @pre w5500_init() must have been called beforehand.
- *
- * @return 1 if the IP address was set successfully.
- */
-int      w5500_set_ip( uint8_t ip[ 4 ] );
-
-/**
- * @brief Get the configured IPv4 address.
- *
- * @details Copies the currently configured IPv4 address into the
- * provided buffer.
- *
- * @param ip Pointer to the destination buffer for the 4-byte IPv4 address.
- *
- * @return 1 if the IP address was copied successfully.
- */
-int      w5500_get_ip( uint8_t ip[ 4 ] );
-
-extern spi_ethernet_driver_t w5500_driver;
-extern pin_name_t            w5500_cs_pin;
+extern eth_transport_driver_t w5500_driver;
 
 // Control byte: OM (operation mode) bits [1:0]
 #define W5500_OM_VDM        0x00
@@ -300,7 +210,6 @@ extern pin_name_t            w5500_cs_pin;
 #define W5500_Sn_MR_TCP       0x01
 #define W5500_Sn_MR_UDP       0x02
 #define W5500_Sn_MR_MACRAW    0x04
-#define W5500_MR              0x0000
 #define W5500_MR_PB           0x10
 #define W5500_Sn_MR_MF        0x40
 /* Sn_CR commands */

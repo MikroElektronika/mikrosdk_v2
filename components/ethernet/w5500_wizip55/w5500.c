@@ -38,72 +38,54 @@
 ****************************************************************************/
 
 /*!
- * @file spi_ethernet_w5500.c
+ * @file w5500.c
  * @brief SPI Ethernet WIZnet W5500 Driver.
  */
 
-#include "transport.h"
 #include "w5500.h"
-#include "drv_spi_master.h"
 #include <delays.h>
-#include <string.h>
-
-#define SPI_ETH_OK           0x00
-#define SPI_ETH_INIT_ERROR   0xFF
 
 #define W5500_IR_SENDOK      0x10
 
-pin_name_t w5500_cs_pin;
+#define W5500_CTX( eth )     ( ( w5500_ctx_t * )( eth )->driver_ctx )
 
-static spi_ethernet_t *current_eth = NULL;
-static uint8_t w5500_mac_addr[ 6 ];
-static uint8_t w5500_ipaddr[ 4 ];
-static uint8_t w5500_hwRev;
+static w5500_ctx_t w5500_default_ctx;
 
-static uint8_t   w5500_read_reg( uint16_t addr, uint8_t bsb );
-static void      w5500_write_reg( uint16_t addr, uint8_t bsb, uint8_t val_in );
-static uint16_t  w5500_read_reg16( uint16_t addr, uint8_t bsb );
-static void      w5500_write_reg16( uint16_t addr, uint8_t bsb, uint16_t value );
-static void      w5500_read_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len );
-static void      w5500_write_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len );
-static void      w5500_hw_reset( spi_ethernet_t *eth );
-static void      w5500_wait_socket_cmd( void );
-static void      w5500_open_socket0_macraw( void );
+static uint8_t   w5500_read_reg( eth_transport_t *eth, uint16_t addr, uint8_t bsb );
+static void      w5500_write_reg( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t val_in );
+static uint16_t  w5500_read_reg16( eth_transport_t *eth, uint16_t addr, uint8_t bsb );
+static void      w5500_write_reg16( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint16_t value );
+static void      w5500_read_burst( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len );
+static void      w5500_write_burst( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len );
+static void      w5500_hw_reset( eth_transport_t *eth );
+static void      w5500_wait_socket_cmd( eth_transport_t *eth );
+static void      w5500_open_socket0_macraw( eth_transport_t *eth );
 
-uint16_t w5500_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
-uint16_t w5500_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len );
-uint8_t  w5500_packet_available( spi_ethernet_t *eth );
-
-spi_ethernet_driver_t w5500_driver = {
+eth_transport_driver_t w5500_driver = {
     .init            = w5500_init,
     .send_packet     = w5500_send_packet,
     .read_packet     = w5500_read_packet,
     .available       = w5500_packet_available,
     .get_link_status = w5500_get_link_status,
     .set_mac         = w5500_set_mac,
-    .get_mac         = w5500_get_mac,
-    .set_ip          = w5500_set_ip,
-    .get_ip          = w5500_get_ip
+    .set_ip          = w5500_set_ip
 };
 
 // Low-Level SPI Access
-static uint8_t w5500_read_reg( uint16_t addr, uint8_t bsb ) {
+static uint8_t w5500_read_reg( eth_transport_t *eth, uint16_t addr, uint8_t bsb ) {
     uint8_t header[ 3 ];
-    uint8_t val;
+    uint8_t val = 0;
 
     header[ 0 ] = ( uint8_t )( addr >> 8 );
     header[ 1 ] = ( uint8_t )( addr & 0xFF );
     header[ 2 ] = ( uint8_t )( bsb | W5500_RWB_READ | W5500_OM_FDM1 );
-    val = 0;
 
-    spi_master_select_device( w5500_cs_pin );
-    ( void )spi_master_write_then_read( current_eth->spi, header, 3, &val, 1 );
-    spi_master_deselect_device( w5500_cs_pin );
+    ( void )eth_transport_bus_read( eth, header, 3, &val, 1 );
 
     return val;
 }
 
-static void w5500_write_reg( uint16_t addr, uint8_t bsb, uint8_t val_in ) {
+static void w5500_write_reg( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t val_in ) {
     uint8_t frame[ 4 ];
 
     frame[ 0 ] = ( uint8_t )( addr >> 8 );
@@ -111,222 +93,175 @@ static void w5500_write_reg( uint16_t addr, uint8_t bsb, uint8_t val_in ) {
     frame[ 2 ] = ( uint8_t )( bsb | W5500_RWB_WRITE | W5500_OM_FDM1 );
     frame[ 3 ] = val_in;
 
-    spi_master_select_device( w5500_cs_pin );
-    ( void )spi_master_write( current_eth->spi, frame, 4 );
-    spi_master_deselect_device( w5500_cs_pin );
+    ( void )eth_transport_bus_write( eth, frame, 4, NULL, 0 );
 }
 
-static uint16_t w5500_read_reg16( uint16_t addr, uint8_t bsb ) {
+static uint16_t w5500_read_reg16( eth_transport_t *eth, uint16_t addr, uint8_t bsb ) {
     uint8_t buf[ 2 ];
-    w5500_read_burst( addr, bsb, buf, 2 );
+    w5500_read_burst( eth, addr, bsb, buf, 2 );
     return ( uint16_t )( ( ( uint16_t )buf[ 0 ] << 8 ) | buf[ 1 ] );
 }
 
-static void w5500_write_reg16( uint16_t addr, uint8_t bsb, uint16_t value ) {
+static void w5500_write_reg16( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint16_t value ) {
     uint8_t buf[ 2 ];
     buf[ 0 ] = ( uint8_t )( value >> 8 );
     buf[ 1 ] = ( uint8_t )( value & 0xFF );
-    w5500_write_burst( addr, bsb, buf, 2 );
+    w5500_write_burst( eth, addr, bsb, buf, 2 );
 }
 
-static void w5500_read_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len ) {
+static void w5500_read_burst( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len ) {
     uint8_t header[ 3 ];
 
     header[ 0 ] = ( uint8_t )( addr >> 8 );
     header[ 1 ] = ( uint8_t )( addr & 0xFF );
     header[ 2 ] = ( uint8_t )( bsb | W5500_RWB_READ | W5500_OM_VDM );
 
-    spi_master_select_device( w5500_cs_pin );
-    ( void )spi_master_write_then_read( current_eth->spi, header, 3, buf, len );
-    spi_master_deselect_device( w5500_cs_pin );
+    ( void )eth_transport_bus_read( eth, header, 3, buf, len );
 }
 
-static void w5500_write_burst( uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len ) {
+static void w5500_write_burst( eth_transport_t *eth, uint16_t addr, uint8_t bsb, uint8_t *buf, uint16_t len ) {
     uint8_t header[ 3 ];
 
     header[ 0 ] = ( uint8_t )( addr >> 8 );
     header[ 1 ] = ( uint8_t )( addr & 0xFF );
     header[ 2 ] = ( uint8_t )( bsb | W5500_RWB_WRITE | W5500_OM_VDM );
 
-    spi_master_select_device( w5500_cs_pin );
-    ( void )spi_master_write( current_eth->spi, header, 3 );
-    ( void )spi_master_write( current_eth->spi, buf, len );
-    spi_master_deselect_device( w5500_cs_pin );
+    ( void )eth_transport_bus_write( eth, header, 3, buf, len );
 }
 
 // Init
-static void w5500_hw_reset( spi_ethernet_t *eth ) {
+static void w5500_hw_reset( eth_transport_t *eth ) {
     digital_out_high( &eth->reset ); Delay_ms( 10 );
     digital_out_low( &eth->reset );  Delay_ms( 1 );
     digital_out_high( &eth->reset ); Delay_ms( 100 );
 }
 
-static void w5500_wait_socket_cmd( void ) {
+static void w5500_wait_socket_cmd( eth_transport_t *eth ) {
     uint16_t tries = 0;
-    while ( w5500_read_reg( W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ) ) ) {
+    while ( w5500_read_reg( eth, W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ) ) ) {
         Delay_ms( 1 );
         if ( ++tries > 200 ) break;
     }
 }
 
-static void w5500_open_socket0_macraw( void ) {
-    w5500_write_reg( W5500_Sn_MR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_MR_MACRAW | W5500_Sn_MR_MF );
-    w5500_write_reg( W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_OPEN );
-    w5500_wait_socket_cmd( );
+static void w5500_open_socket0_macraw( eth_transport_t *eth ) {
+    w5500_write_reg( eth, W5500_Sn_MR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_MR_MACRAW | W5500_Sn_MR_MF );
+    w5500_write_reg( eth, W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_OPEN );
+    w5500_wait_socket_cmd( eth );
 }
 
-void w5500_init( spi_ethernet_t *eth, spi_ethernet_driver_t *drv ) {
-    current_eth = eth;
+err_t w5500_init( eth_transport_t *eth ) {
+    if ( !eth || !eth->driver_ctx ) return ETH_TRANSPORT_ERROR;
 
     w5500_hw_reset( eth );
 
-    memcpy( w5500_mac_addr, eth->mac, 6 );
-    memcpy( w5500_ipaddr, &eth->ip, 4 );
+    W5500_CTX( eth )->hw_rev = w5500_read_reg( eth, W5500_VERSIONR, W5500_BSB_COMMON_REG );
 
-    w5500_hwRev = w5500_read_reg( W5500_VERSIONR, W5500_BSB_COMMON_REG );
+    w5500_write_reg( eth, W5500_MR, W5500_BSB_COMMON_REG, W5500_MR_PB );
 
-    w5500_write_reg( W5500_MR, W5500_BSB_COMMON_REG, W5500_MR_PB );
+    w5500_set_mac( eth, eth->mac );
+    w5500_set_ip( eth, eth->ip );
 
-    w5500_set_mac( w5500_mac_addr );
-    w5500_set_ip( w5500_ipaddr );
+    w5500_open_socket0_macraw( eth );
 
-    w5500_open_socket0_macraw( );
+    return ETH_TRANSPORT_SUCCESS;
 }
 
-// Data Tranfert (MACRAW, socket 0)
-uint16_t w5500_send_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t len ) {
+// Data transfer (MACRAW, socket 0)
+uint16_t w5500_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len ) {
     uint16_t wr_ptr;
-    current_eth = eth;
 
-    wr_ptr = w5500_read_reg16( W5500_Sn_TX_WR, W5500_BSB_SOCKET0_REG( 0 ) );
-    w5500_write_burst( wr_ptr, W5500_BSB_SOCKET0_TX( 0 ), buf, len );
-    w5500_write_reg16( W5500_Sn_TX_WR, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( wr_ptr + len ) );
+    if ( len > W5500_FRAME_SIZE ) return 0;
 
-    w5500_write_reg( W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_SEND );
-    w5500_wait_socket_cmd( );
+    wr_ptr = w5500_read_reg16( eth, W5500_Sn_TX_WR, W5500_BSB_SOCKET0_REG( 0 ) );
+    w5500_write_burst( eth, wr_ptr, W5500_BSB_SOCKET0_TX( 0 ), buf, len );
+    w5500_write_reg16( eth, W5500_Sn_TX_WR, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( wr_ptr + len ) );
 
-    w5500_write_reg( W5500_Sn_IR, W5500_BSB_SOCKET0_REG( 0 ), W5500_IR_SENDOK );
+    w5500_write_reg( eth, W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_SEND );
+    w5500_wait_socket_cmd( eth );
+
+    w5500_write_reg( eth, W5500_Sn_IR, W5500_BSB_SOCKET0_REG( 0 ), W5500_IR_SENDOK );
 
     return len;
 }
 
-uint8_t w5500_packet_available( spi_ethernet_t *eth ) {
+uint8_t w5500_packet_available( eth_transport_t *eth ) {
     uint16_t rsr;
+
     if ( !eth ) return 0;
 
-    rsr = w5500_read_reg16( W5500_Sn_RX_RSR, W5500_BSB_SOCKET0_REG( 0 ) );
+    rsr = w5500_read_reg16( eth, W5500_Sn_RX_RSR, W5500_BSB_SOCKET0_REG( 0 ) );
     return ( rsr > 0 ) ? 1 : 0;
 }
 
-uint16_t w5500_read_packet( spi_ethernet_t *eth, uint8_t *buf, uint16_t max_len ) {
+uint16_t w5500_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_len ) {
     uint16_t rd_ptr, frame_len, data_len, copy_len;
     uint8_t hdr[ 2 ];
-    current_eth = eth;
 
     if ( !w5500_packet_available( eth ) ) return 0;
 
-    rd_ptr = w5500_read_reg16( W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ) );
+    rd_ptr = w5500_read_reg16( eth, W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ) );
 
-    w5500_read_burst( rd_ptr, W5500_BSB_SOCKET0_RX( 0 ), hdr, 2 );
+    // MACRAW frames are prefixed with a 2-byte length (including itself)
+    w5500_read_burst( eth, rd_ptr, W5500_BSB_SOCKET0_RX( 0 ), hdr, 2 );
     frame_len = ( uint16_t )( ( ( uint16_t )hdr[ 0 ] << 8 ) | hdr[ 1 ] );
 
     if ( frame_len < 2 ) {
-        w5500_write_reg16( W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( rd_ptr + 2 ) );
-        w5500_write_reg( W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_RECV );
+        w5500_write_reg16( eth, W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( rd_ptr + 2 ) );
+        w5500_write_reg( eth, W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_RECV );
         return 0;
     }
 
     data_len = ( uint16_t )( frame_len - 2 );
     copy_len = ( data_len > max_len ) ? max_len : data_len;
-    w5500_read_burst( ( uint16_t )( rd_ptr + 2 ), W5500_BSB_SOCKET0_RX( 0 ), buf, copy_len );
+    w5500_read_burst( eth, ( uint16_t )( rd_ptr + 2 ), W5500_BSB_SOCKET0_RX( 0 ), buf, copy_len );
 
-    w5500_write_reg16( W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( rd_ptr + frame_len ) );
-    w5500_write_reg( W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_RECV );
+    w5500_write_reg16( eth, W5500_Sn_RX_RD, W5500_BSB_SOCKET0_REG( 0 ), ( uint16_t )( rd_ptr + frame_len ) );
+    w5500_write_reg( eth, W5500_Sn_CR, W5500_BSB_SOCKET0_REG( 0 ), W5500_Sn_CR_RECV );
 
     return copy_len;
 }
 
-// Link / Identification
-uint8_t w5500_get_link_status( void ) {
+// Link / identification
+uint8_t w5500_get_link_status( eth_transport_t *eth ) {
     uint8_t phycfgr;
-    uint8_t ver;
-    if ( !current_eth ) return 0;
 
-    ver = w5500_read_reg( W5500_VERSIONR, W5500_BSB_COMMON_REG );
-    if ( ver != 0x04 )
-        return 0;
+    if ( !eth ) return 0;
 
-    phycfgr = w5500_read_reg( W5500_PHYCFGR, W5500_BSB_COMMON_REG );
+    if ( w5500_read_reg( eth, W5500_VERSIONR, W5500_BSB_COMMON_REG ) != 0x04 )
+        return 0;                               // Chip not responding
+
+    phycfgr = w5500_read_reg( eth, W5500_PHYCFGR, W5500_BSB_COMMON_REG );
     return ( phycfgr & W5500_PHYCFGR_LNK_MASK ) ? 1 : 0;
 }
 
-uint8_t w5500_get_rev( void ) {
-    return w5500_hwRev;
+uint8_t w5500_get_rev( eth_transport_t *eth ) {
+    if ( !eth || !eth->driver_ctx ) return 0;
+    return W5500_CTX( eth )->hw_rev;
 }
 
 // Addressing
-int w5500_set_mac( uint8_t mac[ 6 ] ) {
-    memcpy( w5500_mac_addr, mac, 6 );
-    w5500_write_burst( W5500_SHAR, W5500_BSB_COMMON_REG, mac, 6 );
-    return 1;
+err_t w5500_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+    w5500_write_burst( eth, W5500_SHAR, W5500_BSB_COMMON_REG, mac, 6 );
+    return ETH_TRANSPORT_SUCCESS;
 }
 
-int w5500_get_mac( uint8_t mac[ 6 ] ) {
-    memcpy( mac, w5500_mac_addr, 6 );
-    return 1;
+err_t w5500_set_ip( eth_transport_t *eth, uint8_t *ip ) {
+    w5500_write_burst( eth, W5500_SIPR, W5500_BSB_COMMON_REG, ip, 4 );
+    return ETH_TRANSPORT_SUCCESS;
 }
 
-int w5500_set_ip( uint8_t ip[ 4 ] ) {
-    memcpy( w5500_ipaddr, ip, 4 );
-    w5500_write_burst( W5500_SIPR, W5500_BSB_COMMON_REG, ip, 4 );
-    return 1;
-}
-
-int w5500_get_ip( uint8_t ip[ 4 ] ) {
-    memcpy( ip, w5500_ipaddr, 4 );
-    return 1;
-}
-
-// Config / Setup
+// Config / setup
 void w5500_cfg_setup( w5500_cfg_t *cfg ) {
-    cfg->miso = HAL_PIN_NC;
-    cfg->mosi = HAL_PIN_NC;
-    cfg->sck  = HAL_PIN_NC;
-    cfg->cs   = HAL_PIN_NC;
-    cfg->rst  = HAL_PIN_NC;
-
-    cfg->spi_speed = 1000000;
-    cfg->spi_mode  = SPI_MASTER_MODE_0;
-
-    cfg->full_duplex = 0;
+    eth_bus_spi_cfg_setup( &cfg->bus );
+    eth_transport_cfg_setup( &cfg->eth );
 }
 
-uint8_t w5500_configure( spi_ethernet_t *eth, spi_master_t *spi, w5500_cfg_t *cfg ) {
-    spi_master_config_t spi_cfg;
-    spi_master_configure_default( &spi_cfg );
-
-    spi_cfg.sck   = cfg->sck;
-    spi_cfg.miso  = cfg->miso;
-    spi_cfg.mosi  = cfg->mosi;
-    spi_cfg.speed = cfg->spi_speed;
-    spi_cfg.mode  = cfg->spi_mode;
-
-    if ( spi_master_open( spi, &spi_cfg ) == SPI_MASTER_ERROR ) {
-        return SPI_ETH_INIT_ERROR;
-    }
-
-    digital_out_init( &eth->cs, cfg->cs );
-    digital_out_init( &eth->reset, cfg->rst );
-
-    w5500_cs_pin = cfg->cs;
-    spi_master_deselect_device( w5500_cs_pin );
-
-    eth->spi = spi;
-    memcpy( eth->mac, cfg->mac, 6 );
-    memcpy( &eth->ip, cfg->ip, 4 );
-    eth->fullDuplex = cfg->full_duplex;
-
-    return 0;
+err_t w5500_configure( eth_transport_t *eth, eth_bus_spi_t *bus, w5500_cfg_t *cfg ) {
+    if ( !eth || !cfg ) return ETH_TRANSPORT_ERROR;
+    if ( !eth->driver_ctx )
+        eth->driver_ctx = &w5500_default_ctx;
+    return eth_bus_spi_configure( eth, bus, &cfg->bus, &cfg->eth );
 }
 
 // ----------------------------------------------------------------------- END

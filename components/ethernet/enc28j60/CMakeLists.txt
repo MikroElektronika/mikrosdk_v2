@@ -10,7 +10,7 @@ target_include_directories(lib_enc28j60
 
 target_link_libraries(lib_enc28j60 PUBLIC
     MikroC.Core
+    MikroSDK.Ethernet.Transport
     MikroSDK.Ethernet.Spi
-    MikroSDK.Driver.SPI.Master
     MikroSDK.Driver.GPIO.Out
 )

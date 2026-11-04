@@ -263,7 +263,7 @@ void ips_init( ips_cfg_t *cfg, gl_driver_t *driver )
     st7789_cfg.width = cfg->board->display_width;
     st7789_cfg.height = cfg->board->display_height;
 
-    st7789_init( &display_ctx, &st7789_cfg, &driver );
+    st7789_init( &display_ctx, &st7789_cfg, driver );
     cfg->board->reset_procedure();
 
     // Set backlight.
