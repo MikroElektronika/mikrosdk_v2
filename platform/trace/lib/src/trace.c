@@ -448,15 +448,15 @@ static void trace_write( uint8_t id, trace_lane_t *lane, const trace_record_t *e
     trace_commit( event );
 }
 
-// Ends the burst of a lane. The record is stamped now, so that record times never go back
-// (the debugger takes a step back as a wrap of the time base); it says how long ago the burst
-// started and ended.
 static bool trace_is_bus( const trace_lane_t *lane )
 {
     return ( TRACE_LANE_I2C == lane->kind ) || ( TRACE_LANE_SPI == lane->kind ) ||
            ( TRACE_LANE_UART == lane->kind ) || ( TRACE_LANE_ONE_WIRE == lane->kind );
 }
 
+// Ends the burst of a lane. The record is stamped now, so that record times never go back
+// (the debugger takes a step back as a wrap of the time base); it says how long ago the burst
+// started and ended.
 static void trace_write_burst( uint8_t id, trace_lane_t *lane, uint32_t now )
 {
     trace_record_t record;
@@ -665,8 +665,6 @@ static bool trace_burst_write( uint8_t id, trace_lane_t *lane, uint8_t level, ui
     return true;
 }
 
-// injected: TRACE_RECORD_INJECTED when a fault gave the level. A level held by a fault and
-// then let go is a change even when the level stays.
 // Counts a transfer into the burst of its bus lane, starting or ending the burst, as
 // trace_burst_write() does for pins. True when the transfer is counted and needs no record.
 static bool trace_bus_burst( uint8_t id, trace_lane_t *lane, uint32_t start, uint32_t end,
@@ -719,7 +717,9 @@ static bool trace_bus_burst( uint8_t id, trace_lane_t *lane, uint32_t start, uin
     return true;
 }
 
-static void trace_level( const void *obj, uint8_t kind, uint8_t level, bool changes_only,
+// injected: TRACE_RECORD_INJECTED when a fault gave the level. A level held by a fault and
+// then let go is a change even when the level stays.
+static void trace_level(const void *obj, uint8_t kind, uint8_t level, bool changes_only,
                          uint8_t injected )
 {
     uint32_t primask = trace_lock();
