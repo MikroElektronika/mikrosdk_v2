@@ -1,6 +1,6 @@
 /*!
  * @file  hal_ll_pior_connection_defs.h
- * @brief PIOR routing map for RL78/L23 (R01UH1082EJ0110 Rev.1.10, Table 4-6).
+ * @brief PIOR routing map for RL78/L23.
  *        One row per (pin, function). Scope: SPI(CSI)/UART(SAU+UARTA)/
  *        I2C(SAU+IICA)/Timer(TAU). Analog (ANIx) pins need no PIOR entry -
  *        every one of them shows PIORx = "-" in the manual.

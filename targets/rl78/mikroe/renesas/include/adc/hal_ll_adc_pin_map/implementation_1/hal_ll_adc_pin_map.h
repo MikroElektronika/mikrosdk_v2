@@ -57,7 +57,7 @@ extern "C"{
 #define hal_ll_adc_module_num(_module_num) (_module_num - 1)
 
 /**
- * ADC channels, value is the ADS register code (R01UH1082 16.3.9).
+ * ADC channels, value is the ADS register code.
  */
 typedef enum
 {

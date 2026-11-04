@@ -398,7 +398,7 @@ static void hal_ll_uart_init( hal_ll_uart_hw_specifics_map_t *map );
  * @brief  Initialize UART module on the hardware level.
  *
  * Performs UART module initialization on
- * the hardware level (R01UH1082 Figure 19-77 and 19-85).
+ * the hardware level.
  *
  * Procedure:
  * 1. Stops both channels
@@ -675,7 +675,7 @@ uint8_t hal_ll_uart_read_polling( handle_t *handle ) {
     // BFFmn is set on reception and on a reception error.
     while ( !check_reg_bit( &hal_ll_hw_reg->ssr[ rx_channel ], HAL_LL_UART_SSR_BFF ) );
 
-    // Read SDRmn first so the next frame can't overrun while the error is handled (Table 19-7).
+    // Read SDRmn first so the next frame can't overrun while the error is handled.
     read_data = ( uint8_t )read_reg( hal_ll_uart_reg16( hal_ll_uart_hw_specifics_map_local->rx_data ) );
 
     errors = read_reg_bits( &hal_ll_hw_reg->ssr[ rx_channel ], HAL_LL_UART_SSR_ERR_MASK );

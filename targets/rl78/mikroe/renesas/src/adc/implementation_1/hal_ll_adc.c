@@ -212,7 +212,7 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static void hal_ll_adc_set_clock( uint8_t lv_mode );
 
 /**
-  * @brief  Set the ADM2 positive reference source (AVREFP pin or internal) and resolution, 16.3.6.
+  * @brief  Set the ADM2 positive reference source (AVREFP pin or internal) and resolution.
   * @param[in]  vref - Voltage reference.
   * @param[in]  adm2_adtyp_resolution - ADTYP1:ADTYP0 bits.
   * @return None
@@ -268,7 +268,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            // ANI0 and AVREFP share P21, 16.3.9 caution 5.
+            // ANI0 and AVREFP share P21.
             if ( HAL_LL_ADC_AVREFP_PIN == pin ) {
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
             }
@@ -357,7 +357,7 @@ hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_ref
 
     switch( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            // ANI0 and AVREFP share P21, 16.3.9 caution 5.
+            // ANI0 and AVREFP share P21.
             if ( HAL_LL_ADC_AVREFP_PIN == hal_ll_adc_hw_specifics_map_local->pin ) {
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
             }
@@ -518,7 +518,7 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
         return;
     }
 
-    // ADCEN must be set before any other ADC register is written, 16.3.1.
+    // ADCEN must be set before any other ADC register is written.
     set_reg_bit( hal_ll_adc_reg8( HAL_LL_ADC_PER0_ADDR ), HAL_LL_ADC_PER0_ADCEN_BIT );
 }
 
@@ -526,7 +526,7 @@ static void hal_ll_adc_set_clock( uint8_t lv_mode ) {
     uint8_t div_shift = 0;
     uint8_t adm1 = HAL_LL_ADC_ADM1_ADSCM;
 
-    // fCLK <= 4 MHz must be flagged through ADLSP, Table 16-3.
+    // fCLK <= 4 MHz must be flagged through ADLSP.
     if ( HAL_LL_ADC_ADLSP_MAX_HZ >= HAL_LL_ADC_FCLK_HZ ) {
         adm1 |= HAL_LL_ADC_ADM1_ADLSP;
     }
@@ -545,7 +545,7 @@ static void hal_ll_adc_set_clock( uint8_t lv_mode ) {
 
 static void hal_ll_adc_set_reference( hal_ll_adc_voltage_reference_t vref, uint8_t adm2_adtyp_resolution ) {
     if ( HAL_LL_ADC_VREF_INTERNAL == vref ) {
-        // Discharge first when switching to the internal reference, 16.3.6.
+        // Discharge first when switching to the internal reference.
         write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM2_ADDR ), HAL_LL_ADC_ADM2_ADREFP_DISCH | adm2_adtyp_resolution );
         Delay_us( HAL_LL_ADC_DISCHARGE_US );
 
@@ -565,7 +565,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM0_ADDR ), 0 );
     Delay_us( HAL_LL_ADC_STOP_WAIT_US );
 
-    // Internal reference is only allowed in low-voltage mode, Table 16-3 caution 5.
+    // Internal reference is only allowed in low-voltage mode.
     hal_ll_adc_set_clock( ( HAL_LL_ADC_VREF_INTERNAL == map->vref_input ) ?
                           HAL_LL_ADC_ADM0_LV_LOW1 : HAL_LL_ADC_ADM0_LV_NORMAL1 );
 
@@ -596,7 +596,7 @@ static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {
     hal_ll_gpio_analog_input( ( uint32_t * ) hal_ll_gpio_port_base( hal_ll_gpio_port_index( map->pin ) ),
                                hal_ll_gpio_pin_mask( map->pin ) );
 
-    // AVREFP pin has to be in analog input mode, 16.3.6 caution 3.
+    // AVREFP pin has to be in analog input mode.
     if ( HAL_LL_ADC_VREF_EXTERNAL == map->vref_input ) {
         hal_ll_gpio_analog_input( ( uint32_t * ) hal_ll_gpio_port_base( hal_ll_gpio_port_index( HAL_LL_ADC_AVREFP_PIN ) ),
                                    hal_ll_gpio_pin_mask( HAL_LL_ADC_AVREFP_PIN ) );

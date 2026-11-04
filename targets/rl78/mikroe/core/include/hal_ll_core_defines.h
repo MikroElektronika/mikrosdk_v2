@@ -50,7 +50,7 @@ extern "C"{
 
 #include <stdint.h>
 
-/*!< @brief Vector table addresses usable as IRQn (R01UH1082 Table 25-1).
+/*!< @brief Vector table addresses usable as IRQn.
  *          Vector address 0x04 (INTWDTI) is interrupt source 0, every
  *          following vector adds one source. BRK (0x7E) can't be masked. */
 #define HAL_LL_CORE_IRQ_VECTOR_FIRST        ( 0x04 )
@@ -60,7 +60,7 @@ extern "C"{
 #define hal_ll_core_irq_source(_irqn)       ( ( uint8_t )( ( ( _irqn ) - HAL_LL_CORE_IRQ_VECTOR_FIRST ) >> 1 ) )
 #define hal_ll_core_irq_bit(_irqn)          ( hal_ll_core_irq_source( _irqn ) & 0x07 )
 
-/*!< @brief Request flag registers (R01UH1082 Table 25-2, Figures 25-2 to 25-4): IF0L-IF1H at FFFE0H-FFFE3H, IF2L-IF3H at FFFD0H-FFFD3H.
+/*!< @brief Request flag registers: IF0L-IF1H at FFFE0H-FFFE3H, IF2L-IF3H at FFFD0H-FFFD3H.
  *          Mask (MKxx), priority 0 (PR0xx) and priority 1 (PR1xx) registers
  *          follow at +4, +8 and +12 from the matching IFxx. */
 #define HAL_LL_CORE_IF0L_ADDR               ( 0xFFFE0UL )

@@ -62,7 +62,7 @@ typedef enum
     HAL_LL_PIOR_MODULE_ERROR
 } hal_ll_pior_err_t;
 
-/*!< @brief PIOR register block base address (R01UH1082EJ0110, 4.3.10).
+/*!< @brief PIOR register block base address.
  * PIOR0..PIOR13 are byte-wide registers at consecutive offsets from this
  * base - hal_ll_pior_set_field() computes the exact register/bit/width
  * per entry in hal_ll_pior_connection_defs.h. */
@@ -76,7 +76,7 @@ static inline void hal_ll_pior_set_field( uint8_t pior_index, uint8_t shift, uin
     volatile uint8_t *reg = ( volatile uint8_t * ) ( HAL_LL_PIOR_BASE + pior_index );
     uint8_t mask = ( uint8_t ) ( ( ( 1U << width ) - 1U ) << shift );
 
-    // PIORx only supports 8-bit access (4.3.10), a single write also avoids
+    // PIORx only supports 8-bit access, a single write also avoids
     // briefly routing the function to the value 0 pin.
     *reg = ( uint8_t ) ( ( *reg & ( uint8_t ) ~mask ) | ( ( value << shift ) & mask ) );
 }

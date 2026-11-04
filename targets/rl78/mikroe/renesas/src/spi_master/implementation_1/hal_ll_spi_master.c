@@ -73,7 +73,7 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_MASTER_PER0_ADDR             ( 0xF00F0UL )
 #define HAL_LL_SPI_MASTER_PRR0_ADDR             ( 0xF00F1UL )
 
-/*!< @brief Interrupt request flag registers holding the INTCSIp flags (R01UH1082 Figure 25-2). */
+/*!< @brief Interrupt request flag registers holding the INTCSIp flags. */
 #define HAL_LL_SPI_MASTER_IF0H_ADDR             ( 0xFFFE1UL )
 #define HAL_LL_SPI_MASTER_IF1L_ADDR             ( 0xFFFE2UL )
 #define HAL_LL_SPI_MASTER_IF1H_ADDR             ( 0xFFFE3UL )
@@ -308,8 +308,7 @@ static void hal_ll_spi_master_init( hal_ll_spi_master_hw_specifics_map_t *map );
 /**
   * @brief  Initialize hardware SPI module.
   *
-  * Master transmission/reception procedure
-  * (R01UH1082 Figure 19-42 and 19-43).
+  * Master transmission/reception procedure.
   *
   * @param[in]  *map - Object specific context handler.
   * @return None
@@ -903,7 +902,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
 
     write_reg( &hal_ll_hw_reg->smr[ channel ], ( cks << HAL_LL_SPI_MASTER_SMR_CKS ) | HAL_LL_SPI_MASTER_SMR_FIXED );
 
-    // Transmission/reception, MSB first, 8-bit data, no stop bit (R01UH1082 Figure 19-42).
+    // Transmission/reception, MSB first, 8-bit data, no stop bit.
     format = HAL_LL_SPI_MASTER_SCR_TXE | HAL_LL_SPI_MASTER_SCR_RXE |
              HAL_LL_SPI_MASTER_SCR_FIXED | HAL_LL_SPI_MASTER_SCR_DLS_8_BITS;
     if ( !cpol ) {

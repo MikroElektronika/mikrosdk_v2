@@ -259,7 +259,7 @@ static void hal_ll_i2c_hw_init( hal_ll_i2c_hw_specifics_map_t *map );
 /**
   * @brief  Full I2C module initialization procedure.
   *
-  * Follows the single-master initial setting flow (R01UH1082 Figure 20-28):
+  * Follows the single-master initial setting flow:
   * clock, pins as inputs, transfer clock, IICEn = 1, pins as outputs.
   *
   * @param[in]  *map - Object specific context handler.
@@ -958,7 +958,7 @@ static void hal_ll_i2c_calculate_speed( hal_ll_i2c_hw_specifics_map_t *map ) {
         iicctl1 |= ( 1 << HAL_LL_I2C_IICCTL1_PRS );
     }
 
-    // Duty cycle per mode, R01UH1082 20.4.2.
+    // Duty cycle per mode.
     if ( map->speed >= HAL_LL_I2C_MASTER_SPEED_1M ) {
         wl_frac = 0.50f;
         wh_frac = 0.50f;

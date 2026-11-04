@@ -47,7 +47,6 @@
 #include "mcu_reg_addresses.h"
 
 //GPIO
-// R7F100LPL (RL78/L23, 100-pin), R01UH1082 2.1.6
 #define __P000_CN
 #define __P001_CN
 #define __P002_CN
@@ -186,8 +185,6 @@
 //EOF I2C
 
 //UART
-// SAU UARTs only, AF = PIOR10 (UART0/1) / PIOR11 (UART2/3) field value. TX and RX
-// of one UART must share the AF value since a single PIOR field routes both.
 #ifdef __P077_CN
 #define UART2_TX_P077_AF0
 #endif
@@ -204,9 +201,6 @@
 //EOF UART
 
 //SPI
-// SAU simplified SPI (CSI) only, SPI0-7 = CSI00, CSI01, CSI10, CSI11, CSI20, CSI21, CSI30, CSI31.
-// AF = PIOR10 (SPI0-3) / PIOR11 (SPI4-7) field value. SCK, MISO and MOSI of one CSI must
-// share the AF value since a single PIOR field routes all three (R01UH1082 Figure 4-10).
 #ifdef __P140_CN
 #define SPI7_SCK_P140_AF0
 #endif
@@ -230,8 +224,6 @@
 //EOF SPI
 
 //TIM
-// TAU0 PWM, TIMn = master channel 2n + slave channel 2n + 1, output TO0(2n+1).
-// AF = PIOR0 (TO01) / PIOR1 (TO03, TO05) / PIOR2 (TO07) field value (R01UH1082 Figure 4-10).
 #ifdef __P064_CN
 #define TIM1_P064_CH3_AF4
 #endif
@@ -251,7 +243,6 @@
 //EOF TIM
 
 //IVT_TABLE
-// Vector table address of the interrupt source, used as IRQn (R01UH1082 Table 25-1).
 #define UART2_TX_IVT    0x14 // INTST2
 #define UART2_RX_IVT    0x16 // INTSR2
 #define UART0_TX_IVT    0x1E // INTST0

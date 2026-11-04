@@ -53,10 +53,10 @@
 #define HAL_LL_GPIO_P_OFFSET       ( 0x00UL )
 #define HAL_LL_GPIO_PM_OFFSET      ( 0x20UL )
 
-/* Per-port register banks, one byte per port index (R01UH1082 4.3). */
+/* Per-port register banks, one byte per port index. */
 #define HAL_LL_GPIO_PDIDIS_BASE    ( 0xF02B0UL )
 
-/* PMCAxx only exists for ports 1, 2 and 4 (R01UH1082 4.3.7). Unimplemented
+/* PMCAxx only exists for ports 1, 2 and 4. Unimplemented
  * bits must be kept at their reset value (1), hence the masks. */
 #define HAL_LL_PMCA1_BASE ( 0xF0061UL )
 #define HAL_LL_PMCA2_BASE ( 0xF0062UL )
@@ -65,13 +65,13 @@
 #define HAL_LL_PMCA2_MASK ( 0xFFU )
 #define HAL_LL_PMCA4_MASK ( 0x3CU )
 
-/* LCD port function registers (R01UH1082 4.3.16). PFSEG0 bits 0-3 are
+/* LCD port function registers. PFSEG0 bits 0-3 are
  * PFCOM0-3 (P90-P93), PFSEGz lives in PFSEG(1 + z / 8) bit (z % 8). Most of
  * these reset to 1, i.e. the pin is an LCD output with digital I/O disabled. */
 #define HAL_LL_PFSEG0_BASE         ( 0xF0290UL )
 #define HAL_LL_PFSEG1_BASE         ( 0xF0291UL )
 
-/* LCD input switch control register (R01UH1082 4.3.17). Resets to 0, i.e.
+/* LCD input switch control register. Resets to 0, i.e.
  * P85-P87 and P125-P127 are LCD pins with digital input disabled. */
 #define HAL_LL_ISCLCD_ADDR         ( 0xF0298UL )
 #define HAL_LL_ISCLCD_ISCCAP       ( 0x01U )
@@ -91,7 +91,7 @@ typedef struct {
     uint8_t seg_offset;
 } hal_ll_gpio_seg_map_t;
 
-/*!< @brief PFSEG mapping per port index (R01UH1082 2.1.6, 4.3.16). */
+/*!< @brief PFSEG mapping per port index. */
 static const hal_ll_gpio_seg_map_t hal_ll_gpio_seg_map[] =
 {
     { 0xFF, 43 }, /* P00-P07 -> SEG43-SEG50 */
@@ -231,7 +231,7 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
 /**
   * @brief  Enable or disable the digital buffers of pins shared with LCD functions.
   * @details PFSEGx/PFCOMy reset to 1 and ISCLCD to 0, leaving most pins in
-  *          "digital input invalid" state (R01UH1082 Table 4-5, 4.3.16, 4.3.17).
+  *          "digital input invalid" state.
   * @param  port_index - port index
   *         mask       - pins within the port
   *         digital    - true for digital I/O, false to restore the reset
@@ -403,7 +403,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         case GPIO_CFG_ANALOG_INPUT:
             /* Only P10-P14, P20-P27 and P42-P45 have an analog function
              * (PMCAxx). Analog requires PMCAmn = 1, PFSEGz = 1 (where the pin
-             * has one) and PMmn = 1 (R01UH1082 Table 4-5). */
+             * has one) and PMmn = 1. */
             if ( 0 == analog_reg ) {
                 break;
             }

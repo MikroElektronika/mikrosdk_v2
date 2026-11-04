@@ -147,7 +147,7 @@ typedef enum
 } hal_ll_tim_err_t;
 
 // ------------------------------------------------------------------ VARIABLES
-/*!< @brief TIM hardware specific info, PIOR fields from R01UH1082 Figure 4-10. */
+/*!< @brief TIM hardware specific info, PIOR fields. */
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 {
     #ifdef TIM_MODULE_0
@@ -275,7 +275,7 @@ static uint16_t hal_ll_tim_duty_count( hal_ll_tim_hw_specifics_map_t *map );
 /**
   * @brief  Initialize TIM module on hardware level.
   *
-  * PWM function procedure (R01UH1082 Figure 7-77 to 7-79).
+  * PWM function procedure.
   * The master channel runs in interval timer mode and sets the
   * period, the slave channel runs in one-count mode, is started
   * by the master and sets the duty.

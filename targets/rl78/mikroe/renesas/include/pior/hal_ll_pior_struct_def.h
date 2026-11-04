@@ -14,7 +14,7 @@ extern "C"{
 #include "hal_ll_gpio_port.h"
 #include "hal_ll_pior_defines.h"
 
-/*!< @brief One row per (pin, function) combination from Table 4-6.
+/*!< @brief One row per (pin, function) combination.
  * direction mirrors the manual's own Input/Output/Input-output column -
  * it's informational here (hal_ll_gpio_config() already does the real
  * PM/PDIDIS work), not a register to write.
