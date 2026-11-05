@@ -60,8 +60,9 @@
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
-// 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED. 4: BUS_BURST records.
-#define TRACE_FORMAT_VERSION (4)
+// 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED. 4: BUS_BURST records. 5: the
+// bus rate at the end of LANE_DEF.
+#define TRACE_FORMAT_VERSION (5)
 #define TRACE_MAX_LANES (32)
 // The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
 #define TRACE_MAX_DATA (16)
@@ -170,6 +171,7 @@ typedef struct
     pin_name_t pins[ 4 ];    // SPI: SCK, MISO, MOSI and the chip select, once known
     uint8_t pin_count;
     uint8_t kind;
+    uint32_t rate;      // a bus's bit rate in Hz (I2C, SPI clock, UART baud), 0 when unknown
     bool defined;       // LANE_DEF written since the last loss
     uint8_t level;      // last level written or read
     uint8_t injected;   // TRACE_RECORD_INJECTED when a fault gave that level
@@ -373,7 +375,7 @@ static uint8_t name_length( const char *name )
 static uint8_t lane_def_size( const trace_lane_t *lane )
 {
     uint8_t name_len = name_length( lane->name );
-    return 6 + 2 + 4 * lane->pin_count + 1 + name_len;
+    return 6 + 2 + 4 * lane->pin_count + 1 + name_len + 4;
 }
 
 static void trace_write_lane_def( uint8_t id, trace_lane_t *lane )
@@ -390,6 +392,7 @@ static void trace_write_lane_def( uint8_t id, trace_lane_t *lane )
     }
     record_u8( &record, name_len );
     record_bytes( &record, (const uint8_t *)lane->name, name_len );
+    record_u32( &record, lane->rate );
     trace_commit( &record );
     lane->defined = true;
 }
@@ -857,6 +860,33 @@ uint32_t drv_trace_now( void )
     return trace_ensure_started() ? trace_ticks() : 0;
 }
 
+// A bus's rate, set at its configuration or changed later (i2c_master_set_speed(),
+// uart_set_baud()): a new one defines the lane again.
+static void trace_set_rate( trace_lane_t *lane, uint32_t rate )
+{
+    if ( lane && ( lane->rate != rate ) )
+    {
+        lane->rate = rate;
+        lane->defined = false;
+    }
+}
+
+// I2C speeds are given as i2c_master_speed_t (standard, full, fast) or, by some HALs, in Hz.
+static uint32_t trace_i2c_rate( uint32_t speed )
+{
+    switch ( speed )
+    {
+        case 0:
+            return 100000;
+        case 1:
+            return 400000;
+        case 2:
+            return 1000000;
+        default:
+            return speed;
+    }
+}
+
 void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
@@ -877,6 +907,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
         lane->pins[ 1 ] = i2c->config.sda;
         lane->pin_count = 2;
     }
+    trace_set_rate( lane, trace_i2c_rate( i2c->config.speed ) );
 
     // Transfers too fast to record each (a display filled pixel by pixel) are counted.
     if ( lane && trace_bus_burst( id, lane, start, start + duration, write_len, read_len, result ) )
@@ -915,6 +946,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
         lane->pins[ 2 ] = spi->config.mosi;
         lane->pin_count = 3;
     }
+    trace_set_rate( lane, spi->config.speed );
     // The chip select tells the device, and so the mikroBUS socket, when several share the bus.
     // A driver object is one device in Click libraries: its first chip select stays.
     if ( lane && ( 3 == lane->pin_count ) && trace_cs_selected )
@@ -958,6 +990,7 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
         lane->pins[ 1 ] = uart->config.rx_pin;
         lane->pin_count = 2;
     }
+    trace_set_rate( lane, uart->config.baud );
 
     // Transfers too fast to record each (a display filled pixel by pixel) are counted.
     if ( lane && trace_bus_burst( id, lane, start, start + duration, is_tx ? len : 0, is_tx ? 0 : len, 0 ) )
