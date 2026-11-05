@@ -53,3 +53,6 @@ add_subdirectory(lcd)
 
 ## GLCD library.
 add_subdirectory(glcd)
+
+# Ethernet library.
+add_subdirectory(ethernet)
