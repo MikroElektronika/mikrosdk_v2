@@ -54,7 +54,11 @@ extern "C"
 #include "hal_target.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define BUTTON1    GPIO_P60
+#define BUTTON2    GPIO_P61
+
+#define LED1       GPIO_P64
+#define LED2       GPIO_P65
 
 #ifdef __cplusplus
 }

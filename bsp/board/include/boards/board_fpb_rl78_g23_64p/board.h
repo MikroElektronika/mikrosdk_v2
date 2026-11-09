@@ -52,9 +52,36 @@ extern "C"
 #define BOARD_NAME "RL78 G23 64p Fast Prototyping Board"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P22
+#define ARDUINO_CONNECTOR_A1        GPIO_P23
+#define ARDUINO_CONNECTOR_A2        GPIO_P24
+#define ARDUINO_CONNECTOR_A3        GPIO_P25
+#define ARDUINO_CONNECTOR_A4        GPIO_P26
+#define ARDUINO_CONNECTOR_A5        GPIO_P27
+#define ARDUINO_CONNECTOR_D0        GPIO_P03
+#define ARDUINO_CONNECTOR_D1        GPIO_P02
+#define ARDUINO_CONNECTOR_D2        GPIO_P43
+#define ARDUINO_CONNECTOR_D3        GPIO_P42
+#define ARDUINO_CONNECTOR_D4        GPIO_P77
+#define ARDUINO_CONNECTOR_D5        GPIO_P41
+#define ARDUINO_CONNECTOR_D6        GPIO_P31
+#define ARDUINO_CONNECTOR_D7        GPIO_P76
+#define ARDUINO_CONNECTOR_D8        GPIO_P73
+#define ARDUINO_CONNECTOR_D9        GPIO_P06
+#define ARDUINO_CONNECTOR_D10       GPIO_P05
+#define ARDUINO_CONNECTOR_D11       GPIO_P51
+#define ARDUINO_CONNECTOR_D12       GPIO_P50
+#define ARDUINO_CONNECTOR_D13       GPIO_P30
+#define ARDUINO_CONNECTOR_SCL       GPIO_P60
+#define ARDUINO_CONNECTOR_SDA       GPIO_P61
+
+#define BUTTON1    GPIO_P137
+
+#define LED1       GPIO_P53
+#define LED2       GPIO_P52
 
 #ifdef __cplusplus
 }

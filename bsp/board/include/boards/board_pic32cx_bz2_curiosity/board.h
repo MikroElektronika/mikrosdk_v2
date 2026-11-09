@@ -54,7 +54,26 @@ extern "C"
 #include "mikrobus.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_PB1
+#define MIKROBUS_1_RST  GPIO_PB2
+#define MIKROBUS_1_CS   GPIO_PA9
+#define MIKROBUS_1_SCK  GPIO_PA8
+#define MIKROBUS_1_MISO GPIO_PA10
+#define MIKROBUS_1_MOSI GPIO_PA7
+#define MIKROBUS_1_PWM  GPIO_PA2
+#define MIKROBUS_1_INT  GPIO_PA2
+#define MIKROBUS_1_RX   GPIO_PA8
+#define MIKROBUS_1_TX   GPIO_PA7
+#define MIKROBUS_1_SCL  GPIO_PA14
+#define MIKROBUS_1_SDA  GPIO_PA13
+
+#define BUTTON2    GPIO_PB4
+
+#define LED5       GPIO_PB7
+#define LED_R      GPIO_PB0
+#define LED_G      GPIO_PB3
+#define LED_B      GPIO_PB5
 
 #ifdef __cplusplus
 }

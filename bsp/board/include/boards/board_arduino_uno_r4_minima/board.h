@@ -52,6 +52,7 @@ extern "C"
 #define BOARD_NAME "Arduino UNO R4 Minima"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
 #define HEADER_CONNECTOR_D0 GPIO_P301

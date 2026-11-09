@@ -52,9 +52,36 @@ extern "C"
 #define BOARD_NAME "Discovery kit with STM32L562QE MCU"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PA0  // shared with STMod+
+#define ARDUINO_CONNECTOR_A1        GPIO_PA1
+#define ARDUINO_CONNECTOR_A2        GPIO_PA4
+#define ARDUINO_CONNECTOR_A3        GPIO_PA5
+#define ARDUINO_CONNECTOR_A4        GPIO_PC4
+#define ARDUINO_CONNECTOR_A5        GPIO_PC5
+#define ARDUINO_CONNECTOR_D0        GPIO_PB10
+#define ARDUINO_CONNECTOR_D1        GPIO_PB11
+#define ARDUINO_CONNECTOR_D2        GPIO_PD11
+#define ARDUINO_CONNECTOR_D3        GPIO_PD12
+#define ARDUINO_CONNECTOR_D4        GPIO_PF4
+#define ARDUINO_CONNECTOR_D5        GPIO_PD13
+#define ARDUINO_CONNECTOR_D6        GPIO_PB8
+#define ARDUINO_CONNECTOR_D7        GPIO_PC6
+#define ARDUINO_CONNECTOR_D8        GPIO_PG0
+#define ARDUINO_CONNECTOR_D9        GPIO_PB9
+#define ARDUINO_CONNECTOR_D10       GPIO_PE0
+#define ARDUINO_CONNECTOR_D11       GPIO_PB5
+#define ARDUINO_CONNECTOR_D12       GPIO_PB4
+#define ARDUINO_CONNECTOR_D13       GPIO_PG9  // shared with blue ARD LED
+#define ARDUINO_CONNECTOR_SCL       GPIO_PB6
+#define ARDUINO_CONNECTOR_SDA       GPIO_PB7
+
+#define BUTTON2    GPIO_PC13
+
+#define LED9       GPIO_PD3
+#define LED10      GPIO_PG12
 
 #ifdef __cplusplus
 }

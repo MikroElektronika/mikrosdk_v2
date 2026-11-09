@@ -1,6 +1,6 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "SAM_E51_CURIOSITY_NANO_EVALUATION_KIT")
     set(BOARD_PATH "include/boards/board_curiosity_nano_with_same51")
     set(MCU_CARD FALSE)
-    set(SHIELD FALSE)
+    set(SHIELD TRUE)
     set(DIP_SOCKET FALSE)
 endif()

@@ -52,6 +52,7 @@ extern "C"
 #define BOARD_NAME "Nucleo-L412KB"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
 #define HEADER_CONNECTOR_CN3_D1 	PA9

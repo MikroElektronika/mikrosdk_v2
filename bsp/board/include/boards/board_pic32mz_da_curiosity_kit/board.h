@@ -54,7 +54,42 @@ extern "C"
 #include "mikrobus.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_PD15
+#define MIKROBUS_1_RST  GPIO_PH6
+#define MIKROBUS_1_CS   GPIO_PB0
+#define MIKROBUS_1_SCK  GPIO_PD1
+#define MIKROBUS_1_MISO GPIO_PB5
+#define MIKROBUS_1_MOSI GPIO_PB10
+#define MIKROBUS_1_PWM  GPIO_PB3
+#define MIKROBUS_1_INT  GPIO_PC3
+#define MIKROBUS_1_RX   GPIO_PB9
+#define MIKROBUS_1_TX   GPIO_PE5
+#define MIKROBUS_1_SCL  GPIO_PA14
+#define MIKROBUS_1_SDA  GPIO_PA15
+
+#define MIKROBUS_2      2
+#define MIKROBUS_2_AN   GPIO_PK2
+#define MIKROBUS_2_RST  GPIO_PH0
+#define MIKROBUS_2_CS   GPIO_PE3
+#define MIKROBUS_2_SCK  GPIO_PB14
+#define MIKROBUS_2_MISO GPIO_PC14
+#define MIKROBUS_2_MOSI GPIO_PD14
+#define MIKROBUS_2_PWM  GPIO_PF8
+#define MIKROBUS_2_INT  GPIO_PH3
+#define MIKROBUS_2_RX   GPIO_PG7
+#define MIKROBUS_2_TX   GPIO_PG8
+#define MIKROBUS_2_SCL  GPIO_PA14
+#define MIKROBUS_2_SDA  GPIO_PA15
+
+#define BUTTON1    GPIO_PB11
+#define BUTTON2    GPIO_PG15
+#define BUTTON3    GPIO_PH12
+#define BUTTON4    GPIO_PB13
+
+#define LED_R      GPIO_PC1
+#define LED_G      GPIO_PC4
+#define LED_B      GPIO_PB1
 
 #ifdef __cplusplus
 }

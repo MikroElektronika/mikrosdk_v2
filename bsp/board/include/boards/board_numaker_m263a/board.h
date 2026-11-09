@@ -52,9 +52,35 @@ extern "C"
 #define BOARD_NAME "NuMaker M263A"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PB7
+#define ARDUINO_CONNECTOR_A1        GPIO_PB6
+#define ARDUINO_CONNECTOR_A2        GPIO_PB5
+#define ARDUINO_CONNECTOR_A3        GPIO_PB4
+#define ARDUINO_CONNECTOR_A4        GPIO_PB0
+#define ARDUINO_CONNECTOR_A5        GPIO_PB1
+#define ARDUINO_CONNECTOR_D0        GPIO_PB2
+#define ARDUINO_CONNECTOR_D1        GPIO_PB3
+#define ARDUINO_CONNECTOR_D2        GPIO_PC4
+#define ARDUINO_CONNECTOR_D3        GPIO_PC5
+#define ARDUINO_CONNECTOR_D4        GPIO_PC3
+#define ARDUINO_CONNECTOR_D5        GPIO_PC2
+#define ARDUINO_CONNECTOR_D6        GPIO_PA7
+#define ARDUINO_CONNECTOR_D7        GPIO_PA6
+#define ARDUINO_CONNECTOR_D8        GPIO_PA5
+#define ARDUINO_CONNECTOR_D9        GPIO_PA4
+#define ARDUINO_CONNECTOR_D10       GPIO_PA3
+#define ARDUINO_CONNECTOR_D11       GPIO_PA0
+#define ARDUINO_CONNECTOR_D12       GPIO_PA1
+#define ARDUINO_CONNECTOR_D13       GPIO_PA2
+#define ARDUINO_CONNECTOR_SCL       GPIO_PC1
+#define ARDUINO_CONNECTOR_SDA       GPIO_PC0
+
+#define BUTTON10   GPIO_PG4
+
+#define LED1       GPIO_PB10
 
 #ifdef __cplusplus
 }

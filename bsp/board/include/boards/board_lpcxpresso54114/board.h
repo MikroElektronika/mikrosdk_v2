@@ -52,9 +52,37 @@ extern "C"
 #define BOARD_NAME "LPCXpresso54114 board"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P0_30
+#define ARDUINO_CONNECTOR_A1        // Pin not routed
+#define ARDUINO_CONNECTOR_A2        GPIO_P1_8
+#define ARDUINO_CONNECTOR_A3        GPIO_P1_10   // shared with RGB LED green
+#define ARDUINO_CONNECTOR_A4        GPIO_P1_4
+#define ARDUINO_CONNECTOR_A5        GPIO_P1_5
+#define ARDUINO_CONNECTOR_D0        GPIO_P0_8
+#define ARDUINO_CONNECTOR_D1        GPIO_P0_9
+#define ARDUINO_CONNECTOR_D2        GPIO_P0_10
+#define ARDUINO_CONNECTOR_D3        GPIO_P1_12   // shared with accelerometer INT1
+#define ARDUINO_CONNECTOR_D4        GPIO_P1_13
+#define ARDUINO_CONNECTOR_D5        GPIO_P0_29   // shared with RGB LED red
+#define ARDUINO_CONNECTOR_D6        GPIO_P1_0
+#define ARDUINO_CONNECTOR_D7        GPIO_P1_14
+#define ARDUINO_CONNECTOR_D8        GPIO_P1_16   // shared with gyroscope INT1
+#define ARDUINO_CONNECTOR_D9        GPIO_P1_15
+#define ARDUINO_CONNECTOR_D10       GPIO_P1_1
+#define ARDUINO_CONNECTOR_D11       GPIO_P0_20
+#define ARDUINO_CONNECTOR_D12       GPIO_P0_18
+#define ARDUINO_CONNECTOR_D13       GPIO_P0_19   // shared with SPIFI_CSn net
+#define ARDUINO_CONNECTOR_SCL       GPIO_P0_25
+#define ARDUINO_CONNECTOR_SDA       GPIO_P0_26
+
+#define BUTTON1    GPIO_P0_24   // SW1 WAKEUP
+
+#define LED_R      GPIO_P0_29
+#define LED_G      GPIO_P1_10
+#define LED_B      GPIO_P1_9
 
 #ifdef __cplusplus
 }

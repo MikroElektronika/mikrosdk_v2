@@ -52,9 +52,37 @@ extern "C"
 #define BOARD_NAME "LPCXpresso board for LPC11U37H"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P0_11
+#define ARDUINO_CONNECTOR_A1        GPIO_P0_12
+#define ARDUINO_CONNECTOR_A2        GPIO_P0_13
+#define ARDUINO_CONNECTOR_A3        GPIO_P0_16   // shared with WAKEUP button SW1
+#define ARDUINO_CONNECTOR_A4        GPIO_P0_5
+#define ARDUINO_CONNECTOR_A5        GPIO_P0_4
+#define ARDUINO_CONNECTOR_D0        GPIO_P0_18
+#define ARDUINO_CONNECTOR_D1        GPIO_P0_19
+#define ARDUINO_CONNECTOR_D2        GPIO_P1_17
+#define ARDUINO_CONNECTOR_D3        GPIO_P1_24   // shared with RGB LED red
+#define ARDUINO_CONNECTOR_D4        GPIO_P1_5
+#define ARDUINO_CONNECTOR_D5        GPIO_P0_1   // shared with ISP button SW2
+#define ARDUINO_CONNECTOR_D6        GPIO_P1_27
+#define ARDUINO_CONNECTOR_D7        GPIO_P0_7
+#define ARDUINO_CONNECTOR_D8        GPIO_P0_2
+#define ARDUINO_CONNECTOR_D9        GPIO_P1_25   // shared with RGB LED green
+#define ARDUINO_CONNECTOR_D10       GPIO_P1_23
+#define ARDUINO_CONNECTOR_D11       GPIO_P0_21
+#define ARDUINO_CONNECTOR_D12       GPIO_P0_22
+#define ARDUINO_CONNECTOR_D13       GPIO_P1_15
+#define ARDUINO_CONNECTOR_SCL       GPIO_P0_4
+#define ARDUINO_CONNECTOR_SDA       GPIO_P0_5
+
+#define BUTTON1    GPIO_P0_16   // SW1 WAKEUP
+
+#define LED_R      GPIO_P1_24
+#define LED_G      GPIO_P1_25
+#define LED_B      GPIO_P1_26
 
 #ifdef __cplusplus
 }

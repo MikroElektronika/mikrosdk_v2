@@ -52,9 +52,38 @@ extern "C"
 #define BOARD_NAME "LPCXpresso802 for the LPC802 family of MCUs"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_P0_15   // shared with potentiometer
+#define ARDUINO_CONNECTOR_A1        // Pin not routed
+#define ARDUINO_CONNECTOR_A2        // Pin not routed
+#define ARDUINO_CONNECTOR_A3        // Pin not routed
+#define ARDUINO_CONNECTOR_A4        // Pin not routed
+#define ARDUINO_CONNECTOR_A5        // Pin not routed
+#define ARDUINO_CONNECTOR_D0        GPIO_P0_4   // shared with debug UART
+#define ARDUINO_CONNECTOR_D1        GPIO_P0_0   // shared with debug UART
+#define ARDUINO_CONNECTOR_D2        // Pin not routed
+#define ARDUINO_CONNECTOR_D3        // Pin not routed
+#define ARDUINO_CONNECTOR_D4        GPIO_P0_9   // shared with user LED2
+#define ARDUINO_CONNECTOR_D5        GPIO_P0_7
+#define ARDUINO_CONNECTOR_D6        GPIO_P0_12   // shared with user LED3 / ISP button
+#define ARDUINO_CONNECTOR_D7        GPIO_P0_8   // shared with user LED1 / WAKE button
+#define ARDUINO_CONNECTOR_D8        GPIO_P0_12   // shared with user LED3 / ISP button
+#define ARDUINO_CONNECTOR_D9        GPIO_P0_17
+#define ARDUINO_CONNECTOR_D10       GPIO_P0_11   // shared with SPI flash
+#define ARDUINO_CONNECTOR_D11       GPIO_P0_13   // shared with SPI flash
+#define ARDUINO_CONNECTOR_D12       GPIO_P0_1   // shared with SPI flash
+#define ARDUINO_CONNECTOR_D13       GPIO_P0_14   // shared with SPI flash
+#define ARDUINO_CONNECTOR_SCL       GPIO_P0_16   // shared with LM75 temperature sensor
+#define ARDUINO_CONNECTOR_SDA       GPIO_P0_10   // shared with LM75 temperature sensor
+
+#define BUTTON1    GPIO_P0_12   // PB1 ISP, shared with user LED3
+#define BUTTON3    GPIO_P0_8   // PB3 WAKE, shared with user LED1
+
+#define LED1       GPIO_P0_8
+#define LED2       GPIO_P0_9
+#define LED3       GPIO_P0_12
 
 #ifdef __cplusplus
 }

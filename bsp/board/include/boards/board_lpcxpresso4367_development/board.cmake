@@ -1,6 +1,6 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_LPCXPRESSO4367_DEVELOPMENT")
     set(BOARD_PATH "include/boards/board_lpcxpresso4367_development")
     set(MCU_CARD FALSE)
-    set(SHIELD FALSE)
+    set(SHIELD TRUE)
     set(DIP_SOCKET FALSE)
 endif()

@@ -57,7 +57,75 @@ extern "C"
 #include "mikrobus.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define MIKROBUS_1      1
+#define MIKROBUS_1_AN   GPIO_PD1
+#define MIKROBUS_1_RST  GPIO_PM0
+#define MIKROBUS_1_CS   GPIO_PT0
+#define MIKROBUS_1_SCK  GPIO_PP0
+#define MIKROBUS_1_MISO GPIO_PP2
+#define MIKROBUS_1_MOSI GPIO_PP1
+#define MIKROBUS_1_PWM  GPIO_PG2
+#define MIKROBUS_1_INT  GPIO_PA7
+#define MIKROBUS_1_RX   GPIO_PV7
+#define MIKROBUS_1_TX   GPIO_PV5
+#define MIKROBUS_1_SCL  GPIO_PA4
+#define MIKROBUS_1_SDA  GPIO_PA5
+
+#define MIKROBUS_2      2
+#define MIKROBUS_2_AN   GPIO_PD2
+#define MIKROBUS_2_RST  GPIO_PM3
+#define MIKROBUS_2_CS   GPIO_PT1
+#define MIKROBUS_2_SCK  GPIO_PP0
+#define MIKROBUS_2_MISO GPIO_PP2
+#define MIKROBUS_2_MOSI GPIO_PP1
+#define MIKROBUS_2_PWM  GPIO_PG5
+#define MIKROBUS_2_INT  GPIO_PA6
+#define MIKROBUS_2_RX   GPIO_PG3
+#define MIKROBUS_2_TX   GPIO_PG4
+#define MIKROBUS_2_SCL  GPIO_PA4
+#define MIKROBUS_2_SDA  GPIO_PA5
+
+#define MIKROBUS_3      3
+#define MIKROBUS_3_AN   GPIO_PD3
+#define MIKROBUS_3_RST  GPIO_PM4
+#define MIKROBUS_3_CS   GPIO_PL6
+#define MIKROBUS_3_SCK  GPIO_PH4
+#define MIKROBUS_3_MISO GPIO_PH6
+#define MIKROBUS_3_MOSI GPIO_PH5
+#define MIKROBUS_3_PWM  GPIO_PT2
+#define MIKROBUS_3_INT  GPIO_PH7
+#define MIKROBUS_3_RX   GPIO_PB2
+#define MIKROBUS_3_TX   GPIO_PB3
+#define MIKROBUS_3_SCL  GPIO_PA4
+#define MIKROBUS_3_SDA  GPIO_PA5
+
+#define MIKROBUS_4      4
+#define MIKROBUS_4_AN   GPIO_PE0
+#define MIKROBUS_4_RST  GPIO_PB4
+#define MIKROBUS_4_CS   GPIO_PL7
+#define MIKROBUS_4_SCK  GPIO_PH4
+#define MIKROBUS_4_MISO GPIO_PH6
+#define MIKROBUS_4_MOSI GPIO_PH5
+#define MIKROBUS_4_PWM  GPIO_PT5
+#define MIKROBUS_4_INT  GPIO_PT3
+#define MIKROBUS_4_RX   GPIO_PB2
+#define MIKROBUS_4_TX   GPIO_PB3
+#define MIKROBUS_4_SCL  GPIO_PA4
+#define MIKROBUS_4_SDA  GPIO_PA5
+
+#define BUTTON1    GPIO_PM6
+#define BUTTON2    GPIO_PB1
+#define BUTTON3    GPIO_PB7
+#define BUTTON4    GPIO_PU0
+#define BUTTON5    GPIO_PU1
+#define BUTTON6    GPIO_PT7
+
+#define LED1       GPIO_PU2
+#define LED2       GPIO_PU3
+#define LED3       GPIO_PU4
+#define LED4       GPIO_PU5
+#define LED5       GPIO_PM5
+#define LED6       GPIO_PM7
 
 #ifdef __cplusplus
 }

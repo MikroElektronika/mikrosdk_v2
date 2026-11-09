@@ -51,10 +51,39 @@ extern "C"
 
 #define BOARD_NAME "NuMaker HMI M487D2"
 
-#include "mikrobus.h"
+#include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PB6
+#define ARDUINO_CONNECTOR_A1        GPIO_PB7
+#define ARDUINO_CONNECTOR_A2        GPIO_PB8
+#define ARDUINO_CONNECTOR_A3        GPIO_PB9
+#define ARDUINO_CONNECTOR_A4        GPIO_PB0
+#define ARDUINO_CONNECTOR_A5        GPIO_PB1
+#define ARDUINO_CONNECTOR_D0        GPIO_PB2
+#define ARDUINO_CONNECTOR_D1        GPIO_PB3
+#define ARDUINO_CONNECTOR_D2        GPIO_PC9
+#define ARDUINO_CONNECTOR_D3        GPIO_PC10
+#define ARDUINO_CONNECTOR_D4        GPIO_PC11
+#define ARDUINO_CONNECTOR_D5        GPIO_PC12
+#define ARDUINO_CONNECTOR_D6        GPIO_PE4
+#define ARDUINO_CONNECTOR_D7        GPIO_PE5
+#define ARDUINO_CONNECTOR_D8        GPIO_PA5
+#define ARDUINO_CONNECTOR_D9        GPIO_PA4
+#define ARDUINO_CONNECTOR_D10       GPIO_PA3
+#define ARDUINO_CONNECTOR_D11       GPIO_PA0
+#define ARDUINO_CONNECTOR_D12       GPIO_PA1
+#define ARDUINO_CONNECTOR_D13       GPIO_PA2
+#define ARDUINO_CONNECTOR_SCL       GPIO_PG0
+#define ARDUINO_CONNECTOR_SDA       GPIO_PG1
+
+#define BUTTON2    GPIO_PG15
+#define BUTTON3    GPIO_PF11
+
+#define LED_R      GPIO_PH0
+#define LED_Y      GPIO_PH1
+#define LED_G      GPIO_PH2
 
 #ifdef __cplusplus
 }

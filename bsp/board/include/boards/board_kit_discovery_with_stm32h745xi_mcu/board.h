@@ -52,9 +52,36 @@ extern "C"
 #define BOARD_NAME "Discovery kit with STM32H745XI MCU"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PC0
+#define ARDUINO_CONNECTOR_A1        GPIO_PF8
+#define ARDUINO_CONNECTOR_A2        // PA0_C analog-only pad, no GPIO equivalent
+#define ARDUINO_CONNECTOR_A3        // PA1_C analog-only pad, no GPIO equivalent
+#define ARDUINO_CONNECTOR_A4        // PC2_C analog-only pad, no GPIO equivalent
+#define ARDUINO_CONNECTOR_A5        // PC3_C analog-only pad, no GPIO equivalent
+#define ARDUINO_CONNECTOR_D0        GPIO_PB7
+#define ARDUINO_CONNECTOR_D1        GPIO_PB6
+#define ARDUINO_CONNECTOR_D2        GPIO_PG3
+#define ARDUINO_CONNECTOR_D3        GPIO_PA6
+#define ARDUINO_CONNECTOR_D4        GPIO_PK1
+#define ARDUINO_CONNECTOR_D5        GPIO_PA8
+#define ARDUINO_CONNECTOR_D6        GPIO_PE6
+#define ARDUINO_CONNECTOR_D7        GPIO_PI8
+#define ARDUINO_CONNECTOR_D8        GPIO_PE3
+#define ARDUINO_CONNECTOR_D9        GPIO_PH15
+#define ARDUINO_CONNECTOR_D10       GPIO_PB4
+#define ARDUINO_CONNECTOR_D11       GPIO_PB15
+#define ARDUINO_CONNECTOR_D12       GPIO_PI2
+#define ARDUINO_CONNECTOR_D13       GPIO_PD3  // shared with LD8 ARDUINO LED
+#define ARDUINO_CONNECTOR_SCL       GPIO_PD12
+#define ARDUINO_CONNECTOR_SDA       GPIO_PD13
+
+#define BUTTON1    GPIO_PC13
+
+#define LED6       GPIO_PI13
+#define LED7       GPIO_PJ2
 
 #ifdef __cplusplus
 }

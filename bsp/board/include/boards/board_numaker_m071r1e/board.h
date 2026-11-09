@@ -52,9 +52,33 @@ extern "C"
 #define BOARD_NAME "NuMaker M071R1E"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PB15
+#define ARDUINO_CONNECTOR_A1        GPIO_PC14
+#define ARDUINO_CONNECTOR_A2        GPIO_PC15
+#define ARDUINO_CONNECTOR_A3        GPIO_PC6
+#define ARDUINO_CONNECTOR_A4        GPIO_PC7
+#define ARDUINO_CONNECTOR_A5        GPIO_PA6
+#define ARDUINO_CONNECTOR_D0        GPIO_PB4
+#define ARDUINO_CONNECTOR_D1        GPIO_PB5
+#define ARDUINO_CONNECTOR_D2        GPIO_PE5
+#define ARDUINO_CONNECTOR_D3        GPIO_PB11
+#define ARDUINO_CONNECTOR_D4        GPIO_PA15
+#define ARDUINO_CONNECTOR_D5        GPIO_PA14
+#define ARDUINO_CONNECTOR_D6        GPIO_PA13
+#define ARDUINO_CONNECTOR_D7        GPIO_PA12
+#define ARDUINO_CONNECTOR_D8        GPIO_PB10
+#define ARDUINO_CONNECTOR_D9        GPIO_PB9
+#define ARDUINO_CONNECTOR_D10       GPIO_PC0
+#define ARDUINO_CONNECTOR_D11       GPIO_PC3
+#define ARDUINO_CONNECTOR_D12       GPIO_PC2
+#define ARDUINO_CONNECTOR_D13       GPIO_PC1
+#define ARDUINO_CONNECTOR_SCL       GPIO_PA9
+#define ARDUINO_CONNECTOR_SDA       GPIO_PA8
+
+#define LED1       GPIO_PB14
 
 #ifdef __cplusplus
 }

@@ -52,6 +52,7 @@ extern "C"
 #define BOARD_NAME "PIC18F57Q84 Curiosity Nano Evaluation Kit"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
 // Left connector

@@ -1,6 +1,6 @@
 if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_NUMAKER_NUC1262SE")
     set(BOARD_PATH "include/boards/board_numaker_nuc1262se")
     set(MCU_CARD FALSE)
-    set(SHIELD FALSE)
+    set(SHIELD TRUE)
     set(DIP_SOCKET FALSE)
 endif()

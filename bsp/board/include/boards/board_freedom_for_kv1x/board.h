@@ -52,9 +52,38 @@ extern "C"
 #define BOARD_NAME "Freedom Development Platform for Kinetis KV1x MCUs"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        GPIO_PC0
+#define ARDUINO_CONNECTOR_A1        GPIO_PE16
+#define ARDUINO_CONNECTOR_A2        GPIO_PE20
+#define ARDUINO_CONNECTOR_A3        GPIO_PE21
+#define ARDUINO_CONNECTOR_A4        GPIO_PB3
+#define ARDUINO_CONNECTOR_A5        GPIO_PB2
+#define ARDUINO_CONNECTOR_D0        GPIO_PD0
+#define ARDUINO_CONNECTOR_D1        GPIO_PD1
+#define ARDUINO_CONNECTOR_D2        GPIO_PB17
+#define ARDUINO_CONNECTOR_D3        GPIO_PE24
+#define ARDUINO_CONNECTOR_D4        GPIO_PB0
+#define ARDUINO_CONNECTOR_D5        GPIO_PE25
+#define ARDUINO_CONNECTOR_D6        GPIO_PE29
+#define ARDUINO_CONNECTOR_D7        GPIO_PC7
+#define ARDUINO_CONNECTOR_D8        GPIO_PD2
+#define ARDUINO_CONNECTOR_D9        GPIO_PA4
+#define ARDUINO_CONNECTOR_D10       GPIO_PD6
+#define ARDUINO_CONNECTOR_D11       GPIO_PC6
+#define ARDUINO_CONNECTOR_D12       GPIO_PD3
+#define ARDUINO_CONNECTOR_D13       GPIO_PC5
+#define ARDUINO_CONNECTOR_SCL       GPIO_PB2
+#define ARDUINO_CONNECTOR_SDA       GPIO_PB3
+
+#define BUTTON2    GPIO_PB0
+#define BUTTON3    GPIO_PA4
+
+#define LED_R      GPIO_PD6
+#define LED_G      GPIO_PE29
+#define LED_B      GPIO_PE25
 
 #ifdef __cplusplus
 }

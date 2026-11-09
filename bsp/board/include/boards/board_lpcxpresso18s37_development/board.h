@@ -52,9 +52,37 @@ extern "C"
 #define BOARD_NAME "LPCXpresso18S37 Development Board"
 
 #include "hal_target.h"
+#include "shield.h"
 
 // Mapping
-// Only Bare Metal support is available for this board at the moment
+#define ARDUINO_CONNECTOR_A0        // Pin not routed (dedicated ADC_0 analog-only pin, no GPIO)
+#define ARDUINO_CONNECTOR_A1        // Pin not routed (dedicated ADC_1 analog-only pin, no GPIO)
+#define ARDUINO_CONNECTOR_A2        // Pin not routed (dedicated ADC_2 analog-only pin, no GPIO)
+#define ARDUINO_CONNECTOR_A3        // Pin not routed (dedicated ADC_3 analog-only pin, no GPIO)
+#define ARDUINO_CONNECTOR_A4        // Pin not routed
+#define ARDUINO_CONNECTOR_A5        GPIO_P2_5
+#define ARDUINO_CONNECTOR_D0        GPIO_P2_11
+#define ARDUINO_CONNECTOR_D1        GPIO_P2_10
+#define ARDUINO_CONNECTOR_D2        GPIO_P2_13
+#define ARDUINO_CONNECTOR_D3        GPIO_P1_8
+#define ARDUINO_CONNECTOR_D4        GPIO_P2_2
+#define ARDUINO_CONNECTOR_D5        GPIO_P1_7
+#define ARDUINO_CONNECTOR_D6        GPIO_P2_9   // BOOT3 boot-mode pin
+#define ARDUINO_CONNECTOR_D7        GPIO_P2_12
+#define ARDUINO_CONNECTOR_D8        GPIO_P2_6
+#define ARDUINO_CONNECTOR_D9        GPIO_P6_5
+#define ARDUINO_CONNECTOR_D10       GPIO_P1_5   // via U8 SSEL mux, default SEL=1 to Arduino D10
+#define ARDUINO_CONNECTOR_D11       GPIO_P1_4
+#define ARDUINO_CONNECTOR_D12       GPIO_P1_3
+#define ARDUINO_CONNECTOR_D13       GPIO_PF_4
+#define ARDUINO_CONNECTOR_SCL       GPIO_P2_4
+#define ARDUINO_CONNECTOR_SDA       GPIO_P2_3
+
+#define BUTTON2    GPIO_P2_7   // SW2 ISP, shared with RGB LED green
+
+#define LED_R      GPIO_P6_11
+#define LED_G      GPIO_P2_7   // shared with ISP button SW2
+#define LED_B      GPIO_P6_9
 
 #ifdef __cplusplus
 }
