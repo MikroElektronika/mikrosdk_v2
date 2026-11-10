@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [TOSHIBA](#toshiba)
     - [Improvements](#improvements)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>TOSHIBA</font>
@@ -44,6 +45,38 @@
 
 + Defined all base addresses in `mcu_reg_addresses.h` file for all TOSHIBA devices
   + This makes adding new TOSHIBA devices to SDK easier
+
+### Fixes
+
++ Fixed SPI Ethernet libraries not showing up in the NECTO Studio Library Manager
+  + SPI Ethernet middleware (`MikroSDK.Ethernet.Transport`, `MikroSDK.Ethernet.Spi`, `MikroSDK.Ethernet.Net`) and controller libraries (`MikroSDK.Ethernet.ENC28J60`, `MikroSDK.Ethernet.LAN8651`, `MikroSDK.Ethernet.LAN9250`, `MikroSDK.Ethernet.W5500`, `MikroSDK.Ethernet.W6100`) are now installed with the SDK
++ Fixed SPI Ethernet controller register and protocol bugs
+  + W5500 no longer blocks broadcast frames, ARP requests and DHCP replies are received again
+  + W6100 now clears the send interrupt through `Sn_IRCLR` and locks the network registers with the documented key, MAC/IP can still be changed after initialization (e.g. after DHCP)
+  + ENC28J60 PHY register reads (link status, PHY ID) now return the correct value, PHY duplex now follows the full duplex setting
+  + ENC28J60 releases receive buffer space for dropped frames and reports failed transmissions
+  + LAN8651 validates the receive footer parity and discards frames marked for dropping
+  + LAN9250 received frames no longer include the 4-byte FCS, consistent with the other controllers
++ SPI Ethernet now reports initialization and bus failures
+  + Initialization verifies the chip identity and fails if no controller responds, e.g. wrong mikroBUS position
+  + Failed SPI transactions and controller timeouts are reported instead of returning success
+  + W5500/W6100 transmit waits for free buffer space and reports success only after the frame was sent
+  + Corrupt receive headers are recovered from (socket reopen / receive buffer reset) instead of losing synchronization
+  + Cached MAC/IP addresses are updated only after the controller accepted them
++ SPI Ethernet network helpers validate received packets
+  + New `eth_net_ipv4_payload()` validates IPv4 version, header length, total length and checksum and rejects fragments
+  + ICMP echo requests are checked for code and checksum, ARP requests for address sizes
+  + DHCP replies are checked for client MAC, server ports, UDP checksum and the selected server
+  + `tests/spi_ethernet` uses a per-device DHCP transaction ID, restarts discovery on DHCPNAK and checks TCP segment bounds
+
+> NOTE:
+>> SPI Ethernet API changes compared to v2.20.2:
+>>
+>> + `eth_net_handle_dhcp()` takes the device MAC address as a new third parameter
+>> + `W5500_FRAME_SIZE` and `W6100_FRAME_SIZE` are now 1514 (MACRAW frame without FCS)
+>> + `W5500_Sn_MR_MF` and `W6100_Sn_MR_MF` corrected to `0x80`, `W6100_PHYSR_RST` replaced by `W6100_PHYSR_CAB` and `W6100_PHYCR1_RST`
+>> + LAN9250 `read_packet` returns the frame without FCS (4 bytes shorter)
+>> + `eth_transport_t` has a new `bus_error` member
 
 ### NEW HARDWARE
 
