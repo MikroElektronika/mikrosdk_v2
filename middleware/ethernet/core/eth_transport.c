@@ -127,12 +127,15 @@ uint8_t eth_transport_get_link_status( eth_transport_t *eth ) {
 
 /* --- Addressing --- */
 err_t eth_transport_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+    err_t err = ETH_TRANSPORT_SUCCESS;
+
     if ( !eth || !mac ) return ETH_TRANSPORT_ERROR;
-    if ( mac != eth->mac )
-        memcpy( eth->mac, mac, 6 );
     if ( eth->drv && eth->drv->set_mac )
-        return eth->drv->set_mac( eth, eth->mac );
-    return ETH_TRANSPORT_SUCCESS;
+        err = eth->drv->set_mac( eth, mac );
+    // Update the cached address only once the controller accepted it
+    if ( err == ETH_TRANSPORT_SUCCESS && mac != eth->mac )
+        memcpy( eth->mac, mac, 6 );
+    return err;
 }
 
 err_t eth_transport_get_mac( eth_transport_t *eth, uint8_t *mac ) {
@@ -142,12 +145,15 @@ err_t eth_transport_get_mac( eth_transport_t *eth, uint8_t *mac ) {
 }
 
 err_t eth_transport_set_ip( eth_transport_t *eth, uint8_t *ip ) {
+    err_t err = ETH_TRANSPORT_SUCCESS;
+
     if ( !eth || !ip ) return ETH_TRANSPORT_ERROR;
-    if ( ip != eth->ip )
-        memcpy( eth->ip, ip, 4 );
     if ( eth->drv && eth->drv->set_ip )
-        return eth->drv->set_ip( eth, eth->ip );
-    return ETH_TRANSPORT_SUCCESS;
+        err = eth->drv->set_ip( eth, ip );
+    // Update the cached address only once the controller accepted it
+    if ( err == ETH_TRANSPORT_SUCCESS && ip != eth->ip )
+        memcpy( eth->ip, ip, 4 );
+    return err;
 }
 
 err_t eth_transport_get_ip( eth_transport_t *eth, uint8_t *ip ) {

@@ -281,6 +281,9 @@ extern eth_transport_driver_t enc28j60_driver;
 #define PHIE             0x12
 #define PHIR             0x13
 #define PHLCON           0x14
+// PHCON1 bits
+#define PHCON1_PRST      0x8000
+#define PHCON1_PDPXMD    0x0100
 
 // SPI instruction set for the ENC28J60
 #define ENC28J60_RCR_CMD 0x00       // Read Control Register

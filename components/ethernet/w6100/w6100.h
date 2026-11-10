@@ -150,8 +150,8 @@ uint8_t  w6100_reopen_socket0_macraw( eth_transport_t *eth );
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
  * @return ETH_TRANSPORT_SUCCESS.
- * @note The network registers must be unlocked (NETLCKR), this is done
- * during w6100_init().
+ * @note Unlocks the network registers (NETLCKR) for the write and locks
+ * them again afterwards.
  */
 err_t    w6100_set_mac( eth_transport_t *eth, uint8_t *mac );
 
@@ -160,8 +160,8 @@ err_t    w6100_set_mac( eth_transport_t *eth, uint8_t *mac );
  * @param[in] eth Ethernet transport instance.
  * @param[in] ip 4-byte IPv4 address.
  * @return ETH_TRANSPORT_SUCCESS.
- * @note The network registers must be unlocked (NETLCKR), this is done
- * during w6100_init().
+ * @note Unlocks the network registers (NETLCKR) for the write and locks
+ * them again afterwards.
  */
 err_t    w6100_set_ip( eth_transport_t *eth, uint8_t *ip );
 
@@ -193,11 +193,15 @@ extern eth_transport_driver_t w6100_driver;
 #define W6100_SIPR          0x4138
 #define W6100_PHYSR         0x3000
 #define W6100_NETLCKR       0x41F5
+#define W6100_NETLCKR_UNLOCK 0x3A
+#define W6100_NETLCKR_LOCK   0xC5
+#define W6100_PHYCR1        0x301D
 
 // Socket n register block
 #define W6100_Sn_MR           0x0000
 #define W6100_Sn_CR           0x0010
-#define W6100_Sn_IR           0x0020
+#define W6100_Sn_IR           0x0020    // Read only, events are cleared through Sn_IRCLR
+#define W6100_Sn_IRCLR        0x0028
 #define W6100_Sn_SR           0x0030
 #define W6100_Sn_PORTR        0x0114
 #define W6100_Sn_DHAR         0x0118
@@ -220,7 +224,8 @@ extern eth_transport_driver_t w6100_driver;
 #define W6100_Sn_MR_TCP       0x01
 #define W6100_Sn_MR_UDP       0x02
 #define W6100_Sn_MR_MACRAW    0x07
-#define W6100_Sn_MR_MF        0x40
+#define W6100_Sn_MR_MF        0x80      // MACRAW: MAC filter enable
+#define W6100_Sn_MR_BRDB      0x40      // MACRAW/UDP: broadcast blocking
 /* Sn_CR commands */
 #define W6100_Sn_CR_OPEN      0x01
 #define W6100_Sn_CR_CLOSE     0x10
@@ -230,11 +235,13 @@ extern eth_transport_driver_t w6100_driver;
 #define W6100_SOCK_CLOSED     0x00
 #define W6100_SOCK_MACRAW     0x42
 
-/* PHYCFGR bits */
+/* PHYSR bits */
 #define W6100_PHYSR_LNK_MASK  0x01
-#define W6100_PHYSR_RST       0x80
+#define W6100_PHYSR_CAB       0x80      // Cable off
+/* PHYCR1 bits (write protected by PHYLCKR) */
+#define W6100_PHYCR1_RST      0x01
 
-#define W6100_FRAME_SIZE 1518
+#define W6100_FRAME_SIZE 1514      // MACRAW TX limit, FCS is appended by the chip
 
 #endif
 

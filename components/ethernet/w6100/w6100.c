@@ -61,6 +61,7 @@ static void      w6100_hw_reset( eth_transport_t *eth );
 static void      w6100_wait_socket_cmd( eth_transport_t *eth );
 static uint8_t   w6100_wait_sn_sr_macraw( eth_transport_t *eth );
 static void      w6100_open_socket0_macraw( eth_transport_t *eth );
+static void      w6100_write_net_reg( eth_transport_t *eth, uint16_t addr, uint8_t *buf, uint16_t len );
 
 eth_transport_driver_t w6100_driver = {
     .init            = w6100_init,
@@ -174,16 +175,14 @@ err_t w6100_init( eth_transport_t *eth ) {
 
     W6100_CTX( eth )->hw_rev = w6100_read_reg( eth, W6100_VERSIONR, W6100_BSB_COMMON_REG );
 
-    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, 0x3A );     // Unlock network registers
-    w6100_set_mac( eth, eth->mac );
-    w6100_set_ip( eth, eth->ip );
-
+    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, W6100_NETLCKR_UNLOCK );
+    w6100_write_burst( eth, W6100_SHAR, W6100_BSB_COMMON_REG, eth->mac, 6 );
+    w6100_write_burst( eth, W6100_SIPR, W6100_BSB_COMMON_REG, eth->ip, 4 );
     w6100_write_reg( eth, W6100_NET4MR, W6100_BSB_COMMON_REG,
                      W6100_NET4MR_PB | W6100_NET4MR_RSTB );
+    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, W6100_NETLCKR_LOCK );
 
     w6100_open_socket0_macraw( eth );
-
-    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, 0x00 );
 
     return ETH_TRANSPORT_SUCCESS;
 }
@@ -201,7 +200,7 @@ uint16_t w6100_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len ) {
     w6100_write_reg( eth, W6100_Sn_CR, W6100_BSB_SOCKET0_REG( 0 ), W6100_Sn_CR_SEND );
     w6100_wait_socket_cmd( eth );
 
-    w6100_write_reg( eth, W6100_Sn_IR, W6100_BSB_SOCKET0_REG( 0 ), W6100_IR_SENDOK );
+    w6100_write_reg( eth, W6100_Sn_IRCLR, W6100_BSB_SOCKET0_REG( 0 ), W6100_IR_SENDOK );
 
     return len;
 }
@@ -255,13 +254,19 @@ uint8_t w6100_get_rev( eth_transport_t *eth ) {
 }
 
 // Addressing
+static void w6100_write_net_reg( eth_transport_t *eth, uint16_t addr, uint8_t *buf, uint16_t len ) {
+    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, W6100_NETLCKR_UNLOCK );
+    w6100_write_burst( eth, addr, W6100_BSB_COMMON_REG, buf, len );
+    w6100_write_reg( eth, W6100_NETLCKR, W6100_BSB_COMMON_REG, W6100_NETLCKR_LOCK );
+}
+
 err_t w6100_set_mac( eth_transport_t *eth, uint8_t *mac ) {
-    w6100_write_burst( eth, W6100_SHAR, W6100_BSB_COMMON_REG, mac, 6 );
+    w6100_write_net_reg( eth, W6100_SHAR, mac, 6 );
     return ETH_TRANSPORT_SUCCESS;
 }
 
 err_t w6100_set_ip( eth_transport_t *eth, uint8_t *ip ) {
-    w6100_write_burst( eth, W6100_SIPR, W6100_BSB_COMMON_REG, ip, 4 );
+    w6100_write_net_reg( eth, W6100_SIPR, ip, 4 );
     return ETH_TRANSPORT_SUCCESS;
 }
 

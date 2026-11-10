@@ -79,6 +79,7 @@ static const uint16_t lan8651_sqi_vals[ 12 ] = {
 };
 
 static uint32_t lan8651_add_parity( uint32_t word );
+static uint8_t  lan8651_parity_ok( uint32_t word );
 static void     lan8651_put_be32( uint8_t *buf, uint32_t val );
 static uint32_t lan8651_get_be32( uint8_t *buf );
 static uint8_t  lan8651_ctrl( eth_transport_t *eth, uint8_t write, uint8_t mms, uint16_t addr, uint32_t *val );
@@ -115,6 +116,15 @@ static uint32_t lan8651_add_parity( uint32_t word ) {
     if ( !( p & 1 ) )       // even number of ones -> set P to make it odd
         word |= 1;
     return word;
+}
+
+static uint8_t lan8651_parity_ok( uint32_t word ) {
+    word ^= word >> 16;
+    word ^= word >> 8;
+    word ^= word >> 4;
+    word ^= word >> 2;
+    word ^= word >> 1;
+    return ( uint8_t )( word & 1 );     // odd number of ones, P bit included
 }
 
 static void lan8651_put_be32( uint8_t *buf, uint32_t val ) {
@@ -325,6 +335,7 @@ static void lan8651_rx_finish( lan8651_ctx_t *ctx ) {
 static void lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer ) {
     uint8_t sv  = ( footer & LAN8651_DATA_FTR_SV ) ? 1 : 0;
     uint8_t ev  = ( footer & LAN8651_DATA_FTR_EV ) ? 1 : 0;
+    uint8_t fd  = ( footer & LAN8651_DATA_FTR_FD ) ? 1 : 0;     // Drop the frame ending in this chunk
     uint8_t swo = ( uint8_t )( ( ( footer >> LAN8651_DATA_FTR_SWO_SHIFT ) & 0x0F ) * 4 );
     uint8_t ebo = ( uint8_t )( ( footer >> LAN8651_DATA_FTR_EBO_SHIFT ) & 0x3F );
 
@@ -333,7 +344,7 @@ static void lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer ) {
 
     // End of a frame started in an earlier chunk (possibly followed by a new start)
     if ( ev && ( !sv || swo > ebo ) ) {
-        if ( ctx->rx_in_progress && lan8651_rx_append( ctx, lan8651_chunk_rx, ( uint16_t )ebo + 1 ) )
+        if ( ctx->rx_in_progress && !fd && lan8651_rx_append( ctx, lan8651_chunk_rx, ( uint16_t )ebo + 1 ) )
             lan8651_rx_finish( ctx );
         ctx->rx_in_progress = 0;
         if ( !sv || ctx->rx_ready )
@@ -345,8 +356,9 @@ static void lan8651_process_rx_chunk( lan8651_ctx_t *ctx, uint32_t footer ) {
         ctx->rx_len = 0;
         ctx->rx_in_progress = 1;
         if ( ev ) {
-            if ( lan8651_rx_append( ctx, &lan8651_chunk_rx[ swo ], ( uint16_t )( ebo + 1 - swo ) ) )
+            if ( !fd && lan8651_rx_append( ctx, &lan8651_chunk_rx[ swo ], ( uint16_t )( ebo + 1 - swo ) ) )
                 lan8651_rx_finish( ctx );
+            ctx->rx_in_progress = 0;
         } else {
             lan8651_rx_append( ctx, &lan8651_chunk_rx[ swo ], ( uint16_t )( LAN8651_CHUNK_PAYLOAD_SIZE - swo ) );
         }
@@ -381,7 +393,8 @@ static uint8_t lan8651_data_chunk( eth_transport_t *eth, uint8_t *tx_data, uint8
 
     // TX header goes first, RX footer comes last: [ 64 B payload ][ footer ]
     footer = lan8651_get_be32( &lan8651_chunk_rx[ LAN8651_CHUNK_PAYLOAD_SIZE ] );
-    if ( !( footer & LAN8651_DATA_FTR_SYNC ) || ( footer & LAN8651_DATA_FTR_HDRB ) ) {
+    if ( !lan8651_parity_ok( footer ) ||
+         !( footer & LAN8651_DATA_FTR_SYNC ) || ( footer & LAN8651_DATA_FTR_HDRB ) ) {
         ctx->rx_in_progress = 0;
         return 0;
     }

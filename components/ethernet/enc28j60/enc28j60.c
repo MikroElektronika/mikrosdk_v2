@@ -288,9 +288,10 @@ err_t enc28j60_init( eth_transport_t *eth ) {
 
 // PHY access
 void enc28j60_phy_init( eth_transport_t *eth ) {
-    enc28j60_phy_write( eth, PHCON1, 0x8000 );  // Reset PHY
+    enc28j60_phy_write( eth, PHCON1, PHCON1_PRST );     // Reset PHY
     Delay_ms( 100 );
-    enc28j60_phy_write( eth, PHCON1, 0x0000 );  // Normal mode
+    // Normal mode, PHY duplex must match MACON3.FULDPX
+    enc28j60_phy_write( eth, PHCON1, eth->full_duplex ? PHCON1_PDPXMD : 0x0000 );
     Delay_ms( 50 );
     enc28j60_phy_write( eth, PHCON2, 0x0100 );  // Disable loopback (so physical cable only)
     Delay_ms( 50 );
@@ -304,8 +305,8 @@ void enc28j60_phy_write( eth_transport_t *eth, uint8_t phy_reg, uint16_t value )
     enc28j60_write_reg( eth, MIWRL    & 0x1F, ( uint8_t )( value & 0xFF ) );
     enc28j60_write_reg( eth, MIWRH    & 0x1F, ( uint8_t )( value >> 8 ) );
     Delay_ms( 15 );
-    enc28j60_select_bank( eth, 2 );
-    while ( enc28j60_read_reg( eth, MISTAT & 0x1F ) & MISTAT_BUSY ) {
+    enc28j60_select_bank( eth, 3 );             // MISTAT is in bank 3
+    while ( enc28j60_read_reg( eth, MISTAT ) & MISTAT_BUSY ) {
         Delay_ms( 1 );
         if ( ++tries > ENC28J60_MIIM_TIMEOUT_MS ) break;
     }
@@ -318,14 +319,16 @@ void enc28j60_phy_read( eth_transport_t *eth, uint8_t reg, uint8_t *low, uint8_t
     enc28j60_write_reg( eth, MIREGADR & 0x1F, reg );
     enc28j60_write_reg( eth, MICMD & 0x1F, MICMD_MIIRD );
     Delay_ms( 15 );
-    enc28j60_select_bank( eth, 2 );
-    while ( enc28j60_read_reg( eth, MISTAT & 0x1F ) & MISTAT_BUSY ) {
+    enc28j60_select_bank( eth, 3 );             // MISTAT is in bank 3
+    while ( enc28j60_read_reg( eth, MISTAT ) & MISTAT_BUSY ) {
         Delay_ms( 1 );
         if ( ++tries > ENC28J60_MIIM_TIMEOUT_MS ) break;
     }
+    enc28j60_select_bank( eth, 2 );
     enc28j60_write_reg( eth, MICMD & 0x1F, 0x00 );
-    *low  = enc28j60_read_reg( eth, MIRDL & 0x1F );
-    *high = enc28j60_read_reg( eth, MIRDH & 0x1F );
+    // MII registers return a dummy byte first, keep the 0x80 marker
+    *low  = enc28j60_read_reg( eth, MIRDL );
+    *high = enc28j60_read_reg( eth, MIRDH );
 }
 
 // Data transfer
@@ -359,13 +362,12 @@ uint16_t enc28j60_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_
     status        = header[ 4 ] | ( ( uint16_t )header[ 5 ] << 8 );
 
     if ( ( status & ENC28J60_RSV_RECEIVED_OK ) == 0 ) {
-        enc28j60_set_bit_reg( eth, ECON2, PKTDEC );
-        return 0;
+        length = 0;                             // Drop, but still release its ring space
+    } else {
+        if ( length > 4 ) length -= 4;          // Strip FCS
+        if ( length > max_len ) length = max_len;
+        enc28j60_read_mem( eth, buf, length );
     }
-
-    if ( length > 4 ) length -= 4;              // Strip FCS
-    if ( length > max_len ) length = max_len;
-    enc28j60_read_mem( eth, buf, length );
 
     // ERXRDPT must be odd (errata), so it is set just before the next packet
     new_ptr = ( ctx->next_ptr == RECEIVE_START ) ? RECEIVE_END : ctx->next_ptr - 1;
@@ -405,8 +407,10 @@ uint16_t enc28j60_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len 
         Delay_ms( 1 );
         if ( ++tries > 200 ) break;
     }
-    if ( enc28j60_read_reg( eth, EIR ) & TXERIF )
-        enc28j60_clear_bit_reg( eth, ECON1, TXRTS );
+    if ( ( tries > 200 ) || ( enc28j60_read_reg( eth, EIR ) & TXERIF ) ) {
+        enc28j60_clear_bit_reg( eth, ECON1, TXRTS );    // Abort, TXRST at the next send recovers the TX logic
+        return 0;
+    }
     return len;
 }
 

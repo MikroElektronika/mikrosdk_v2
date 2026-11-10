@@ -283,7 +283,8 @@ uint8_t eth_transport_get_link_status( eth_transport_t *eth );
 
 /**
  * @brief Set the MAC address.
- * @details Stores the address in @p eth and programs the controller.
+ * @details Programs the controller and stores the address in @p eth
+ * once the controller accepted it.
  * @param[in,out] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
  * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.

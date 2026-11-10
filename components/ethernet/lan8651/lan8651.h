@@ -212,6 +212,7 @@ extern eth_transport_driver_t lan8651_driver;
 #define LAN8651_DATA_FTR_DV         0x00200000UL
 #define LAN8651_DATA_FTR_SV         0x00100000UL
 #define LAN8651_DATA_FTR_SWO_SHIFT  16
+#define LAN8651_DATA_FTR_FD         0x00008000UL
 #define LAN8651_DATA_FTR_EV         0x00004000UL
 #define LAN8651_DATA_FTR_EBO_SHIFT  8
 #define LAN8651_DATA_FTR_TXC_SHIFT  1

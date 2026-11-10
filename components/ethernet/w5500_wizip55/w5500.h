@@ -211,7 +211,8 @@ extern eth_transport_driver_t w5500_driver;
 #define W5500_Sn_MR_UDP       0x02
 #define W5500_Sn_MR_MACRAW    0x04
 #define W5500_MR_PB           0x10
-#define W5500_Sn_MR_MF        0x40
+#define W5500_Sn_MR_MF        0x80      // MACRAW: MAC filter enable
+#define W5500_Sn_MR_BCASTB    0x40      // MACRAW/UDP: broadcast blocking
 /* Sn_CR commands */
 #define W5500_Sn_CR_OPEN      0x01
 #define W5500_Sn_CR_CLOSE     0x10
@@ -225,7 +226,7 @@ extern eth_transport_driver_t w5500_driver;
 #define W5500_PHYCFGR_LNK_MASK  0x01
 #define W5500_PHYCFGR_RST       0x80
 
-#define W5500_FRAME_SIZE 1518
+#define W5500_FRAME_SIZE 1514      // MACRAW TX limit, FCS is appended by the chip
 
 #endif
 

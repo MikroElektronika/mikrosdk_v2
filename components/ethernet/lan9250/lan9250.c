@@ -320,12 +320,15 @@ uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_l
         return 0;
     }
 
-    if ( length == 0 || length > LAN9250_FRAME_SIZE ) {
+    // Packet length includes the 4-byte FCS
+    if ( length <= LAN9250_FCS_SIZE || length > LAN9250_FRAME_SIZE ) {
         lan9250_drop_packet( eth, length );
         return 0;
     }
 
-    copy_len = ( length > max_len ) ? max_len : length;
+    // Return the frame without FCS, but drain the whole packet from the FIFO
+    copy_len = ( uint16_t )( length - LAN9250_FCS_SIZE );
+    if ( copy_len > max_len ) copy_len = max_len;
     lan9250_read_fifo( eth, LAN9250_RX_DATA_FIFO, buf, copy_len, length );
 
     return copy_len;

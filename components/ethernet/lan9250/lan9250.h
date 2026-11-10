@@ -113,7 +113,7 @@ uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
  * @param[in] eth Ethernet transport instance.
  * @param[out] buf Buffer receiving the frame.
  * @param[in] len Size of @p buf in bytes, longer frames are truncated.
- * @return Number of bytes read, 0 if no valid frame is available.
+ * @return Number of bytes read (frame without FCS), 0 if no valid frame is available.
  */
 uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
@@ -255,6 +255,7 @@ extern eth_transport_driver_t lan9250_driver;
 
 // Maximum Ethernet frame size handled
 #define LAN9250_FRAME_SIZE 1518
+#define LAN9250_FCS_SIZE   4
 
 #endif
 
