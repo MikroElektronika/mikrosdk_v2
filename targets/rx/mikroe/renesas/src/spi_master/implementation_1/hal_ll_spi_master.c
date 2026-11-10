@@ -107,7 +107,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_PRCR_UNLOCK_VAL ( 0xA502U )
 #define HAL_LL_SPI_PRCR_LOCK_VAL ( 0xA500U )
 
-// TODO: confirm MSTPB17 (RSPI0) against the Low Power Consumption chapter.
 #define HAL_LL_SPI_RSPI0_MSTPCRB_POS ( 17 )
 #define HAL_LL_SPI_RSPIA0_MSTPCRD_POS ( 26 )
 

@@ -207,7 +207,7 @@ void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
         return;
     }
 
-    /* PMR/PDR both 0 before ASEL goes high (R01UH0979 21.3.3). */
+    /* PMR/PDR both 0 before ASEL goes high. */
     *pmr &= ( uint8_t )~pin_mask;
     *pdr &= ( uint8_t )~pin_mask;
 
@@ -326,7 +326,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
         }
     }
 
-    /* PMR must be 0 while PSEL is changed (R01UH0979 21.3.2 note 1). */
+    /* PMR must be 0 while PSEL is changed. */
     *pmr &= ( uint8_t )~( 1U << pin );
 
     if ( true == state ) {

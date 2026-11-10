@@ -207,7 +207,7 @@ void hal_ll_sci_uart_write_polling( hal_ll_sci_uart_hw_specifics_map_t *map, uin
  *
  * Performs SCI module initialization in UART mode on
  * the hardware level, following the SCI asynchronous-mode
- * init sequence from the reference manual.
+ * init sequence.
  *
  * Procedure:
  * 1. Clears SCR/SMR (disables TE/RE, resets mode bits)

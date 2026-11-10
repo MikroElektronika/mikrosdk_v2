@@ -134,7 +134,7 @@
 #define HAL_LL_SCI_SPI_STEP_BASE            (4UL)
 
 
-/*!< @brief RSCI (RSCI8, RSCI9, RSCI11) macros defining bit location (RX26T Group manual sec. 33.2). */
+/*!< @brief RSCI (RSCI8, RSCI9, RSCI11) macros defining bit location. */
 #define HAL_LL_RSCI_SCR0_RE             (0)
 #define HAL_LL_RSCI_SCR0_TE             (4)
 #define HAL_LL_RSCI_SCR0_RIE            (16)
@@ -207,26 +207,26 @@
 #define HAL_LL_RSCI_RDR_DATA_MASK       (0xFFUL)
 #define HAL_LL_RSCI_SSCR_ERROR_MASK     ((1UL << HAL_LL_RSCI_SSCR_ORERC) | (1UL << HAL_LL_RSCI_SSCR_APERC) |\
                                          (1UL << HAL_LL_RSCI_SSCR_AFERC))
-/*!< @brief SSCR: RDRFC, AFERC, APERC, MFFC, ORERC, DFERC, DPERC, DCMFC and ERSC (Figure 33.85 step 7). */
+/*!< @brief SSCR: RDRFC, AFERC, APERC, MFFC, ORERC, DFERC, DPERC, DCMFC and ERSC. */
 #define HAL_LL_RSCI_SSCR_CLEAR_MASK     (0x9D070010UL)
 
 /*!< @brief Macros used for RSCI simple I2C bit rate calculation. */
-// Bit rate = PCLK / ( 64 * 2^(2n-1) * ( N + 1 )) = PCLK / ( 32 * 4^n * ( N + 1 )) (Table 33.10).
+// Bit rate = PCLK / ( 64 * 2^(2n-1) * ( N + 1 )) = PCLK / ( 32 * 4^n * ( N + 1 )).
 #define HAL_LL_RSCI_I2C_STEP_BASE       (32UL)
-// CKS other than PCLK/1 is prohibited for RSCI8 and RSCI9 (Table 33.12).
+// CKS other than PCLK/1 is prohibited for RSCI8 and RSCI9.
 #define HAL_LL_RSCI_CKS_MAX_RSCI8_9     (0)
 #define HAL_LL_RSCI_CKS_MAX_RSCI11      (3)
 
 /*!< @brief Macros used for RSCI clock synchronous (simple SPI) bit rate calculation. */
-// Bit rate = PCLK / ( 4 * 4^n * ( N + 1 )), halved divisor with BGDM = 1 (Table 33.10).
+// Bit rate = PCLK / ( 4 * 4^n * ( N + 1 )), halved divisor with BGDM = 1.
 #define HAL_LL_RSCI_SPI_STEP_BASE       (4UL)
 #define HAL_LL_RSCI_SPI_STEP_BASE_BGDM  (2UL)
 
 /*!< @brief Macros used for RSCI asynchronous bit rate calculation. */
-// Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )), F = 64, 32 or 16 depending on BGDM/ABCS (Table 33.10).
+// Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )), F = 64, 32 or 16 depending on BGDM/ABCS.
 #define HAL_LL_RSCI_UART_STEP_COUNT     (3)
 
-/*!< @brief SCI register structure (SCI1, SCI5, SCI6, RX26T Group manual sec. 32.2) */
+/*!< @brief SCI register structure (SCI1, SCI5, SCI6) */
 typedef struct {
     uint8_t smr;
     uint8_t brr;
@@ -246,7 +246,7 @@ typedef struct {
     uint8_t sptr;
 } hal_ll_sci_base_handle_t;
 
-/*!< @brief RSCI register structure (RSCI8, RSCI9, RSCI11, RX26T Group manual sec. 33.2) */
+/*!< @brief RSCI register structure (RSCI8, RSCI9, RSCI11) */
 typedef struct {
     uint32_t rdr;           // 0x00
     uint32_t tdr;           // 0x04
@@ -319,32 +319,6 @@ static void hal_ll_sci_uart_set_parity_bare_metal( hal_ll_sci_uart_hw_specifics_
  * @return void None.
  */
 static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module_state );
-
-/**
- * @brief  Sets module TX line state.
- *
- * Enables/disables specific SCI_UART module
- * TX pin state
- *
- * @param[in]  base - SCI module base address.
- * @param[in]  module_state - true(enable transmitter pin) / false(disable transmitter pin)
- *
- * @return void None.
- */
-static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t module_state );
-
-/**
- * @brief  Sets module RX line state.
- *
- * Enables/disables specific SCI_UART module
- * RX pin state
- *
- * @param[in]  base - SCI module base address.
- * @param[in]  module_state - true(enable receive pin) / false(disable receive pin)
- *
- * @return void None.
- */
-static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t module_state );
 
 /**
  * @brief  Sets Sci_UART module baudrate.
@@ -426,7 +400,7 @@ static bool hal_ll_sci_is_rsci( uint32_t base );
 /**
   * @brief  Returns the source clock of the SCI module.
   *
-  * RSCI11 is clocked from PCLKA, RSCI8, RSCI9 and SCI1/5/6/12 from PCLKB (RX26T manual sec. 33).
+  * RSCI11 is clocked from PCLKA, RSCI8, RSCI9 and SCI1/5/6/12 from PCLKB.
   *
   * @param[in]  base - SCI module base address.
   * @return Source clock frequency in Hz.
@@ -436,7 +410,7 @@ static uint32_t hal_ll_sci_get_source_clock( uint32_t base );
 /**
   * @brief  Returns the highest allowed SCR2.CKS value for the RSCI channel.
   *
-  * CKS other than PCLK/1 is prohibited for RSCI8 and RSCI9 (Table 33.12).
+  * CKS other than PCLK/1 is prohibited for RSCI8 and RSCI9.
   *
   * @param[in]  base - RSCI module base address.
   * @return Highest allowed CKS value.
@@ -761,6 +735,7 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
     volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
+    bool slave_nack = false;
 
     if ( hal_ll_sci_is_rsci( map->base ) )
         return hal_ll_rsci_i2c_write_bare_metal( map, write_data_buf, len_write_data, mode );
@@ -804,8 +779,10 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
     if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ))
         dummy_read = read_reg( &hal_ll_hw_reg->rdr );
 
-    // Check if for ACK signal.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+    // Check for ACK signal; stop sending as soon as the slave rejects the address or a byte.
+    if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+        slave_nack = true;
+    } else {
         for( size_t i = 0; i < len_write_data; i++ ) {
             write_reg( &hal_ll_hw_reg->tdr, write_data_buf[i] );
 
@@ -819,11 +796,16 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
 
             if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_RDRF ))
                 dummy_read = read_reg( &hal_ll_hw_reg->rdr );
+
+            if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+                slave_nack = true;
+                break;
+            }
         }
     }
 
-    // If there is no need in RESTART condition - issue a STOP condition.
-    if ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode ) {
+    // Issue a STOP condition unless a RESTART follows; a NACK always ends the transfer.
+    if ( ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode ) || slave_nack ) {
         // Trigger the STOP condition.
         write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_STOP_MASK );
 
@@ -840,7 +822,7 @@ hal_ll_err_t hal_ll_sci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t 
         write_reg( &hal_ll_hw_reg->simr3, HAL_LL_SCI_SIMR3_RELEASE_MASK );
     }
 
-    return 0;
+    return slave_nack ? HAL_LL_SCI_I2C_ERROR : 0;
 }
 
 hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
@@ -851,6 +833,11 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
     uint16_t time_counter = map->timeout;
     uint8_t dummy_byte = HAL_LL_SCI_DUMMY_BYTE;
     uint8_t dummy_read = 0;
+    bool slave_nack = false;
+
+    // Nothing to read; the last-byte handling below needs at least one byte.
+    if ( 0 == len_read_data )
+        return HAL_LL_SCI_I2C_ERROR;
 
     if ( hal_ll_sci_is_rsci( map->base ) )
         return hal_ll_rsci_i2c_read_bare_metal( map, read_data_buf, len_read_data, mode );
@@ -892,7 +879,9 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
     }
 
     // Check if address has been acknowledged.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+    if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_SCI_SISR_IICACKR ) ) {
+        slave_nack = true;
+    } else {
         // Enable ACK transmission.
         clear_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICACKT );
 
@@ -979,7 +968,7 @@ hal_ll_err_t hal_ll_sci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *
 
     set_reg_bit( &hal_ll_hw_reg->simr2, HAL_LL_SCI_SIMR2_IICACKT );
 
-    return 0;
+    return slave_nack ? HAL_LL_SCI_I2C_ERROR : 0;
 }
 
 void hal_ll_sci_spi_write_bare_metal( hal_ll_sci_spi_hw_specifics_map_t *map,
@@ -1183,13 +1172,12 @@ void hal_ll_sci_uart_hw_init( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_FER );
     clear_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_SCI_SSR_PER );
 
-    hal_ll_sci_uart_set_transmitter( map->base, HAL_LL_SCI_ENABLE );
-
-    hal_ll_sci_uart_set_receiver( map->base, HAL_LL_SCI_ENABLE );
-
     hal_ll_sci_uart_set_module( map->base, HAL_LL_SCI_ENABLE );
 
-    set_reg_bits( &hal_ll_hw_reg->scr, irq_bits );
+    // Enable transmitter and receiver, restoring the interrupt enables in the same write:
+    // TE and TIE have to be set together for the TXI request to be generated.
+    write_reg( &hal_ll_hw_reg->scr, read_reg( &hal_ll_hw_reg->scr ) |
+                                    ( 1 << HAL_LL_SCI_SCR_TE ) | ( 1 << HAL_LL_SCI_SCR_RE ) | irq_bits );
 }
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
@@ -1243,7 +1231,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         uint32_t divisor = HAL_LL_SCI_BRR_COUNT_MAX;
         uint8_t cks;
 
-        // Bit rate = PCLK / ( 8 * 2^(2n-1) * ( N + 1 )) (Table 32.10); round the divisor up so the rate never exceeds the requested one.
+        // Bit rate = PCLK / ( 8 * 2^(2n-1) * ( N + 1 )); round the divisor up so the rate never exceeds the requested one.
         for ( cks = 0; cks < HAL_LL_SCI_CKS_COUNT; cks++ ) {
             uint32_t step = ( HAL_LL_SCI_SPI_STEP_BASE << ( 2 * cks )) * speed;
 
@@ -1268,7 +1256,7 @@ static void hal_ll_sci_calculate_speed( uint32_t base, uint32_t speed, hal_ll_sc
         return;
     }
 
-    // SCL period in cycles: 8 * ( N + 1 ) * 2^(2n-1) + 15 (Table 32.12).
+    // SCL period in cycles: 8 * ( N + 1 ) * 2^(2n-1) + 15.
     for ( uint8_t cks = 0; cks < HAL_LL_SCI_CKS_COUNT; cks++ ) {
         uint32_t step = HAL_LL_SCI_SCL_STEP_BASE << ( 2 * cks );
         uint32_t cycles = source_clock / speed;
@@ -1478,42 +1466,6 @@ static void hal_ll_sci_uart_set_module( uint32_t base, hal_ll_sci_state_t module
     }
 }
 
-static void hal_ll_sci_uart_set_transmitter( uint32_t base, hal_ll_sci_state_t module_state ) {
-    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
-
-    switch ( module_state )
-    {
-        case HAL_LL_SCI_DISABLE:
-            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-            break;
-
-        case HAL_LL_SCI_ENABLE:
-            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_TE );
-            break;
-
-        default:
-            break;
-    }
-}
-
-static void hal_ll_sci_uart_set_receiver( uint32_t base, hal_ll_sci_state_t module_state ) {
-    volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( base );
-
-    switch ( module_state )
-    {
-        case HAL_LL_SCI_DISABLE:
-            clear_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
-            break;
-
-        case HAL_LL_SCI_ENABLE:
-            set_reg_bit( &hal_ll_hw_reg->scr, HAL_LL_SCI_SCR_RE );
-            break;
-
-        default:
-            break;
-    }
-}
-
 static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
     volatile hal_ll_sci_base_handle_t *hal_ll_hw_reg = hal_ll_sci_get_base_struct( map->base );
     uint32_t source_clock = hal_ll_sci_get_source_clock( map->base );
@@ -1527,7 +1479,7 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
     uint8_t best_step = 0;
     uint32_t best_divisor = HAL_LL_SCI_BRR_COUNT_MAX;
 
-    // Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )) (Table 32.10).
+    // Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )).
     for ( uint8_t cks = 0; cks <= HAL_LL_SCI_SMR_CKS_MASK; cks++ ) {
         for ( uint8_t s = 0; s < HAL_LL_SCI_UART_STEP_COUNT; s++ ) {
             uint32_t step_clock = source_clock / (( uint32_t )step_base[ s ] << ( 2 * cks ));
@@ -1767,6 +1719,7 @@ static hal_ll_err_t hal_ll_rsci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specific
                                                       hal_ll_sci_i2c_end_mode_t mode ) {
     volatile hal_ll_rsci_base_handle_t *hal_ll_hw_reg = hal_ll_rsci_get_base_struct( map->base );
     volatile uint8_t dummy_read;
+    bool slave_nack = false;
 
     // Wait for all previous transmissions to be ended.
     if ( !hal_ll_rsci_wait_bit( &hal_ll_hw_reg->ssr, HAL_LL_RSCI_SSR_TEND, true, map->timeout ))
@@ -1786,8 +1739,10 @@ static hal_ll_err_t hal_ll_rsci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specific
     if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_RSCI_SSR_RDRF ))
         dummy_read = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
 
-    // Check for ACK signal.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_RSCI_SISR_IICACKR ) ) {
+    // Check for ACK signal; stop sending as soon as the slave rejects the address or a byte.
+    if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_RSCI_SISR_IICACKR ) ) {
+        slave_nack = true;
+    } else {
         for( size_t i = 0; i < len_write_data; i++ ) {
             write_reg( &hal_ll_hw_reg->tdr, HAL_LL_RSCI_TDR_RESERVED_MASK | write_data_buf[i] );
 
@@ -1796,16 +1751,22 @@ static hal_ll_err_t hal_ll_rsci_i2c_write_bare_metal( hal_ll_sci_i2c_hw_specific
 
             if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_RSCI_SSR_RDRF ))
                 dummy_read = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
+
+            if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_RSCI_SISR_IICACKR ) ) {
+                slave_nack = true;
+                break;
+            }
         }
     }
 
-    // If there is no need in RESTART condition - issue a STOP condition and release SSCL and SSDA pins.
-    if ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode ) {
+    // Issue a STOP condition and release SSCL and SSDA pins unless a RESTART follows;
+    // a NACK always ends the transfer.
+    if ( ( HAL_LL_SCI_I2C_WRITE_THEN_READ != mode ) || slave_nack ) {
         if ( !hal_ll_rsci_i2c_condition( map, HAL_LL_RSCI_SIMR_STOP_MASK, HAL_LL_RSCI_SIMR_RELEASE_MASK ))
             return HAL_LL_SCI_I2C_TIMEOUT_STOP;
     }
 
-    return 0;
+    return slave_nack ? HAL_LL_SCI_I2C_ERROR : 0;
 }
 
 static hal_ll_err_t hal_ll_rsci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics_map_t *map,
@@ -1815,6 +1776,7 @@ static hal_ll_err_t hal_ll_rsci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics
     volatile hal_ll_rsci_base_handle_t *hal_ll_hw_reg = hal_ll_rsci_get_base_struct( map->base );
     volatile uint8_t dummy_read;
     uint32_t condition_mask;
+    bool slave_nack = false;
 
     if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_RSCI_SSR_RDRF ))
         dummy_read = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
@@ -1834,7 +1796,9 @@ static hal_ll_err_t hal_ll_rsci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics
         return HAL_LL_SCI_I2C_TIMEOUT_READ;
 
     // Check if address has been acknowledged.
-    if ( !check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_RSCI_SISR_IICACKR ) ) {
+    if ( check_reg_bit( &hal_ll_hw_reg->sisr, HAL_LL_RSCI_SISR_IICACKR ) ) {
+        slave_nack = true;
+    } else {
         // Discard the address byte shifted into the receive buffer.
         if( check_reg_bit( &hal_ll_hw_reg->ssr, HAL_LL_RSCI_SSR_RDRF ))
             dummy_read = ( uint8_t )read_reg( &hal_ll_hw_reg->rdr );
@@ -1870,7 +1834,7 @@ static hal_ll_err_t hal_ll_rsci_i2c_read_bare_metal( hal_ll_sci_i2c_hw_specifics
     // Default back to NACK transmission and ACK/NACK reception.
     set_reg_bit( &hal_ll_hw_reg->simr, HAL_LL_RSCI_SIMR_IICACKT );
 
-    return 0;
+    return slave_nack ? HAL_LL_SCI_I2C_ERROR : 0;
 }
 
 static void hal_ll_rsci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_map_t *map ) {
@@ -1915,7 +1879,7 @@ static void hal_ll_rsci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_m
 
     // Requested baud rate is below the minimum achievable with BRR alone (e.g. below ~7.3k on RSCI8/RSCI9 at
     // 60MHz, where CKS is fixed to PCLK/1) -- use the slowest setting and slow it further down with bit rate modulation:
-    // B = PCLK / ( F/2 * 4^n * ( N + 1 )) * M / 256, 128 <= M <= 255 (Table 33.24).
+    // B = PCLK / ( F/2 * 4^n * ( N + 1 )) * M / 256, 128 <= M <= 255.
     if ( 0xFFFFFFFFUL == best_error ) {
         uint32_t slowest_speed = ( source_clock /
                                  (( uint32_t )step_base[ best_step ] << ( 2 * best_cks ))) / best_divisor;

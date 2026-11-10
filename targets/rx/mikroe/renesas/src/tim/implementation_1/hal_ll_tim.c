@@ -72,10 +72,6 @@ static volatile hal_ll_tim_handle_register_t hal_ll_module_state[ TIM_MODULE_COU
 #define HAL_LL_TIM_GTIOR_OAE (8)
 #define HAL_LL_TIM_GTIOR_OBE (24)
 
-
-// TODO: MSTPCRA bit for GPTW is not in the uploaded chapter, confirm against section 11.
-#define HAL_LL_TIM_MSTPCRA_GPTW_POS (7)
-
 #define HAL_LL_TIM_PRCR_ADDR (0x000803FEUL)
 #define HAL_LL_TIM_PRCR_UNLOCK_VAL (0xA502U)
 #define HAL_LL_TIM_PRCR_LOCK_VAL (0xA500U)
@@ -374,7 +370,10 @@ uint32_t hal_ll_tim_set_freq( handle_t *handle, uint32_t freq_hz ) {
 hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     hal_ll_tim_hw_specifics_map_local = hal_ll_get_specifics( hal_ll_tim_get_module_state_address );
     hal_ll_tim_base_handle_t *hal_ll_hw_reg = hal_ll_tim_get_base_struct( hal_ll_tim_hw_specifics_map_local->base );
+    // Compare register and its single buffer: GTCCRA is buffered by GTCCRC, GTCCRB by GTCCRE.
+    // Register order is A, B, C, E, D, F, so the buffer always sits two slots after its compare register.
     uint8_t ccr_index = ( HAL_LL_TIM_PIN_A == hal_ll_tim_hw_specifics_map_local->config.pin_type ) ? 0 : 1;
+    uint8_t ccr_buffer_index = ccr_index + 2;
     uint32_t compare = 0;
 
     if ( 0.0f < duty_ratio ) {
@@ -386,10 +385,10 @@ hal_ll_err_t hal_ll_tim_set_duty( handle_t *handle, float duty_ratio ) {
     }
 
     if ( check_reg_bit( &hal_ll_hw_reg->gtcr, HAL_LL_TIM_GTCR_CST ) ) {
-        write_reg( &hal_ll_hw_reg->gtccr[ ccr_index + 2 ], compare );
+        write_reg( &hal_ll_hw_reg->gtccr[ ccr_buffer_index ], compare );
     } else {
         write_reg( &hal_ll_hw_reg->gtccr[ ccr_index ], compare );
-        write_reg( &hal_ll_hw_reg->gtccr[ ccr_index + 2 ], compare );
+        write_reg( &hal_ll_hw_reg->gtccr[ ccr_buffer_index ], compare );
     }
 
     return HAL_LL_TIM_SUCCESS;
