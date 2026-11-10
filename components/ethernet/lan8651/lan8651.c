@@ -89,6 +89,7 @@ static void     lan8651_modify_reg( eth_transport_t *eth, uint8_t mms, uint16_t 
 static int8_t   lan8651_indirect_read( eth_transport_t *eth, uint16_t addr );
 static void     lan8651_apply_config_fixups( eth_transport_t *eth );
 static void     lan8651_clear_status( eth_transport_t *eth );
+static void     lan8651_write_mac( eth_transport_t *eth, uint8_t *mac );
 static uint8_t  lan8651_wait_reset_complete( eth_transport_t *eth );
 static void     lan8651_hw_reset( eth_transport_t *eth );
 static uint8_t  lan8651_rx_append( lan8651_ctx_t *ctx, uint8_t *data_buf, uint16_t len );
@@ -159,8 +160,10 @@ static uint8_t lan8651_ctrl( eth_transport_t *eth, uint8_t write, uint8_t mms, u
         return 0;                       // bus error or bus without full duplex support
 
     // Reply is delayed by one word: [ ignored ][ echoed header ][ register value ]
-    if ( lan8651_get_be32( &rx_buf[ 4 ] ) != header )
+    if ( lan8651_get_be32( &rx_buf[ 4 ] ) != header ) {
+        eth->bus_error = 1;             // MAC-PHY did not accept the transaction
         return 0;
+    }
     if ( !write )
         *val = lan8651_get_be32( &rx_buf[ 8 ] );
     return 1;
@@ -177,7 +180,11 @@ static void lan8651_write_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr,
 }
 
 static void lan8651_modify_reg( eth_transport_t *eth, uint8_t mms, uint16_t addr, uint32_t mask, uint32_t val ) {
-    uint32_t reg = lan8651_read_reg( eth, mms, addr );
+    uint32_t reg = 0;
+
+    // Never write back a value derived from a failed read
+    if ( !lan8651_ctrl( eth, 0, mms, addr, &reg ) )
+        return;
     lan8651_write_reg( eth, mms, addr, ( reg & ~mask ) | ( val & mask ) );
 }
 
@@ -266,14 +273,20 @@ err_t lan8651_init( eth_transport_t *eth ) {
     ctx->rx_len = 0;
     ctx->rx_in_progress = 0;
     ctx->rx_ready = 0;
+    eth->bus_error = 0;
 
     lan8651_hw_reset( eth );
-    lan8651_wait_reset_complete( eth );
+    if ( !lan8651_wait_reset_complete( eth ) )
+        return ETH_TRANSPORT_ERROR;             // No MAC-PHY responding
 
     lan8651_write_reg( eth, LAN8651_MMS_OA, LAN8651_OA_RESET, LAN8651_OA_RESET_SWRESET );
-    lan8651_wait_reset_complete( eth );
+    if ( !lan8651_wait_reset_complete( eth ) )
+        return ETH_TRANSPORT_ERROR;
+    eth->bus_error = 0;                         // Polling during the reset may fail, the reset completed
 
     ctx->phy_id = lan8651_read_reg( eth, LAN8651_MMS_OA, LAN8651_OA_PHYID );
+    if ( eth->bus_error || !ctx->phy_id || ctx->phy_id == 0xFFFFFFFFUL )
+        return ETH_TRANSPORT_ERROR;
 
     lan8651_apply_config_fixups( eth );
 
@@ -292,7 +305,7 @@ err_t lan8651_init( eth_transport_t *eth ) {
         lan8651_modify_reg( eth, LAN8651_MMS_PHY_VS_PLCA, LAN8651_VS_CDCTL0, LAN8651_VS_CDCTL0_CDEN, 0 );
     }
 
-    lan8651_set_mac( eth, eth->mac );
+    lan8651_write_mac( eth, eth->mac );
 
     lan8651_modify_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_NCR,
                         LAN8651_MAC_NCR_TXEN | LAN8651_MAC_NCR_RXEN,
@@ -308,7 +321,8 @@ err_t lan8651_init( eth_transport_t *eth ) {
     ctx->rx_chunks  = ( uint8_t )( bufsts & 0xFF );
 
     // IRQ_N stays asserted after reset until the first data chunk is exchanged
-    ( void )lan8651_data_chunk( eth, NULL, 0, 0, 0 );
+    if ( !lan8651_data_chunk( eth, NULL, 0, 0, 0 ) || eth->bus_error )
+        return ETH_TRANSPORT_ERROR;
 
     return ETH_TRANSPORT_SUCCESS;
 }
@@ -445,6 +459,7 @@ uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
 
 uint8_t lan8651_packet_available( eth_transport_t *eth ) {
     lan8651_ctx_t *ctx;
+    uint32_t bufsts = 0;
 
     if ( !eth ) return 0;
     ctx = LAN8651_CTX( eth );
@@ -452,7 +467,10 @@ uint8_t lan8651_packet_available( eth_transport_t *eth ) {
     if ( ctx->rx_ready )
         return 1;
 
-    ctx->rx_chunks = ( uint8_t )( lan8651_read_reg( eth, LAN8651_MMS_OA, LAN8651_OA_BUFSTS ) & 0xFF );
+    eth->bus_error = 0;
+    if ( !lan8651_ctrl( eth, 0, LAN8651_MMS_OA, LAN8651_OA_BUFSTS, &bufsts ) )
+        return 0;
+    ctx->rx_chunks = ( uint8_t )( bufsts & 0xFF );
     return ( ctx->rx_chunks > 0 ) ? 1 : 0;
 }
 
@@ -509,14 +527,19 @@ uint32_t lan8651_get_phy_id( eth_transport_t *eth ) {
 }
 
 // Addressing
-err_t lan8651_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+static void lan8651_write_mac( eth_transport_t *eth, uint8_t *mac ) {
     // Bottom half first: writing it disables the filter until the top half is written
     lan8651_write_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_SAB1,
                        ( uint32_t )mac[ 0 ] | ( ( uint32_t )mac[ 1 ] << 8 ) |
                        ( ( uint32_t )mac[ 2 ] << 16 ) | ( ( uint32_t )mac[ 3 ] << 24 ) );
     lan8651_write_reg( eth, LAN8651_MMS_MAC, LAN8651_MAC_SAT1,
                        ( uint32_t )mac[ 4 ] | ( ( uint32_t )mac[ 5 ] << 8 ) );
-    return ETH_TRANSPORT_SUCCESS;
+}
+
+err_t lan8651_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+    eth->bus_error = 0;
+    lan8651_write_mac( eth, mac );
+    return eth->bus_error ? ETH_TRANSPORT_ERROR : ETH_TRANSPORT_SUCCESS;
 }
 
 // Config / setup

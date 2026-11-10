@@ -122,7 +122,9 @@ err_t    lan8651_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan8651_cf
  * configuration fixups, configures PLCA/CSMA-CD, programs the MAC address
  * and enables the MAC transmitter and receiver.
  * @param[in] eth Ethernet transport instance.
- * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR if the reset
+ * does not complete, the PHY ID is not valid (no chip responding) or a bus
+ * transaction fails.
  * @pre lan8651_configure() must have been called beforehand.
  */
 err_t    lan8651_init( eth_transport_t *eth );
@@ -180,7 +182,7 @@ uint32_t lan8651_get_phy_id( eth_transport_t *eth );
  * @brief Program the MAC address filter (SAB1/SAT1).
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    lan8651_set_mac( eth_transport_t *eth, uint8_t *mac );
 

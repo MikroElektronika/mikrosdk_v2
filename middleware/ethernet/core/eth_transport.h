@@ -149,6 +149,10 @@ struct eth_transport {
 
     void *driver_ctx;           // Controller driver state (e.g. enc28j60_ctx_t), one per device
     eth_transport_driver_t *drv;
+
+    uint8_t bus_error;          // Sticky, set by eth_transport_bus_*() on a failed transaction or by
+                                // the driver when the controller does not respond, cleared by the
+                                // driver at the start of each operation
 };
 
 /**
@@ -199,6 +203,7 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
  * @param[in] data_buf Bytes sent after the header, NULL if none.
  * @param[in] data_len Number of data bytes.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached.
+ * @note A failed transaction sets @p eth->bus_error.
  */
 err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                                uint8_t *data_buf, uint16_t data_len );
@@ -211,6 +216,7 @@ err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_
  * @param[out] data_buf Buffer receiving the reply.
  * @param[in] data_len Number of bytes to read.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached.
+ * @note A failed transaction sets @p eth->bus_error.
  */
 err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                               uint8_t *data_buf, uint16_t data_len );
@@ -223,6 +229,7 @@ err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_l
  * @param[in] len Number of bytes.
  * @return Bus result, ETH_TRANSPORT_ERROR if no bus is attached or the bus
  * does not support full duplex transfers.
+ * @note A failed transaction sets @p eth->bus_error.
  */
 err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len );
 

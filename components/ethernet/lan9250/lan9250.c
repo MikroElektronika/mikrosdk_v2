@@ -66,6 +66,9 @@ static void     lan9250_read_fifo( eth_transport_t *eth, uint16_t addr, uint8_t 
 static void     lan9250_hw_reset( eth_transport_t *eth );
 static uint8_t  lan9250_wait_ready( eth_transport_t *eth );
 static void     lan9250_drop_packet( eth_transport_t *eth, uint16_t length );
+static void     lan9250_write_mac( eth_transport_t *eth, uint8_t *mac );
+static void     lan9250_rx_flush( eth_transport_t *eth );
+static void     lan9250_tx_flush( eth_transport_t *eth );
 
 eth_transport_driver_t lan9250_driver = {
     .init            = lan9250_init,
@@ -121,8 +124,12 @@ static void lan9250_write_mac_reg( eth_transport_t *eth, uint8_t addr, uint32_t 
     lan9250_write_sys_reg( eth, LAN9250_MAC_CSR_CMD, cmd );
 
     while ( lan9250_read_sys_reg( eth, LAN9250_MAC_CSR_CMD ) & LAN9250_MAC_CSR_CMD_BUSY ) {
+        if ( eth->bus_error ) break;
+        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) {
+            eth->bus_error = 1;                 // Controller not responding
+            break;
+        }
         Delay_ms( 1 );
-        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
     }
 }
 
@@ -135,8 +142,12 @@ static uint32_t lan9250_read_mac_reg( eth_transport_t *eth, uint8_t addr ) {
     lan9250_write_sys_reg( eth, LAN9250_MAC_CSR_CMD, cmd );
 
     while ( lan9250_read_sys_reg( eth, LAN9250_MAC_CSR_CMD ) & LAN9250_MAC_CSR_CMD_BUSY ) {
+        if ( eth->bus_error ) break;
+        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) {
+            eth->bus_error = 1;                 // Controller not responding
+            break;
+        }
         Delay_ms( 1 );
-        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
     }
 
     return lan9250_read_sys_reg( eth, LAN9250_MAC_CSR_DATA );
@@ -152,8 +163,12 @@ static uint16_t lan9250_read_phy_reg( eth_transport_t *eth, uint8_t addr ) {
     lan9250_write_mac_reg( eth, LAN9250_HMAC_MII_ACC, acc );
 
     while ( lan9250_read_mac_reg( eth, LAN9250_HMAC_MII_ACC ) & LAN9250_HMAC_MII_ACC_MIIBZY ) {
+        if ( eth->bus_error ) break;
+        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) {
+            eth->bus_error = 1;                 // Controller not responding
+            break;
+        }
         Delay_ms( 1 );
-        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
     }
 
     return ( uint16_t )( lan9250_read_mac_reg( eth, LAN9250_HMAC_MII_DATA ) & 0xFFFF );
@@ -198,14 +213,14 @@ static uint8_t lan9250_wait_ready( eth_transport_t *eth ) {
     uint16_t tries = 0;
 
     while ( lan9250_read_sys_reg( eth, LAN9250_BYTE_TEST ) != LAN9250_BYTE_TEST_DEFAULT ) {
+        if ( eth->bus_error || ++tries > LAN9250_WAIT_TIMEOUT_MS ) return 0;
         Delay_ms( 1 );
-        if ( ++tries > LAN9250_WAIT_TIMEOUT_MS ) return 0;
     }
 
     tries = 0;
     while ( !( lan9250_read_sys_reg( eth, LAN9250_HW_CFG ) & LAN9250_HW_CFG_DEVICE_READY ) ) {
+        if ( eth->bus_error || ++tries > LAN9250_WAIT_TIMEOUT_MS ) return 0;
         Delay_ms( 1 );
-        if ( ++tries > LAN9250_WAIT_TIMEOUT_MS ) return 0;
     }
 
     return 1;
@@ -217,17 +232,22 @@ err_t lan9250_init( eth_transport_t *eth ) {
 
     if ( !eth || !eth->driver_ctx ) return ETH_TRANSPORT_ERROR;
 
+    eth->bus_error = 0;
     lan9250_hw_reset( eth );
 
     // Wait for the SPI interface to become functional
-    lan9250_wait_ready( eth );
+    if ( !lan9250_wait_ready( eth ) )
+        return ETH_TRANSPORT_ERROR;
 
     // Perform a digital (multi-module) reset, then wait again
     lan9250_write_sys_reg( eth, LAN9250_RESET_CTL, LAN9250_RESET_CTL_DIGITAL_RST );
-    lan9250_wait_ready( eth );
+    if ( !lan9250_wait_ready( eth ) )
+        return ETH_TRANSPORT_ERROR;
 
-    // Read chip ID / revision for diagnostics (expected 0x9250xxxx)
+    // Read chip ID / revision (expected 0x9250xxxx)
     LAN9250_CTX( eth )->id_rev = lan9250_read_sys_reg( eth, LAN9250_ID_REV );
+    if ( ( LAN9250_CTX( eth )->id_rev & LAN9250_ID_REV_CHIP_ID_MASK ) != LAN9250_ID_REV_CHIP_ID_LAN9250 )
+        return ETH_TRANSPORT_ERROR;
 
     // Configure TX FIFO size (mandatory MBO bit set)
     lan9250_write_sys_reg( eth, LAN9250_HW_CFG, LAN9250_HW_CFG_MBO | LAN9250_HW_CFG_TX_FIF_SZ_5KB );
@@ -236,7 +256,7 @@ err_t lan9250_init( eth_transport_t *eth ) {
     lan9250_write_sys_reg( eth, LAN9250_TX_CFG, LAN9250_TX_CFG_TXSAO );
 
     // Program the MAC address into the hardware filter
-    lan9250_set_mac( eth, eth->mac );
+    lan9250_write_mac( eth, eth->mac );
 
     // Configure the host MAC (duplex mode)
     hmac_cr = eth->full_duplex ? LAN9250_HMAC_CR_FDPX : 0;
@@ -252,7 +272,30 @@ err_t lan9250_init( eth_transport_t *eth ) {
     hmac_cr |= LAN9250_HMAC_CR_TXEN | LAN9250_HMAC_CR_RXEN;
     lan9250_write_mac_reg( eth, LAN9250_HMAC_CR, hmac_cr );
 
-    return ETH_TRANSPORT_SUCCESS;
+    return eth->bus_error ? ETH_TRANSPORT_ERROR : ETH_TRANSPORT_SUCCESS;
+}
+
+// Recovery after a failed FIFO access: the FIFO position is unknown, discard its contents
+static void lan9250_rx_flush( eth_transport_t *eth ) {
+    uint16_t tries = 0;
+
+    lan9250_write_sys_reg( eth, LAN9250_RX_CFG,
+                           lan9250_read_sys_reg( eth, LAN9250_RX_CFG ) | LAN9250_RX_CFG_RX_DUMP );
+    while ( lan9250_read_sys_reg( eth, LAN9250_RX_CFG ) & LAN9250_RX_CFG_RX_DUMP ) {
+        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
+        Delay_ms( 1 );
+    }
+}
+
+static void lan9250_tx_flush( eth_transport_t *eth ) {
+    uint16_t tries = 0;
+
+    lan9250_write_sys_reg( eth, LAN9250_TX_CFG,
+                           lan9250_read_sys_reg( eth, LAN9250_TX_CFG ) | LAN9250_TX_CFG_TXD_DUMP );
+    while ( lan9250_read_sys_reg( eth, LAN9250_TX_CFG ) & LAN9250_TX_CFG_TXD_DUMP ) {
+        if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
+        Delay_ms( 1 );
+    }
 }
 
 // Data transfer
@@ -262,9 +305,10 @@ uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
     uint32_t cmd_b;
 
     if ( len > LAN9250_FRAME_SIZE ) return 0;
+    eth->bus_error = 0;
 
     free_space = lan9250_read_sys_reg( eth, LAN9250_TX_FIFO_INF ) & LAN9250_TX_FIFO_INF_TXFREE;
-    if ( free_space < ( uint32_t )( len + LAN9250_TX_CMD_SIZE ) )
+    if ( eth->bus_error || free_space < ( uint32_t )( len + LAN9250_TX_CMD_SIZE ) )
         return 0;
 
     cmd_a = LAN9250_TX_CMD_A_BUFFER_ALIGN_4B | LAN9250_TX_CMD_A_START_OFFSET_0B |
@@ -276,6 +320,12 @@ uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
 
     lan9250_write_fifo( eth, LAN9250_TX_DATA_FIFO, buf, len );
 
+    // A partly written frame would corrupt the TX FIFO for every following frame
+    if ( eth->bus_error ) {
+        lan9250_tx_flush( eth );
+        return 0;
+    }
+
     return len;
 }
 
@@ -283,8 +333,10 @@ uint8_t lan9250_packet_available( eth_transport_t *eth ) {
     uint32_t rxsused;
 
     if ( !eth ) return 0;
+    eth->bus_error = 0;
 
     rxsused = ( lan9250_read_sys_reg( eth, LAN9250_RX_FIFO_INF ) & LAN9250_RX_FIFO_INF_RXSUSED ) >> 16;
+    if ( eth->bus_error ) return 0;
     return ( uint8_t )( ( rxsused > 0xFF ) ? 0xFF : rxsused );
 }
 
@@ -295,8 +347,11 @@ static void lan9250_drop_packet( eth_transport_t *eth, uint16_t length ) {
     if ( length >= 16 ) {
         lan9250_write_sys_reg( eth, LAN9250_RX_DP_CTRL, LAN9250_RX_DP_CTRL_RX_FFWD );
         while ( lan9250_read_sys_reg( eth, LAN9250_RX_DP_CTRL ) & LAN9250_RX_DP_CTRL_RX_FFWD ) {
+            if ( eth->bus_error || ++tries > LAN9250_BUSY_TIMEOUT_MS ) {
+                lan9250_rx_flush( eth );
+                break;
+            }
             Delay_ms( 1 );
-            if ( ++tries > LAN9250_BUSY_TIMEOUT_MS ) break;
         }
     }
     else {
@@ -312,7 +367,12 @@ uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_l
 
     if ( !lan9250_packet_available( eth ) ) return 0;
 
+    // Reading the status pops it, after a failed read the status/data FIFO pairing is lost
     status = lan9250_read_sys_reg( eth, LAN9250_RX_STATUS_FIFO );
+    if ( eth->bus_error ) {
+        lan9250_rx_flush( eth );
+        return 0;
+    }
     length = ( uint16_t )( ( status & LAN9250_RX_STS_PACKET_LEN ) >> 16 );
 
     if ( status & LAN9250_RX_STS_ERROR_STATUS ) {
@@ -330,6 +390,10 @@ uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t max_l
     copy_len = ( uint16_t )( length - LAN9250_FCS_SIZE );
     if ( copy_len > max_len ) copy_len = max_len;
     lan9250_read_fifo( eth, LAN9250_RX_DATA_FIFO, buf, copy_len, length );
+    if ( eth->bus_error ) {
+        lan9250_rx_flush( eth );
+        return 0;
+    }
 
     return copy_len;
 }
@@ -357,7 +421,7 @@ uint32_t lan9250_get_id_rev( eth_transport_t *eth ) {
 }
 
 // Addressing
-err_t lan9250_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+static void lan9250_write_mac( eth_transport_t *eth, uint8_t *mac ) {
     uint32_t addrl;
     uint32_t addrh;
 
@@ -367,8 +431,12 @@ err_t lan9250_set_mac( eth_transport_t *eth, uint8_t *mac ) {
 
     lan9250_write_mac_reg( eth, LAN9250_HMAC_ADDRL, addrl );
     lan9250_write_mac_reg( eth, LAN9250_HMAC_ADDRH, addrh );
+}
 
-    return ETH_TRANSPORT_SUCCESS;
+err_t lan9250_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+    eth->bus_error = 0;
+    lan9250_write_mac( eth, mac );
+    return eth->bus_error ? ETH_TRANSPORT_ERROR : ETH_TRANSPORT_SUCCESS;
 }
 
 // Config / setup

@@ -61,8 +61,11 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
 
     eth->bus = bus;
     eth->bus_ops = bus_ops;
+    eth->bus_error = 0;
 
-    digital_out_init( &eth->reset, cfg->rst );
+    // Reset pin is optional, only a connected pin has to initialize
+    if ( digital_out_init( &eth->reset, cfg->rst ) != DIGITAL_OUT_SUCCESS && cfg->rst != HAL_PIN_NC )
+        return ETH_TRANSPORT_ERROR;
 
     memcpy( eth->mac, cfg->mac, 6 );
     memcpy( eth->ip, cfg->ip, 4 );
@@ -74,19 +77,37 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
 /* --- Bus access (used by controller drivers) --- */
 err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                                uint8_t *data_buf, uint16_t data_len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->write ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->write( eth->bus, hdr, hdr_len, data_buf, data_len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->write ) ?
+          eth->bus_ops->write( eth->bus, hdr, hdr_len, data_buf, data_len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                               uint8_t *data_buf, uint16_t data_len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->read ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->read( eth->bus, hdr, hdr_len, data_buf, data_len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->read ) ?
+          eth->bus_ops->read( eth->bus, hdr, hdr_len, data_buf, data_len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->transfer ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->transfer( eth->bus, tx_buf, rx_buf, len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->transfer ) ?
+          eth->bus_ops->transfer( eth->bus, tx_buf, rx_buf, len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 /* --- Initialization --- */
