@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_EK_RX74N",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R5K574NCB4AE"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

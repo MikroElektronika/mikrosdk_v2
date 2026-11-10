@@ -1,0 +1,22 @@
+{
+    "board_uid": "RX72M_STARTER_KIT_PLUS",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R5F572MNDDBD"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

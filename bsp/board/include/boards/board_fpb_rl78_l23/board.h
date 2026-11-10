@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2026 MikroElektronika d.o.o.
+** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
 **
 ** This file is part of the mikroSDK package
@@ -55,7 +55,6 @@ extern "C"
 #include "shield.h"
 
 // Mapping
-#define ARDUINO_CONNECTOR_A0        GPIO_P027
 #define ARDUINO_CONNECTOR_A1        GPIO_P026
 #define ARDUINO_CONNECTOR_A2        GPIO_P025
 #define ARDUINO_CONNECTOR_A3        GPIO_P024
@@ -184,10 +183,6 @@ extern "C"
 
 #define LED1       GPIO_P064
 #define LED2       GPIO_P065
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif    // _BOARD_H_
 // ------------------------------------------------------------------------- END

@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FPB_RL78_L23",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R7F100LPL"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
