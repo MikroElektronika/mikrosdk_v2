@@ -9,6 +9,7 @@ mikrosdk_add_library(lib_drv_digital_out MikroSDK.Driver.GPIO.Out
 
 target_link_libraries(lib_drv_digital_out PUBLIC
     MikroC.Core
+    MikroSDK.Driver.Trace
     MikroSDK.Hal.GPIO
 )
 

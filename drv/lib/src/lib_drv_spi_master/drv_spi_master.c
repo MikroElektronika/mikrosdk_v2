@@ -47,27 +47,6 @@
 static spi_master_t *_owner = NULL;
 
 #if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK uint32_t drv_trace_now( void )
-{
-    return 0;
-}
-
-DRV_TRACE_WEAK void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
-                                   const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
-{
-}
-
-DRV_TRACE_WEAK void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
-{
-}
-
-DRV_TRACE_WEAK void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
-{
-}
-
 // Defined by the HAL in both driver modes.
 extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;
 

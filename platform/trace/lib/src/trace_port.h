@@ -53,9 +53,10 @@
  * The counter is read as 32 bits and may wrap; the automatic flush keeps the wrap visible to
  * the debugger as long as the flush interval is shorter than the wrap period.
  *
- * Ported: Cortex-M (ARM), RISC-V, PIC32 (MIPS32). Not yet: dsPIC/PIC24 (XC16), PIC 8-bit
- * (XC8), see the stubs at the end. platform/CMakeLists.txt builds the trace only for the ported
- * architectures.
+ * Ported: Cortex-M (ARM), RISC-V, PIC32 (MIPS32) with GCC, Clang and XC32; Cortex-M and PIC32
+ * with mikroC, which has its own assembler syntax and none of the GCC attributes. Not yet:
+ * dsPIC/PIC24 (XC16), PIC 8-bit (XC8), see the stubs at the end. platform/CMakeLists.txt
+ * builds the trace only for the ported architectures.
  */
 
 #ifndef _TRACE_PORT_H_
@@ -63,7 +64,14 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
+// The core header of ARM and RISC-V holds only defines (FOSC_KHZ_VALUE). The one of PIC32
+// (and of dsPIC and PIC 8-bit) also holds the #pragma config of the device, which belongs to
+// preinit.c alone: included here as well, the configuration words are defined twice and the
+// link fails.
+#if defined(__arm__) || defined(__thumb__) || defined(__riscv)
 #include "core_header.h"
+#endif
 
 // Core clock in Hz, 0 when the setup does not give it. ARM and RISC-V core headers define
 // FOSC_KHZ_VALUE; the PIC32 core library defines OSC_KHZ on the command line.
@@ -75,8 +83,140 @@
 #define TRACE_PORT_FOSC_HZ ( 0UL )
 #endif
 
+// ======================================================================== mikroC: Cortex-M
+#if defined(__MIKROC_AI_FOR_ARM__)
+
+// The core clock, set by the system library at startup: the rate of the DWT cycle counter.
+unsigned long Get_Fosc_kHz( void );
+
+// mikroC's assembler names special registers by number only (16: PRIMASK) and reaches C
+// variables only when they are global, so the state goes through this one. The functions are
+// not inline: the compiler does not know which registers the assembly uses.
+volatile uint32_t trace_port_primask;
+
+static uint32_t trace_port_lock( void )
+{
+    asm {
+        MRS     R0, #16
+        CPSID   I
+        MOVW    R1, #lo_addr(_trace_port_primask+0)
+        MOVT    R1, #hi_addr(_trace_port_primask+0)
+        STR     R0, [R1, #0]
+    }
+    // Read with the interrupts masked: no other lock can change it now.
+    return trace_port_primask;
+}
+
+static void trace_port_unlock( uint32_t primask )
+{
+    trace_port_primask = primask;
+    asm {
+        MOVW    R1, #lo_addr(_trace_port_primask+0)
+        MOVT    R1, #hi_addr(_trace_port_primask+0)
+        LDR     R0, [R1, #0]
+        MSR     #16, R0
+    }
+}
+
+// DWT cycle counter: Cortex-M3 and newer (core defines of MikroSDK.HalLowLevelCore). Cortex-M0
+// has none, and its debug registers fault when written.
+#if defined(__cortex_m3__) || defined(__cortex_m4__) || defined(__cortex_m7__) || defined(__cortex_m33__)
+#define TRACE_PORT_HAS_COUNTER 1
+#define TRACE_PORT_COUNTER_HZ ( (uint32_t)Get_Fosc_kHz() * 1000UL )
+
+#define TRACE_DEMCR (*(volatile uint32_t *)0xE000EDFCUL)
+#define TRACE_DEMCR_TRCENA (1UL << 24)
+#define TRACE_DWT_CTRL (*(volatile uint32_t *)0xE0001000UL)
+#define TRACE_DWT_CTRL_CYCCNTENA (1UL << 0)
+#define TRACE_DWT_CYCCNT (*(volatile uint32_t *)0xE0001004UL)
+#define TRACE_DWT_LAR (*(volatile uint32_t *)0xE0001FB0UL)
+#define TRACE_DWT_LAR_KEY (0xC5ACCE55UL)
+
+static uint32_t trace_port_counter( void )
+{
+    return TRACE_DWT_CYCCNT;
+}
+
+static bool trace_port_counter_start( void )
+{
+    uint32_t first;
+    TRACE_DEMCR |= TRACE_DEMCR_TRCENA;
+    #ifdef __cortex_m7__
+    TRACE_DWT_LAR = TRACE_DWT_LAR_KEY;
+    #endif
+    TRACE_DWT_CYCCNT = 0;
+    TRACE_DWT_CTRL |= TRACE_DWT_CTRL_CYCCNTENA;
+
+    first = TRACE_DWT_CYCCNT;
+    asm {
+        NOP
+        NOP
+        NOP
+        NOP
+    }
+    return TRACE_DWT_CYCCNT != first;
+}
+#else
+#define TRACE_PORT_HAS_COUNTER 0
+#endif
+
+// ======================================================================== mikroC: PIC32
+#elif defined(__MIKROC_AI_FOR_PIC32__)
+
+// The system clock: CP0 Count runs at half of it.
+unsigned long Get_Fosc_kHz( void );
+
+// CP0_GET is a compiler built-in. It takes the name of a constant and looks up <name>_SELECT
+// next to it; given a plain number, the compiler stops without a message.
+static const unsigned long TRACE_CP0_COUNT = 9;
+static const unsigned long TRACE_CP0_COUNT_SELECT = 0;
+static const unsigned long TRACE_CP0_STATUS = 12;
+static const unsigned long TRACE_CP0_STATUS_SELECT = 0;
+#define TRACE_STATUS_IE (1UL)
+
+static uint32_t trace_port_lock( void )
+{
+    uint32_t status = CP0_GET( TRACE_CP0_STATUS );
+    asm {
+        DI
+        EHB
+    }
+    return status;
+}
+
+static void trace_port_unlock( uint32_t status )
+{
+    if ( status & TRACE_STATUS_IE )
+    {
+        asm {
+            EI
+            EHB
+        }
+    }
+}
+
+#define TRACE_PORT_HAS_COUNTER 1
+#define TRACE_PORT_COUNTER_HZ ( (uint32_t)Get_Fosc_kHz() * 500UL )
+
+static uint32_t trace_port_counter( void )
+{
+    return CP0_GET( TRACE_CP0_COUNT );
+}
+
+static bool trace_port_counter_start( void )
+{
+    uint32_t first = trace_port_counter();
+    asm {
+        NOP
+        NOP
+        NOP
+        NOP
+    }
+    return trace_port_counter() != first;
+}
+
 // ======================================================================== ARM Cortex-M
-#if defined(__arm__) || defined(__thumb__)
+#elif defined(__arm__) || defined(__thumb__)
 
 static inline uint32_t trace_port_lock( void )
 {

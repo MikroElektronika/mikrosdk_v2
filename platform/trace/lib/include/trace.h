@@ -103,7 +103,18 @@ extern "C"{
  */
 #define TRACE_BUFFER( size ) \
     volatile uint8_t __traceBuffer[ size ]; \
-    const volatile uint16_t __traceBufferSize = ( size )
+    TRACE_BUFFER_SIZE_TYPE __traceBufferSize = ( size )
+
+/**
+ * @brief Type of the buffer size the debugger reads.
+ * @details Constant where the toolchain allows: mikroC would replace a constant by its value
+ * when it compiles the library, before TRACE_BUFFER can replace it.
+ */
+#if defined(__MIKROC_AI__)
+#define TRACE_BUFFER_SIZE_TYPE volatile uint16_t
+#else
+#define TRACE_BUFFER_SIZE_TYPE const volatile uint16_t
+#endif
 
 /**
  * @brief Default automatic flush interval, in milliseconds of program time.

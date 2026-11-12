@@ -35,7 +35,8 @@
     + Fast GPIO writes (a display strobe, a bit-banged bus) and fast bus transfers (a display filled pixel by pixel over SPI) are coalesced into bursts, so they do not stop the program over and over.
     + Time base: the core cycle counter (DWT CYCCNT on Cortex-M3 and newer, `mcycle` on RISC-V, CP0 Count on PIC32); Cortex-M0/M0+ keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
     + Added trace hooks to the GPIO Out, GPIO In, I2C Master, SPI Master, UART, ADC and 1-Wire drivers (`drv_trace.h`). Without the trace library the hooks cost one load and a branch per call.
-    + The library is built for ARM (GCC and Clang), RISC-V (GCC) and PIC32 (XC32); the architecture-specific code (interrupt lock, cycle counter) is in `trace_port.h`. dsPIC/PIC24 (XC16) is not ported yet. With mikroC and XC8 the drivers are built without hooks.
+    + The library is built for ARM (GCC, Clang and mikroC), RISC-V (GCC) and PIC32 (XC32 and mikroC); the architecture-specific code (interrupt lock, cycle counter) is in `trace_port.h`. dsPIC/PIC24 (XC16) is not ported yet. With XC8 and the other mikroC compilers the drivers are built without hooks.
+    + The empty driver hooks are defined once, in the new `MikroSDK.Driver.Trace` library that every traced driver links (mikroC rejects a weak symbol defined in two libraries).
     + Added validation test under `tests/trace`.
 + **Timestamped plot**
   + Added `plot_ts()` to `plot.h`: like `plot()`, with the time the value was taken on the device, so NECTO Studio keeps the real spacing of the values.

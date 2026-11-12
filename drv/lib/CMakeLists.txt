@@ -1,6 +1,8 @@
 ## ./drv/lib/CMakeLists.txt
 # ALL MODULES
 add_subdirectory(src/lib_drv)
+# Empty trace hooks, linked by every driver that reports to the firmware trace.
+add_subdirectory(src/lib_drv_trace)
 
 # SEPARATE MODULES
 set(module_list "")

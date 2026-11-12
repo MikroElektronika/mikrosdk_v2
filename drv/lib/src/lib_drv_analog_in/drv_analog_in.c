@@ -46,19 +46,6 @@
 
 static analog_in_t *_owner = NULL;
 
-#if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
-{
-}
-
-DRV_TRACE_WEAK uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value )
-{
-    return 0;
-}
-#endif
 
 #if !DRV_TO_HAL
 extern hal_adc_handle_register_t DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ADC_MODULE_COUNT];

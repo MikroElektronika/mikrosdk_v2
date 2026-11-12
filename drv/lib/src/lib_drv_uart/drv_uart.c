@@ -47,18 +47,6 @@
 static uart_t *_owner = NULL;
 
 #if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK uint32_t drv_trace_now( void )
-{
-    return 0;
-}
-
-DRV_TRACE_WEAK void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
-{
-}
-
 // The UART functions return the number of bytes, or a negative error.
 static void _trace_uart( const uart_t *obj, uint8_t is_tx, const void *buf, err_t result, uint32_t start )
 {

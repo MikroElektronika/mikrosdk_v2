@@ -56,21 +56,6 @@ extern handle_t *hal_owner;
 #endif
 
 #if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK uint32_t drv_trace_now( void ) {
-    return 0;
-}
-
-DRV_TRACE_WEAK void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
-                                        err_t result, uint32_t start ) {
-}
-
-DRV_TRACE_WEAK uint8_t drv_trace_fault_one_wire( const void *obj, pin_name_t pin ) {
-    return 0;
-}
-
 static void _trace_one_wire( one_wire_t *obj, uint8_t op, const uint8_t *buf, size_t len,
                              err_t result, uint32_t start ) {
     if ( drv_trace_present && obj ) {

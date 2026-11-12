@@ -125,7 +125,8 @@ static inline int plot( const char * __generic_ptr name, double value ) {
  * @ref plot: the record must fit in @ref PLOT_BUFF_SIZE.
  */
 static inline int plot_ts( const char * __generic_ptr name, double value, uint32_t time_us ) {
-    size_t length = PLOT_CHAR_NUM_TEMPLATE + PLOT_CHAR_NUM_TIMESTAMP + strlen( name );
+    // Not size_t: mikroC's string.h does not define it.
+    uint32_t length = PLOT_CHAR_NUM_TEMPLATE + PLOT_CHAR_NUM_TIMESTAMP + strlen( name );
     if ( length > PLOT_BUFF_SIZE ) {
         return printf_me( "Chart name too long. Reduce by %u characters.\n",
                           (unsigned int)( length - PLOT_BUFF_SIZE ) );

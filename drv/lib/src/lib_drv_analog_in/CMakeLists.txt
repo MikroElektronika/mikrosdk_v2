@@ -15,6 +15,7 @@ mikrosdk_add_library(lib_drv_adc MikroSDK.Driver.ADC
 
 target_link_libraries(lib_drv_adc  PUBLIC
     MikroC.Core
+    MikroSDK.Driver.Trace
     MikroSDK.Hal.ADC
 )
 target_compile_definitions(lib_drv_adc

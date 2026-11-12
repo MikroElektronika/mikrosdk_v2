@@ -43,18 +43,6 @@
 
 #include "drv_digital_out.h"
 
-#if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
-{
-}
-
-DRV_TRACE_WEAK void drv_trace_gpio_out( const void *obj, uint8_t level )
-{
-}
-#endif
 
 err_t digital_out_init( digital_out_t *out, pin_name_t name )
 {

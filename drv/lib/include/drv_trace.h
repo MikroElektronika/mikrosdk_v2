@@ -79,11 +79,21 @@ extern "C"{
 /**
  * @brief Trace hooks are compiled in.
  * @details Weak symbols are needed to let the trace library replace the empty hooks;
- * toolchains without them get no hooks at all.
+ * toolchains without them get no hooks at all. The empty hooks are defined once, in
+ * MikroSDK.Driver.Trace (drv_trace.c): mikroC rejects a weak symbol defined in two libraries.
  */
-#if (defined(__GNUC__) || defined(__clang__)) && !defined(__XC8) && !defined(__MIKROC_AI__)
+#if (defined(__GNUC__) || defined(__clang__)) && !defined(__XC8)
 #define DRV_TRACE_ENABLED 1
 #define DRV_TRACE_WEAK __attribute__((weak))
+// Constant: the drivers only read it.
+#define DRV_TRACE_PRESENT_TYPE const volatile uint8_t
+#elif defined(__MIKROC_AI_FOR_ARM__) || defined(__MIKROC_AI_FOR_PIC32__)
+#define DRV_TRACE_ENABLED 1
+#define DRV_TRACE_WEAK __attribute__((weak))
+// Not constant: mikroC replaces a constant by its value when it compiles the driver, before
+// the trace library can replace it. Its weak definition has no initializer either, since
+// mikroC rejects two initialized definitions even when one is weak: it starts at 0.
+#define DRV_TRACE_PRESENT_TYPE volatile uint8_t
 #else
 #define DRV_TRACE_ENABLED 0
 #endif
@@ -118,10 +128,11 @@ typedef enum
 
 /**
  * @brief 1 when the MikroSDK.Trace library is linked, 0 otherwise.
- * @details The drivers define it weak as 0, the library as 1. Every hook call is behind it, so
- * firmware without the trace pays one load and a branch per call, not an empty call.
+ * @details MikroSDK.Driver.Trace defines it weak as 0, the library as 1. Every hook call is
+ * behind it, so firmware without the trace pays one load and a branch per call, not an empty
+ * call.
  */
-extern const volatile uint8_t drv_trace_present;
+extern DRV_TRACE_PRESENT_TYPE drv_trace_present;
 
 /**
  * @brief Calls a hook only when the trace library is linked.

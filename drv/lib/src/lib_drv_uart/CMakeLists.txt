@@ -9,6 +9,7 @@ mikrosdk_add_library(lib_drv_uart MikroSDK.Driver.UART
 
 target_link_libraries(lib_drv_uart  PUBLIC
     MikroC.Core
+    MikroSDK.Driver.Trace
     MikroSDK.Hal.UART
     MikroSDK.RingBuffer
 )

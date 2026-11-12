@@ -46,25 +46,6 @@
 
 static i2c_master_t *_owner = NULL;
 
-#if DRV_TRACE_ENABLED
-// Empty unless the MikroSDK.Trace library is linked.
-DRV_TRACE_WEAK const volatile uint8_t drv_trace_present = 0;
-
-DRV_TRACE_WEAK uint32_t drv_trace_now( void )
-{
-    return 0;
-}
-
-DRV_TRACE_WEAK void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
-                                   const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
-{
-}
-
-DRV_TRACE_WEAK uint8_t drv_trace_fault_i2c( const void *obj )
-{
-    return 0;
-}
-#endif
 
 #if !DRV_TO_HAL
 extern hal_i2c_master_handle_register_t DRV_TO_HAL_PREFIXED(i2c, hal_module_state)[ I2C_MODULE_COUNT ];

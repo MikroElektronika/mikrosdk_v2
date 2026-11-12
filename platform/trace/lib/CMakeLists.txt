@@ -24,9 +24,11 @@ target_include_directories(lib_trace
 )
 
 # Linking the library is all an application needs. Nothing calls into it (the drivers only have
-# weak hooks), so its object is pulled into the link by name; and the flattened GPIO macros need
-# MIKROSDK_TRACE in the application.
-target_link_options(lib_trace INTERFACE "LINKER:--undefined=trace_init")
+# weak hooks), so with GNU ld its object is pulled into the link by name; the mikroC linker takes
+# the strong hooks by itself. The flattened GPIO macros need MIKROSDK_TRACE in the application.
+if (NOT ${TOOLCHAIN_LANGUAGE} MATCHES "MikroC")
+    target_link_options(lib_trace INTERFACE "LINKER:--undefined=trace_init")
+endif()
 target_compile_definitions(lib_trace INTERFACE MIKROSDK_TRACE)
 
 mikrosdk_install(MikroSDK.Trace)

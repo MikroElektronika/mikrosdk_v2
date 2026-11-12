@@ -58,6 +58,16 @@
 #error "The firmware trace needs a toolchain with weak symbols."
 #endif
 
+// mikroC has neither attribute. It keeps what the code uses (the faults are read, the break is
+// called) and does not inline functions.
+#if defined(__MIKROC_AI__)
+#define TRACE_USED
+#define TRACE_NOINLINE
+#else
+#define TRACE_USED __attribute__((used))
+#define TRACE_NOINLINE __attribute__((noinline, used))
+#endif
+
 // ------------------------------------------------------------- PRIVATE MACROS
 
 // 2: ONE_WIRE records and lanes. 3: TRACE_RECORD_INJECTED. 4: BUS_BURST records. 5: the
@@ -177,25 +187,31 @@ typedef struct
 
 typedef struct
 {
-    uint8_t data[ TRACE_MAX_RECORD ];
+    uint8_t buf[ TRACE_MAX_RECORD ];    // not "data": a mikroC keyword
     uint8_t len;
 } trace_record_t;
 
 // ------------------------------------------------------------------ VARIABLES
 
 // Tells the drivers that their hooks are here (drv_trace.h).
-const volatile uint8_t drv_trace_present = 1;
+DRV_TRACE_PRESENT_TYPE drv_trace_present = 1;
 
 // Read by the debugger, see the file comment.
 // Weak: an application with TRACE_BUFFER( size ) replaces both. The size is read at run time
 // (volatile), never folded into the code, so that the replacement takes effect.
 __attribute__((weak)) volatile uint8_t __traceBuffer[ TRACE_BUFF_SIZE ];
-__attribute__((weak)) const volatile uint16_t __traceBufferSize = TRACE_BUFF_SIZE;
+#if defined(__MIKROC_AI__)
+// mikroC rejects an initialized weak variable next to TRACE_BUFFER's: 0 here, the default size
+// set by trace_init().
+__attribute__((weak)) TRACE_BUFFER_SIZE_TYPE __traceBufferSize;
+#else
+__attribute__((weak)) TRACE_BUFFER_SIZE_TYPE __traceBufferSize = TRACE_BUFF_SIZE;
+#endif
 volatile uint16_t __traceLen = 0;
 volatile uint32_t __traceDropped = 0;
 // Written by the debugger while the program is stopped, the faults packed from the start: the
 // first entry of kind TRACE_FAULT_NONE ends the list.
-__attribute__((used)) volatile trace_fault_t __traceFaults[ TRACE_MAX_FAULTS ];
+TRACE_USED volatile trace_fault_t __traceFaults[ TRACE_MAX_FAULTS ];
 
 static trace_lane_t trace_lanes[ TRACE_MAX_LANES ];
 static uint8_t trace_lane_count = 0;
@@ -227,7 +243,7 @@ static bool trace_counter_running = false;
 
 static void record_u8( trace_record_t *record, uint8_t value )
 {
-    record->data[ record->len++ ] = value;
+    record->buf[ record->len++ ] = value;
 }
 
 static void record_u16( trace_record_t *record, uint16_t value )
@@ -248,7 +264,7 @@ static void record_bytes( trace_record_t *record, const uint8_t *bytes, uint8_t 
     {
         return;
     }
-    memcpy( &record->data[ record->len ], bytes, count );
+    memcpy( &record->buf[ record->len ], bytes, count );
     record->len += count;
 }
 
@@ -302,7 +318,7 @@ static void trace_flush_locked( void )
 static void trace_commit( const trace_record_t *record )
 {
     uint16_t pos = __traceLen;
-    memcpy( (uint8_t *)&__traceBuffer[ pos ], record->data, record->len );
+    memcpy( (uint8_t *)&__traceBuffer[ pos ], record->buf, record->len );
 
     // The debugger may have emptied the buffer while the record was copied (a pause or a
     // breakpoint in between). The record then belongs at the start.
@@ -475,8 +491,8 @@ static void trace_auto_flush( void )
 
 static uint32_t record_ticks( const trace_record_t *record )
 {
-    return (uint32_t)record->data[ 2 ] | ( (uint32_t)record->data[ 3 ] << 8 ) |
-           ( (uint32_t)record->data[ 4 ] << 16 ) | ( (uint32_t)record->data[ 5 ] << 24 );
+    return (uint32_t)record->buf[ 2 ] | ( (uint32_t)record->buf[ 3 ] << 8 ) |
+           ( (uint32_t)record->buf[ 4 ] << 16 ) | ( (uint32_t)record->buf[ 5 ] << 24 );
 }
 
 static void trace_emit( uint8_t id, trace_lane_t *lane, const trace_record_t *event )
@@ -519,7 +535,21 @@ static trace_lane_t *trace_lane( const void *key, uint8_t kind, uint8_t *id )
 static void trace_set_flush_interval_locked( uint32_t ms )
 {
     // Needs a time base; a record counter gives none.
-    trace_flush_ticks = trace_hz ? (uint32_t)( ( (uint64_t)trace_hz * ms ) / 1000U ) : 0;
+    // 32-bit arithmetic only, here as everywhere in the trace: mikroC for PIC32 does 64-bit math
+    // in helper functions and, in a function that calls nothing else, does not save the return
+    // address before calling them; the function then never returns. Ticks per millisecond lose
+    // less than a tick; an interval longer than the 32-bit time base is capped.
+    uint32_t per_ms = trace_hz / 1000U;
+    if ( !trace_hz )
+    {
+        trace_flush_ticks = 0;
+        return;
+    }
+    if ( !per_ms )
+    {
+        per_ms = 1;
+    }
+    trace_flush_ticks = ( ms > ( 0xFFFFFFFFUL / per_ms ) ) ? 0xFFFFFFFFUL : per_ms * ms;
 }
 
 // The first recorded event starts the trace: linking the library is all an application needs.
@@ -743,9 +773,17 @@ __attribute__((weak)) uint32_t trace_ticks( void )
     return trace_sequence++;
 }
 
-void __attribute__((noinline, used)) traceBuffFullBreak( void )
+// The debugger breaks here. A debugger that sets breakpoints only by file and line (mikroC's)
+// breaks on the nop: keep it on a line of its own.
+void TRACE_NOINLINE traceBuffFullBreak( void )
 {
+    #if defined(__MIKROC_AI__)
+    asm {
+        NOP
+    }
+    #else
     __asm volatile ( "nop" );
+    #endif
 }
 
 void trace_set_flush_interval( uint32_t ms )
@@ -757,6 +795,13 @@ void trace_set_flush_interval( uint32_t ms )
 
 void trace_init( void )
 {
+    #if defined(__MIKROC_AI__)
+    // No TRACE_BUFFER in the application: the default buffer, of the default size.
+    if ( 0 == __traceBufferSize )
+    {
+        __traceBufferSize = TRACE_BUFF_SIZE;
+    }
+    #endif
     if ( __traceBufferSize < TRACE_MIN_BUFF_SIZE )
     {
         return;
@@ -774,9 +819,10 @@ void trace_init( void )
     trace_counter_running = trace_port_counter_start();
     #endif
     trace_hz = trace_tick_hz();
-    // Bursts need a time base too.
-    trace_burst_gap = (uint32_t)( ( (uint64_t)trace_hz * TRACE_BURST_GAP_US ) / 1000000U );
-    trace_bus_burst_gap = (uint32_t)( ( (uint64_t)trace_hz * TRACE_BUS_BURST_GAP_US ) / 1000000U );
+    // Bursts need a time base too. In 32 bits (see trace_set_flush_interval_locked): the gaps
+    // divide a second evenly, so ticks per gap are the rate over gaps per second.
+    trace_burst_gap = trace_hz / ( 1000000UL / TRACE_BURST_GAP_US );
+    trace_bus_burst_gap = trace_hz / ( 1000000UL / TRACE_BUS_BURST_GAP_US );
     trace_set_flush_interval_locked( TRACE_FLUSH_INTERVAL_MS );
     trace_last_flush = trace_ticks();
     trace_started = true;

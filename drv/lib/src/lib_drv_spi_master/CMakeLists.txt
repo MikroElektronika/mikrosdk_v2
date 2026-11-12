@@ -10,6 +10,7 @@ mikrosdk_add_library(lib_drv_spi_master MikroSDK.Driver.SPI.Master
 target_link_libraries(lib_drv_spi_master
     PUBLIC
         MikroC.Core
+    MikroSDK.Driver.Trace
         MikroSDK.Hal.SPI.Master
         MikroSDK.GenericPointer
 )

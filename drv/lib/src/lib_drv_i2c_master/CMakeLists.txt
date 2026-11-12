@@ -9,6 +9,7 @@ mikrosdk_add_library(lib_drv_i2c_master MikroSDK.Driver.I2C.Master
 
 target_link_libraries(lib_drv_i2c_master  PUBLIC
     MikroC.Core
+    MikroSDK.Driver.Trace
     MikroSDK.Hal.I2C.Master
 )
 

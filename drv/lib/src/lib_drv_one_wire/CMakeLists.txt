@@ -9,6 +9,7 @@ mikrosdk_add_library(lib_drv_one_wire MikroSDK.Driver.OneWire
 
 target_link_libraries(lib_drv_one_wire  PUBLIC
     MikroC.Core
+    MikroSDK.Driver.Trace
     MikroSDK.Hal.OneWire
 )
 
