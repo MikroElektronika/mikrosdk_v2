@@ -21,7 +21,7 @@
     - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>TOSHIBA</font>
+### TOSHIBA
 
 **TMPM4L MCUs supported!**
 
