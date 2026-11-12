@@ -53,6 +53,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define W5500_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -230,6 +234,10 @@ extern eth_transport_driver_t w5500_driver;
 #define W5500_PHYCFGR_RST       0x80
 
 #define W5500_FRAME_SIZE 1514      // MACRAW TX limit, FCS is appended by the chip
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

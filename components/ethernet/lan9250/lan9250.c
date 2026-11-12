@@ -304,7 +304,7 @@ uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
     uint32_t cmd_a;
     uint32_t cmd_b;
 
-    if ( len > LAN9250_FRAME_SIZE ) return 0;
+    if ( len > LAN9250_TX_FRAME_SIZE ) return 0;
     eth->bus_error = 0;
 
     free_space = lan9250_read_sys_reg( eth, LAN9250_TX_FIFO_INF ) & LAN9250_TX_FIFO_INF_TXFREE;
