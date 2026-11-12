@@ -119,7 +119,10 @@ err_t eth_bus_spi_configure( eth_transport_t *eth, eth_bus_spi_t *bus,
     if ( spi_master_open( &bus->spi, &spi_cfg ) == SPI_MASTER_ERROR )
         return ETH_TRANSPORT_ERROR;
 
-    digital_out_init( &bus->cs_out, bus_cfg->cs );
+    if ( digital_out_init( &bus->cs_out, bus_cfg->cs ) != DIGITAL_OUT_SUCCESS ) {
+        spi_master_close( &bus->spi );
+        return ETH_TRANSPORT_ERROR;
+    }
     bus->cs = bus_cfg->cs;
     spi_master_deselect_device( bus->cs );
 
