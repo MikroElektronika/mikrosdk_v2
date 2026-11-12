@@ -52,6 +52,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define W6100_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -245,6 +249,10 @@ extern eth_transport_driver_t w6100_driver;
 #define W6100_PHYCR1_RST      0x01
 
 #define W6100_FRAME_SIZE 1514      // MACRAW TX limit, FCS is appended by the chip
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

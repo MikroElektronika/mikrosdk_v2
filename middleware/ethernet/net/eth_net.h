@@ -71,11 +71,13 @@ extern "C"{
 /**
  * @brief Size of the internal TX buffer, the largest frame the helpers can build.
  * @details Must hold a DHCP message (311 bytes). TCP/UDP payloads are limited
- * to ETH_NET_TX_BUF_SIZE - 54 / ETH_NET_TX_BUF_SIZE - 42 bytes.
+ * to ETH_NET_TX_BUF_SIZE - 54 / ETH_NET_TX_BUF_SIZE - 42 bytes, ICMP echo
+ * replies to ETH_NET_TX_BUF_SIZE - 34 bytes (ping payloads up to 358 bytes).
+ * @note Fixed when the library is built. The SDK ships the library
+ * precompiled, so redefining this value in an application would not change
+ * the library buffer.
  */
-#ifndef ETH_NET_TX_BUF_SIZE
 #define ETH_NET_TX_BUF_SIZE         400
-#endif
 
 /**
  * @brief Frame layout.

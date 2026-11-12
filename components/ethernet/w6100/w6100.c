@@ -182,7 +182,7 @@ static uint8_t w6100_wait_sn_sr_macraw( eth_transport_t *eth ) {
 }
 
 static uint8_t w6100_open_socket0_macraw( eth_transport_t *eth ) {
-    w6100_write_reg( eth, W6100_Sn_MR, W6100_BSB_SOCKET0_REG( 0 ), W6100_Sn_MR_MACRAW );
+    w6100_write_reg( eth, W6100_Sn_MR, W6100_BSB_SOCKET0_REG( 0 ), W6100_Sn_MR_MACRAW | W6100_Sn_MR_MF );
     w6100_write_reg( eth, W6100_Sn_CR, W6100_BSB_SOCKET0_REG( 0 ), W6100_Sn_CR_OPEN );
     if ( !w6100_wait_socket_cmd( eth ) )
         return 0;
