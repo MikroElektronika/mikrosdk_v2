@@ -51,6 +51,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define LAN9250_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -104,7 +108,7 @@ err_t    lan9250_init( eth_transport_t *eth );
  * @brief Send an Ethernet frame through the TX data FIFO.
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS).
- * @param[in] len Frame length in bytes, at most LAN9250_FRAME_SIZE.
+ * @param[in] len Frame length in bytes (without FCS), at most LAN9250_TX_FRAME_SIZE.
  * @return Number of bytes sent, 0 if the frame is too long, the TX FIFO is full
  * or a bus transaction fails (the TX data FIFO is flushed).
  */
@@ -260,8 +264,13 @@ extern eth_transport_driver_t lan9250_driver;
 #define LAN9250_PHY_BASIC_STATUS_LINK_STATUS 0x0004
 
 // Maximum Ethernet frame size handled
-#define LAN9250_FRAME_SIZE 1518
+#define LAN9250_FRAME_SIZE 1518                // Maximum frame length including FCS
+#define LAN9250_TX_FRAME_SIZE 1514             // Largest frame lan9250_send_packet() accepts, the MAC appends the FCS
 #define LAN9250_FCS_SIZE   4
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
