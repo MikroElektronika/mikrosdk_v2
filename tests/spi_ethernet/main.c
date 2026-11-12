@@ -22,7 +22,7 @@ static eth_bus_spi_t   bus;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
-static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };   // Define your local static ip
+static uint8_t local_ip[ 4 ]  = { 172, 30, 14, 240 };   // Define your local static ip
 #if USE_DHCP
 static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
 static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
@@ -34,21 +34,8 @@ static uint8_t rx_buf[ 700 ];
 
 // Print an IP address in dotted decimal format
 static void log_print_ip( log_t *logger, uint8_t *ip ) {
-    uint8_t k, val, digit;
-    for ( k = 0; k < 4; k++ ) {
-        val = ip[ k ];
-        if ( val >= 100 ) {
-            digit = val / 100; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 100;
-            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 10;
-        } else if ( val >= 10 ) {
-            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 10;
-        }
-        log_printf( logger, "%c", hex_digits[ val ] );
-        if ( k < 3 ) log_printf( logger, "." );
-    }
+    log_printf( logger, "%u.%u.%u.%u", ( uint16_t )ip[ 0 ], ( uint16_t )ip[ 1 ],
+                ( uint16_t )ip[ 2 ], ( uint16_t )ip[ 3 ] );
 }
 
 // Print the HTTP server ready message
@@ -250,9 +237,7 @@ int main( void ) {
 
     // SPI
     rev = spi_eth_get_rev( &eth );
-    log_printf( &logger, "EREVID = 0x" );
-    log_printf( &logger, "%c", hex_digits[ ( rev >> 4 ) & 0x0F ] );
-    log_printf( &logger, "%c", hex_digits[ rev & 0x0F ] );
+    log_printf( &logger, "EREVID = 0x%c%c", (hex_digits[ ( rev >> 4 ) & 0x0F ]), (hex_digits[ rev & 0x0F ]) );
     if ( rev == 0x00 || rev == 0xFF )
         log_printf( &logger, " NOT OK" );
     log_printf( &logger, "\r\n" );
