@@ -57,10 +57,13 @@
 #define ICMP_ECHO_REQUEST   8
 #define ICMP_ECHO_REPLY     0
 
+#define IP_FLAG_MF_OFFSET   0x3FFF                                              // More fragments flag + fragment offset
+
 #define DHCP_FIXED_SIZE     240                                                 // Fixed fields + magic cookie
 #define DHCP_OPTIONS_SIZE   29                                                  // Options 53, 61, 50, 54, 55, 255
 #define DHCP_FRAME_SIZE     ( UDP_DATA_OFFSET + DHCP_FIXED_SIZE + DHCP_OPTIONS_SIZE )
 #define DHCP_OP_REQUEST     1
+#define DHCP_OP_REPLY       2
 #define DHCP_HTYPE_ETH      1
 #define DHCP_HLEN_ETH       6
 
@@ -192,6 +195,30 @@ static uint8_t *dhcp_find_option( uint8_t *options, uint16_t options_len, uint8_
     return NULL;
 }
 
+uint8_t *eth_net_ipv4_payload( uint8_t *pkt, uint16_t len, uint16_t *payload_len ) {
+    uint8_t *ip;
+    uint8_t ihl;
+    uint16_t ip_total;
+
+    if ( !pkt || len < L4_OFFSET || get_be16( &pkt[ 12 ] ) != ETH_NET_ETHERTYPE_IPV4 )
+        return NULL;
+
+    ip = &pkt[ IP_OFFSET ];
+    ihl = ( ip[ 0 ] & 0x0F ) * 4;
+    ip_total = get_be16( &ip[ 2 ] );
+    if ( ( ip[ 0 ] >> 4 ) != 4 || ihl < ETH_NET_IP_HEADER_SIZE ||
+         ip_total < ihl || ip_total > len - IP_OFFSET )
+        return NULL;                            // Not IPv4, malformed or truncated
+    if ( get_be16( &ip[ 6 ] ) & IP_FLAG_MF_OFFSET )
+        return NULL;                            // Fragment, reassembly is not supported
+    if ( ip_checksum( ip, ihl ) != 0 )
+        return NULL;                            // Header checksum over a valid header folds to 0
+
+    if ( payload_len )
+        *payload_len = ip_total - ihl;
+    return &ip[ ihl ];
+}
+
 uint16_t eth_net_send_tcp( eth_transport_t *eth, uint8_t *local_mac, uint8_t *local_ip,
                            uint8_t *dst_mac, uint8_t *dst_ip,
                            uint16_t src_port, uint16_t dst_port,
@@ -250,8 +277,9 @@ uint16_t eth_net_handle_arp( eth_transport_t *eth, uint8_t *local_mac, uint8_t *
 
     if ( len < ARP_FRAME_SIZE || get_be16( &pkt[ 12 ] ) != ETH_NET_ETHERTYPE_ARP )
         return 0;
-    if ( get_be16( &arp[ 0 ] ) != 1 || get_be16( &arp[ 2 ] ) != ETH_NET_ETHERTYPE_IPV4 )
-        return 0;                               // Ethernet / IPv4 only
+    if ( get_be16( &arp[ 0 ] ) != 1 || get_be16( &arp[ 2 ] ) != ETH_NET_ETHERTYPE_IPV4 ||
+         arp[ 4 ] != 6 || arp[ 5 ] != 4 )
+        return 0;                               // Ethernet / IPv4 only, the offsets below depend on it
     if ( get_be16( &arp[ 6 ] ) != 1 )           // Opcode 1 = request
         return 0;
     if ( memcmp( &arp[ 24 ], local_ip, 4 ) != 0 )   // Target protocol address
@@ -278,24 +306,15 @@ uint16_t eth_net_handle_icmp( eth_transport_t *eth, uint8_t *local_mac, uint8_t 
     uint8_t *ip = &pkt[ IP_OFFSET ];
     uint8_t *icmp;
     uint8_t *reply = &tx_pkt[ L4_OFFSET ];
-    uint8_t ihl;
-    uint16_t ip_total;
-    uint16_t icmp_len;
+    uint16_t icmp_len = 0;
 
-    if ( len < L4_OFFSET + ICMP_HEADER_SIZE || get_be16( &pkt[ 12 ] ) != ETH_NET_ETHERTYPE_IPV4 )
+    icmp = eth_net_ipv4_payload( pkt, len, &icmp_len );
+    if ( !icmp || ip[ 9 ] != ETH_NET_IP_PROTO_ICMP || memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )
         return 0;
-    if ( ip[ 9 ] != ETH_NET_IP_PROTO_ICMP || memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )
+    if ( icmp_len < ICMP_HEADER_SIZE || icmp[ 0 ] != ICMP_ECHO_REQUEST || icmp[ 1 ] != 0 )
         return 0;
-
-    ihl = ( ip[ 0 ] & 0x0F ) * 4;
-    ip_total = get_be16( &ip[ 2 ] );
-    if ( ihl < ETH_NET_IP_HEADER_SIZE || ip_total < ihl + ICMP_HEADER_SIZE || ip_total > len - IP_OFFSET )
-        return 0;                               // Malformed or truncated packet
-
-    icmp = &ip[ ihl ];
-    icmp_len = ip_total - ihl;
-    if ( icmp[ 0 ] != ICMP_ECHO_REQUEST )
-        return 0;
+    if ( ip_checksum( icmp, icmp_len ) != 0 )
+        return 0;                               // Corrupted request
     if ( icmp_len > ETH_NET_TX_BUF_SIZE - L4_OFFSET )
         return 0;                               // Reply does not fit the TX buffer
 
@@ -359,36 +378,48 @@ uint16_t eth_net_dhcp_send( eth_transport_t *eth, uint8_t msg_type, uint8_t *loc
                            ETH_NET_DHCP_CLIENT_PORT, ETH_NET_DHCP_SERVER_PORT, opt );
 }
 
-uint8_t eth_net_handle_dhcp( uint8_t *pkt, uint16_t len, uint32_t dhcp_xid,
+uint8_t eth_net_handle_dhcp( uint8_t *pkt, uint16_t len, uint8_t *local_mac, uint32_t dhcp_xid,
                              uint8_t *dhcp_offered_ip, uint8_t *dhcp_server_ip,
                              uint8_t *local_ip ) {
+    uint8_t zero_ip[ 4 ] = { 0, 0, 0, 0 };
     uint8_t *ip = &pkt[ IP_OFFSET ];
     uint8_t *udp;
     uint8_t *dhcp;
     uint8_t *options;
     uint8_t *opt_val;
+    uint8_t *server_id;
     uint8_t opt_len;
-    uint8_t ihl;
+    uint16_t ip_payload_len = 0;
     uint16_t udp_len;
     uint16_t options_len;
 
-    if ( len < L4_OFFSET || get_be16( &pkt[ 12 ] ) != ETH_NET_ETHERTYPE_IPV4 || ip[ 9 ] != ETH_NET_IP_PROTO_UDP )
+    udp = eth_net_ipv4_payload( pkt, len, &ip_payload_len );
+    if ( !udp || ip[ 9 ] != ETH_NET_IP_PROTO_UDP )
+        return ETH_NET_DHCP_NONE;
+    if ( ip_payload_len < ETH_NET_UDP_HEADER_SIZE + DHCP_FIXED_SIZE )
         return ETH_NET_DHCP_NONE;
 
-    ihl = ( ip[ 0 ] & 0x0F ) * 4;
-    if ( ihl < ETH_NET_IP_HEADER_SIZE || len < IP_OFFSET + ihl + ETH_NET_UDP_HEADER_SIZE + DHCP_FIXED_SIZE )
+    if ( get_be16( &udp[ 0 ] ) != ETH_NET_DHCP_SERVER_PORT || get_be16( &udp[ 2 ] ) != ETH_NET_DHCP_CLIENT_PORT )
         return ETH_NET_DHCP_NONE;
 
-    udp = &ip[ ihl ];
-    if ( get_be16( &udp[ 2 ] ) != ETH_NET_DHCP_CLIENT_PORT )
-        return ETH_NET_DHCP_NONE;
-
+    // Bounded by the IPv4 total length, bytes past it (e.g. Ethernet padding) are not DHCP data
     udp_len = get_be16( &udp[ 4 ] );
-    if ( udp_len < ETH_NET_UDP_HEADER_SIZE + DHCP_FIXED_SIZE || udp_len > len - IP_OFFSET - ihl )
+    if ( udp_len < ETH_NET_UDP_HEADER_SIZE + DHCP_FIXED_SIZE || udp_len > ip_payload_len )
+        return ETH_NET_DHCP_NONE;
+
+    // UDP checksum is optional over IPv4, 0 means it was not computed
+    if ( get_be16( &udp[ 6 ] ) &&
+         l4_checksum( &ip[ 12 ], &ip[ 16 ], ETH_NET_IP_PROTO_UDP, udp, udp_len ) != 0 )
         return ETH_NET_DHCP_NONE;
 
     dhcp = &udp[ ETH_NET_UDP_HEADER_SIZE ];
+    if ( dhcp[ 0 ] != DHCP_OP_REPLY || dhcp[ 1 ] != DHCP_HTYPE_ETH || dhcp[ 2 ] != DHCP_HLEN_ETH )
+        return ETH_NET_DHCP_NONE;
     if ( memcmp( &dhcp[ 236 ], dhcp_magic_cookie, 4 ) != 0 )
+        return ETH_NET_DHCP_NONE;
+
+    // Replies are broadcast, so check that this one is addressed to our MAC (chaddr)
+    if ( memcmp( &dhcp[ 28 ], local_mac, 6 ) != 0 )
         return ETH_NET_DHCP_NONE;
 
     // Check this reply matches our transaction (xid)
@@ -403,16 +434,27 @@ uint8_t eth_net_handle_dhcp( uint8_t *pkt, uint16_t len, uint32_t dhcp_xid,
     if ( !opt_val || opt_len < 1 )
         return ETH_NET_DHCP_NONE;
 
-    if ( *opt_val == ETH_NET_DHCP_MSG_OFFER ) {
-        memcpy( dhcp_offered_ip, &dhcp[ 16 ], 4 );      // yiaddr = offered IP
+    server_id = dhcp_find_option( options, options_len, 54, &opt_len );     // Server identifier
+    if ( server_id && opt_len < 4 )
+        server_id = NULL;
 
-        opt_val = dhcp_find_option( options, options_len, 54, &opt_len );     // Server identifier
-        if ( opt_val && opt_len >= 4 )
-            memcpy( dhcp_server_ip, opt_val, 4 );
+    // Outputs are written only once the reply has been fully accepted
+    if ( *opt_val == ETH_NET_DHCP_MSG_OFFER ) {
+        // A REQUEST must name the server, so an OFFER without option 54 is unusable
+        if ( !server_id || memcmp( &dhcp[ 16 ], zero_ip, 4 ) == 0 )
+            return ETH_NET_DHCP_NONE;
+        memcpy( dhcp_offered_ip, &dhcp[ 16 ], 4 );      // yiaddr = offered IP
+        memcpy( dhcp_server_ip, server_id, 4 );
         return ETH_NET_DHCP_OFFER;
     }
 
+    // ACK / NAK from a server other than the selected one are not for this transaction
+    if ( server_id && memcmp( server_id, dhcp_server_ip, 4 ) != 0 )
+        return ETH_NET_DHCP_NONE;
+
     if ( *opt_val == ETH_NET_DHCP_MSG_ACK ) {
+        if ( memcmp( &dhcp[ 16 ], zero_ip, 4 ) == 0 )
+            return ETH_NET_DHCP_NONE;
         memcpy( local_ip, &dhcp[ 16 ], 4 );             // yiaddr = confirmed IP
         return ETH_NET_DHCP_ACK;
     }
