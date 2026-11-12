@@ -123,6 +123,20 @@ extern "C"{
 #define ETH_NET_DHCP_NAK            3
 
 /**
+ * @brief Validate a received Ethernet/IPv4 frame and locate its payload.
+ * @details Checks the EtherType, IP version, header length, header checksum
+ * and the total length against @p len, and rejects fragments (no reassembly).
+ * The protocol (IP header byte 9) is left to the caller.
+ * @param[in] pkt Received Ethernet frame.
+ * @param[in] len Length of @p pkt in bytes.
+ * @param[out] payload_len IPv4 payload length (total length - header length),
+ * bytes past it (e.g. Ethernet padding) are not part of the packet. May be NULL.
+ * @return Pointer to the IPv4 payload (ICMP/TCP/UDP header), NULL if @p pkt
+ * is not a valid unfragmented IPv4 packet.
+ */
+uint8_t *eth_net_ipv4_payload( uint8_t *pkt, uint16_t len, uint16_t *payload_len );
+
+/**
  * @brief Send a TCP segment over Ethernet/IPv4.
  * @details Builds the Ethernet, IPv4 and TCP headers (no options, window
  * 8192), computes the checksums and sends the frame.
@@ -182,7 +196,8 @@ uint16_t eth_net_handle_arp( eth_transport_t *eth, uint8_t *local_mac, uint8_t *
 /**
  * @brief Answer an ICMP echo request (ping) for this device.
  * @details Replies with an echo reply carrying the same identifier, sequence
- * and data if @p pkt is an echo request addressed to @p local_ip.
+ * and data if @p pkt is an echo request addressed to @p local_ip. The request
+ * must pass eth_net_ipv4_payload() and carry a valid ICMP checksum.
  * @param[in] eth Ethernet transport instance.
  * @param[in] local_mac This device's MAC address (6 bytes).
  * @param[in] local_ip This device's IPv4 address (4 bytes).
@@ -213,19 +228,26 @@ uint16_t eth_net_dhcp_send( eth_transport_t *eth, uint8_t msg_type, uint8_t *loc
 
 /**
  * @brief Parse a received frame as a DHCP server reply.
- * @details Accepts only well-formed IPv4/UDP frames for port 68 with the
- * DHCP magic cookie and a matching transaction ID. On OFFER the offered and
- * server addresses are stored, on ACK the confirmed address is written to
- * @p local_ip.
+ * @details Accepts only valid IPv4/UDP frames (see eth_net_ipv4_payload(),
+ * UDP checksum if present) from port 67 to port 68 carrying a BOOTREPLY with
+ * the DHCP magic cookie, the expected transaction ID and @p local_mac as
+ * client hardware address. Outputs are written only for an accepted reply:
+ * - OFFER: must carry a server identifier (option 54) and a non-zero
+ *   address, both are stored.
+ * - ACK / NAK: ignored if the server identifier does not match
+ *   @p dhcp_server_ip. On ACK the confirmed address is written to @p local_ip.
  * @param[in] pkt Received Ethernet frame.
  * @param[in] len Length of @p pkt in bytes.
+ * @param[in] local_mac This device's MAC address (6 bytes), as sent in chaddr.
  * @param[in] dhcp_xid Expected transaction ID.
  * @param[out] dhcp_offered_ip Updated on OFFER (4 bytes).
- * @param[out] dhcp_server_ip Updated on OFFER if the server sent option 54 (4 bytes).
+ * @param[in,out] dhcp_server_ip Updated on OFFER, compared on ACK / NAK (4 bytes).
  * @param[out] local_ip Updated on ACK (4 bytes).
  * @return ETH_NET_DHCP_NONE, ETH_NET_DHCP_OFFER, ETH_NET_DHCP_ACK or ETH_NET_DHCP_NAK.
+ * @note Pass a copy of the selected server address while waiting for the ACK,
+ * otherwise a later OFFER from another server overwrites it.
  */
-uint8_t eth_net_handle_dhcp( uint8_t *pkt, uint16_t len, uint32_t dhcp_xid,
+uint8_t eth_net_handle_dhcp( uint8_t *pkt, uint16_t len, uint8_t *local_mac, uint32_t dhcp_xid,
                              uint8_t *dhcp_offered_ip, uint8_t *dhcp_server_ip,
                              uint8_t *local_ip );
 

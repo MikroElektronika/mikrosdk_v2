@@ -22,7 +22,7 @@ static eth_bus_spi_t   bus;
 static log_t logger;
 
 static uint8_t local_mac[ 6 ] = { 0x02, 0xDE, 0xAD, 0xBE, 0xEF, 0x01 };
-static uint8_t local_ip[ 4 ]  = { 172, 20, 22, 200 };   // Define your local static ip
+static uint8_t local_ip[ 4 ]  = { 172, 30, 14, 240 };   // Define your local static ip
 #if USE_DHCP
 static uint8_t dhcp_offered_ip[ 4 ] = { 0, 0, 0, 0 };
 static uint8_t dhcp_server_ip[ 4 ]  = { 0, 0, 0, 0 };
@@ -34,21 +34,8 @@ static uint8_t rx_buf[ 700 ];
 
 // Print an IP address in dotted decimal format
 static void log_print_ip( log_t *logger, uint8_t *ip ) {
-    uint8_t k, val, digit;
-    for ( k = 0; k < 4; k++ ) {
-        val = ip[ k ];
-        if ( val >= 100 ) {
-            digit = val / 100; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 100;
-            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 10;
-        } else if ( val >= 10 ) {
-            digit = val / 10; log_printf( logger, "%c", hex_digits[ digit ] );
-            val -= digit * 10;
-        }
-        log_printf( logger, "%c", hex_digits[ val ] );
-        if ( k < 3 ) log_printf( logger, "." );
-    }
+    log_printf( logger, "%u.%u.%u.%u", ( uint16_t )ip[ 0 ], ( uint16_t )ip[ 1 ],
+                ( uint16_t )ip[ 2 ], ( uint16_t )ip[ 3 ] );
 }
 
 // Print the HTTP server ready message
@@ -69,27 +56,32 @@ static char http_response[ ] =
     "<p>MikroE SPI-ETHERNET library test works!</p>"
     "</body></html>\r\n";
 
-// Handler TCP/HTTP (dispatch SYN/ACK/FIN)
-static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
-    uint8_t *ip = &pkt[ 14 ];
-    uint8_t ihl = ( ip[ 0 ] & 0x0F ) * 4;       // IHL: lower 4 bits, converted from 32-bit words to bytes
-    uint8_t *tcp = &ip[ ihl ];                  // TCP header starts after the IP header
-    uint16_t dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];       // TCP bytes 2-3 = dest. port (big-endian)
-    uint16_t src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];       // TCP bytes 0-1 = src port
-    uint32_t seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
-                ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];              // bytes 4-7 = sequence number (big-endian)
-    uint32_t our_seq = ( ( uint32_t )tcp[ 8 ] << 24 ) | ( ( uint32_t )tcp[ 9 ] << 16 ) |
-                ( ( uint32_t )tcp[ 10 ] << 8 ) | tcp[ 11 ];             // bytes 8-11 = ack number = our next seq for this connection
-    uint8_t  tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;     // Data offset: upper 4 bits, converted to bytes
-    uint8_t  flags = tcp[ 13 ];                     // TCP flags
-    uint16_t ip_total = ( ( uint16_t )ip[ 2 ] << 8 ) | ip[ 3 ];         // Total IP packet length
+// Handler TCP/HTTP (dispatch SYN/ACK/FIN), tcp / seg_len come from eth_net_ipv4_payload()
+static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint8_t *tcp, uint16_t seg_len ) {
+    uint8_t *src_ip_addr  = &pkt[ 14 + 12 ];    // IP bytes 12-15 = src address
+    uint8_t *src_mac_addr = &pkt[ 6 ];          // Ethernet bytes 6-11 = MAC source
+    uint16_t dst_port;
+    uint16_t src_port;
+    uint32_t seq;
+    uint32_t our_seq;
+    uint8_t  tcp_hlen;
+    uint8_t  flags;
     uint16_t tcp_payload_len;
-    uint8_t *src_ip_addr  = &ip[ 12 ];      // IP bytes 12-15 = src address
-    uint8_t *src_mac_addr = &pkt[ 6 ];      // Ethernet bytes 6-11 = MAC source
 
-    if ( len < 14 + ihl + 20 || ip_total < ihl + tcp_hlen || ip_total > len - 14 )
-        return;                                         // Truncated or malformed segment
-    tcp_payload_len = ip_total - ihl - tcp_hlen;
+    if ( seg_len < 20 )
+        return;                                 // Truncated segment, no complete TCP header
+    tcp_hlen = ( tcp[ 12 ] >> 4 ) * 4;          // Data offset: upper 4 bits, converted to bytes
+    if ( tcp_hlen < 20 || tcp_hlen > seg_len )
+        return;                                 // Malformed segment
+    tcp_payload_len = seg_len - tcp_hlen;
+
+    dst_port = ( ( uint16_t )tcp[ 2 ] << 8 ) | tcp[ 3 ];        // TCP bytes 2-3 = dest. port (big-endian)
+    src_port = ( ( uint16_t )tcp[ 0 ] << 8 ) | tcp[ 1 ];        // TCP bytes 0-1 = src port
+    seq = ( ( uint32_t )tcp[ 4 ] << 24 ) | ( ( uint32_t )tcp[ 5 ] << 16 ) |
+          ( ( uint32_t )tcp[ 6 ] << 8 )  | tcp[ 7 ];            // bytes 4-7 = sequence number (big-endian)
+    our_seq = ( ( uint32_t )tcp[ 8 ] << 24 ) | ( ( uint32_t )tcp[ 9 ] << 16 ) |
+              ( ( uint32_t )tcp[ 10 ] << 8 ) | tcp[ 11 ];       // bytes 8-11 = ack number = our next seq for this connection
+    flags = tcp[ 13 ];                                          // TCP flags
 
     if ( dst_port != 80 )
         return;
@@ -125,8 +117,11 @@ static void handle_tcp( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
 // Handler IPv4 (dispatch ICMP/TCP)
 static void handle_ip( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
     uint8_t *ip = &pkt[ 14 ];
-    if ( len < 34 )
-        return;
+    uint16_t l4_len;
+    uint8_t *l4 = eth_net_ipv4_payload( pkt, len, &l4_len );
+
+    if ( !l4 )
+        return;                                     // Not a valid, unfragmented IPv4 packet
 
     if ( memcmp( &ip[ 16 ], local_ip, 4 ) != 0 )    // bytes 16-19 = IP address dest.
         return;
@@ -137,7 +132,7 @@ static void handle_ip( eth_transport_t *eth, uint8_t *pkt, uint16_t len ) {
     }
 
     if ( ip[ 9 ] == ETH_NET_IP_PROTO_TCP ) {
-        handle_tcp( eth, pkt, len );
+        handle_tcp( eth, pkt, l4, l4_len );
         return;
     }
 }
@@ -150,6 +145,12 @@ static uint8_t dhcp_obtain_ip( eth_transport_t *eth ) {
     uint8_t i;
     uint8_t result;
     uint16_t rx_len;
+    uint8_t offer_ip[ 4 ];
+    uint8_t server_ip[ 4 ];
+
+    // Transaction ID derived from the MAC, so boards on the same LAN do not share it
+    dhcp_xid = 0x39017623UL ^ ( ( ( uint32_t )local_mac[ 2 ] << 24 ) | ( ( uint32_t )local_mac[ 3 ] << 16 ) |
+                                ( ( uint32_t )local_mac[ 4 ] << 8 ) | local_mac[ 5 ] );
 
     for ( retry = 0; retry < 5; retry++ ) {
         eth_net_dhcp_send( eth, dhcp_state ? ETH_NET_DHCP_MSG_REQUEST : ETH_NET_DHCP_MSG_DISCOVER,
@@ -158,15 +159,24 @@ static uint8_t dhcp_obtain_ip( eth_transport_t *eth ) {
         // Wait ~2s for a reply (20 x 100ms)
         for ( i = 0; i < 20; i++ ) {
             rx_len = eth_transport_receive( eth, rx_buf, sizeof( rx_buf ) );
-            result = eth_net_handle_dhcp( rx_buf, rx_len, dhcp_xid, dhcp_offered_ip, dhcp_server_ip, local_ip );
+            // Work on a copy, so an OFFER from another server cannot replace the selected one
+            memcpy( server_ip, dhcp_server_ip, 4 );
+            result = eth_net_handle_dhcp( rx_buf, rx_len, local_mac, dhcp_xid, offer_ip, server_ip, local_ip );
             if ( result == ETH_NET_DHCP_OFFER && dhcp_state == 0 ) {
                 log_printf( &logger, "DHCPOFFER received\r\n" );
+                memcpy( dhcp_offered_ip, offer_ip, 4 );
+                memcpy( dhcp_server_ip, server_ip, 4 );
                 dhcp_state = 1;
                 break;
             }
             if ( result == ETH_NET_DHCP_ACK && dhcp_state == 1 ) {
                 log_printf( &logger, "DHCPACK received -> IP obtained\r\n" );
                 return 1;
+            }
+            if ( result == ETH_NET_DHCP_NAK && dhcp_state == 1 ) {
+                log_printf( &logger, "DHCPNAK received -> restart discovery\r\n" );
+                dhcp_state = 0;
+                break;
             }
             Delay_ms( 100 );
         }
@@ -227,9 +237,7 @@ int main( void ) {
 
     // SPI
     rev = spi_eth_get_rev( &eth );
-    log_printf( &logger, "EREVID = 0x" );
-    log_printf( &logger, "%c", hex_digits[ ( rev >> 4 ) & 0x0F ] );
-    log_printf( &logger, "%c", hex_digits[ rev & 0x0F ] );
+    log_printf( &logger, "EREVID = 0x%c%c", (hex_digits[ ( rev >> 4 ) & 0x0F ]), (hex_digits[ rev & 0x0F ]) );
     if ( rev == 0x00 || rev == 0xFF )
         log_printf( &logger, " NOT OK" );
     log_printf( &logger, "\r\n" );
