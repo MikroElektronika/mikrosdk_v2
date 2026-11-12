@@ -50,7 +50,7 @@
 #include "drv_i2c_master.h"
 #include "drv_spi_master.h"
 #include "drv_uart.h"
-#include "core_header.h"
+#include "trace_port.h"
 #include <stdbool.h>
 #include <string.h>
 
@@ -96,20 +96,6 @@
 
 // Faults the debugger can inject at once.
 #define TRACE_MAX_FAULTS (8)
-
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
-#define TRACE_HAS_CYCCNT 1
-#define TRACE_DEMCR (*(volatile uint32_t *)0xE000EDFCUL)
-#define TRACE_DEMCR_TRCENA (1UL << 24)
-#define TRACE_DWT_CTRL (*(volatile uint32_t *)0xE0001000UL)
-#define TRACE_DWT_CTRL_CYCCNTENA (1UL << 0)
-#define TRACE_DWT_CYCCNT (*(volatile uint32_t *)0xE0001004UL)
-// Cortex-M7 keeps the DWT locked until this key is written; other cores have no such register.
-#define TRACE_DWT_LAR (*(volatile uint32_t *)0xE0001FB0UL)
-#define TRACE_DWT_LAR_KEY (0xC5ACCE55UL)
-#else
-#define TRACE_HAS_CYCCNT 0
-#endif
 
 // -------------------------------------------------------------- PRIVATE TYPES
 
@@ -233,42 +219,11 @@ static pin_name_t trace_cs_pin;    // selected chip select, while trace_cs_selec
 // Driver object whose call a fault just changed: its record is marked injected.
 static const void *trace_injected = NULL;
 
-#if TRACE_HAS_CYCCNT
-static bool trace_cyccnt_running = false;
+#if TRACE_PORT_HAS_COUNTER
+static bool trace_counter_running = false;
 #endif
 
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
-
-#if TRACE_HAS_CYCCNT
-static void trace_cyccnt_start( void )
-{
-    TRACE_DEMCR |= TRACE_DEMCR_TRCENA;
-    #ifdef __cortex_m7__
-    TRACE_DWT_LAR = TRACE_DWT_LAR_KEY;
-    #endif
-    TRACE_DWT_CYCCNT = 0;
-    TRACE_DWT_CTRL |= TRACE_DWT_CTRL_CYCCNTENA;
-
-    // The counter is optional in the architecture: check that it really counts.
-    uint32_t first = TRACE_DWT_CYCCNT;
-    __asm volatile ( "nop\n\tnop\n\tnop\n\tnop" );
-    trace_cyccnt_running = ( TRACE_DWT_CYCCNT != first );
-}
-#endif
-
-// Hooks run in interrupts too (UART callbacks). The previous state is restored, so that a
-// hook called inside a critical section of the application does not enable interrupts.
-static inline uint32_t trace_lock( void )
-{
-    uint32_t primask;
-    __asm volatile ( "mrs %0, primask\n\tcpsid i" : "=r" ( primask ) :: "memory" );
-    return primask;
-}
-
-static inline void trace_unlock( uint32_t primask )
-{
-    __asm volatile ( "msr primask, %0" :: "r" ( primask ) : "memory" );
-}
 
 static void record_u8( trace_record_t *record, uint8_t value )
 {
@@ -725,14 +680,14 @@ static bool trace_bus_burst( uint8_t id, trace_lane_t *lane, uint32_t start, uin
 static void trace_level(const void *obj, uint8_t kind, uint8_t level, bool changes_only,
                          uint8_t injected )
 {
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, kind, &id );
     uint32_t now = trace_ticks();
     level = level ? 1 : 0;
     if ( lane && changes_only && ( lane->level == level ) && ( lane->injected == injected ) )
     {
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
 
@@ -750,7 +705,7 @@ static void trace_level(const void *obj, uint8_t kind, uint8_t level, bool chang
         record_u8( &record, level );
         trace_emit( id, lane, &record );
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 static void trace_emit_value( uint8_t id, trace_lane_t *lane, float value, uint8_t injected )
@@ -768,10 +723,10 @@ static void trace_emit_value( uint8_t id, trace_lane_t *lane, float value, uint8
 
 __attribute__((weak)) uint32_t trace_tick_hz( void )
 {
-    #if TRACE_HAS_CYCCNT && defined(FOSC_KHZ_VALUE)
-    if ( trace_cyccnt_running )
+    #if TRACE_PORT_HAS_COUNTER
+    if ( trace_counter_running )
     {
-        return (uint32_t)FOSC_KHZ_VALUE * 1000UL;
+        return TRACE_PORT_COUNTER_HZ;
     }
     #endif
     return 0;
@@ -779,10 +734,10 @@ __attribute__((weak)) uint32_t trace_tick_hz( void )
 
 __attribute__((weak)) uint32_t trace_ticks( void )
 {
-    #if TRACE_HAS_CYCCNT
-    if ( trace_cyccnt_running )
+    #if TRACE_PORT_HAS_COUNTER
+    if ( trace_counter_running )
     {
-        return TRACE_DWT_CYCCNT;
+        return trace_port_counter();
     }
     #endif
     return trace_sequence++;
@@ -795,9 +750,9 @@ void __attribute__((noinline, used)) traceBuffFullBreak( void )
 
 void trace_set_flush_interval( uint32_t ms )
 {
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     trace_set_flush_interval_locked( ms );
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void trace_init( void )
@@ -807,16 +762,16 @@ void trace_init( void )
         return;
     }
 
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     // Started already, by an earlier call or by the first recorded event: restarting would
     // reset the time base under the records already made.
     if ( trace_started )
     {
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
-    #if TRACE_HAS_CYCCNT
-    trace_cyccnt_start();
+    #if TRACE_PORT_HAS_COUNTER
+    trace_counter_running = trace_port_counter_start();
     #endif
     trace_hz = trace_tick_hz();
     // Bursts need a time base too.
@@ -826,15 +781,15 @@ void trace_init( void )
     trace_last_flush = trace_ticks();
     trace_started = true;
     trace_resync = true;
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void trace_flush( void )
 {
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     trace_end_bursts( trace_ticks(), true );
     trace_flush_locked();
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void trace_value( const char *name, float value )
@@ -844,7 +799,7 @@ void trace_value( const char *name, float value )
         return;
     }
 
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( name, TRACE_LANE_VALUE, &id );
     if ( lane )
@@ -852,7 +807,7 @@ void trace_value( const char *name, float value )
         lane->name = name;
         trace_emit_value( id, lane, value, 0 );
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 uint32_t drv_trace_now( void )
@@ -898,7 +853,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     // The hook runs right after the transfer: now is its end.
     uint32_t duration = trace_ticks() - start;
     const i2c_master_t *i2c = (const i2c_master_t *)obj;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, TRACE_LANE_I2C, &id );
     if ( lane && !lane->pin_count )
@@ -914,7 +869,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     {
         (void)trace_take_injected( obj );
         trace_auto_flush();
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
 
@@ -923,7 +878,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     record_u8( &record, i2c->config.addr );
     record_transfer( &record, op, write_buf, write_len, read_buf, read_len, result, duration );
     trace_emit( id, lane, &record );
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
@@ -936,7 +891,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
 
     uint32_t duration = trace_ticks() - start;
     const spi_master_t *spi = (const spi_master_t *)obj;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, TRACE_LANE_SPI, &id );
     if ( lane && !lane->pin_count )
@@ -961,7 +916,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     {
         (void)trace_take_injected( obj );
         trace_auto_flush();
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
 
@@ -969,7 +924,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     record_header( &record, TRACE_RECORD_SPI | trace_take_injected( obj ), id, start );
     record_transfer( &record, op, write_buf, write_len, read_buf, read_len, result, duration );
     trace_emit( id, lane, &record );
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
@@ -981,7 +936,7 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
 
     uint32_t duration = trace_ticks() - start;
     const uart_t *uart = (const uart_t *)obj;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, TRACE_LANE_UART, &id );
     if ( lane && !lane->pin_count )
@@ -997,7 +952,7 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
     {
         (void)trace_take_injected( obj );
         trace_auto_flush();
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
 
@@ -1009,13 +964,13 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
     record_u8( &record, kept );
     record_bytes( &record, buf, kept );
     trace_emit( id, lane, &record );
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
 {
     // Kept before trace_init too: drivers are often initialized first.
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, is_output ? TRACE_LANE_GPIO_OUT : TRACE_LANE_GPIO_IN, &id );
     if ( lane )
@@ -1034,7 +989,7 @@ void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
         lane->written = false;
         lane->fast_writes = 0;
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void drv_trace_gpio_out( const void *obj, uint8_t level )
@@ -1054,7 +1009,7 @@ uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
 
     // A fault holding the pin gives its level instead of the one read.
     uint8_t injected = 0;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, TRACE_LANE_GPIO_IN, &id );
     const volatile trace_fault_t *fault =
@@ -1064,7 +1019,7 @@ uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
         level = fault->value ? 1 : 0;
         injected = TRACE_RECORD_INJECTED;
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 
     // Polling loops read the same level again and again: only changes are recorded.
     trace_level( obj, TRACE_LANE_GPIO_IN, level, true, injected );
@@ -1078,7 +1033,7 @@ void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
         return;
     }
 
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     if ( selected )
     {
         trace_cs_pin = chip_select;
@@ -1110,7 +1065,7 @@ void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
         lane->pins[ 0 ] = chip_select;
         lane->pin_count = 1;
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 
     if ( lane )
     {
@@ -1128,7 +1083,7 @@ void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float v
     // Raw counts and volts of one input are two lanes, so that a lane never mixes units. The
     // volts lane is keyed one byte into the driver object: no other object starts there.
     const void *key = is_voltage ? (const void *)( (const uint8_t *)obj + 1 ) : obj;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( key, TRACE_LANE_VALUE, &id );
     if ( lane )
@@ -1141,7 +1096,7 @@ void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float v
         }
         trace_emit_value( id, lane, value, trace_take_injected( obj ) );
     }
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
@@ -1153,7 +1108,7 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     }
 
     uint32_t duration = trace_ticks() - start;
-    uint32_t primask = trace_lock();
+    uint32_t irq_state = trace_port_lock();
     uint8_t id;
     trace_lane_t *lane = trace_lane( obj, TRACE_LANE_ONE_WIRE, &id );
     if ( lane && !lane->pin_count )
@@ -1170,7 +1125,7 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     {
         (void)trace_take_injected( obj );
         trace_auto_flush();
-        trace_unlock( primask );
+        trace_port_unlock( irq_state );
         return;
     }
 
@@ -1184,7 +1139,7 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     record_u8( &record, kept );
     record_bytes( &record, buf, kept );
     trace_emit( id, lane, &record );
-    trace_unlock( primask );
+    trace_port_unlock( irq_state );
 }
 
 uint8_t drv_trace_fault_i2c( const void *obj )

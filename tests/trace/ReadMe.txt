@@ -25,4 +25,4 @@ Error pins:
 Run the test without stopping between the checks: a debugger that reads the trace empties
 the buffer whenever the program stops. Breakpoints on the error lines are fine.
 
-The burst check (TEST_PIN_6) runs only with a time base (Cortex-M3 and newer).
+The burst check (TEST_PIN_6) runs only with a time base: Cortex-M3 and newer, RISC-V and PIC32.

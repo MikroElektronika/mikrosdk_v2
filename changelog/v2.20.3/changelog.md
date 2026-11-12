@@ -33,9 +33,9 @@
     + Fault injection while debugging: NECTO Studio can make an I2C device stop answering, hold SPI MISO at a byte, hold a GPIO input at a level, force an ADC value, and take the devices off a 1-Wire bus. The debugger writes the faults to the trace library (`__traceFaults`); the drivers ask fault hooks (`drv_trace_fault_*()`) before or after each call, and the trace marks the calls a fault changed.
     + Records are kept in a RAM buffer (512 bytes by default, `TRACE_BUFFER( size )` to change it) and handed to the debugger when the buffer is full, on `trace_flush()`, or every 500 ms of program time (`trace_set_flush_interval()`).
     + Fast GPIO writes (a display strobe, a bit-banged bus) and fast bus transfers (a display filled pixel by pixel over SPI) are coalesced into bursts, so they do not stop the program over and over.
-    + Time base: the DWT cycle counter on Cortex-M3 and newer; other cores keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
+    + Time base: the core cycle counter (DWT CYCCNT on Cortex-M3 and newer, `mcycle` on RISC-V, CP0 Count on PIC32); Cortex-M0/M0+ keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
     + Added trace hooks to the GPIO Out, GPIO In, I2C Master, SPI Master, UART, ADC and 1-Wire drivers (`drv_trace.h`). Without the trace library the hooks cost one load and a branch per call.
-    + The library is built for ARM with GCC and Clang. With mikroC and XC8 the drivers are built without hooks.
+    + The library is built for ARM (GCC and Clang), RISC-V (GCC) and PIC32 (XC32); the architecture-specific code (interrupt lock, cycle counter) is in `trace_port.h`. dsPIC/PIC24 (XC16) is not ported yet. With mikroC and XC8 the drivers are built without hooks.
     + Added validation test under `tests/trace`.
 + **Timestamped plot**
   + Added `plot_ts()` to `plot.h`: like `plot()`, with the time the value was taken on the device, so NECTO Studio keeps the real spacing of the values.

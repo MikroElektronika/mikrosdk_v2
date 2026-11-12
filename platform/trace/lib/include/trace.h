@@ -173,9 +173,10 @@ void trace_value( const char *name, float value );
 
 /**
  * @brief Time base of the trace, in ticks.
- * @details Cortex-M3 and newer: the DWT cycle counter. Other cores: a record counter, which
- * keeps the order but not the timing. Weak: an application can supply its own free-running
- * timer together with #trace_tick_hz.
+ * @details The core's cycle counter: DWT CYCCNT on Cortex-M3 and newer, mcycle on RISC-V,
+ * CP0 Count on PIC32 (half the core clock). Other cores (Cortex-M0/M0+): a record counter,
+ * which keeps the order but not the timing. Weak: an application can supply its own
+ * free-running timer together with #trace_tick_hz.
  * @return Current time, in ticks.
  *
  * @b Example
