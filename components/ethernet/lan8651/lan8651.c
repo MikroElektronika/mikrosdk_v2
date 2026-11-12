@@ -429,7 +429,7 @@ uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
     uint16_t tries;
     uint8_t  chunk_len;
 
-    if ( !buf || !len || len > LAN8651_FRAME_SIZE )
+    if ( !buf || !len || len > LAN8651_TX_FRAME_SIZE )
         return 0;
 
     // Pad runt frames to the Ethernet minimum (FCS is appended by the MAC)

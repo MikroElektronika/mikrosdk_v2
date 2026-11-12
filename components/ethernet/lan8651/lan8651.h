@@ -56,6 +56,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define LAN8651_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -77,7 +81,8 @@ typedef struct {
 #define LAN8651_CHUNK_SIZE          ( LAN8651_CHUNK_PAYLOAD_SIZE + 4 )
 #define LAN8651_FCS_SIZE            4
 #define LAN8651_MIN_FRAME_SIZE      60
-#define LAN8651_FRAME_SIZE          1518
+#define LAN8651_FRAME_SIZE          1518    // Maximum frame length including FCS
+#define LAN8651_TX_FRAME_SIZE       1514    // Largest frame lan8651_send_packet() accepts, the MAC appends the FCS
 
 /**
  * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
@@ -133,7 +138,7 @@ err_t    lan8651_init( eth_transport_t *eth );
  * @brief Send an Ethernet frame as a sequence of TC6 data chunks.
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS), runt frames are padded.
- * @param[in] len Frame length in bytes, at most LAN8651_FRAME_SIZE.
+ * @param[in] len Frame length in bytes (without FCS), at most LAN8651_TX_FRAME_SIZE.
  * @return Number of bytes sent, 0 on failure.
  */
 uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
@@ -252,6 +257,10 @@ extern eth_transport_driver_t lan8651_driver;
 #define LAN8651_PLCA_CTRL1          0xCA02
 #define LAN8651_PLCA_STS            0xCA03
 #define LAN8651_PLCA_STS_PST        0x00008000UL
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

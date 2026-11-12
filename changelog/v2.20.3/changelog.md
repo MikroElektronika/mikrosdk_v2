@@ -57,10 +57,15 @@
   + Fixed SPI Ethernet controller register and protocol bugs
     + W5500 no longer blocks broadcast frames, ARP requests and DHCP replies are received again
     + W6100 now clears the send interrupt through `Sn_IRCLR` and locks the network registers with the documented key, MAC/IP can still be changed after initialization (e.g. after DHCP)
+    + W6100 MACRAW socket now enables MAC filtering, frames addressed to other devices are no longer received
     + ENC28J60 PHY register reads (link status, PHY ID) now return the correct value, PHY duplex now follows the full duplex setting
     + ENC28J60 releases receive buffer space for dropped frames and reports failed transmissions
     + LAN8651 validates the receive footer parity and discards frames marked for dropping
     + LAN9250 received frames no longer include the 4-byte FCS, consistent with the other controllers
+    + ENC28J60, LAN8651 and LAN9250 reject frames longer than 1514 bytes on send, the MAC appends the 4-byte FCS
+  + Fixed SPI Ethernet build issues
+    + ENC28J60 register names (`MACON1`, `ECON1`, `EIR`, ...) no longer clash with PIC18F97J60 family SFRs
+    + Controller driver headers can be included from C++ sources (`extern "C"` guards)
   + SPI Ethernet now reports initialization and bus failures
     + Initialization verifies the chip identity and fails if no controller responds, e.g. wrong mikroBUS position
     + Failed SPI transactions and controller timeouts are reported instead of returning success
@@ -81,6 +86,9 @@
 >> + `W5500_Sn_MR_MF` and `W6100_Sn_MR_MF` corrected to `0x80`, `W6100_PHYSR_RST` replaced by `W6100_PHYSR_CAB` and `W6100_PHYCR1_RST`
 >> + LAN9250 `read_packet` returns the frame without FCS (4 bytes shorter)
 >> + `eth_transport_t` has a new `bus_error` member
+>> + New `ENC28J60_TX_FRAME_SIZE`, `LAN8651_TX_FRAME_SIZE` and `LAN9250_TX_FRAME_SIZE` (1514), the largest frame `send_packet` accepts
+>> + ENC28J60 control register and memory layout macros (`MACON1`, `ECON1`, `RAM_SIZE`, `TRANSMIT_START`, ...) are no longer in `enc28j60.h`, PHY register macros remain
+>> + `ETH_NET_TX_BUF_SIZE` can no longer be redefined by the application, the library is shipped precompiled with a 400-byte buffer
 
 ### NEW HARDWARE
 
