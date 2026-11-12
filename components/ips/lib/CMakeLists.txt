@@ -4,6 +4,7 @@
 string(REGEX REPLACE "_CLICK$" "" _ips_click "${_MSDK_TFT_BOARD_}")
 string(REPLACE "_" "" _ips_click "${_ips_click}")
 set(_ips_position_var "MIKROBUS_POSITION_${_ips_click}")
+string(REGEX REPLACE "1$" "" _ips_position_var "${_ips_position_var}")
 
 ips_lvgl_mikrobus_selection(${CMAKE_CURRENT_BINARY_DIR}/include ips_lvgl_mikrobus.h
                             ${${_ips_position_var}})
