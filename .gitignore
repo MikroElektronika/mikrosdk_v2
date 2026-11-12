@@ -1,6 +1,7 @@
 *.asm
 .mikrobus
 .vscode
+.mikrobus
 output
 __pycache__
 *.7z

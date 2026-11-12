@@ -96,7 +96,9 @@ err_t    enc28j60_configure( eth_transport_t *eth, eth_bus_spi_t *bus, enc28j60_
  * transmit buffers, the receive filter, the MAC and the PHY, reads the chip
  * revision and enables reception.
  * @param[in] eth Ethernet transport instance.
- * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR if the clock
+ * does not become ready, EREVID is not valid (no chip responding) or a bus
+ * transaction fails.
  * @pre enc28j60_configure() must have been called beforehand.
  */
 err_t    enc28j60_init( eth_transport_t *eth );
@@ -106,7 +108,8 @@ err_t    enc28j60_init( eth_transport_t *eth );
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS).
  * @param[in] len Frame length in bytes, at most ENC28J60_FRAME_SIZE.
- * @return Number of bytes sent, 0 if the frame is too long.
+ * @return Number of bytes sent, 0 if the frame is too long, the transmission
+ * failed or timed out.
  */
 uint16_t enc28j60_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
@@ -137,7 +140,7 @@ uint8_t  enc28j60_get_link_status( eth_transport_t *eth );
  * @brief Program the MAC address registers.
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    enc28j60_set_mac( eth_transport_t *eth, uint8_t *mac );
 
@@ -281,6 +284,9 @@ extern eth_transport_driver_t enc28j60_driver;
 #define PHIE             0x12
 #define PHIR             0x13
 #define PHLCON           0x14
+// PHCON1 bits
+#define PHCON1_PRST      0x8000
+#define PHCON1_PDPXMD    0x0100
 
 // SPI instruction set for the ENC28J60
 #define ENC28J60_RCR_CMD 0x00       // Read Control Register
