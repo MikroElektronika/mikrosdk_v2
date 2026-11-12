@@ -119,8 +119,9 @@ static void trace_port_unlock( uint32_t primask )
 }
 
 // DWT cycle counter: Cortex-M3 and newer (core defines of MikroSDK.HalLowLevelCore). Cortex-M0
-// has none, and its debug registers fault when written.
-#if defined(__cortex_m3__) || defined(__cortex_m4__) || defined(__cortex_m7__) || defined(__cortex_m33__)
+// and M23 have none, and their debug registers fault when written.
+#if defined(__cortex_m3__) || defined(__cortex_m4__) || defined(__cortex_m7__) || \
+    defined(__cortex_m33__) || defined(__cortex_m85__)
 #define TRACE_PORT_HAS_COUNTER 1
 #define TRACE_PORT_COUNTER_HZ ( (uint32_t)Get_Fosc_kHz() * 1000UL )
 
@@ -230,8 +231,11 @@ static inline void trace_port_unlock( uint32_t primask )
     __asm volatile ( "msr primask, %0" :: "r" ( primask ) : "memory" );
 }
 
-// DWT cycle counter: Cortex-M3 and newer, optional in the architecture. Cortex-M0/M0+ have none.
-#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__)
+// DWT cycle counter: Cortex-M3 and newer, optional in the architecture. Cortex-M0/M0+ and M23
+// (v6-M, v8-M Baseline) have none. Cortex-M55/M85 are v8.1-M Mainline: Clang says so, GCC says
+// v8-M Mainline.
+#if defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__) || defined(__ARM_ARCH_8M_MAIN__) || \
+    defined(__ARM_ARCH_8_1M_MAIN__)
 #define TRACE_PORT_HAS_COUNTER 1
 #define TRACE_PORT_COUNTER_HZ TRACE_PORT_FOSC_HZ
 
