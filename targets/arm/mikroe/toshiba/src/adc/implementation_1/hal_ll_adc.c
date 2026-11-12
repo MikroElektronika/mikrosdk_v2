@@ -63,9 +63,14 @@
 
 #define hal_ll_gpio_port_get_port_index( __index ) ( (uint8_t) ( __index & 0xF0 ) >> 4 )
 
+#ifdef TMPM4L
+#define HAL_LL_CG_ADC0_BIT             (12)
+#define HAL_LL_CG_ADC1_BIT             (13)
+#else
 #define HAL_LL_CG_ADC0_BIT             (2)
 #define HAL_LL_CG_ADC1_BIT             (3)
 #define HAL_LL_CG_ADC2_BIT             (4)
+#endif
 #define HAL_LL_CG_ADCKEN0_BIT          (16)
 #define HAL_LL_CG_ADCKEN1_BIT          (17)
 #define HAL_LL_CG_ADCKEN2_BIT          (18)
@@ -92,6 +97,7 @@
 #define HAL_LL_ADC_MOD1_40MHZ  (0x00306122u)  /* SCLK=40MHz, conv~0.96us */
 #define HAL_LL_ADC_MOD1_30MHZ  (0x00308012u)  /* SCLK=30MHz, conv~0.91us */
 #define HAL_LL_ADC_MOD1_20MHZ  (0x00104011u)  /* SCLK=20MHz, conv~1.09us */
+#define HAL_LL_ADC_MOD1_TMPM4L (0x00002000u)  /* Write as 0x00002000 */
 #define HAL_LL_ADC_MOD2_ALL    (0x00000000u)
 
 #define HAL_LL_ADC_EXAZ_m1        (0x0u)
@@ -496,14 +502,23 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
 
     uint8_t port = hal_ll_gpio_port_get_port_index( map->pin );
 
+    #ifdef TMPM4L
+    // TMPM4L has no FSYSMENA/FSYSMENB, port and ADC clocks are in FSYSENA/FSYSENB
+    volatile uint32_t *port_clk_reg = &hal_ll_cg_reg->fsysena;
+    volatile uint32_t *adc_clk_reg  = &hal_ll_cg_reg->fsysenb;
+    #else
+    volatile uint32_t *port_clk_reg = &hal_ll_cg_reg->fsysmena;
+    volatile uint32_t *adc_clk_reg  = &hal_ll_cg_reg->fsysmenb;
+    #endif
+
     // Enable port clock
-    set_reg_bit( &hal_ll_cg_reg->fsysmena, port );
+    set_reg_bit( port_clk_reg, port );
 
     switch ( map->module_index ) {
         #ifdef ADC_MODULE_0
         case hal_ll_adc_module_num( ADC_MODULE_0 ):
             // Enable clock for ADC0 module
-            set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC0_BIT );
+            set_reg_bit( adc_clk_reg, HAL_LL_CG_ADC0_BIT );
             // ADCKEN0
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN0_BIT );
             break;
@@ -511,7 +526,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         #ifdef ADC_MODULE_1
         case hal_ll_adc_module_num( ADC_MODULE_1 ):
             // Enable clock for ADC1 module
-            set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC1_BIT );
+            set_reg_bit( adc_clk_reg, HAL_LL_CG_ADC1_BIT );
             // ADCKEN1
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN1_BIT );
             break;
@@ -519,7 +534,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         #ifdef ADC_MODULE_2
         case hal_ll_adc_module_num( ADC_MODULE_2 ):
             // Enable clock for ADC2 module
-            set_reg_bit( &hal_ll_cg_reg->fsysmenb, HAL_LL_CG_ADC2_BIT );
+            set_reg_bit( adc_clk_reg, HAL_LL_CG_ADC2_BIT );
             // ADCKEN2
             set_reg_bit( &hal_ll_cg_reg->spclken, HAL_LL_CG_ADCKEN2_BIT );
             break;
@@ -571,6 +586,11 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
         exaz   = HAL_LL_ADC_EXAZ_m1;
         mod1   = HAL_LL_ADC_MOD1_20MHZ;
     }
+
+    #ifdef TMPM4L
+    // TMPM4L reference manual: ADxMOD1 must be written as 0x00002000
+    mod1 = HAL_LL_ADC_MOD1_TMPM4L;
+    #endif
 
     // Configuring these registers is allowed only if CR0<ADEN> = 0
     write_reg( &base->mod1, mod1 );
