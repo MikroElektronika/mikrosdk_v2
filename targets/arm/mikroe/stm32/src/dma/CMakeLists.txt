@@ -13,7 +13,8 @@ find_mcu_header_path(hal_ll_def_list mcu_header_path MEMAKE_MCU_NAME_FIRST_7)
 ## Note2 - STM32H7 requires a separate implementation as it has DMA controller
 ##         sith separate DMAMUX controller per DMA.
 if (${MCU_NAME} MATCHES "^STM32F[247].+")
-    set(dma_subimplementation "implementation_1/hal_ll_dma.c")
+    # hal_ll_dma_irq.c: stream interrupt handlers, linked only when a callback is registered.
+    set(dma_subimplementation "implementation_1/hal_ll_dma.c" "implementation_1/hal_ll_dma_irq.c")
 else()
     set(dma_subimplementation "implementation_2/hal_ll_dma.c")
 endif()

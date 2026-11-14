@@ -363,4 +363,67 @@ err_t hal_dma_close( hal_dma_t *obj )
     return HAL_DMA_SUCCESS;
 }
 
+err_t hal_dma_set_interrupts( hal_dma_t *obj, uint8_t events )
+{
+    err_t status = HAL_DMA_ERROR;
+
+    #ifdef HAL_LL_DMA_EXT_SUPPORTED
+    if ( obj && obj->allocated && obj->initialized ) {
+        status = hal_ll_dma_set_interrupts( (hal_ll_dma_t *)obj, events );
+    }
+    #else
+    (void)obj;
+    (void)events;
+    #endif
+
+    return status;
+}
+
+uint8_t hal_dma_get_status( hal_dma_t *obj )
+{
+    uint8_t events = 0;
+
+    #ifdef HAL_LL_DMA_EXT_SUPPORTED
+    if ( obj && obj->allocated && obj->initialized ) {
+        events = hal_ll_dma_get_status( (hal_ll_dma_t *)obj );
+    }
+    #else
+    (void)obj;
+    #endif
+
+    return events;
+}
+
+err_t hal_dma_clear_status( hal_dma_t *obj, uint8_t events )
+{
+    err_t status = HAL_DMA_ERROR;
+
+    #ifdef HAL_LL_DMA_EXT_SUPPORTED
+    if ( obj && obj->allocated && obj->initialized ) {
+        status = hal_ll_dma_clear_status( (hal_ll_dma_t *)obj, events );
+    }
+    #else
+    (void)obj;
+    (void)events;
+    #endif
+
+    return status;
+}
+
+err_t hal_dma_set_fifo( hal_dma_t *obj, bool enable )
+{
+    err_t status = HAL_DMA_ERROR;
+
+    #ifdef HAL_LL_DMA_EXT_SUPPORTED
+    if ( obj && obj->allocated && obj->initialized ) {
+        status = hal_ll_dma_set_fifo( (hal_ll_dma_t *)obj, enable );
+    }
+    #else
+    (void)obj;
+    (void)enable;
+    #endif
+
+    return status;
+}
+
 // ------------------------------------------------------------------------- END

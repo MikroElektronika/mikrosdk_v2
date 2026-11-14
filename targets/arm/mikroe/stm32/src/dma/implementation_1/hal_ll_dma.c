@@ -44,6 +44,7 @@
 #include "hal_ll_rcc.h"
 #include "hal_ll_dma.h"
 #include "hal_ll_gpio.h"
+#include "hal_ll_core.h"
 
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -59,7 +60,19 @@
 #define HAL_LL_DMA_IT_TE ((uint32_t)(1U << 2))
 #define HAL_LL_DMA_IT_DME ((uint32_t)(1U << 1))
 #define HAL_LL_DMA_IT_FE_MASK (0x80U)
-#define HAL_LL_DMA_IT_CLEAR_MASK (0x3FUL)
+#define HAL_LL_DMA_IT_CLEAR_MASK (0x3DUL)
+
+/*!< @brief Stream flags within a stream's LISR/HISR (LIFCR/HIFCR) group. */
+#define HAL_LL_DMA_FLAG_FE  (1UL << 0)
+#define HAL_LL_DMA_FLAG_DME (1UL << 2)
+#define HAL_LL_DMA_FLAG_TE  (1UL << 3)
+#define HAL_LL_DMA_FLAG_HT  (1UL << 4)
+#define HAL_LL_DMA_FLAG_TC  (1UL << 5)
+
+/*!< @brief FIFO mode selected by hal_ll_dma_set_fifo (default keeps the init behaviour). */
+#define HAL_LL_DMA_FIFO_DEFAULT (0U)
+#define HAL_LL_DMA_FIFO_ENABLED (1U)
+#define HAL_LL_DMA_FIFO_DIRECT  (2U)
 
 /*!< @brief DMA SCR register masks. */
 #if defined(STM32F2xx) || defined(STM32F4xx)
@@ -209,7 +222,47 @@ static const dma_control_struct_t dma_controller[ DMA_NUM_OF_MODULES ] =
     #endif
 };
 
+/*!< @brief Stream NVIC vector numbers (IRQn + 16), identical on STM32F2/F4/F7. */
+static const uint8_t hal_ll_dma_nvic[ DMA_NUM_OF_MODULES ][ DMA_NUM_OF_STREAMS ] =
+{
+    { 27, 28, 29, 30, 31, 32, 33, 63 },  // DMA1 Stream0..7
+    { 72, 73, 74, 75, 76, 84, 85, 86 }   // DMA2 Stream0..7
+};
+
+/**
+ * @brief Per-stream settings that survive reconfiguration.
+ * @details The HAL reconfigures a stream on every transfer config (abort, then
+ *          mode/direction/priority re-init), which clears the stream's
+ *          interrupt enables and resets its FIFO mode. Both are kept here and
+ *          re-applied. Interrupt events are also read by hal_ll_dma_irq.c.
+ */
+uint8_t hal_ll_dma_irq_events[ DMA_NUM_OF_MODULES ][ DMA_NUM_OF_STREAMS ];
+static uint8_t hal_ll_dma_fifo_mode[ DMA_NUM_OF_MODULES ][ DMA_NUM_OF_STREAMS ];
+
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
+
+/**
+ * @brief Gets the interrupt status/clear registers of a stream.
+ * @details Streams 0-3 use LISR/LIFCR, streams 4-7 HISR/HIFCR.
+ * @param[in] module DMA module number.
+ * @param[in] stream DMA stream number.
+ * @return Register block with isr/ifcr of the stream's group.
+ */
+static dma_isr_registers_t *hal_ll_dma_get_isr_registers( uint8_t module, uint8_t stream );
+
+/**
+ * @brief Gets the bit offset of a stream's flag group in LISR/HISR.
+ * @param[in] stream DMA stream number.
+ * @return 0, 6, 16 or 22.
+ */
+static uint8_t hal_ll_dma_get_flag_shift( uint8_t stream );
+
+/**
+ * @brief Re-applies the stream's interrupt enables kept in hal_ll_dma_irq_events.
+ * @param[in] obj DMA object.
+ * @return Nothing.
+ */
+static void hal_ll_dma_apply_interrupts( hal_ll_dma_t *obj );
 
 /**
  * @brief Gets current stream address.
@@ -474,6 +527,10 @@ hal_ll_err_t hal_ll_dma_set_parameters( hal_ll_dma_t *obj, uint32_t addr_src, ui
         // Configure DMA Stream destination address.
         dma->m0ar = addr_dst;
     }
+
+    // The HAL aborted the stream before this (clearing its interrupt enables).
+    hal_ll_dma_apply_interrupts( obj );
+
     return HAL_LL_DMA_SUCCESS;
 }
 
@@ -503,8 +560,8 @@ hal_ll_err_t hal_ll_dma_transfer_abort( hal_ll_dma_t *obj ) {
     hal_ll_err_t status = HAL_LL_DMA_SUCCESS;
     dma_handle_t *dma = (dma_handle_t *)obj->handle;
 
-    // Calculate DMA base and stream number.
-    dma_isr_registers_t *regs = (dma_isr_registers_t *)(dma_controller[obj->module].stream_base - SCR_BASE_OFFSET + (4 * (obj->channel / 4)));
+    // Interrupt status/clear registers of the stream's group (LISR/LIFCR or HISR/HIFCR).
+    dma_isr_registers_t *regs = hal_ll_dma_get_isr_registers( obj->module, obj->stream );
 
     // Disable all the transfer interrupts.
     dma->cr &= ~(HAL_LL_DMA_IT_TC | HAL_LL_DMA_IT_TE | HAL_LL_DMA_IT_DME);
@@ -518,12 +575,136 @@ hal_ll_err_t hal_ll_dma_transfer_abort( hal_ll_dma_t *obj ) {
 
     // Clear all interrupt flags at correct offset within the register.
     if ( HAL_LL_DMA_SUCCESS == status )
-        regs->ifcr = HAL_LL_DMA_IT_CLEAR_MASK << obj->stream;
+        regs->ifcr = HAL_LL_DMA_IT_CLEAR_MASK << hal_ll_dma_get_flag_shift( obj->stream );
 
     return status;
 }
 
+hal_ll_err_t hal_ll_dma_set_interrupts( hal_ll_dma_t *obj, uint8_t events ) {
+    if ( !obj || ( obj->module >= DMA_NUM_OF_MODULES ) || ( obj->stream >= DMA_NUM_OF_STREAMS ) )
+        return HAL_LL_DMA_ERROR;
+
+    hal_ll_dma_irq_events[ obj->module ][ obj->stream ] = events;
+    if ( obj->handle )
+        hal_ll_dma_apply_interrupts( obj );
+
+    if ( events )
+        hal_ll_core_enable_irq( hal_ll_dma_nvic[ obj->module ][ obj->stream ] );
+    else
+        hal_ll_core_disable_irq( hal_ll_dma_nvic[ obj->module ][ obj->stream ] );
+
+    return HAL_LL_DMA_SUCCESS;
+}
+
+uint8_t hal_ll_dma_get_status_raw( uint8_t module, uint8_t stream ) {
+    dma_isr_registers_t *regs = hal_ll_dma_get_isr_registers( module, stream );
+    uint32_t flags = regs->isr >> hal_ll_dma_get_flag_shift( stream );
+    uint8_t events = 0;
+
+    if ( flags & HAL_LL_DMA_FLAG_TC )
+        events |= HAL_LL_DMA_EVENT_TRANSFER_COMPLETE;
+    if ( flags & HAL_LL_DMA_FLAG_HT )
+        events |= HAL_LL_DMA_EVENT_HALF_TRANSFER;
+    if ( flags & HAL_LL_DMA_FLAG_TE )
+        events |= HAL_LL_DMA_EVENT_TRANSFER_ERROR;
+    if ( flags & HAL_LL_DMA_FLAG_DME )
+        events |= HAL_LL_DMA_EVENT_DIRECT_MODE_ERROR;
+    if ( flags & HAL_LL_DMA_FLAG_FE )
+        events |= HAL_LL_DMA_EVENT_FIFO_ERROR;
+
+    return events;
+}
+
+void hal_ll_dma_clear_status_raw( uint8_t module, uint8_t stream, uint8_t events ) {
+    dma_isr_registers_t *regs = hal_ll_dma_get_isr_registers( module, stream );
+    uint32_t flags = 0;
+
+    if ( events & HAL_LL_DMA_EVENT_TRANSFER_COMPLETE )
+        flags |= HAL_LL_DMA_FLAG_TC;
+    if ( events & HAL_LL_DMA_EVENT_HALF_TRANSFER )
+        flags |= HAL_LL_DMA_FLAG_HT;
+    if ( events & HAL_LL_DMA_EVENT_TRANSFER_ERROR )
+        flags |= HAL_LL_DMA_FLAG_TE;
+    if ( events & HAL_LL_DMA_EVENT_DIRECT_MODE_ERROR )
+        flags |= HAL_LL_DMA_FLAG_DME;
+    if ( events & HAL_LL_DMA_EVENT_FIFO_ERROR )
+        flags |= HAL_LL_DMA_FLAG_FE;
+
+    // LIFCR/HIFCR are write-1-to-clear.
+    regs->ifcr = flags << hal_ll_dma_get_flag_shift( stream );
+}
+
+uint8_t hal_ll_dma_get_status( hal_ll_dma_t *obj ) {
+    if ( !obj || ( obj->module >= DMA_NUM_OF_MODULES ) || ( obj->stream >= DMA_NUM_OF_STREAMS ) )
+        return 0;
+
+    return hal_ll_dma_get_status_raw( obj->module, obj->stream );
+}
+
+hal_ll_err_t hal_ll_dma_clear_status( hal_ll_dma_t *obj, uint8_t events ) {
+    if ( !obj || ( obj->module >= DMA_NUM_OF_MODULES ) || ( obj->stream >= DMA_NUM_OF_STREAMS ) )
+        return HAL_LL_DMA_ERROR;
+
+    hal_ll_dma_clear_status_raw( obj->module, obj->stream, events );
+    return HAL_LL_DMA_SUCCESS;
+}
+
+hal_ll_err_t hal_ll_dma_set_fifo( hal_ll_dma_t *obj, bool enable ) {
+    dma_handle_t *dma;
+
+    if ( !obj || ( obj->module >= DMA_NUM_OF_MODULES ) || ( obj->stream >= DMA_NUM_OF_STREAMS ) )
+        return HAL_LL_DMA_ERROR;
+    // Memory-to-memory transfers require the FIFO.
+    if ( !enable && ( HAL_LL_DMA_DIRECTION_MEMORY_TO_MEMORY == obj->config.direction ) )
+        return HAL_LL_DMA_ERROR;
+
+    hal_ll_dma_fifo_mode[ obj->module ][ obj->stream ] = enable ? HAL_LL_DMA_FIFO_ENABLED : HAL_LL_DMA_FIFO_DIRECT;
+
+    dma = (dma_handle_t *)obj->handle;
+    if ( dma ) {
+        // FCR may only be changed while the stream is disabled.
+        if ( dma->cr & ( 1U << HAL_LL_DMA_SCR_EN_BIT ) )
+            return HAL_LL_DMA_ERROR;
+        if ( enable )
+            dma->fcr |= HAL_LL_DMA_SFCR_DMDIS_MASK;
+        else
+            dma->fcr &= (uint32_t)~HAL_LL_DMA_SFCR_DMDIS;
+    }
+
+    return HAL_LL_DMA_SUCCESS;
+}
+
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+static dma_isr_registers_t *hal_ll_dma_get_isr_registers( uint8_t module, uint8_t stream ) {
+    return (dma_isr_registers_t *)( dma_controller[ module ].stream_base - SCR_BASE_OFFSET + ( 4 * ( stream / 4 ) ) );
+}
+
+static uint8_t hal_ll_dma_get_flag_shift( uint8_t stream ) {
+    static const uint8_t shift[ 4 ] = { 0, 6, 16, 22 };
+    return shift[ stream & 3 ];
+}
+
+static void hal_ll_dma_apply_interrupts( hal_ll_dma_t *obj ) {
+    dma_handle_t *dma = (dma_handle_t *)obj->handle;
+    uint8_t events = hal_ll_dma_irq_events[ obj->module ][ obj->stream ];
+    uint32_t cr = dma->cr & ~( HAL_LL_DMA_IT_TC | HAL_LL_DMA_IT_HT | HAL_LL_DMA_IT_TE | HAL_LL_DMA_IT_DME );
+
+    if ( events & HAL_LL_DMA_EVENT_TRANSFER_COMPLETE )
+        cr |= HAL_LL_DMA_IT_TC;
+    if ( events & HAL_LL_DMA_EVENT_HALF_TRANSFER )
+        cr |= HAL_LL_DMA_IT_HT;
+    if ( events & HAL_LL_DMA_EVENT_TRANSFER_ERROR )
+        cr |= HAL_LL_DMA_IT_TE;
+    if ( events & HAL_LL_DMA_EVENT_DIRECT_MODE_ERROR )
+        cr |= HAL_LL_DMA_IT_DME;
+    dma->cr = cr;
+
+    if ( events & HAL_LL_DMA_EVENT_FIFO_ERROR )
+        dma->fcr |= HAL_LL_DMA_IT_FE_MASK;
+    else
+        dma->fcr &= ~HAL_LL_DMA_IT_FE_MASK;
+}
+
 
 static hal_ll_base_addr_t hal_ll_dma_get_stream_address( uint8_t module, uint8_t stream ) {
     return ((hal_ll_base_addr_t)dma_controller[module].stream_base + (hal_ll_base_addr_t)(STREAM_BASE_OFFSET * stream));
@@ -596,8 +777,18 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
     } else {
         tmp |= HAL_LL_DMA_SFCR_FTH_FULL_THRESHOLD;
     }
+    // FIFO mode chosen with hal_ll_dma_set_fifo (memory-to-memory always needs the FIFO).
+    if ( HAL_LL_DMA_DIRECTION_MEMORY_TO_MEMORY != config.direction ) {
+        if ( HAL_LL_DMA_FIFO_DIRECT == hal_ll_dma_fifo_mode[ obj->module ][ obj->stream ] ) {
+            tmp &= (uint32_t)~HAL_LL_DMA_SFCR_DMDIS;
+        } else if ( HAL_LL_DMA_FIFO_ENABLED == hal_ll_dma_fifo_mode[ obj->module ][ obj->stream ] ) {
+            tmp |= HAL_LL_DMA_SFCR_DMDIS_MASK;
+        }
+    }
     // Then write to DMA Stream FCR.
     dma->fcr = tmp;
+
+    hal_ll_dma_apply_interrupts( obj );
 
     return HAL_LL_DMA_SUCCESS;
 }

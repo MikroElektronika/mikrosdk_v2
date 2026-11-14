@@ -61,6 +61,9 @@
 #define HAL_LL_DMA_IT_ET ((uint32_t)(1U << 3))
 #define HAL_LL_DMA_IT_CLEAR_MASK (0x0fUL)
 
+/*!< @brief DMAMUX channel configuration: DMAREQ_ID field (request routed to the channel; 7 bits on G0/G4/L4+, 8 on H7). */
+#define HAL_LL_DMAMUX_CCR_DMAREQ_ID_MASK (0xFFUL)
+
 /*!< @brief DMA SCR register masks. */
 #if defined(STM32H7xx)
     #define HAL_LL_DMA_CCR_PRIORITY_VERY_HIGH_MASK (0x30000)
@@ -612,10 +615,14 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
     tmp = dma->cr;
 
     // Clear CHSEL, MBURST, PBURST, PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR, CT and DBM bits.
-    tmp &= ((uint32_t)~( HAL_LL_DMA_CCR_EN_BIT | HAL_LL_DMA_CCR_TCIE_BIT | HAL_LL_DMA_CCR_HTIE_BIT | \
-                        HAL_LL_DMA_CCR_TEIE_BIT | HAL_LL_DMA_CCR_DIR_BIT | HAL_LL_DMA_CCR_CIRC_BIT | \
-                        HAL_LL_DMA_CCR_PINC_BIT | HAL_LL_DMA_CCR_MINC_BIT | HAL_LL_DMA_CCR_M2M_BIT | \
-                        HAL_LL_DMA_CCR_PSIZE_MASK | HAL_LL_DMA_CCR_MSIZE_MASK | HAL_LL_DMA_CCR_PRIO_MASK ));
+    // The *_BIT macros are bit positions: build masks from them (OR-ing the positions
+    // themselves cleared unrelated low bits and left DIR/CIRC/PINC/MINC/M2M set).
+    tmp &= ((uint32_t)~( ( 1UL << HAL_LL_DMA_CCR_EN_BIT )   | ( 1UL << HAL_LL_DMA_CCR_TCIE_BIT ) | \
+                         ( 1UL << HAL_LL_DMA_CCR_HTIE_BIT ) | ( 1UL << HAL_LL_DMA_CCR_TEIE_BIT ) | \
+                         ( 1UL << HAL_LL_DMA_CCR_DIR_BIT )  | ( 1UL << HAL_LL_DMA_CCR_CIRC_BIT ) | \
+                         ( 1UL << HAL_LL_DMA_CCR_PINC_BIT ) | ( 1UL << HAL_LL_DMA_CCR_MINC_BIT ) | \
+                         ( 1UL << HAL_LL_DMA_CCR_M2M_BIT )  | \
+                         HAL_LL_DMA_CCR_PSIZE_MASK | HAL_LL_DMA_CCR_MSIZE_MASK | HAL_LL_DMA_CCR_PRIO_MASK ));
 
     // BEGIN Prepare the DMA stream configuration.
     // Set desired direction value.
@@ -635,17 +642,21 @@ static hal_ll_err_t hal_ll_dma_init_hw( hal_ll_dma_t *obj, dma_handle_t *dma, ha
     dma->cr = tmp;
 
     #ifdef IMPL_3
+        // DMAREQ_ID is a field, not a flag: replace it (OR-ing kept the previous
+        // request's bits, so re-opening a stream with another request routed the wrong one).
         if (obj->module == 0 ) {
             dmamux_registers_t * dmamux = (dmamux_registers_t*)( DMAMUX1_BASE + ( obj->stream * DMAMUX1_OFFSET ) );
-            dmamux->dmamux_cr |= obj->channel;
+            dmamux->dmamux_cr = ( dmamux->dmamux_cr & ~HAL_LL_DMAMUX_CCR_DMAREQ_ID_MASK ) | obj->channel;
         } else {
             dmamux_registers_t * dmamux = (dmamux_registers_t*)( DMAMUX1_BASE + 0x20 + ( obj->stream * DMAMUX1_OFFSET ) );
-            dmamux->dmamux_cr |= obj->channel;
+            dmamux->dmamux_cr = ( dmamux->dmamux_cr & ~HAL_LL_DMAMUX_CCR_DMAREQ_ID_MASK ) | obj->channel;
         }
     #endif
     #ifdef IMPL_2
+            // CxS is a 4-bit field per channel: replace it instead of OR-ing into the old selection.
             dma_cselr_registers_t * dmacselr = ( dma_cselr_registers_t*)( DMA1_BASE + DMA_CSELR_OFFSET );
-            dmacselr->cselr |= obj->channel << ( obj->stream * DMA_CSELR_CHANNEL_OFFSET );
+            dmacselr->cselr = ( dmacselr->cselr & ~( 0xFUL << ( obj->stream * DMA_CSELR_CHANNEL_OFFSET ) ) ) |
+                              ( (uint32_t)obj->channel << ( obj->stream * DMA_CSELR_CHANNEL_OFFSET ) );
     #endif
 
     return HAL_LL_DMA_SUCCESS;

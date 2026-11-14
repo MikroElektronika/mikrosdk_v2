@@ -318,4 +318,24 @@ err_t dma_close( dma_t *obj )
 }
 
 
+err_t dma_set_interrupts( dma_t *obj, uint8_t events )
+{
+    return hal_dma_set_interrupts( (hal_dma_t *)obj, events );
+}
+
+uint8_t dma_get_status( dma_t *obj )
+{
+    return hal_dma_get_status( (hal_dma_t *)obj );
+}
+
+err_t dma_clear_status( dma_t *obj, uint8_t events )
+{
+    return hal_dma_clear_status( (hal_dma_t *)obj, events );
+}
+
+err_t dma_set_fifo( dma_t *obj, bool enable )
+{
+    return hal_dma_set_fifo( (hal_dma_t *)obj, enable );
+}
+
 // ------------------------------------------------------------------------- END
