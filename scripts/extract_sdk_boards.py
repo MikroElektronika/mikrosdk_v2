@@ -13,7 +13,9 @@ Given a current release such as ``mikroSDK-2.19.0``, the script:
 
 5. Downloads and extracts the NECTO development database (or uses an explicitly
    supplied database file).
-6. Looks up each board by ``Boards.name`` and classifies it using
+6. Looks up each board by ``Boards.name`` (falling back to ``Boards.uid``
+   derived from the name or product URL, then to hardware revisions such as
+   ``<name> v1.04``) and classifies it using
    ``Boards.mikrobus_count`` and the optional ``_MSDK_SHIELD_`` entry from
    ``Boards.sdk_config``. It also reads ``Boards.installer_package`` and links
    to ``bsp/board/include/boards/<package>/board.h`` in the selected tag.
@@ -30,6 +32,22 @@ Given a current release such as ``mikroSDK-2.19.0``, the script:
      an ``_MSDK_SHIELD_`` expansion option.
    Every other board is preserved and reported with the reason it is not
    eligible.
+9. Unless ``--no-ledger`` is given, also classifies every board from earlier
+   hardware changelogs and every other database board, and compares them with
+   EmbeddedWiki (development boards with at least one article count as done)
+   and the reported-boards ledger (``scripts/data/embedded_wiki_boards.json``):
+   - an eligible board that is neither on EmbeddedWiki nor in the ledger is
+     reported as newly eligible (for example, its MCU gained mikroSDK support
+     after the board was added);
+   - an eligible board in the ledger but not on EmbeddedWiki is listed as
+     still missing, unless a developer added it manually;
+   - a ledger board without a soldered device whose newly SDK-supported
+     ``BoardToDevice`` devices are not in the ledger is reported with only
+     those devices. A soldered-device board has one MCU, so it is complete
+     once reported.
+   ``--update-ledger`` records everything reported by the run, and the
+   optional Google Sheet sync also appends one row per reported board to the
+   ``EW Boards`` tab.
 
 Changelog files are read directly with ``git show``. The working tree is never
 changed. Downloaded database files are cached between invocations.
@@ -49,7 +67,7 @@ import sys
 import urllib.error
 import urllib.request
 from urllib.parse import parse_qs, quote, urlparse
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
 from datetime import date
 from pathlib import Path
 from typing import Iterable
@@ -62,6 +80,31 @@ DEFAULT_DATABASE_URL = (
 DEFAULT_DATABASE_CACHE_DIR = Path(".cache/sdk-board-support/database")
 DATABASE_ARCHIVE_NAME = "database_dev.7z"
 DATABASE_RELATIVE_PATH = Path("necto_db.db")
+
+# Ledger of boards (and their SDK-supported devices) already reported as
+# EmbeddedWiki candidates. Relative paths are resolved against --repo.
+DEFAULT_LEDGER_PATH = Path("scripts/data/embedded_wiki_boards.json")
+DEFAULT_BOARDS_SHEET_NAME = "EW Boards"
+LEDGER_BASELINE = "baseline"
+LEDGER_MANUAL = "manual"
+MANUAL_LEDGER_KEY_PREFIX = "name:"
+REASON_NEW_HARDWARE = "new_hardware"
+REASON_NEWLY_ELIGIBLE = "newly_eligible"
+REASON_NEW_DEVICES = "new_devices"
+REASON_MISSING_FROM_EMBEDDED_WIKI = "missing_from_embedded_wiki"
+REASON_EMBEDDED_WIKI = "embedded_wiki"
+
+# Development boards with an EmbeddedWiki page, and those of them that have
+# at least one article.
+DEFAULT_EMBEDDED_WIKI_PAGES_URL = (
+    "https://embeddedwiki.com/api/external/cms/embedded-wiki/public/page-filters.jsonld"
+    "?filter[and][][type][eq]=DEVELOPMENT_SYSTEM&size=200"
+)
+DEFAULT_EMBEDDED_WIKI_BOARDS_URL = DEFAULT_EMBEDDED_WIKI_PAGES_URL + "&withoutEmptyResults=1"
+SHEET_DONE_YES = "YES"
+SHEET_DONE_PAGE_ONLY = "PAGE ONLY"
+SHEET_DONE_NO = "NO"
+CHANGELOG_INDEX_RE = re.compile(r"^changelog/v\d+\.\d+\.\d+/changelog\.md$")
 
 RELEASE_DATE_RE = re.compile(
     r"^\s*[-+*]\s*released\s*:\s*(\d{4}-\d{2}-\d{2})\s*$",
@@ -121,6 +164,11 @@ class Board:
     embedded_wiki_eligible: bool = False
     embedded_wiki_eligible_with_shield: bool = False
     eligibility_note: str | None = None
+    report_reason: str | None = None
+    newly_supported_device_uids: tuple[str, ...] = ()
+    database_match_method: str | None = None
+    on_embedded_wiki: bool | None = None
+    embedded_wiki_page_only: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -177,6 +225,21 @@ class ReleaseBoards:
     embedded_wiki_eligible_boards: list[Board]
     embedded_wiki_eligible_with_shield_boards: list[Board]
     other_boards: list[Board]
+    ledger_file: str | None = None
+    historical_boards_checked: int = 0
+    newly_eligible_boards: list[Board] = field(default_factory=list)
+    newly_eligible_with_shield_boards: list[Board] = field(default_factory=list)
+    boards_with_new_devices: list[Board] = field(default_factory=list)
+    ledger_baseline_boards: list[Board] = field(default_factory=list)
+    embedded_wiki_source: str | None = None
+    embedded_wiki_boards: int = 0
+    embedded_wiki_unmatched_names: list[str] = field(default_factory=list)
+    embedded_wiki_published_names: list[str] = field(default_factory=list)
+    embedded_wiki_pages_source: str | None = None
+    embedded_wiki_page_only_names: list[str] = field(default_factory=list)
+    database_boards_checked: int = 0
+    boards_missing_from_embedded_wiki: list[Board] = field(default_factory=list)
+    embedded_wiki_unrecorded_boards: list[Board] = field(default_factory=list)
 
 
 def run_git(repo: Path, *args: str) -> str:
@@ -427,6 +490,619 @@ def collect_interval_links(
         ((link_date, path) for path, link_date in selected.items()),
         key=lambda item: (date.fromisoformat(item[0]), item[1]),
     )
+
+
+def collect_historical_links(
+    repo: Path,
+    current_tag: str,
+    previous_release_date: str,
+) -> list[tuple[str, str]]:
+    """Collect every hardware file released on or before the previous release.
+
+    All version changelog indexes present in the current tag are scanned. Old
+    changelogs are not always consistent, so problems are skipped instead of
+    aborting the run.
+    """
+    lower = date.fromisoformat(previous_release_date)
+    selected: dict[str, str] = {}
+
+    changelog_paths = sorted(
+        path
+        for path in run_git(
+            repo, "ls-tree", "-r", "--name-only", current_tag, "changelog/"
+        ).splitlines()
+        if CHANGELOG_INDEX_RE.fullmatch(path)
+    )
+
+    for changelog_path in changelog_paths:
+        markdown = read_tag_file(repo, current_tag, changelog_path)
+        try:
+            section = extract_section(markdown, "NEW HARDWARE")
+        except ExtractionError:
+            continue
+
+        for link_date, linked_file in get_dated_hardware_links(section):
+            if date.fromisoformat(link_date) > lower:
+                continue
+            try:
+                resolved = resolve_git_path(changelog_path, linked_file)
+            except ExtractionError:
+                continue
+            selected.setdefault(resolved, link_date)
+
+    return sorted(
+        ((link_date, path) for path, link_date in selected.items()),
+        key=lambda item: (date.fromisoformat(item[0]), item[1]),
+    )
+
+
+def parse_hardware_files(
+    repo: Path,
+    tag: str,
+    dated_files: list[tuple[str, str]],
+    strict: bool = True,
+) -> tuple[list[HardwareChangelog], list[Board]]:
+    """Read linked hardware files and return their unique boards."""
+    hardware_changelogs: list[HardwareChangelog] = []
+    boards: list[Board] = []
+    seen_boards: set[tuple[str, str | None]] = set()
+
+    for added_date, hardware_changelog in dated_files:
+        try:
+            hardware_markdown = read_tag_file(repo, tag, hardware_changelog)
+            if strict:
+                validate_hardware_file_heading(
+                    hardware_markdown, added_date, hardware_changelog
+                )
+            hardware_section = extract_section(hardware_markdown, "NEW HARDWARE")
+        except ExtractionError:
+            if strict:
+                raise
+            continue
+
+        file_boards = parse_boards(
+            hardware_section,
+            added_date=added_date,
+            source_file=hardware_changelog,
+        )
+
+        hardware_changelogs.append(
+            HardwareChangelog(
+                date=added_date,
+                path=hardware_changelog,
+                board_count=len(file_boards),
+            )
+        )
+
+        for board in file_boards:
+            key = (board.name.casefold(), board.url)
+            if key not in seen_boards:
+                boards.append(board)
+                seen_boards.add(key)
+
+    return hardware_changelogs, boards
+
+
+def fetch_embedded_wiki_boards(source: str) -> list[str]:
+    """Return development-board names published on EmbeddedWiki.
+
+    ``source`` is the page-filters API URL (Hydra pages are followed through
+    ``hydra:next``) or a path to a saved response, for offline runs.
+    """
+    names: list[str] = []
+    next_url: str | None = source
+    expected_total: int | None = None
+    visited: set[str] = set()
+
+    while next_url:
+        if next_url in visited:
+            raise ExtractionError(f"EmbeddedWiki pagination loops at '{next_url}'")
+        visited.add(next_url)
+
+        if re.match(r"^https?://", next_url):
+            request = urllib.request.Request(
+                next_url,
+                headers={
+                    "User-Agent": "mikroSDK-board-support-extractor/1.0",
+                    "Accept": "application/ld+json",
+                },
+            )
+            try:
+                with urllib.request.urlopen(request, timeout=60) as response:
+                    payload = response.read().decode("utf-8")
+            except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, OSError) as exc:
+                raise ExtractionError(
+                    f"Failed to fetch EmbeddedWiki boards from '{next_url}': {exc}"
+                ) from exc
+        else:
+            path = Path(next_url).expanduser()
+            if not path.is_file():
+                raise ExtractionError(f"EmbeddedWiki boards file does not exist: {path}")
+            payload = path.read_text(encoding="utf-8")
+
+        try:
+            data = json.loads(payload)
+        except json.JSONDecodeError as exc:
+            raise ExtractionError(
+                f"EmbeddedWiki response from '{next_url}' is not valid JSON: {exc}"
+            ) from exc
+
+        members = data.get("hydra:member") if isinstance(data, dict) else None
+        if not isinstance(members, list):
+            raise ExtractionError(
+                f"EmbeddedWiki response from '{next_url}' has no 'hydra:member' list"
+            )
+        if expected_total is None and isinstance(data.get("hydra:totalItems"), int):
+            expected_total = data["hydra:totalItems"]
+
+        for member in members:
+            name = str(member.get("name") or "").strip() if isinstance(member, dict) else ""
+            if name:
+                names.append(name)
+
+        view = data.get("hydra:view") or {}
+        relative_next = view.get("hydra:next") if isinstance(view, dict) else None
+        if relative_next and re.match(r"^https?://", source):
+            parsed = urlparse(source)
+            next_url = f"{parsed.scheme}://{parsed.netloc}{relative_next}"
+        else:
+            next_url = None
+
+    if expected_total is not None and len(names) < expected_total:
+        raise ExtractionError(
+            f"EmbeddedWiki reports {expected_total} boards but only {len(names)} "
+            "were received; increase 'size' in the URL"
+        )
+    return names
+
+
+def list_database_boards(database_path: Path) -> list[tuple[str, str]]:
+    """Return ``(uid, name)`` for every database board, sorted by name."""
+    try:
+        connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"Failed to open SQLite database '{database_path}': {exc}") from exc
+    try:
+        schema = resolve_database_schema(connection)
+        boards_table, board_name_column, board_uid_column = schema[0], schema[1], schema[2]
+        rows = connection.execute(
+            f"SELECT {quote_identifier(board_uid_column)}, "
+            f"{quote_identifier(board_name_column)} "
+            f"FROM {quote_identifier(boards_table)}"
+        ).fetchall()
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"SQLite query failed for '{database_path}': {exc}") from exc
+    finally:
+        connection.close()
+
+    boards: dict[str, tuple[str, str]] = {}
+    for uid, name in rows:
+        uid_text = str(uid or "").strip()
+        name_text = str(name or "").strip()
+        if uid_text and name_text:
+            boards.setdefault(ledger_key(uid_text), (uid_text, name_text))
+    return sorted(boards.values(), key=lambda item: item[1].casefold())
+
+
+def resolve_embedded_wiki_uids(
+    database_path: Path,
+    names: list[str],
+) -> tuple[dict[str, str], list[str]]:
+    """Map EmbeddedWiki board names to database uids.
+
+    Uses the same matching as changelog boards (exact name, uid form, hardware
+    revisions). Returns ``{casefolded uid: uid}`` and the names that did not
+    match any database board.
+    """
+    try:
+        connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"Failed to open SQLite database '{database_path}': {exc}") from exc
+    try:
+        schema = resolve_database_schema(connection)
+        boards_table, board_name_column, board_uid_column = schema[0], schema[1], schema[2]
+        uid_by_name: dict[str, str] = {}
+        for uid, name in connection.execute(
+            f"SELECT {quote_identifier(board_uid_column)}, "
+            f"{quote_identifier(board_name_column)} "
+            f"FROM {quote_identifier(boards_table)}"
+        ):
+            if uid is not None and name is not None:
+                uid_by_name.setdefault(str(name).strip().casefold(), str(uid).strip())
+
+        resolved = resolve_board_identities(
+            connection,
+            boards_table,
+            board_name_column,
+            board_uid_column,
+            # source_file carries the EmbeddedWiki name; revisions rename the board.
+            [
+                Board(name=name, url=None, added_date="", source_file=name)
+                for name in names
+            ],
+        )
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"SQLite query failed for '{database_path}': {exc}") from exc
+    finally:
+        connection.close()
+
+    published: dict[str, str] = {}
+    matched_names: set[str] = set()
+    for board in resolved:
+        uid = board.board_uid or uid_by_name.get(board.name.strip().casefold())
+        if uid is None:
+            continue
+        published.setdefault(ledger_key(uid), uid)
+        matched_names.add(board.source_file.casefold())
+
+    unmatched = [name for name in names if name.casefold() not in matched_names]
+    return published, unmatched
+
+
+def ledger_key(board_uid: str) -> str:
+    return board_uid.strip().casefold()
+
+
+def load_ledger(path: Path) -> dict[str, dict[str, object]]:
+    """Load the reported-boards ledger keyed by casefolded board uid.
+
+    An entry may contain only ``name``; it is keyed by name until
+    ``complete_manual_ledger_entries`` fills it in from the database.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ExtractionError(f"Ledger '{path}' is not valid JSON: {exc}") from exc
+
+    entries = data.get("boards") if isinstance(data, dict) else None
+    if not isinstance(entries, list):
+        raise ExtractionError(f"Ledger '{path}' must contain a 'boards' list")
+
+    ledger: dict[str, dict[str, object]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ExtractionError(f"Ledger '{path}' contains a non-object entry: {entry!r}")
+
+        board_uid = str(entry.get("board_uid") or "").strip()
+        name = str(entry.get("name") or "").strip()
+        if board_uid:
+            key = ledger_key(board_uid)
+        elif name:
+            key = MANUAL_LEDGER_KEY_PREFIX + name.casefold()
+        else:
+            raise ExtractionError(
+                f"Ledger '{path}' contains an entry without name or board_uid: {entry!r}"
+            )
+
+        devices = entry.get("devices") or {}
+        if not isinstance(devices, dict):
+            raise ExtractionError(
+                f"Ledger '{path}' entry '{board_uid or name}' has a non-object 'devices'"
+            )
+        if key in ledger:
+            raise ExtractionError(
+                f"Ledger '{path}' lists board '{board_uid or name}' more than once"
+            )
+        ledger[key] = entry
+    return ledger
+
+
+def complete_manual_ledger_entries(
+    ledger: dict[str, dict[str, object]],
+    database_path: Path,
+    database_url: str,
+    repo: Path,
+    ref: str,
+    repository_url: str,
+) -> list[str]:
+    """Fill name-only ledger entries from the database.
+
+    The name must equal ``Boards.name`` (case-insensitive); no other matching
+    is applied, so a typo fails loudly instead of matching a different board.
+    Every currently SDK-supported device is recorded as already reported.
+    Returns the names of the completed entries.
+    """
+    manual_keys = [key for key in ledger if key.startswith(MANUAL_LEDGER_KEY_PREFIX)]
+    if not manual_keys:
+        return []
+
+    try:
+        connection = sqlite3.connect(f"file:{database_path}?mode=ro", uri=True)
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"Failed to open SQLite database '{database_path}': {exc}") from exc
+    try:
+        schema = resolve_database_schema(connection)
+        boards_table, board_name_column = schema[0], schema[1]
+        database_names = {
+            str(row[0]).strip().casefold()
+            for row in connection.execute(
+                f"SELECT {quote_identifier(board_name_column)} "
+                f"FROM {quote_identifier(boards_table)}"
+            )
+            if row[0] is not None
+        }
+    except sqlite3.Error as exc:
+        raise ExtractionError(f"SQLite query failed for '{database_path}': {exc}") from exc
+    finally:
+        connection.close()
+
+    unknown = [
+        str(ledger[key]["name"]).strip()
+        for key in manual_keys
+        if str(ledger[key]["name"]).strip().casefold() not in database_names
+    ]
+    if unknown:
+        raise ExtractionError(
+            "Ledger entries do not match any Boards.name in the database: "
+            + ", ".join(repr(name) for name in unknown)
+        )
+
+    manual_boards = [
+        Board(
+            name=str(ledger[key]["name"]).strip(),
+            url=str(ledger[key].get("url") or "").strip() or None,
+            added_date=str(ledger[key].get("hardware_added") or "").strip(),
+            source_file="ledger",
+        )
+        for key in manual_keys
+    ]
+    # strict=True: a name shared by several database boards is an error.
+    classified, *_ = classify_boards_with_database(
+        manual_boards,
+        database_path,
+        database_url,
+        repo=repo,
+        ref=ref,
+        repository_url=repository_url,
+    )
+
+    completed: list[str] = []
+    for key, board in zip(manual_keys, classified):
+        assert board.board_uid is not None
+        manual_entry = ledger.pop(key)
+        uid_key = ledger_key(board.board_uid)
+        if uid_key in ledger:
+            print(
+                f"warning: ledger entry '{board.name}' duplicates board uid "
+                f"'{board.board_uid}'; keeping the existing entry",
+                file=sys.stderr,
+            )
+            continue
+
+        if not (board.embedded_wiki_eligible or board.embedded_wiki_eligible_with_shield):
+            print(
+                f"warning: manually added ledger board '{board.name}' is not "
+                f"EmbeddedWiki eligible ({board.eligibility_note})",
+                file=sys.stderr,
+            )
+
+        manual_devices = manual_entry.get("devices") or {}
+        ledger[uid_key] = {
+            "name": board.name,
+            "board_uid": board.board_uid,
+            "url": board.url,
+            "category": (
+                "mikrobus"
+                if board.has_mikrobus
+                else "shield" if board.has_shield else None
+            ),
+            "soldered_device": board.soldered_device,
+            "hardware_added": board.added_date or None,
+            "first_reported_in": LEDGER_MANUAL,
+            "reason": LEDGER_MANUAL,
+            "devices": manual_devices
+            or {uid: LEDGER_MANUAL for uid in board.sdk_supported_device_uids},
+        }
+        completed.append(board.name)
+
+    return completed
+
+
+def board_category(board: Board) -> str:
+    return "mikrobus" if board.embedded_wiki_eligible else "shield"
+
+
+def upsert_ledger_entry(
+    ledger: dict[str, dict[str, object]],
+    board: Board,
+    reason: str,
+    reported_in: str,
+    device_uids: Iterable[str],
+) -> None:
+    """Record a board and its reported devices without rewriting history."""
+    assert board.board_uid is not None
+    key = ledger_key(board.board_uid)
+    entry = ledger.get(key)
+    if entry is None:
+        entry = {
+            "name": board.name,
+            "board_uid": board.board_uid,
+            "url": board.url,
+            "category": board_category(board),
+            "soldered_device": board.soldered_device,
+            "hardware_added": board.added_date,
+            "first_reported_in": reported_in,
+            "reason": reason,
+            "devices": {},
+        }
+        ledger[key] = entry
+
+    devices: dict[str, str] = entry.setdefault("devices", {})  # type: ignore[assignment]
+    known = {uid.casefold() for uid in devices}
+    for device_uid in device_uids:
+        if device_uid.casefold() not in known:
+            devices[device_uid] = reported_in
+            known.add(device_uid.casefold())
+
+
+def write_ledger(path: Path, ledger: dict[str, dict[str, object]]) -> None:
+    entries = []
+    for entry in sorted(
+        ledger.values(),
+        key=lambda item: (str(item.get("name") or "").casefold(), str(item["board_uid"])),
+    ):
+        devices = entry.get("devices") or {}
+        entries.append(
+            {
+                **entry,
+                "devices": {
+                    uid: devices[uid]  # type: ignore[index]
+                    for uid in sorted(devices, key=str.casefold)  # type: ignore[arg-type]
+                },
+            }
+        )
+
+    document = {
+        "description": (
+            "Boards (and their SDK-supported devices) already reported as "
+            "EmbeddedWiki candidates by scripts/extract_sdk_boards.py. Remove an "
+            "entry, or a device from an entry, to have it reported again. To mark "
+            "a board as already done, add an entry with only its exact database "
+            "'name'; the remaining fields are filled in on the next "
+            "--update-ledger run."
+        ),
+        "boards": entries,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(document, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def update_ledger_from_result(
+    ledger: dict[str, dict[str, object]],
+    result: "ReleaseBoards",
+) -> None:
+    version = result.sdk_version
+    for board in (
+        result.embedded_wiki_eligible_boards
+        + result.embedded_wiki_eligible_with_shield_boards
+    ):
+        upsert_ledger_entry(
+            ledger, board, REASON_NEW_HARDWARE, version, board.sdk_supported_device_uids
+        )
+    for board in (
+        result.newly_eligible_boards + result.newly_eligible_with_shield_boards
+    ):
+        upsert_ledger_entry(
+            ledger, board, REASON_NEWLY_ELIGIBLE, version, board.sdk_supported_device_uids
+        )
+    for board in result.boards_with_new_devices:
+        upsert_ledger_entry(
+            ledger, board, REASON_NEW_DEVICES, version, board.newly_supported_device_uids
+        )
+    for board in result.ledger_baseline_boards:
+        upsert_ledger_entry(
+            ledger, board, LEDGER_BASELINE, LEDGER_BASELINE, board.sdk_supported_device_uids
+        )
+    # Published boards are recorded so later MCU additions on multi-device
+    # boards can still be detected.
+    for board in result.embedded_wiki_unrecorded_boards:
+        upsert_ledger_entry(
+            ledger,
+            board,
+            REASON_EMBEDDED_WIKI,
+            REASON_EMBEDDED_WIKI,
+            board.sdk_supported_device_uids,
+        )
+
+
+@dataclass
+class UnreportedBoards:
+    newly_eligible: list[Board] = field(default_factory=list)
+    newly_eligible_with_shield: list[Board] = field(default_factory=list)
+    with_new_devices: list[Board] = field(default_factory=list)
+    missing_from_embedded_wiki: list[Board] = field(default_factory=list)
+    published_unrecorded: list[Board] = field(default_factory=list)
+    baseline: list[Board] = field(default_factory=list)
+
+
+def select_unreported_boards(
+    candidate_boards: list[Board],
+    ledger: dict[str, dict[str, object]],
+    version: str,
+    initialize: bool,
+    published_uids: set[str] | None,
+) -> UnreportedBoards:
+    """Sort eligible older boards by what still has to be done for them.
+
+    A board is done when it has EmbeddedWiki articles (``published_uids``) or
+    a developer added it to the ledger manually. Otherwise:
+    - not in the ledger: newly eligible, reported once;
+    - in the ledger: reported before, listed as still missing from EmbeddedWiki.
+
+    A board with a soldered device has exactly one MCU, so it is either fully
+    reported or not. A board without one can list many devices through
+    BoardToDevice; when more of them gain SDK support after the board was
+    recorded, only those devices are reported again.
+
+    Entries recorded for the current version still count as unreported, so
+    re-running the same release produces the same report.
+    """
+    result = UnreportedBoards()
+
+    for board in candidate_boards:
+        if not (board.embedded_wiki_eligible or board.embedded_wiki_eligible_with_shield):
+            continue
+        assert board.board_uid is not None
+
+        key = ledger_key(board.board_uid)
+        entry = ledger.get(key)
+        on_embedded_wiki = published_uids is not None and key in published_uids
+
+        if entry is None and on_embedded_wiki:
+            result.published_unrecorded.append(board)
+            continue
+
+        if initialize and entry is None:
+            result.baseline.append(replace(board, report_reason=LEDGER_BASELINE))
+            continue
+
+        if entry is None or (
+            entry.get("reason") == REASON_NEWLY_ELIGIBLE
+            and entry.get("first_reported_in") == version
+        ):
+            updated = replace(
+                board,
+                report_reason=REASON_NEWLY_ELIGIBLE,
+                newly_supported_device_uids=board.sdk_supported_device_uids,
+            )
+            if board.embedded_wiki_eligible:
+                result.newly_eligible.append(updated)
+            else:
+                result.newly_eligible_with_shield.append(updated)
+            continue
+
+        recorded = {
+            str(uid).casefold(): str(reported_in)
+            for uid, reported_in in (entry.get("devices") or {}).items()  # type: ignore[union-attr]
+        }
+        new_devices = tuple(
+            uid
+            for uid in board.sdk_supported_device_uids
+            if recorded.get(uid.casefold(), version) == version
+        )
+        if new_devices:
+            result.with_new_devices.append(
+                replace(
+                    board,
+                    report_reason=REASON_NEW_DEVICES,
+                    newly_supported_device_uids=new_devices,
+                )
+            )
+            continue
+
+        if (
+            published_uids is not None
+            and not on_embedded_wiki
+            and entry.get("reason") != LEDGER_MANUAL
+        ):
+            result.missing_from_embedded_wiki.append(
+                replace(board, report_reason=REASON_MISSING_FROM_EMBEDDED_WIKI)
+            )
+
+    return result
 
 
 def download_database_archive(url: str, destination: Path, refresh: bool) -> None:
@@ -772,6 +1448,102 @@ def normalize_sdk_support(raw_value: object, device_uid: str) -> bool:
     return value == 1
 
 
+def uid_form(text: str) -> str:
+    return re.sub(r"[^A-Z0-9]+", "_", text.upper()).strip("_")
+
+
+def url_slug(url: str | None) -> str | None:
+    if not url:
+        return None
+    segment = urlparse(url).path.rstrip("/").rsplit("/", 1)[-1]
+    segment = re.sub(r"\.html?$", "", segment, flags=re.IGNORECASE)
+    return segment or None
+
+
+def resolve_board_identities(
+    connection: sqlite3.Connection,
+    boards_table: str,
+    board_name_column: str,
+    board_uid_column: str,
+    boards: list[Board],
+) -> list[Board]:
+    """Match changelog board names that differ from ``Boards.name``.
+
+    Exact name matches are left to the regular lookup. Otherwise, in order:
+    1. the name in uid form equals ``Boards.uid`` (optionally ``BOARD_``-prefixed);
+    2. the product URL slug in uid form equals ``Boards.uid`` (same prefix rule);
+    3. database names equal to the changelog name followed by a hardware
+       revision (``... v1.04``); every revision becomes its own board.
+    Matched boards get ``board_uid`` preset and are looked up by uid.
+    """
+    rows = connection.execute(
+        f"SELECT {quote_identifier(board_uid_column)}, "
+        f"{quote_identifier(board_name_column)} "
+        f"FROM {quote_identifier(boards_table)}"
+    ).fetchall()
+
+    names = {str(name).strip().casefold() for _uid, name in rows if name is not None}
+    uids: dict[str, str] = {}
+    for uid, _name in rows:
+        if uid is not None and str(uid).strip():
+            uids.setdefault(str(uid).strip().casefold(), str(uid).strip())
+
+    def find_uid(text: str) -> str | None:
+        base = uid_form(text)
+        for candidate in (base, f"BOARD_{base}"):
+            match = uids.get(candidate.casefold())
+            if match is not None:
+                return match
+        return None
+
+    resolved: list[Board] = []
+    for board in boards:
+        if board.board_uid is not None or board.name.strip().casefold() in names:
+            resolved.append(board)
+            continue
+
+        uid = find_uid(board.name)
+        if uid is not None:
+            resolved.append(replace(board, board_uid=uid, database_match_method="uid"))
+            continue
+
+        slug = url_slug(board.url)
+        uid = find_uid(slug) if slug else None
+        if uid is not None:
+            resolved.append(replace(board, board_uid=uid, database_match_method="url"))
+            continue
+
+        revision_re = re.compile(
+            re.escape(board.name.strip()) + r"\s+v\d+(?:\.\d+)*",
+            re.IGNORECASE,
+        )
+        revisions = sorted(
+            (
+                (str(name).strip(), str(uid).strip())
+                for uid, name in rows
+                if name is not None
+                and uid is not None
+                and revision_re.fullmatch(str(name).strip())
+            ),
+            key=lambda item: item[0].casefold(),
+        )
+        if revisions:
+            resolved.extend(
+                replace(
+                    board,
+                    name=name,
+                    board_uid=uid,
+                    database_match_method="revision",
+                )
+                for name, uid in revisions
+            )
+            continue
+
+        resolved.append(board)
+
+    return resolved
+
+
 def classify_boards_with_database(
     boards: list[Board],
     database_path: Path,
@@ -779,6 +1551,7 @@ def classify_boards_with_database(
     repo: Path,
     ref: str,
     repository_url: str,
+    strict: bool = True,
 ) -> tuple[
     list[Board],
     list[Board],
@@ -821,340 +1594,385 @@ def classify_boards_with_database(
             f"FROM {quote_identifier(boards_table)} "
             f"WHERE TRIM({quote_identifier(board_name_column)}) = TRIM(?) COLLATE NOCASE"
         )
+        board_by_uid_query = (
+            f"SELECT {quote_identifier(board_uid_column)}, "
+            f"{quote_identifier(mikrobus_column)}, "
+            f"{quote_identifier(sdk_config_column)}, "
+            f"{quote_identifier(installer_package_column)}, "
+            f"{quote_identifier(soldered_device_column)} "
+            f"FROM {quote_identifier(boards_table)} "
+            f"WHERE TRIM({quote_identifier(board_uid_column)}) = TRIM(?) COLLATE NOCASE"
+        )
         linked_devices_query = (
             f"SELECT DISTINCT {quote_identifier(board_to_device_device_uid_column)} "
             f"FROM {quote_identifier(board_to_device_table)} "
             f"WHERE TRIM({quote_identifier(board_to_device_board_uid_column)}) "
             f"= TRIM(?) COLLATE NOCASE"
         )
-        device_support_query = (
-            f"SELECT {quote_identifier(device_sdk_support_column)}, "
+        # Devices and their packages are read once: boards such as generic
+        # ones link thousands of devices, and the TRIM/NOCASE lookups cannot
+        # use an index.
+        device_support_rows: dict[str, list[tuple[object, object]]] = {}
+        for device_uid, sdk_support, vendor in connection.execute(
+            f"SELECT {quote_identifier(device_uid_column)}, "
+            f"{quote_identifier(device_sdk_support_column)}, "
             f"{quote_identifier(device_vendor_column)} "
-            f"FROM {quote_identifier(devices_table)} "
-            f"WHERE TRIM({quote_identifier(device_uid_column)}) = TRIM(?) COLLATE NOCASE"
-        )
-        device_packages_query = (
-            f"SELECT DISTINCT {quote_identifier(device_to_package_package_uid_column)} "
-            f"FROM {quote_identifier(device_to_package_table)} "
-            f"WHERE TRIM({quote_identifier(device_to_package_device_uid_column)}) "
-            f"= TRIM(?) COLLATE NOCASE"
-        )
+            f"FROM {quote_identifier(devices_table)}"
+        ):
+            if device_uid is not None:
+                device_support_rows.setdefault(
+                    str(device_uid).strip().casefold(), []
+                ).append((sdk_support, vendor))
+
+        device_package_rows: dict[str, list[tuple[object]]] = {}
+        for device_uid, package_uid in connection.execute(
+            f"SELECT DISTINCT {quote_identifier(device_to_package_device_uid_column)}, "
+            f"{quote_identifier(device_to_package_package_uid_column)} "
+            f"FROM {quote_identifier(device_to_package_table)}"
+        ):
+            if device_uid is not None:
+                device_package_rows.setdefault(
+                    str(device_uid).strip().casefold(), []
+                ).append((package_uid,))
 
         classified: list[Board] = []
         eligible_boards: list[Board] = []
         shield_eligible_boards: list[Board] = []
         other_boards: list[Board] = []
+        skipped_boards: list[str] = []
         unmatched_count = 0
         sdk_supported_count = 0
         sdk_unsupported_count = 0
 
+        boards = resolve_board_identities(
+            connection,
+            boards_table,
+            board_name_column,
+            board_uid_column,
+            boards,
+        )
+
         for board in boards:
-            rows = connection.execute(board_query, (board.name,)).fetchall()
-            if not rows:
-                updated = replace(
-                    board,
-                    database_match=False,
-                    board_uid=None,
-                    mikrobus_count=None,
-                    has_mikrobus=None,
-                    sdk_config=None,
-                    installer_package=None,
-                    board_package=None,
-                    board_header_path=None,
-                    board_header_url=None,
-                    board_header_exists=None,
-                    shield_uid=None,
-                    has_shield=False,
-                    soldered_device=None,
-                    sdk_support_source=None,
-                    checked_device_uids=(),
-                    sdk_supported_device_uids=(),
-                    missing_device_uids=(),
-                    mcu_packages=(),
-                    has_sdk_support=None,
-                    embedded_wiki_eligible=False,
-                    embedded_wiki_eligible_with_shield=False,
-                    eligibility_note="Database match not found",
-                )
-                classified.append(updated)
-                other_boards.append(updated)
-                unmatched_count += 1
-                continue
-
-            normalized_counts: set[int] = set()
-            normalized_uids: dict[str, str] = {}
-            normalized_sdk_configs: dict[
-                str, tuple[str | None, str | None, bool]
-            ] = {}
-            normalized_installer_packages: dict[
-                str, tuple[str | None, str | None]
-            ] = {}
-            normalized_soldered_devices: dict[str, str | None] = {}
-
-            for row in rows:
-                raw_uid = row[0]
-                if raw_uid is None or str(raw_uid).strip() == "":
-                    raise ExtractionError(
-                        f"Board '{board.name}' has an empty uid value in database"
-                    )
-                uid = str(raw_uid).strip()
-                normalized_uids.setdefault(uid.casefold(), uid)
-
-                raw_count = row[1]
-                if raw_count is None or str(raw_count).strip() == "":
-                    count = 0
+            try:
+                if board.board_uid is not None:
+                    rows = connection.execute(
+                        board_by_uid_query, (board.board_uid,)
+                    ).fetchall()
                 else:
-                    try:
-                        count = int(raw_count)
-                    except (TypeError, ValueError) as exc:
+                    rows = connection.execute(board_query, (board.name,)).fetchall()
+                    if rows:
+                        board = replace(board, database_match_method="name")
+                if not rows:
+                    updated = replace(
+                        board,
+                        database_match=False,
+                        board_uid=None,
+                        mikrobus_count=None,
+                        has_mikrobus=None,
+                        sdk_config=None,
+                        installer_package=None,
+                        board_package=None,
+                        board_header_path=None,
+                        board_header_url=None,
+                        board_header_exists=None,
+                        shield_uid=None,
+                        has_shield=False,
+                        soldered_device=None,
+                        sdk_support_source=None,
+                        checked_device_uids=(),
+                        sdk_supported_device_uids=(),
+                        missing_device_uids=(),
+                        mcu_packages=(),
+                        has_sdk_support=None,
+                        embedded_wiki_eligible=False,
+                        embedded_wiki_eligible_with_shield=False,
+                        eligibility_note="Database match not found",
+                    )
+                    classified.append(updated)
+                    other_boards.append(updated)
+                    unmatched_count += 1
+                    continue
+
+                normalized_counts: set[int] = set()
+                normalized_uids: dict[str, str] = {}
+                normalized_sdk_configs: dict[
+                    str, tuple[str | None, str | None, bool]
+                ] = {}
+                normalized_installer_packages: dict[
+                    str, tuple[str | None, str | None]
+                ] = {}
+                normalized_soldered_devices: dict[str, str | None] = {}
+
+                for row in rows:
+                    raw_uid = row[0]
+                    if raw_uid is None or str(raw_uid).strip() == "":
                         raise ExtractionError(
-                            f"Board '{board.name}' has invalid mikrobus_count value "
-                            f"'{raw_count}' in database"
-                        ) from exc
-                if count < 0:
+                            f"Board '{board.name}' has an empty uid value in database"
+                        )
+                    uid = str(raw_uid).strip()
+                    normalized_uids.setdefault(uid.casefold(), uid)
+
+                    raw_count = row[1]
+                    if raw_count is None or str(raw_count).strip() == "":
+                        count = 0
+                    else:
+                        try:
+                            count = int(raw_count)
+                        except (TypeError, ValueError) as exc:
+                            raise ExtractionError(
+                                f"Board '{board.name}' has invalid mikrobus_count value "
+                                f"'{raw_count}' in database"
+                            ) from exc
+                    if count < 0:
+                        raise ExtractionError(
+                            f"Board '{board.name}' has negative mikrobus_count value {count}"
+                        )
+                    normalized_counts.add(count)
+
+                    sdk_config, shield_uid, has_shield = parse_sdk_config(row[2], board.name)
+                    normalized_sdk_configs.setdefault(
+                        sdk_config or "",
+                        (sdk_config, shield_uid, has_shield),
+                    )
+
+                    installer_package, board_package = parse_installer_package(
+                        row[3], board.name
+                    )
+                    normalized_installer_packages.setdefault(
+                        installer_package or "",
+                        (installer_package, board_package),
+                    )
+
+                    soldered_device = normalize_nullable_uid(row[4])
+                    soldered_key = soldered_device.casefold() if soldered_device else ""
+                    normalized_soldered_devices.setdefault(soldered_key, soldered_device)
+
+                if len(normalized_counts) > 1:
+                    values = ", ".join(str(value) for value in sorted(normalized_counts))
                     raise ExtractionError(
-                        f"Board '{board.name}' has negative mikrobus_count value {count}"
+                        f"Board name '{board.name}' matches multiple database rows with "
+                        f"different mikrobus_count values: {values}"
                     )
-                normalized_counts.add(count)
 
-                sdk_config, shield_uid, has_shield = parse_sdk_config(row[2], board.name)
-                normalized_sdk_configs.setdefault(
-                    sdk_config or "",
-                    (sdk_config, shield_uid, has_shield),
-                )
+                if len(normalized_uids) > 1:
+                    values = ", ".join(sorted(normalized_uids.values(), key=str.casefold))
+                    raise ExtractionError(
+                        f"Board name '{board.name}' matches multiple database rows with "
+                        f"different uid values: {values}"
+                    )
 
-                installer_package, board_package = parse_installer_package(
-                    row[3], board.name
-                )
-                normalized_installer_packages.setdefault(
-                    installer_package or "",
-                    (installer_package, board_package),
-                )
+                if len(normalized_sdk_configs) > 1:
+                    values = ", ".join(
+                        value[0] or "(empty)" for value in normalized_sdk_configs.values()
+                    )
+                    raise ExtractionError(
+                        f"Board name '{board.name}' matches multiple database rows with "
+                        f"different sdk_config values: {values}"
+                    )
 
-                soldered_device = normalize_nullable_uid(row[4])
-                soldered_key = soldered_device.casefold() if soldered_device else ""
-                normalized_soldered_devices.setdefault(soldered_key, soldered_device)
+                if len(normalized_installer_packages) > 1:
+                    values = ", ".join(
+                        value[0] or "(empty)"
+                        for value in normalized_installer_packages.values()
+                    )
+                    raise ExtractionError(
+                        f"Board name '{board.name}' matches multiple database rows with "
+                        f"different installer_package values: {values}"
+                    )
 
-            if len(normalized_counts) > 1:
-                values = ", ".join(str(value) for value in sorted(normalized_counts))
-                raise ExtractionError(
-                    f"Board name '{board.name}' matches multiple database rows with "
-                    f"different mikrobus_count values: {values}"
-                )
+                if len(normalized_soldered_devices) > 1:
+                    values = ", ".join(
+                        "(empty)" if value is None else value
+                        for value in sorted(
+                            normalized_soldered_devices.values(),
+                            key=lambda item: "" if item is None else item.casefold(),
+                        )
+                    )
+                    raise ExtractionError(
+                        f"Board name '{board.name}' matches multiple database rows with "
+                        f"different soldered_device values: {values}"
+                    )
 
-            if len(normalized_uids) > 1:
-                values = ", ".join(sorted(normalized_uids.values(), key=str.casefold))
-                raise ExtractionError(
-                    f"Board name '{board.name}' matches multiple database rows with "
-                    f"different uid values: {values}"
+                board_uid = next(iter(normalized_uids.values()))
+                mikrobus_count = next(iter(normalized_counts))
+                has_mikrobus = mikrobus_count > 0
+                sdk_config, shield_uid, has_shield = next(
+                    iter(normalized_sdk_configs.values())
                 )
-
-            if len(normalized_sdk_configs) > 1:
-                values = ", ".join(
-                    value[0] or "(empty)" for value in normalized_sdk_configs.values()
+                installer_package, board_package = next(
+                    iter(normalized_installer_packages.values())
                 )
-                raise ExtractionError(
-                    f"Board name '{board.name}' matches multiple database rows with "
-                    f"different sdk_config values: {values}"
-                )
-
-            if len(normalized_installer_packages) > 1:
-                values = ", ".join(
-                    value[0] or "(empty)"
-                    for value in normalized_installer_packages.values()
-                )
-                raise ExtractionError(
-                    f"Board name '{board.name}' matches multiple database rows with "
-                    f"different installer_package values: {values}"
-                )
-
-            if len(normalized_soldered_devices) > 1:
-                values = ", ".join(
-                    "(empty)" if value is None else value
-                    for value in sorted(
-                        normalized_soldered_devices.values(),
-                        key=lambda item: "" if item is None else item.casefold(),
+                board_header_path, board_header_url, board_header_exists = (
+                    build_board_header_reference(
+                        repo,
+                        ref,
+                        repository_url,
+                        board_package,
                     )
                 )
-                raise ExtractionError(
-                    f"Board name '{board.name}' matches multiple database rows with "
-                    f"different soldered_device values: {values}"
-                )
+                soldered_device = next(iter(normalized_soldered_devices.values()))
 
-            board_uid = next(iter(normalized_uids.values()))
-            mikrobus_count = next(iter(normalized_counts))
-            has_mikrobus = mikrobus_count > 0
-            sdk_config, shield_uid, has_shield = next(
-                iter(normalized_sdk_configs.values())
-            )
-            installer_package, board_package = next(
-                iter(normalized_installer_packages.values())
-            )
-            board_header_path, board_header_url, board_header_exists = (
-                build_board_header_reference(
-                    repo,
-                    ref,
-                    repository_url,
-                    board_package,
-                )
-            )
-            soldered_device = next(iter(normalized_soldered_devices.values()))
+                if soldered_device is not None:
+                    sdk_support_source = "Boards.soldered_device"
+                    device_uids = [soldered_device]
+                else:
+                    sdk_support_source = "BoardToDevice"
+                    linked_rows = connection.execute(
+                        linked_devices_query,
+                        (board_uid,),
+                    ).fetchall()
+                    devices_by_key: dict[str, str] = {}
+                    for linked_row in linked_rows:
+                        device_uid = normalize_nullable_uid(linked_row[0])
+                        if device_uid is not None:
+                            devices_by_key.setdefault(device_uid.casefold(), device_uid)
+                    device_uids = sorted(devices_by_key.values(), key=str.casefold)
 
-            if soldered_device is not None:
-                sdk_support_source = "Boards.soldered_device"
-                device_uids = [soldered_device]
-            else:
-                sdk_support_source = "BoardToDevice"
-                linked_rows = connection.execute(
-                    linked_devices_query,
-                    (board_uid,),
-                ).fetchall()
-                devices_by_key: dict[str, str] = {}
-                for linked_row in linked_rows:
-                    device_uid = normalize_nullable_uid(linked_row[0])
-                    if device_uid is not None:
-                        devices_by_key.setdefault(device_uid.casefold(), device_uid)
-                device_uids = sorted(devices_by_key.values(), key=str.casefold)
+                supported_devices: list[str] = []
+                missing_devices: list[str] = []
+                mcu_packages: list[McuPackage] = []
 
-            supported_devices: list[str] = []
-            missing_devices: list[str] = []
-            mcu_packages: list[McuPackage] = []
+                for device_uid in device_uids:
+                    package_rows = device_package_rows.get(
+                        device_uid.strip().casefold(), []
+                    )
+                    packages_by_key: dict[str, str] = {}
+                    for package_row in package_rows:
+                        package_uid = normalize_nullable_uid(package_row[0])
+                        if package_uid is not None:
+                            packages_by_key.setdefault(package_uid.casefold(), package_uid)
+                    package_uids = tuple(
+                        sorted(packages_by_key.values(), key=str.casefold)
+                    )
 
-            for device_uid in device_uids:
-                package_rows = connection.execute(
-                    device_packages_query,
-                    (device_uid,),
-                ).fetchall()
-                packages_by_key: dict[str, str] = {}
-                for package_row in package_rows:
-                    package_uid = normalize_nullable_uid(package_row[0])
-                    if package_uid is not None:
-                        packages_by_key.setdefault(package_uid.casefold(), package_uid)
-                package_uids = tuple(
-                    sorted(packages_by_key.values(), key=str.casefold)
-                )
+                    support_rows = device_support_rows.get(
+                        device_uid.strip().casefold(), []
+                    )
 
-                support_rows = connection.execute(
-                    device_support_query,
-                    (device_uid,),
-                ).fetchall()
+                    if not support_rows:
+                        mcu_packages.append(
+                            McuPackage(
+                                mcu_uid=device_uid,
+                                vendor=None,
+                                package_uids=package_uids,
+                            )
+                        )
+                        missing_devices.append(device_uid)
+                        continue
 
-                if not support_rows:
+                    support_values = {
+                        normalize_sdk_support(row[0], device_uid) for row in support_rows
+                    }
+                    if len(support_values) > 1:
+                        raise ExtractionError(
+                            f"Device uid '{device_uid}' matches multiple Devices rows with "
+                            "conflicting sdk_support values"
+                        )
+
+                    vendors_by_key: dict[str, str] = {}
+                    for row in support_rows:
+                        vendor_name = normalize_nullable_uid(row[1])
+                        if vendor_name is not None:
+                            vendors_by_key.setdefault(vendor_name.casefold(), vendor_name)
+
+                    if len(vendors_by_key) > 1:
+                        raise ExtractionError(
+                            f"Device uid '{device_uid}' matches multiple Devices rows with "
+                            "conflicting vendor values: "
+                            + ", ".join(sorted(vendors_by_key.values(), key=str.casefold))
+                        )
+
+                    vendor_name = next(iter(vendors_by_key.values()), None)
                     mcu_packages.append(
                         McuPackage(
                             mcu_uid=device_uid,
-                            vendor=None,
+                            vendor=vendor_name,
                             package_uids=package_uids,
                         )
                     )
-                    missing_devices.append(device_uid)
-                    continue
 
-                support_values = {
-                    normalize_sdk_support(row[0], device_uid) for row in support_rows
-                }
-                if len(support_values) > 1:
-                    raise ExtractionError(
-                        f"Device uid '{device_uid}' matches multiple Devices rows with "
-                        "conflicting sdk_support values"
-                    )
+                    if True in support_values:
+                        supported_devices.append(device_uid)
 
-                vendors_by_key: dict[str, str] = {}
-                for row in support_rows:
-                    vendor_name = normalize_nullable_uid(row[1])
-                    if vendor_name is not None:
-                        vendors_by_key.setdefault(vendor_name.casefold(), vendor_name)
-
-                if len(vendors_by_key) > 1:
-                    raise ExtractionError(
-                        f"Device uid '{device_uid}' matches multiple Devices rows with "
-                        "conflicting vendor values: "
-                        + ", ".join(sorted(vendors_by_key.values(), key=str.casefold))
-                    )
-
-                vendor_name = next(iter(vendors_by_key.values()), None)
-                mcu_packages.append(
-                    McuPackage(
-                        mcu_uid=device_uid,
-                        vendor=vendor_name,
-                        package_uids=package_uids,
-                    )
+                # A board without a soldered device may map to several possible devices.
+                # Any supported linked device is sufficient to confirm board SDK support.
+                has_sdk_support = bool(supported_devices)
+                embedded_wiki_eligible = has_mikrobus and has_sdk_support
+                embedded_wiki_eligible_with_shield = (
+                    not has_mikrobus and has_shield and has_sdk_support
                 )
 
-                if True in support_values:
-                    supported_devices.append(device_uid)
+                if has_sdk_support:
+                    sdk_supported_count += 1
+                else:
+                    sdk_unsupported_count += 1
 
-            # A board without a soldered device may map to several possible devices.
-            # Any supported linked device is sufficient to confirm board SDK support.
-            has_sdk_support = bool(supported_devices)
-            embedded_wiki_eligible = has_mikrobus and has_sdk_support
-            embedded_wiki_eligible_with_shield = (
-                not has_mikrobus and has_shield and has_sdk_support
-            )
+                if embedded_wiki_eligible:
+                    eligibility_note = "mikroBUS present and device-confirmed mikroSDK support"
+                elif embedded_wiki_eligible_with_shield:
+                    eligibility_note = (
+                        "No onboard mikroBUS, but shield expansion and "
+                        "device-confirmed mikroSDK support are available"
+                    )
+                elif not device_uids:
+                    eligibility_note = "No devices linked for SDK support verification"
+                elif missing_devices and len(missing_devices) == len(device_uids):
+                    eligibility_note = "Linked device records were not found in Devices"
+                elif not has_sdk_support and has_shield and not has_mikrobus:
+                    eligibility_note = (
+                        "mikroBUS expansion shield available but no device-confirmed "
+                        "mikroSDK support"
+                    )
+                elif not has_sdk_support:
+                    eligibility_note = "No device-confirmed mikroSDK support"
+                elif not has_mikrobus:
+                    eligibility_note = "No onboard mikroBUS or shield expansion option"
+                else:
+                    eligibility_note = "Not EmbeddedWiki eligible"
 
-            if has_sdk_support:
-                sdk_supported_count += 1
-            else:
-                sdk_unsupported_count += 1
-
-            if embedded_wiki_eligible:
-                eligibility_note = "mikroBUS present and device-confirmed mikroSDK support"
-            elif embedded_wiki_eligible_with_shield:
-                eligibility_note = (
-                    "No onboard mikroBUS, but shield expansion and "
-                    "device-confirmed mikroSDK support are available"
+                updated = replace(
+                    board,
+                    database_match=True,
+                    board_uid=board_uid,
+                    mikrobus_count=mikrobus_count,
+                    has_mikrobus=has_mikrobus,
+                    sdk_config=sdk_config,
+                    installer_package=installer_package,
+                    board_package=board_package,
+                    board_header_path=board_header_path,
+                    board_header_url=board_header_url,
+                    board_header_exists=board_header_exists,
+                    shield_uid=shield_uid,
+                    has_shield=has_shield,
+                    soldered_device=soldered_device,
+                    sdk_support_source=sdk_support_source,
+                    checked_device_uids=tuple(device_uids),
+                    sdk_supported_device_uids=tuple(supported_devices),
+                    missing_device_uids=tuple(missing_devices),
+                    mcu_packages=tuple(mcu_packages),
+                    has_sdk_support=has_sdk_support,
+                    embedded_wiki_eligible=embedded_wiki_eligible,
+                    embedded_wiki_eligible_with_shield=(
+                        embedded_wiki_eligible_with_shield
+                    ),
+                    eligibility_note=eligibility_note,
                 )
-            elif not device_uids:
-                eligibility_note = "No devices linked for SDK support verification"
-            elif missing_devices and len(missing_devices) == len(device_uids):
-                eligibility_note = "Linked device records were not found in Devices"
-            elif not has_sdk_support and has_shield and not has_mikrobus:
-                eligibility_note = (
-                    "mikroBUS expansion shield available but no device-confirmed "
-                    "mikroSDK support"
+                classified.append(updated)
+
+                if embedded_wiki_eligible:
+                    eligible_boards.append(updated)
+                elif embedded_wiki_eligible_with_shield:
+                    shield_eligible_boards.append(updated)
+                else:
+                    other_boards.append(updated)
+            except ExtractionError as exc:
+                if strict:
+                    raise
+                skipped_boards.append(board.name)
+                print(
+                    f"warning: skipping board '{board.name}': {exc}",
+                    file=sys.stderr,
                 )
-            elif not has_sdk_support:
-                eligibility_note = "No device-confirmed mikroSDK support"
-            elif not has_mikrobus:
-                eligibility_note = "No onboard mikroBUS or shield expansion option"
-            else:
-                eligibility_note = "Not EmbeddedWiki eligible"
-
-            updated = replace(
-                board,
-                database_match=True,
-                board_uid=board_uid,
-                mikrobus_count=mikrobus_count,
-                has_mikrobus=has_mikrobus,
-                sdk_config=sdk_config,
-                installer_package=installer_package,
-                board_package=board_package,
-                board_header_path=board_header_path,
-                board_header_url=board_header_url,
-                board_header_exists=board_header_exists,
-                shield_uid=shield_uid,
-                has_shield=has_shield,
-                soldered_device=soldered_device,
-                sdk_support_source=sdk_support_source,
-                checked_device_uids=tuple(device_uids),
-                sdk_supported_device_uids=tuple(supported_devices),
-                missing_device_uids=tuple(missing_devices),
-                mcu_packages=tuple(mcu_packages),
-                has_sdk_support=has_sdk_support,
-                embedded_wiki_eligible=embedded_wiki_eligible,
-                embedded_wiki_eligible_with_shield=(
-                    embedded_wiki_eligible_with_shield
-                ),
-                eligibility_note=eligibility_note,
-            )
-            classified.append(updated)
-
-            if embedded_wiki_eligible:
-                eligible_boards.append(updated)
-            elif embedded_wiki_eligible_with_shield:
-                shield_eligible_boards.append(updated)
-            else:
-                other_boards.append(updated)
 
         metadata = DatabaseMetadata(
             source_url=database_url,
@@ -1207,7 +2025,22 @@ def extract_release_boards(
     database_url: str,
     raw_previous_version: str | None = None,
     github_repository_url: str | None = None,
+    ledger: dict[str, dict[str, object]] | None = None,
+    ledger_file: Path | None = None,
+    initialize_ledger: bool = False,
+    embedded_wiki_source: str | None = None,
+    embedded_wiki_pages_source: str | None = None,
 ) -> ReleaseBoards:
+    """Classify boards added in the release interval.
+
+    When a ledger is supplied, boards from earlier hardware changelogs and every
+    other database board are classified too, and those that are eligible now
+    but were never reported (or gained SDK support for more devices) are
+    returned as separate lists. With ``embedded_wiki_source``, boards that
+    already have EmbeddedWiki articles count as done. With
+    ``embedded_wiki_pages_source``, boards whose page exists without articles
+    are marked, but still count as missing.
+    """
     version = normalize_version(raw_version)
     tag = f"mikroSDK-{version}"
     release_changelog = f"changelog/v{version}/changelog.md"
@@ -1243,35 +2076,7 @@ def extract_release_boards(
         current_release_date=release_date,
     )
 
-    hardware_changelogs: list[HardwareChangelog] = []
-    boards: list[Board] = []
-    seen_boards: set[tuple[str, str | None]] = set()
-
-    for added_date, hardware_changelog in dated_files:
-        hardware_markdown = read_tag_file(repo, tag, hardware_changelog)
-        validate_hardware_file_heading(
-            hardware_markdown, added_date, hardware_changelog
-        )
-        hardware_section = extract_section(hardware_markdown, "NEW HARDWARE")
-        file_boards = parse_boards(
-            hardware_section,
-            added_date=added_date,
-            source_file=hardware_changelog,
-        )
-
-        hardware_changelogs.append(
-            HardwareChangelog(
-                date=added_date,
-                path=hardware_changelog,
-                board_count=len(file_boards),
-            )
-        )
-
-        for board in file_boards:
-            key = (board.name.casefold(), board.url)
-            if key not in seen_boards:
-                boards.append(board)
-                seen_boards.add(key)
+    hardware_changelogs, boards = parse_hardware_files(repo, tag, dated_files)
 
     (
         classified_boards,
@@ -1287,6 +2092,186 @@ def extract_release_boards(
         ref=tag,
         repository_url=repository_url,
     )
+
+    unreported = UnreportedBoards()
+    historical_count = 0
+    database_count = 0
+
+    published_uids: dict[str, str] | None = None
+    page_only_uids: set[str] = set()
+    page_only_names: list[str] = []
+    embedded_wiki_names: list[str] = []
+    embedded_wiki_unmatched: list[str] = []
+    published_names: list[str] = []
+    if embedded_wiki_source is not None:
+        embedded_wiki_names = fetch_embedded_wiki_boards(embedded_wiki_source)
+        published_uids, embedded_wiki_unmatched = resolve_embedded_wiki_uids(
+            database_path, embedded_wiki_names
+        )
+        database_names_by_uid = {
+            ledger_key(uid): name for uid, name in list_database_boards(database_path)
+        }
+        if embedded_wiki_pages_source is not None:
+            page_names = fetch_embedded_wiki_boards(embedded_wiki_pages_source)
+            page_uids, _unmatched_pages = resolve_embedded_wiki_uids(
+                database_path, page_names
+            )
+            page_only_uids = set(page_uids) - set(published_uids)
+            published_page_names = {name.casefold() for name in embedded_wiki_names}
+            page_only_names = sorted(
+                {
+                    *(
+                        name
+                        for name in page_names
+                        if name.casefold() not in published_page_names
+                    ),
+                    *(
+                        database_names_by_uid[key]
+                        for key in page_only_uids
+                        if key in database_names_by_uid
+                    ),
+                },
+                key=str.casefold,
+            )
+        published_names = sorted(
+            {
+                *embedded_wiki_names,
+                *(
+                    database_names_by_uid[key]
+                    for key in published_uids
+                    if key in database_names_by_uid
+                ),
+            },
+            key=str.casefold,
+        )
+
+    if ledger is not None:
+        completed = complete_manual_ledger_entries(
+            ledger,
+            database_path,
+            database_url,
+            repo=repo,
+            ref=tag,
+            repository_url=repository_url,
+        )
+        if completed:
+            print(
+                "Completed manual ledger entries from the database: "
+                + ", ".join(completed)
+                + ". Pass --update-ledger to save them.",
+                file=sys.stderr,
+            )
+
+        _historical_changelogs, historical_boards = parse_hardware_files(
+            repo,
+            tag,
+            collect_historical_links(repo, tag, previous_release_date),
+            strict=False,
+        )
+        # A board re-listed in this interval is already handled above, and a
+        # board listed several times in history only needs one check.
+        seen_names = {board.name.casefold() for board in boards}
+        unique_historical: list[Board] = []
+        for board in reversed(historical_boards):
+            if board.name.casefold() not in seen_names:
+                unique_historical.append(board)
+                seen_names.add(board.name.casefold())
+        unique_historical.reverse()
+        historical_count = len(unique_historical)
+
+        (
+            classified_historical,
+            _eligible,
+            _eligible_with_shield,
+            _other,
+            _metadata,
+        ) = classify_boards_with_database(
+            unique_historical,
+            database_path,
+            database_url,
+            repo=repo,
+            ref=tag,
+            repository_url=repository_url,
+            strict=False,
+        )
+        # Different changelog names can resolve to the same database board.
+        seen_uids = {
+            ledger_key(board.board_uid)
+            for board in classified_boards
+            if board.board_uid is not None
+        }
+        deduplicated_historical: list[Board] = []
+        for board in classified_historical:
+            if board.board_uid is not None:
+                if ledger_key(board.board_uid) in seen_uids:
+                    continue
+                seen_uids.add(ledger_key(board.board_uid))
+            deduplicated_historical.append(board)
+        classified_historical = deduplicated_historical
+
+        # Boards never listed in a dated hardware changelog are checked too.
+        database_only = [
+            Board(
+                name=name,
+                url=None,
+                added_date="",
+                source_file="database",
+                board_uid=uid,
+                database_match_method="database",
+            )
+            for uid, name in list_database_boards(database_path)
+            if ledger_key(uid) not in seen_uids
+        ]
+        database_count = len(database_only)
+        classified_database, *_ = classify_boards_with_database(
+            database_only,
+            database_path,
+            database_url,
+            repo=repo,
+            ref=tag,
+            repository_url=repository_url,
+            strict=False,
+        )
+
+        unreported = select_unreported_boards(
+            classified_historical + classified_database,
+            ledger,
+            version,
+            initialize=initialize_ledger,
+            published_uids=set(published_uids) if published_uids is not None else None,
+        )
+
+    def finish(board: Board, reason: str | None = None) -> Board:
+        on_embedded_wiki = (
+            None
+            if published_uids is None
+            else board.board_uid is not None
+            and ledger_key(board.board_uid) in published_uids
+        )
+        page_only = (
+            None
+            if published_uids is None or embedded_wiki_pages_source is None
+            else board.board_uid is not None
+            and ledger_key(board.board_uid) in page_only_uids
+        )
+        return replace(
+            board,
+            report_reason=reason or board.report_reason,
+            on_embedded_wiki=on_embedded_wiki,
+            embedded_wiki_page_only=page_only,
+        )
+
+    classified_boards = [
+        finish(board, REASON_NEW_HARDWARE) for board in classified_boards
+    ]
+    embedded_wiki_eligible_boards = [
+        finish(board, REASON_NEW_HARDWARE) for board in embedded_wiki_eligible_boards
+    ]
+    embedded_wiki_eligible_with_shield_boards = [
+        finish(board, REASON_NEW_HARDWARE)
+        for board in embedded_wiki_eligible_with_shield_boards
+    ]
+    other_boards = [finish(board, REASON_NEW_HARDWARE) for board in other_boards]
 
     return ReleaseBoards(
         sdk_version=version,
@@ -1307,6 +2292,29 @@ def extract_release_boards(
             embedded_wiki_eligible_with_shield_boards
         ),
         other_boards=other_boards,
+        ledger_file=str(ledger_file) if ledger_file is not None else None,
+        historical_boards_checked=historical_count,
+        newly_eligible_boards=[finish(b) for b in unreported.newly_eligible],
+        newly_eligible_with_shield_boards=[
+            finish(b) for b in unreported.newly_eligible_with_shield
+        ],
+        boards_with_new_devices=[finish(b) for b in unreported.with_new_devices],
+        ledger_baseline_boards=[finish(b) for b in unreported.baseline],
+        embedded_wiki_source=embedded_wiki_source,
+        embedded_wiki_boards=len(embedded_wiki_names),
+        embedded_wiki_unmatched_names=embedded_wiki_unmatched,
+        embedded_wiki_published_names=published_names,
+        embedded_wiki_pages_source=(
+            embedded_wiki_pages_source if embedded_wiki_source is not None else None
+        ),
+        embedded_wiki_page_only_names=page_only_names,
+        database_boards_checked=database_count,
+        boards_missing_from_embedded_wiki=[
+            finish(b) for b in unreported.missing_from_embedded_wiki
+        ],
+        embedded_wiki_unrecorded_boards=[
+            finish(b, REASON_EMBEDDED_WIKI) for b in unreported.published_unrecorded
+        ],
     )
 
 
@@ -1349,15 +2357,26 @@ def board_header_markdown_link(board: Board) -> str:
     return ""
 
 
-def mcu_package_markdown_status(board: Board) -> str:
-    """Return a compact MCU-to-package mapping for Markdown outputs."""
+def mcu_package_markdown_status(
+    board: Board,
+    device_uids: Iterable[str] | None = None,
+) -> str:
+    """Return a compact MCU-to-package mapping for Markdown outputs.
+
+    When ``device_uids`` is given, only those devices are listed.
+    """
     if not board.database_match:
         return ""
     if not board.mcu_packages:
         return " — **MCU/package data not found**"
 
+    selected = (
+        {uid.casefold() for uid in device_uids} if device_uids is not None else None
+    )
     mappings: list[str] = []
     for item in board.mcu_packages:
+        if selected is not None and item.mcu_uid.casefold() not in selected:
+            continue
         if item.package_uids:
             packages = ", ".join(f"`{value}`" for value in item.package_uids)
         else:
@@ -1367,12 +2386,163 @@ def mcu_package_markdown_status(board: Board) -> str:
     return " — **MCU / package:** " + "; ".join(mappings)
 
 
+PAGE_ONLY_MARKDOWN = " — **EmbeddedWiki page exists, no articles yet**"
+
+
+def match_method_markdown_note(board: Board) -> str:
+    if board.database_match_method in ("uid", "url"):
+        return (
+            f" — *changelog name differs from database, matched by "
+            f"{board.database_match_method}* (`{board.board_uid}`)"
+        )
+    return ""
+
+
 def eligible_markdown_board_line(board: Board) -> str:
     return (
         f"- {markdown_board_name(board)} — {mikrobus_markdown_status(board)}"
+        f"{' — **already on EmbeddedWiki**' if board.on_embedded_wiki else ''}"
+        f"{PAGE_ONLY_MARKDOWN if board.embedded_wiki_page_only else ''}"
+        f"{match_method_markdown_note(board)}"
         f"{mcu_package_markdown_status(board)}"
         f"{board_header_markdown_link(board)}"
     )
+
+
+def board_origin_markdown(board: Board) -> str:
+    if board.source_file == "database":
+        return "**not listed in any hardware changelog**"
+    return f"**added {board.added_date}** (`{board.source_file}`)"
+
+
+def compact_markdown_board_line(
+    board: Board,
+    device_uids: Iterable[str] | None = None,
+) -> str:
+    """Short line for Mattermost, where message length is limited."""
+    selected = tuple(device_uids if device_uids is not None else board.sdk_supported_device_uids)
+    if not selected:
+        mcus = ""
+    elif len(selected) <= 3:
+        mcus = " — " + ", ".join(f"`{uid}`" for uid in selected)
+    else:
+        mcus = f" — {len(selected)} MCUs"
+    shield = "" if board.has_mikrobus else " — *with shield*"
+    page_only = " — *page exists, no articles yet*" if board.embedded_wiki_page_only else ""
+    return f"- {markdown_board_name(board)}{shield}{mcus}{page_only}"
+
+
+def newly_eligible_markdown_board_line(board: Board) -> str:
+    return f"{eligible_markdown_board_line(board)} — {board_origin_markdown(board)}"
+
+
+def new_devices_markdown_board_line(board: Board) -> str:
+    count = len(board.newly_supported_device_uids)
+    label = "MCU" if count == 1 else "MCUs"
+    return (
+        f"- {markdown_board_name(board)} — **{count} newly supported {label}**"
+        f"{mcu_package_markdown_status(board, board.newly_supported_device_uids)}"
+        f"{board_header_markdown_link(board)}"
+    )
+
+
+def append_backfill_markdown(lines: list[str], result: ReleaseBoards, full: bool) -> None:
+    """Append sections for older boards that are reportable in this release.
+
+    ``full`` adds explanations and MCU/package details; otherwise lines stay
+    short for Mattermost.
+    """
+    newly_eligible = (
+        result.newly_eligible_boards + result.newly_eligible_with_shield_boards
+    )
+
+    lines.extend(["", "### Newly eligible boards from earlier releases", ""])
+    if full:
+        lines.extend(
+            [
+                (
+                    "> Boards from earlier hardware changelogs, or from the "
+                    "database only, that are eligible now (for example, their "
+                    "MCU gained mikroSDK support), are not on EmbeddedWiki and "
+                    "have not been reported yet."
+                ),
+                "",
+            ]
+        )
+    if newly_eligible:
+        lines.extend(
+            newly_eligible_markdown_board_line(board)
+            if full
+            else compact_markdown_board_line(board)
+            for board in newly_eligible
+        )
+    else:
+        lines.append("No boards from earlier releases became EmbeddedWiki eligible.")
+
+    lines.extend(["", "### Reported boards with newly supported MCUs", ""])
+    if full:
+        lines.extend(
+            [
+                (
+                    "> Boards without a soldered MCU that were already reported "
+                    "or published, where more of their linked MCUs now have "
+                    "mikroSDK support."
+                ),
+                "",
+            ]
+        )
+    if result.boards_with_new_devices:
+        lines.extend(
+            new_devices_markdown_board_line(board)
+            if full
+            else compact_markdown_board_line(board, board.newly_supported_device_uids)
+            for board in result.boards_with_new_devices
+        )
+    else:
+        lines.append("No reported boards gained newly supported MCUs.")
+
+    if not result.embedded_wiki_source:
+        return
+
+    missing = result.boards_missing_from_embedded_wiki
+    lines.extend(["", "### Eligible boards still missing from EmbeddedWiki", ""])
+    page_only_count = sum(1 for board in missing if board.embedded_wiki_page_only)
+    if full:
+        lines.extend(
+            [
+                (
+                    "> Reported in an earlier release (or recorded as baseline) "
+                    "but still without EmbeddedWiki articles."
+                ),
+                "",
+            ]
+        )
+        if missing:
+            lines.extend(eligible_markdown_board_line(board) for board in missing)
+        else:
+            lines.append("Every reported eligible board is on EmbeddedWiki.")
+
+        lines.extend(["", "### EmbeddedWiki boards without a database match", ""])
+        lines.extend(
+            [
+                (
+                    "> Not matched to any `Boards` entry, so they cannot count as "
+                    "done. If one is an eligible board, add its exact database name "
+                    "to the ledger as a name-only entry."
+                ),
+                "",
+            ]
+        )
+        if result.embedded_wiki_unmatched_names:
+            lines.extend(f"- {name}" for name in result.embedded_wiki_unmatched_names)
+        else:
+            lines.append("Every EmbeddedWiki board matched the database.")
+    else:
+        lines.append(
+            f"{len(missing)} reported eligible boards still have no EmbeddedWiki "
+            f"articles, {page_only_count} of them with an empty page "
+            "(listed in the full report)."
+        )
 
 
 def other_markdown_board_line(board: Board) -> str:
@@ -1411,6 +2581,33 @@ def format_markdown(result: ReleaseBoards) -> str:
             f"{len(result.embedded_wiki_eligible_with_shield_boards)}"
         ),
         f"- **Other boards:** {len(result.other_boards)}",
+        (
+            "- **Reported-boards ledger:** "
+            + (f"`{result.ledger_file}`" if result.ledger_file else "not used")
+        ),
+        f"- **Boards from earlier releases checked:** {result.historical_boards_checked}",
+        (
+            "- **Newly eligible boards from earlier releases:** "
+            f"{len(result.newly_eligible_boards) + len(result.newly_eligible_with_shield_boards)}"
+        ),
+        (
+            "- **Reported boards with newly supported MCUs:** "
+            f"{len(result.boards_with_new_devices)}"
+        ),
+        f"- **Database-only boards checked:** {result.database_boards_checked}",
+        (
+            "- **EmbeddedWiki boards with articles:** "
+            + (
+                f"{result.embedded_wiki_boards} "
+                f"({len(result.embedded_wiki_unmatched_names)} without database match)"
+                if result.embedded_wiki_source
+                else "not checked"
+            )
+        ),
+        (
+            "- **Eligible boards still missing from EmbeddedWiki:** "
+            f"{len(result.boards_missing_from_embedded_wiki)}"
+        ),
         "",
         "### EmbeddedWiki eligible boards",
         "",
@@ -1449,6 +2646,9 @@ def format_markdown(result: ReleaseBoards) -> str:
             "No newly added boards are EmbeddedWiki eligible through a shield."
         )
 
+    if result.ledger_file:
+        append_backfill_markdown(lines, result, full=True)
+
     lines.extend(
         [
             "",
@@ -1471,6 +2671,8 @@ def format_mattermost(result: ReleaseBoards) -> str:
     total_eligible = (
         len(result.embedded_wiki_eligible_boards)
         + len(result.embedded_wiki_eligible_with_shield_boards)
+        + len(result.newly_eligible_boards)
+        + len(result.newly_eligible_with_shield_boards)
     )
 
     lines = [
@@ -1488,6 +2690,18 @@ def format_mattermost(result: ReleaseBoards) -> str:
         (
             "- **Eligible with shield:** "
             f"{len(result.embedded_wiki_eligible_with_shield_boards)}"
+        ),
+        (
+            "- **Newly eligible from earlier releases:** "
+            f"{len(result.newly_eligible_boards) + len(result.newly_eligible_with_shield_boards)}"
+        ),
+        (
+            "- **Reported boards with newly supported MCUs:** "
+            f"{len(result.boards_with_new_devices)}"
+        ),
+        (
+            "- **Still missing from EmbeddedWiki:** "
+            f"{len(result.boards_missing_from_embedded_wiki)}"
         ),
         "",
         "### EmbeddedWiki eligible boards",
@@ -1520,17 +2734,34 @@ def format_mattermost(result: ReleaseBoards) -> str:
             "No shield-based EmbeddedWiki candidates were added in this release interval."
         )
 
+    if result.ledger_file:
+        append_backfill_markdown(lines, result, full=False)
+
     return "\n".join(lines) + "\n\n---\n"
 
 
-def mcu_package_plain_status(board: Board) -> str:
+def mcu_package_plain_status(
+    board: Board,
+    device_uids: Iterable[str] | None = None,
+) -> str:
     if not board.mcu_packages:
         return "MCU/package unavailable"
+    selected = (
+        {uid.casefold() for uid in device_uids} if device_uids is not None else None
+    )
     mappings: list[str] = []
     for item in board.mcu_packages:
+        if selected is not None and item.mcu_uid.casefold() not in selected:
+            continue
         packages = ",".join(item.package_uids) if item.package_uids else "package not found"
         mappings.append(f"{item.mcu_uid} -> {packages}")
     return "; ".join(mappings)
+
+
+def board_origin_plain(board: Board) -> str:
+    if board.source_file == "database":
+        return "not in any hardware changelog"
+    return f"added {board.added_date}"
 
 
 def format_plain(result: ReleaseBoards) -> str:
@@ -1548,6 +2779,40 @@ def format_plain(result: ReleaseBoards) -> str:
         lines.append(
             f"[EMBEDDEDWIKI ELIGIBLE WITH SHIELD] [{shield_status}] "
             f"[{mcu_package_plain_status(board)}] {board.name}"
+        )
+
+    for board in result.newly_eligible_boards:
+        lines.append(
+            f"[NEWLY ELIGIBLE] {'[PAGE ONLY] ' if board.embedded_wiki_page_only else ''}"
+            f"[mikroBUS x{board.mikrobus_count}] "
+            f"[{board_origin_plain(board)}] "
+            f"[{mcu_package_plain_status(board)}] {board.name}"
+        )
+
+    for board in result.newly_eligible_with_shield_boards:
+        shield_status = (
+            f"shield {board.shield_uid}" if board.shield_uid else "shield available"
+        )
+        lines.append(
+            f"[NEWLY ELIGIBLE WITH SHIELD] "
+            f"{'[PAGE ONLY] ' if board.embedded_wiki_page_only else ''}"
+            f"[{shield_status}] "
+            f"[{board_origin_plain(board)}] "
+            f"[{mcu_package_plain_status(board)}] {board.name}"
+        )
+
+    for board in result.boards_missing_from_embedded_wiki:
+        page_only = "[PAGE ONLY] " if board.embedded_wiki_page_only else ""
+        lines.append(
+            f"[MISSING FROM EMBEDDEDWIKI] {page_only}"
+            f"[{mcu_package_plain_status(board)}] {board.name}"
+        )
+
+    for board in result.boards_with_new_devices:
+        lines.append(
+            f"[NEW MCUS] "
+            f"[{mcu_package_plain_status(board, board.newly_supported_device_uids)}] "
+            f"{board.name}"
         )
 
     for board in result.other_boards:
@@ -1635,6 +2900,10 @@ def collect_sheet_mcu_package_pairs(
     eligible_boards = (
         result.embedded_wiki_eligible_boards
         + result.embedded_wiki_eligible_with_shield_boards
+        + result.newly_eligible_boards
+        + result.newly_eligible_with_shield_boards
+        + result.boards_with_new_devices
+        + result.boards_missing_from_embedded_wiki
     )
 
     rows_by_key: dict[tuple[str, str], tuple[str, str, str]] = {}
@@ -1642,8 +2911,14 @@ def collect_sheet_mcu_package_pairs(
     missing_vendor_mcus: dict[str, str] = {}
 
     for board in eligible_boards:
+        # For an already reported board only its newly supported devices are new work.
+        reported_device_uids = (
+            board.newly_supported_device_uids
+            if board.report_reason == REASON_NEW_DEVICES
+            else board.sdk_supported_device_uids
+        )
         supported_device_keys = {
-            device_uid.casefold() for device_uid in board.sdk_supported_device_uids
+            device_uid.casefold() for device_uid in reported_device_uids
         }
 
         for mapping in board.mcu_packages:
@@ -1689,6 +2964,289 @@ def collect_sheet_mcu_package_pairs(
     missing_packages = sorted(missing_package_mcus.values(), key=str.casefold)
     missing_vendors = sorted(missing_vendor_mcus.values(), key=str.casefold)
     return rows, missing_packages, missing_vendors
+
+
+def build_sheets_service(credentials_path: Path):
+    resolved_credentials = credentials_path.expanduser().resolve()
+    if not resolved_credentials.is_file():
+        raise ExtractionError(
+            f"Google service-account credentials file does not exist: "
+            f"{resolved_credentials}"
+        )
+
+    try:
+        from google.oauth2.service_account import Credentials
+        from googleapiclient.discovery import build
+    except ImportError as exc:
+        raise ExtractionError(
+            "Google Sheet editing requires google-api-python-client and google-auth. "
+            "Install them with: pip install google-api-python-client google-auth"
+        ) from exc
+
+    credentials = Credentials.from_service_account_file(
+        str(resolved_credentials),
+        scopes=SHEETS_READWRITE_SCOPES,
+    )
+    return build(
+        "sheets",
+        "v4",
+        credentials=credentials,
+        cache_discovery=False,
+    )
+
+
+BOARDS_SHEET_HEADERS = (
+    "BOARD",
+    "PRODUCT LINK",
+    "CATEGORY",
+    "MCU",
+    "REASON",
+    "HARDWARE ADDED",
+    "SDK VERSION",
+    "DATE ADDED",
+    "IS IT DONE",
+)
+
+BOARDS_SHEET_REASONS = {
+    REASON_NEW_HARDWARE: "New hardware",
+    REASON_NEWLY_ELIGIBLE: "Newly SDK supported",
+    REASON_NEW_DEVICES: "New MCUs supported",
+    REASON_MISSING_FROM_EMBEDDED_WIKI: "Not on EmbeddedWiki yet",
+}
+
+
+def collect_boards_sheet_rows(
+    result: ReleaseBoards,
+    date_added: str,
+) -> list[dict[str, str]]:
+    """Build one EW Boards row per reported board.
+
+    Boards with newly supported MCUs get a row listing only those MCUs.
+    """
+    rows: list[dict[str, str]] = []
+    for board in (
+        result.embedded_wiki_eligible_boards
+        + result.embedded_wiki_eligible_with_shield_boards
+        + result.newly_eligible_boards
+        + result.newly_eligible_with_shield_boards
+        + result.boards_with_new_devices
+        + result.boards_missing_from_embedded_wiki
+    ):
+        device_uids = (
+            board.newly_supported_device_uids
+            if board.report_reason == REASON_NEW_DEVICES
+            else board.sdk_supported_device_uids
+        )
+        rows.append(
+            {
+                "BOARD": board.name,
+                "PRODUCT LINK": board.url or "",
+                "CATEGORY": "mikroBUS" if board.has_mikrobus else "Shield",
+                "MCU": ", ".join(device_uids),
+                "REASON": BOARDS_SHEET_REASONS.get(board.report_reason or "", ""),
+                "HARDWARE ADDED": board.added_date,
+                "SDK VERSION": result.sdk_version,
+                "DATE ADDED": date_added,
+                "IS IT DONE": (
+                    SHEET_DONE_YES
+                    if board.on_embedded_wiki
+                    else SHEET_DONE_PAGE_ONLY
+                    if board.embedded_wiki_page_only
+                    else SHEET_DONE_NO
+                ),
+            }
+        )
+    return rows
+
+
+def update_boards_google_sheet(
+    result: ReleaseBoards,
+    sheet_url: str,
+    credentials_path: Path,
+    sheet_name: str,
+    date_added: str | None = None,
+    dry_run: bool = False,
+) -> dict[str, object]:
+    """Append reported boards to the board-level tab of the EW spreadsheet.
+
+    BOARD + MCU is the uniqueness key, so re-running a release adds nothing and
+    newly supported MCUs of an already listed board get their own row. The tab
+    is created with its header row when it does not exist yet. When EmbeddedWiki
+    was checked, rows of published boards get IS IT DONE = YES.
+    """
+    spreadsheet_id, _gid = _extract_google_sheet_ids(sheet_url)
+    if not spreadsheet_id:
+        raise ExtractionError(
+            "Could not extract a Google spreadsheet ID from --sheet-url. "
+            "Use a normal /spreadsheets/d/<ID>/... URL."
+        )
+
+    if date_added is None:
+        date_added = date.today().isoformat()
+    try:
+        date.fromisoformat(date_added)
+    except ValueError as exc:
+        raise ExtractionError(
+            f"Invalid sheet date '{date_added}'. Expected YYYY-MM-DD."
+        ) from exc
+
+    candidate_rows = collect_boards_sheet_rows(result, date_added)
+    published_names = {
+        name.strip().casefold() for name in result.embedded_wiki_published_names
+    }
+    page_only_names = {
+        name.strip().casefold() for name in result.embedded_wiki_page_only_names
+    }
+    if dry_run:
+        return {
+            "dry_run": True,
+            "sheet_name": sheet_name,
+            "candidate_rows": len(candidate_rows),
+            "appended": 0,
+            "rows": candidate_rows,
+        }
+
+    service = build_sheets_service(credentials_path)
+    metadata = service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+    resolved_sheet_name = next(
+        (
+            str(sheet.get("properties", {}).get("title") or "").strip()
+            for sheet in metadata.get("sheets", [])
+            if str(sheet.get("properties", {}).get("title") or "").strip().casefold()
+            == sheet_name.strip().casefold()
+        ),
+        None,
+    )
+
+    created = False
+    if resolved_sheet_name is None:
+        resolved_sheet_name = sheet_name.strip()
+        service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={
+                "requests": [
+                    {
+                        "addSheet": {
+                            "properties": {
+                                "title": resolved_sheet_name,
+                                "gridProperties": {"frozenRowCount": 1},
+                            }
+                        }
+                    }
+                ]
+            },
+        ).execute()
+        service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"{_quote_sheet_title(resolved_sheet_name)}!A1",
+            valueInputOption="RAW",
+            body={"values": [list(BOARDS_SHEET_HEADERS)]},
+        ).execute()
+        created = True
+
+    quoted_title = _quote_sheet_title(resolved_sheet_name)
+    values = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheet_id,
+        range=f"{quoted_title}!A1:ZZ",
+    ).execute().get("values", [])
+    if not values:
+        raise ExtractionError(
+            f"No headers were found in row 1 of sheet '{resolved_sheet_name}'."
+        )
+
+    headers = [str(value).strip() for value in values[0]]
+    header_indexes = {
+        header.casefold(): index for index, header in enumerate(headers) if header
+    }
+    missing_headers = [
+        header
+        for header in BOARDS_SHEET_HEADERS
+        if header.casefold() not in header_indexes
+    ]
+    if missing_headers:
+        raise ExtractionError(
+            f"Google Sheet '{resolved_sheet_name}' is missing required columns: "
+            f"{', '.join(missing_headers)}. Found: {headers}"
+        )
+
+    board_index = header_indexes["board"]
+    mcu_index = header_indexes["mcu"]
+    done_index = header_indexes["is it done"]
+    done_column = _column_number_to_a1(done_index + 1)
+
+    # Rows of boards with EmbeddedWiki articles become YES; rows of boards with
+    # only an empty page become PAGE ONLY. YES is never downgraded.
+    done_updates: list[dict[str, object]] = []
+    for offset, row in enumerate(values[1:]):
+        board_name = str(row[board_index]).strip().casefold() if len(row) > board_index else ""
+        done = str(row[done_index]).strip().upper() if len(row) > done_index else ""
+        if board_name in published_names:
+            new_value = SHEET_DONE_YES
+        elif board_name in page_only_names and done in ("", SHEET_DONE_NO):
+            new_value = SHEET_DONE_PAGE_ONLY
+        else:
+            continue
+        if done != new_value:
+            done_updates.append(
+                {
+                    "range": f"{quoted_title}!{done_column}{offset + 2}",
+                    "values": [[new_value]],
+                }
+            )
+    if done_updates:
+        service.spreadsheets().values().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body={"valueInputOption": "RAW", "data": done_updates},
+        ).execute()
+
+    def row_key(board: str, mcu: str) -> tuple[str, str]:
+        return board.strip().casefold(), mcu.replace(" ", "").casefold()
+
+    existing_keys = {
+        row_key(
+            str(row[board_index]) if len(row) > board_index else "",
+            str(row[mcu_index]) if len(row) > mcu_index else "",
+        )
+        for row in values[1:]
+    }
+
+    append_values: list[list[str]] = []
+    skipped_existing = 0
+    for candidate in candidate_rows:
+        key = row_key(candidate["BOARD"], candidate["MCU"])
+        if key in existing_keys:
+            skipped_existing += 1
+            continue
+        row = [""] * len(headers)
+        for header, value in candidate.items():
+            row[header_indexes[header.casefold()]] = value
+        append_values.append(row)
+        existing_keys.add(key)
+
+    append_response: dict[str, object] | None = None
+    if append_values:
+        append_response = service.spreadsheets().values().append(
+            spreadsheetId=spreadsheet_id,
+            range=f"{quoted_title}!A:{_column_number_to_a1(len(headers))}",
+            valueInputOption="RAW",
+            insertDataOption="INSERT_ROWS",
+            body={"values": append_values},
+        ).execute()
+
+    return {
+        "dry_run": False,
+        "sheet_name": resolved_sheet_name,
+        "created_tab": created,
+        "marked_done": len(done_updates),
+        "candidate_rows": len(candidate_rows),
+        "appended": len(append_values),
+        "existing": skipped_existing,
+        "appended_range": (
+            append_response.get("updates", {}).get("updatedRange")
+            if append_response
+            else None
+        ),
+    }
 
 
 def update_google_sheet(
@@ -1752,31 +3310,7 @@ def update_google_sheet(
             ],
         }
 
-    if not resolved_credentials.is_file():
-        raise ExtractionError(
-            f"Google service-account credentials file does not exist: "
-            f"{resolved_credentials}"
-        )
-
-    try:
-        from google.oauth2.service_account import Credentials
-        from googleapiclient.discovery import build
-    except ImportError as exc:
-        raise ExtractionError(
-            "Google Sheet editing requires google-api-python-client and google-auth. "
-            "Install them with: pip install google-api-python-client google-auth"
-        ) from exc
-
-    credentials = Credentials.from_service_account_file(
-        str(resolved_credentials),
-        scopes=SHEETS_READWRITE_SCOPES,
-    )
-    service = build(
-        "sheets",
-        "v4",
-        credentials=credentials,
-        cache_discovery=False,
-    )
+    service = build_sheets_service(resolved_credentials)
 
     requested_sheet_name = (
         sheet_name.strip() if sheet_name and sheet_name.strip() else None
@@ -2329,6 +3863,70 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--boards-sheet-name",
+        default=os.environ.get("BOARDS_SHEET_NAME") or DEFAULT_BOARDS_SHEET_NAME,
+        help=(
+            "Tab of the same spreadsheet that receives one row per reported board; "
+            "created when missing. Defaults to BOARDS_SHEET_NAME or "
+            f"'{DEFAULT_BOARDS_SHEET_NAME}'"
+        ),
+    )
+    parser.add_argument(
+        "--ledger-path",
+        type=Path,
+        default=DEFAULT_LEDGER_PATH,
+        help=(
+            "JSON ledger of boards already reported as EmbeddedWiki candidates, "
+            f"relative to --repo (default: {DEFAULT_LEDGER_PATH}). Boards from "
+            "earlier releases that are eligible now but missing from the ledger, "
+            "or that gained newly supported MCUs, are reported separately"
+        ),
+    )
+    parser.add_argument(
+        "--no-ledger",
+        action="store_true",
+        help="Only report boards added in the release interval (previous behavior)",
+    )
+    parser.add_argument(
+        "--update-ledger",
+        action="store_true",
+        help="Record every board and MCU reported by this run in the ledger",
+    )
+    parser.add_argument(
+        "--initialize-ledger",
+        action="store_true",
+        help=(
+            "Create or extend the ledger: eligible boards from earlier releases "
+            "that are missing from it are recorded as 'baseline' instead of being "
+            "reported. Implies --update-ledger"
+        ),
+    )
+    parser.add_argument(
+        "--embedded-wiki-url",
+        default=os.environ.get("EMBEDDED_WIKI_BOARDS_URL") or DEFAULT_EMBEDDED_WIKI_BOARDS_URL,
+        help=(
+            "EmbeddedWiki page-filters API URL listing development boards with "
+            "articles, or a path to a saved response. Boards found there count "
+            "as done. Defaults to EMBEDDED_WIKI_BOARDS_URL or the public API"
+        ),
+    )
+    parser.add_argument(
+        "--embedded-wiki-pages-url",
+        default=os.environ.get("EMBEDDED_WIKI_PAGES_URL") or DEFAULT_EMBEDDED_WIKI_PAGES_URL,
+        help=(
+            "EmbeddedWiki page-filters API URL listing every development board "
+            "page, including pages without articles, or a path to a saved "
+            "response. Such boards still count as missing but are marked as "
+            "'page exists, no articles yet'. Defaults to EMBEDDED_WIKI_PAGES_URL "
+            "or the public API"
+        ),
+    )
+    parser.add_argument(
+        "--no-embedded-wiki",
+        action="store_true",
+        help="Do not check which boards are already published on EmbeddedWiki",
+    )
+    parser.add_argument(
         "--sheet-date-added",
         help="DATE ADDED value in YYYY-MM-DD format (default: today's date)",
     )
@@ -2366,6 +3964,29 @@ def main(argv: Iterable[str] | None = None) -> int:
             refresh=args.refresh_database,
         )
 
+        if args.no_ledger and (args.update_ledger or args.initialize_ledger):
+            raise ExtractionError(
+                "--no-ledger cannot be combined with --update-ledger or "
+                "--initialize-ledger"
+            )
+
+        ledger: dict[str, dict[str, object]] | None = None
+        ledger_path: Path | None = None
+        if not args.no_ledger:
+            ledger_path = args.ledger_path.expanduser()
+            if not ledger_path.is_absolute():
+                ledger_path = repo / ledger_path
+            if ledger_path.is_file():
+                ledger = load_ledger(ledger_path)
+            elif args.initialize_ledger:
+                ledger = {}
+            else:
+                raise ExtractionError(
+                    f"Reported-boards ledger '{ledger_path}' does not exist. Create "
+                    "it with --initialize-ledger, or pass --no-ledger to report only "
+                    "boards added in the release interval."
+                )
+
         result = extract_release_boards(
             repo,
             args.version,
@@ -2373,6 +3994,17 @@ def main(argv: Iterable[str] | None = None) -> int:
             database_url=args.database_url,
             raw_previous_version=args.previous_version,
             github_repository_url=args.github_repository_url,
+            ledger=ledger,
+            ledger_file=(
+                ledger_path.relative_to(repo)
+                if ledger_path is not None and ledger_path.is_relative_to(repo)
+                else ledger_path
+            ),
+            initialize_ledger=args.initialize_ledger,
+            embedded_wiki_source=(
+                None if args.no_embedded_wiki or args.no_ledger else args.embedded_wiki_url
+            ),
+            embedded_wiki_pages_source=args.embedded_wiki_pages_url,
         )
 
         formatter = {
@@ -2422,6 +4054,34 @@ def main(argv: Iterable[str] | None = None) -> int:
             print(
                 "Google Sheet update: "
                 + json.dumps(sheet_result, ensure_ascii=False),
+                file=sys.stderr,
+            )
+
+            boards_sheet_result = update_boards_google_sheet(
+                result=result,
+                sheet_url=args.sheet_url,
+                credentials_path=credentials_path,
+                sheet_name=args.boards_sheet_name,
+                date_added=args.sheet_date_added,
+                dry_run=args.sheet_dry_run,
+            )
+            print(
+                "Google Sheet boards update: "
+                + json.dumps(boards_sheet_result, ensure_ascii=False),
+                file=sys.stderr,
+            )
+
+        # The ledger is written last, so a failed sheet update can simply be re-run.
+        if ledger is not None and ledger_path is not None and (
+            args.update_ledger or args.initialize_ledger
+        ):
+            update_ledger_from_result(ledger, result)
+            write_ledger(ledger_path, ledger)
+            print(
+                f"Ledger updated: {ledger_path} ({len(ledger)} boards, "
+                f"{len(result.ledger_baseline_boards)} recorded as baseline, "
+                f"{len(result.embedded_wiki_unrecorded_boards)} recorded from "
+                "EmbeddedWiki)",
                 file=sys.stderr,
             )
 

@@ -1,0 +1,1540 @@
+{
+  "description": "Boards (and their SDK-supported devices) already reported as EmbeddedWiki candidates by scripts/extract_sdk_boards.py. Remove an entry, or a device from an entry, to have it reported again. To mark a board as already done, add an entry with only its exact database 'name'; the remaining fields are filled in on the next --update-ledger run.",
+  "boards": [
+    {
+      "name": "AUTOMOTIVE NETWORKING DEVELOPMENT BOARD",
+      "board_uid": "AUTOMOTIVE_NETWORKING_DEVELOPMENT_BOARD",
+      "url": "https://www.microchip.com/en-us/development-tool/ADM00716",
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": "2025-03-11",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIM_FOR_DSPIC33EP256GP506": "baseline",
+        "PIM_FOR_DSPIC33EP512GM710": "baseline",
+        "PIM_FOR_DSPIC33EP512MU810": "baseline",
+        "PIM_FOR_PIC24EP512GU810": "baseline",
+        "PIM_FOR_PIC24F16KA102": "baseline",
+        "PIM_FOR_PIC24F32KA304": "baseline",
+        "PIM_FOR_PIC24FJ1024GB610": "baseline",
+        "PIM_FOR_PIC24FJ128GA010": "baseline",
+        "PIM_FOR_PIC24FJ128GA310": "baseline",
+        "PIM_FOR_PIC24FJ128GB204": "baseline",
+        "PIM_FOR_PIC24FJ256GA110": "baseline",
+        "PIM_FOR_PIC24FJ256GB110": "baseline",
+        "PIM_FOR_PIC24FJ256GB210": "baseline",
+        "PIM_FOR_PIC24FJ256GB410": "baseline",
+        "PIM_FOR_PIC24FJ64GA004": "baseline",
+        "PIM_FOR_PIC24FJ64GB004": "baseline",
+        "PIM_FOR_PIC24HJ128GP504": "baseline",
+        "PIM_FOR_PIC32MX250F128D": "baseline",
+        "PIM_FOR_PIC32MX270F256D": "baseline",
+        "PIM_FOR_PIC32MX270F512L": "baseline",
+        "PIM_FOR_PIC32MX360F512L": "baseline",
+        "PIM_FOR_PIC32MX460F512L": "baseline",
+        "PIM_FOR_PIC32MX470F512L": "baseline",
+        "PIM_FOR_PIC32MX570F512L": "baseline",
+        "PIM_FOR_PIC32MX795F512L": "baseline",
+        "PIM_FOR_PIC32MZ2048EFH100": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for MK64FN1M0VLL12",
+      "board_uid": "CLICKER_4_FOR_MK64FN1M0VLL12",
+      "url": "https://www.mikroe.com/clicker-4-for-mk64fn1m0vll12",
+      "category": "mikrobus",
+      "soldered_device": "MK64FN1M0VLL12",
+      "hardware_added": "2025-08-22",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "MK64FN1M0VLL12": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for R7FA4M2A",
+      "board_uid": "CLICKER_4_FOR_R7FA4M2A",
+      "url": null,
+      "category": "mikrobus",
+      "soldered_device": "R7FA4M2AD3CFP",
+      "hardware_added": null,
+      "first_reported_in": "manual",
+      "reason": "manual",
+      "devices": {
+        "R7FA4M2AD3CFP": "manual"
+      }
+    },
+    {
+      "name": "Clicker 4 for STM32F302VCT6",
+      "board_uid": "CLICKER_4_FOR_STM32F302VCT6",
+      "url": "https://www.mikroe.com/clicker-4-for-stm32f302vct6",
+      "category": "mikrobus",
+      "soldered_device": "STM32F302VC",
+      "hardware_added": "2025-01-24",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F302VC": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for STM32F745VG",
+      "board_uid": "CLICKER_4_FOR_STM32F745VGT6",
+      "url": "https://www.mikroe.com/clicker-4-for-stm32f745vgt6",
+      "category": "mikrobus",
+      "soldered_device": "STM32F745VG",
+      "hardware_added": "2025-02-14",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F745VG": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for STM32G484VE",
+      "board_uid": "CLICKER_4_FOR_STM32G484VE",
+      "url": "https://www.mikroe.com/clicker-4-for-stm32g484ve",
+      "category": "mikrobus",
+      "soldered_device": "STM32G484VE",
+      "hardware_added": "2025-10-31",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G484VE": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for STM32L4A6VG",
+      "board_uid": "CLICKER_4_FOR_STM32L4A6VG",
+      "url": "https://www.mikroe.com/clicker-4-for-stm32l4a6vg",
+      "category": "mikrobus",
+      "soldered_device": "STM32L4A6VG",
+      "hardware_added": "2025-07-28",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L4A6VG": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for STM32L4R9VG",
+      "board_uid": "CLICKER_4_FOR_STM32L4R9VG",
+      "url": "https://www.mikroe.com/clicker-4-for-stm32l4r9vg",
+      "category": "mikrobus",
+      "soldered_device": "STM32L4R9VG",
+      "hardware_added": "2025-08-08",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L4R9VG": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for TMPM4K v1.03",
+      "board_uid": "CLICKER_4_FOR_TMPM4_V103",
+      "url": "https://www.mikroe.com/clicker-4-for-tmpm4k?srsltid=AfmBOoqtWeLNjT839EJUTny60Sqtt0TPKO_FdLEyE-WXPrY_q7xls_AS",
+      "category": "mikrobus",
+      "soldered_device": "TMPM4KNFYAFG",
+      "hardware_added": "2025-11-06",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "TMPM4KNFYAFG": "baseline"
+      }
+    },
+    {
+      "name": "CLICKER 4 for TMPM4K v1.04",
+      "board_uid": "CLICKER_4_FOR_TMPM4",
+      "url": "https://www.mikroe.com/clicker-4-for-tmpm4k?srsltid=AfmBOoqtWeLNjT839EJUTny60Sqtt0TPKO_FdLEyE-WXPrY_q7xls_AS",
+      "category": "mikrobus",
+      "soldered_device": "TMPM4KNF10AFG",
+      "hardware_added": "2025-11-06",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "TMPM4KNF10AFG": "baseline"
+      }
+    },
+    {
+      "name": "Cloud Kit Based on RA6M5 MCU Group",
+      "board_uid": "BOARD_CK_RA6M5",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ck-ra6m5",
+      "category": "shield",
+      "soldered_device": "R7FA6M5BH3CFC",
+      "hardware_added": "2026-04-08",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6M5BH3CFC": "baseline"
+      }
+    },
+    {
+      "name": "Curiosity PIC32MX470 Development Board",
+      "board_uid": "PIC32MX470_CURIOSITY_DEVELOPMENT_BOARD",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.modules-and-peripherals.communication.i2s/mcu32.dm320103/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MX470F512H",
+      "hardware_added": "2024-11-27",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MX470F512H": "baseline"
+      }
+    },
+    {
+      "name": "Curiosity PIC32MZ EF 2.0 Development Board",
+      "board_uid": "PIC32MZ_EF_20_CURIOSITY_DEVELOPMENT_BOARD",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.modules-and-peripherals.communication.can.Others/mcu32.dm320209/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFM144",
+      "hardware_added": "2024-12-06",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFM144": "baseline"
+      }
+    },
+    {
+      "name": "Curiosity PIC32MZ EF Development Board",
+      "board_uid": "PIC32MZ_EF_CURIOSITY_DEVELOPMENT_BOARD",
+      "url": null,
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFM100",
+      "hardware_added": null,
+      "first_reported_in": "manual",
+      "reason": "manual",
+      "devices": {
+        "PIC32MZ2048EFM100": "manual"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA2A2 MCU Group",
+      "board_uid": "BOARD_EK_RA2A2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra2a2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA2A2AD3CFP",
+      "hardware_added": "2026-02-16",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2A2AD3CFP": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA2E1 MCU Group",
+      "board_uid": "BOARD_EK_RA2E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra2e1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA2E1A92DFM",
+      "hardware_added": "2026-02-23",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2E1A92DFM": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA2E2 MCU Group",
+      "board_uid": "BOARD_EK_RA2E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra2e2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA2E2A72DNK",
+      "hardware_added": "2026-02-17",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2E2A72DNK": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA2L1 MCU Group",
+      "board_uid": "BOARD_EK_RA2L1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra2l1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA2L1AB2DFP",
+      "hardware_added": "2026-02-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2L1AB2DFP": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA2L2 MCU Group",
+      "board_uid": "BOARD_EK_RA2L2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra2l2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA2L2094CFM",
+      "hardware_added": "2025-12-25",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2L2094CFM": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4C1 MCU Group",
+      "board_uid": "BOARD_EK_RA4C1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4c1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4C1BD3CFP",
+      "hardware_added": "2025-12-31",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4C1BD3CFP": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4E2 MCU Group",
+      "board_uid": "BOARD_EK_RA4E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4e2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4E2B93CFM",
+      "hardware_added": "2026-01-20",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4E2B93CFM": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4L1 MCU Group",
+      "board_uid": "BOARD_EK_RA4L1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4l1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4L1BD4CFP",
+      "hardware_added": "2025-12-23",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4L1BD4CFP": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4M2 MCU Group",
+      "board_uid": "BOARD_EK_RA4M2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4m2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4M2AD3CFP",
+      "hardware_added": "2026-01-22",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4M2AD3CFP": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4M3 MCU Group",
+      "board_uid": "BOARD_EK_RA4M3",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4m3",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4M3AF3CFB",
+      "hardware_added": "2025-12-04",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4M3AF3CFB": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA4W1 MCU Group",
+      "board_uid": "BOARD_EK_RA4W1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra4w1",
+      "category": "shield",
+      "soldered_device": "R7FA4W1AD2CNG",
+      "hardware_added": "2026-02-05",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4W1AD2CNG": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA6E2 MCU Group",
+      "board_uid": "BOARD_EK_RA6E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra6e2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA6E2BB3CFM",
+      "hardware_added": "2026-01-28",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6E2BB3CFM": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA6M3 MCU Group",
+      "board_uid": "BOARD_EK_RA6M3",
+      "url": "https://www.renesas.com/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ek-ra6m3-evaluation-kit-ra6m3-mcu-group?srsltid=AfmBOooDzqGBjZZ0KnVNgHEDGkMadv2TOIPlO30181l1RWR0ZN2tsDr_",
+      "category": "mikrobus",
+      "soldered_device": "R7FA6M3AH3CFC",
+      "hardware_added": "2025-05-20",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6M3AH3CFC": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA6M4 MCU Group",
+      "board_uid": "BOARD_EK_RA6M4",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra6m4",
+      "category": "mikrobus",
+      "soldered_device": "R7FA6M4AF3CFB",
+      "hardware_added": "2026-01-08",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6M4AF3CFB": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA6M5 MCU Group",
+      "board_uid": "BOARD_EK_RA6M5",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra6m5",
+      "category": "mikrobus",
+      "soldered_device": "R7FA6M5BH3CFC",
+      "hardware_added": "2025-12-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6M5BH3CFC": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8D1 MCU Group",
+      "board_uid": "BOARD_EK_RA8D1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8d1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA8D1BHECBD",
+      "hardware_added": "2026-01-30",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA8D1BHECBD": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8D2 MCU Group",
+      "board_uid": "BOARD_EK_RA8D2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8d2",
+      "category": "mikrobus",
+      "soldered_device": "R7KA8D2KFLCAC",
+      "hardware_added": "2026-01-07",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7KA8D2KFLCAC": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8E2 MCU Group",
+      "board_uid": "BOARD_EK_RA8E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8e2",
+      "category": "mikrobus",
+      "soldered_device": "R7FA8E2AFDCBD",
+      "hardware_added": "2026-01-12",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA8E2AFDCBD": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8M1 MCU Group",
+      "board_uid": "BOARD_EK_RA8M1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8m1",
+      "category": "mikrobus",
+      "soldered_device": "R7FA8M1AHECBD",
+      "hardware_added": "2026-01-14",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA8M1AHECBD": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8M2 MCU Group",
+      "board_uid": "BOARD_EK_RA8M2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8m2",
+      "category": "mikrobus",
+      "soldered_device": "R7KA8M2JFLCAC",
+      "hardware_added": "2026-01-06",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7KA8M2JFLCAC": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8P1 MCU Group",
+      "board_uid": "BOARD_EK_RA8P1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8p1",
+      "category": "mikrobus",
+      "soldered_device": "R7KA8P1KFLCAC",
+      "hardware_added": "2025-12-26",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7KA8P1KFLCAC": "baseline"
+      }
+    },
+    {
+      "name": "Evaluation Kit for RA8T2 MCU Group",
+      "board_uid": "BOARD_EK_RA8T2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/ek-ra8t2",
+      "category": "mikrobus",
+      "soldered_device": "R7KA8T2LFLCAC",
+      "hardware_added": "2026-04-13",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7KA8T2LFLCAC": "baseline"
+      }
+    },
+    {
+      "name": "Explorer 16/32",
+      "board_uid": "EXPLORER_16_32",
+      "url": null,
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": null,
+      "first_reported_in": "manual",
+      "reason": "manual",
+      "devices": {
+        "PIM_FOR_DSPIC33EP256GP506": "manual",
+        "PIM_FOR_DSPIC33EP512GM710": "manual",
+        "PIM_FOR_DSPIC33EP512MU810": "manual",
+        "PIM_FOR_PIC24EP512GU810": "manual",
+        "PIM_FOR_PIC24F16KA102": "manual",
+        "PIM_FOR_PIC24F32KA304": "manual",
+        "PIM_FOR_PIC24FJ1024GB610": "manual",
+        "PIM_FOR_PIC24FJ128GA010": "manual",
+        "PIM_FOR_PIC24FJ128GA204": "manual",
+        "PIM_FOR_PIC24FJ128GA310": "manual",
+        "PIM_FOR_PIC24FJ128GB204": "manual",
+        "PIM_FOR_PIC24FJ256GA110": "manual",
+        "PIM_FOR_PIC24FJ256GA705": "manual",
+        "PIM_FOR_PIC24FJ256GB110": "manual",
+        "PIM_FOR_PIC24FJ256GB210": "manual",
+        "PIM_FOR_PIC24FJ256GB410": "manual",
+        "PIM_FOR_PIC24FJ64GA004": "manual",
+        "PIM_FOR_PIC24FJ64GB004": "manual",
+        "PIM_FOR_PIC24HJ128GP504": "manual",
+        "PIM_FOR_PIC24HJ256GP610A": "manual",
+        "PIM_FOR_PIC32MX250F128D": "manual",
+        "PIM_FOR_PIC32MX270F256D": "manual",
+        "PIM_FOR_PIC32MX270F512L": "manual",
+        "PIM_FOR_PIC32MX360F512L": "manual",
+        "PIM_FOR_PIC32MX460F512L": "manual",
+        "PIM_FOR_PIC32MX470F512L": "manual",
+        "PIM_FOR_PIC32MX570F512L": "manual",
+        "PIM_FOR_PIC32MX795F512L": "manual",
+        "PIM_FOR_PIC32MZ2048EFH100": "manual"
+      }
+    },
+    {
+      "name": "Explorer 8 Development Kit",
+      "board_uid": "EXPLORER_8_DEVELOPMENT_KIT",
+      "url": "https://www.microchip.com/en-us/development-tool/dm160228",
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": "2025-02-21",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC18F4455": "baseline",
+        "PIC18F4458": "baseline",
+        "PIC18F4515": "baseline",
+        "PIC18F4525": "baseline",
+        "PIC18F4550": "baseline",
+        "PIC18F4553": "baseline",
+        "PIC18F4585": "baseline",
+        "PIC18F45K22": "baseline",
+        "PIC18F45K40": "baseline",
+        "PIC18F45K42": "baseline",
+        "PIC18F45K50": "baseline",
+        "PIC18F45K80": "baseline",
+        "PIC18F4610": "baseline",
+        "PIC18F4620": "baseline",
+        "PIC18F4680": "baseline",
+        "PIC18F4682": "baseline",
+        "PIC18F4685": "baseline",
+        "PIC18F46K20": "baseline",
+        "PIC18F46K22": "baseline",
+        "PIC18F46K40": "baseline",
+        "PIC18F46K42": "baseline",
+        "PIC18F46K80": "baseline",
+        "PIC18F47K40": "baseline",
+        "PIC18F47K42": "baseline",
+        "PIC18F47Q10": "baseline",
+        "PIC18LF4455": "baseline",
+        "PIC18LF4458": "baseline",
+        "PIC18LF4515": "baseline",
+        "PIC18LF4525": "baseline",
+        "PIC18LF4550": "baseline",
+        "PIC18LF4553": "baseline",
+        "PIC18LF4585": "baseline",
+        "PIC18LF45K22": "baseline",
+        "PIC18LF45K40": "baseline",
+        "PIC18LF45K42": "baseline",
+        "PIC18LF45K50": "baseline",
+        "PIC18LF45K80": "baseline",
+        "PIC18LF4610": "baseline",
+        "PIC18LF4620": "baseline",
+        "PIC18LF4680": "baseline",
+        "PIC18LF4682": "baseline",
+        "PIC18LF4685": "baseline",
+        "PIC18LF46K22": "baseline",
+        "PIC18LF46K40": "baseline",
+        "PIC18LF46K42": "baseline",
+        "PIC18LF46K80": "baseline",
+        "PIC18LF47K40": "baseline",
+        "PIC18LF47K42": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA0E2 MCU Group",
+      "board_uid": "BOARD_FPB_RA0E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra0e2",
+      "category": "shield",
+      "soldered_device": "R7FA0E2094CFM",
+      "hardware_added": "2025-12-24",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA0E2094CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA0L1",
+      "board_uid": "BOARD_FPB_RA0L1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra0l1",
+      "category": "shield",
+      "soldered_device": "R7FA0L1074CFL",
+      "hardware_added": "2026-01-05",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA0L1074CFL": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA2E1 MCU Group",
+      "board_uid": "BOARD_FPB_RA2E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra2e1",
+      "category": "shield",
+      "soldered_device": "R7FA2E1A92DFM",
+      "hardware_added": "2026-02-24",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2E1A92DFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA2E2 MCU Group",
+      "board_uid": "BOARD_FPB_RA2E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra2e2",
+      "category": "shield",
+      "soldered_device": "R7FA2E2A74CNK",
+      "hardware_added": "2026-02-18",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2E2A74CNK": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA2E3 MCU Group",
+      "board_uid": "BOARD_FPB_RA2E3",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra2e3",
+      "category": "shield",
+      "soldered_device": "R7FA2E3073CFL",
+      "hardware_added": "2025-12-18",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2E3073CFL": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA2T1 MCU Group",
+      "board_uid": "BOARD_FPB_RA2T1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra2t1",
+      "category": "shield",
+      "soldered_device": "R7FA2T1074CFL",
+      "hardware_added": "2025-12-30",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA2T1074CFL": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA4E1 MCU Group",
+      "board_uid": "BOARD_FPB_RA4E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra4e1",
+      "category": "shield",
+      "soldered_device": "R7FA4E10D2CFM",
+      "hardware_added": "2026-01-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4E10D2CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA4E2 MCU Group",
+      "board_uid": "BOARD_FPB_RA4E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra4e2",
+      "category": "shield",
+      "soldered_device": "R7FA4E2B93CFM",
+      "hardware_added": "2026-01-21",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4E2B93CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA4T1 MCU Group",
+      "board_uid": "BOARD_FPB_RA4T1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra4t1",
+      "category": "shield",
+      "soldered_device": "R7FA4T1BB3CFM",
+      "hardware_added": "2026-01-26",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4T1BB3CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA6E1 MCU Group",
+      "board_uid": "BOARD_FPB_RA6E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra6e1",
+      "category": "shield",
+      "soldered_device": "R7FA6E10F2CFP",
+      "hardware_added": "2026-01-27",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6E10F2CFP": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA6E2 MCU Group",
+      "board_uid": "BOARD_FPB_RA6E2",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra6e2",
+      "category": "shield",
+      "soldered_device": "R7FA6E2BB3CFM",
+      "hardware_added": "2026-01-29",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6E2BB3CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA6T3 MCU Group",
+      "board_uid": "BOARD_FPB_RA6T3",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra6t3",
+      "category": "shield",
+      "soldered_device": "R7FA6T3BB3CFM",
+      "hardware_added": "2026-02-04",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA6T3BB3CFM": "baseline"
+      }
+    },
+    {
+      "name": "Fast Prototyping Board for RA8E1 MCU Group",
+      "board_uid": "BOARD_FPB_RA8E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra8e1",
+      "category": "shield",
+      "soldered_device": "R7FA8E1AFDCFB",
+      "hardware_added": "2026-01-09",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA8E1AFDCFB": "baseline"
+      }
+    },
+    {
+      "name": "MCP3564 ADC Evaluation Board For PIC32 MCUs",
+      "board_uid": "MCP3564_ADC_EVALUATION_BOARD_FOR_PIC32_MCUS",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.modules-and-peripherals.analog.adc-modules.adc/mcu08.adm00583/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": "2025-02-05",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIM_FOR_PIC32MX250F128D": "baseline",
+        "PIM_FOR_PIC32MX270F256D": "baseline",
+        "PIM_FOR_PIC32MX270F512L": "baseline",
+        "PIM_FOR_PIC32MX360F512L": "baseline",
+        "PIM_FOR_PIC32MX460F512L": "baseline",
+        "PIM_FOR_PIC32MX470F512L": "baseline",
+        "PIM_FOR_PIC32MX570F512L": "baseline",
+        "PIM_FOR_PIC32MX795F512L": "baseline",
+        "PIM_FOR_PIC32MZ2048EFH100": "baseline"
+      }
+    },
+    {
+      "name": "Mikromedia 3 for PIC32MZ Resistive FPI with frame",
+      "board_uid": "MIKROMEDIA_3_FOR_PIC32MZ_RESISTIVE_FPI_WITH_FRAME",
+      "url": "https://www.mikroe.com/mikromedia-3-for-pic32mz-resistive-fpi-with-frame",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFH100",
+      "hardware_added": "2024-10-10",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFH100": "baseline"
+      }
+    },
+    {
+      "name": "Mikromedia 4 for PIC32MZ Resistive",
+      "board_uid": "MIKROMEDIA_4_FOR_PIC32MZ_RESISTIVE",
+      "url": "https://www.mikroe.com/mikromedia-4-for-pic32mz-resistive",
+      "category": "shield",
+      "soldered_device": "PIC32MZ2048EFH144",
+      "hardware_added": "2024-10-10",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFH144": "baseline"
+      }
+    },
+    {
+      "name": "Mikromedia 4 for PIC32MZ Resistive FPI with frame",
+      "board_uid": "MIKROMEDIA_4_FOR_PIC32MZ_RESISTIVE_FPI_WITH_FRAME",
+      "url": "https://www.mikroe.com/mikromedia-4-for-pic32mz-resistive-fpi-with-frame",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFH144",
+      "hardware_added": "2024-10-11",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFH144": "baseline"
+      }
+    },
+    {
+      "name": "Mikromedia 5 for PIC32MZ Resistive",
+      "board_uid": "MIKROMEDIA_5_FOR_PIC32MZ_RESISTIVE",
+      "url": "https://www.mikroe.com/mikromedia-5-for-pic32mz-resistive",
+      "category": "shield",
+      "soldered_device": "PIC32MZ2048EFH144",
+      "hardware_added": "2024-10-18",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFH144": "baseline"
+      }
+    },
+    {
+      "name": "Mikromedia 5 for PIC32MZ Resistive FPI with frame",
+      "board_uid": "MIKROMEDIA_5_FOR_PIC32MZ_RESISTIVE_FPI_WITH_FRAME",
+      "url": "https://www.mikroe.com/mikromedia-5-for-pic32mz-resistive-fpi-with-frame",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFH144",
+      "hardware_added": "2024-10-02",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFH144": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F207ZG MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F207ZG_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f207zg.html",
+      "category": "shield",
+      "soldered_device": "STM32F207ZG",
+      "hardware_added": "2024-09-11",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F207ZG": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F303ZE MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F303ZE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f303ze.html",
+      "category": "shield",
+      "soldered_device": "STM32F303ZE",
+      "hardware_added": "2024-09-11",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F303ZE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F429ZI MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F429ZI_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f429zi.html",
+      "category": "shield",
+      "soldered_device": "STM32F429ZI",
+      "hardware_added": "2024-09-12",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F429ZI": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F439ZI MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F439ZI_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f439zi.html",
+      "category": "shield",
+      "soldered_device": "STM32F439ZI",
+      "hardware_added": "2024-09-12",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F439ZI": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F746ZG MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F746ZG_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f746zg.html",
+      "category": "shield",
+      "soldered_device": "STM32F746ZG",
+      "hardware_added": "2024-09-13",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F746ZG": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F756ZG MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F756ZG_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f756zg.html",
+      "category": "shield",
+      "soldered_device": "STM32F756ZG",
+      "hardware_added": "2024-09-13",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F756ZG": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32F767ZI MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32F767ZI_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f767zi.html",
+      "category": "shield",
+      "soldered_device": "STM32F767ZI",
+      "hardware_added": "2024-10-02",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F767ZI": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32H753ZI MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32H753ZI_MCU",
+      "url": "https://www.st.com/en/evaluation-tools/nucleo-h753zi.html",
+      "category": "shield",
+      "soldered_device": "STM32H753ZI",
+      "hardware_added": "2025-01-08",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32H753ZI": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 144 with STM32L4A6ZG MCU",
+      "board_uid": "NUCLEO_144_WITH_STM32L4A6ZG_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l4a6zg.html",
+      "category": "shield",
+      "soldered_device": "STM32L4A6ZG",
+      "hardware_added": "2024-09-16",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L4A6ZG": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 32 with STM32L432KC MCU",
+      "board_uid": "NUCLEO_32_WITH_STM32L432KC_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l432kc.html",
+      "category": "shield",
+      "soldered_device": "STM32L432KC",
+      "hardware_added": "2024-09-20",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L432KC": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32C031C6 MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32C031C6_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-c031c6.html",
+      "category": "shield",
+      "soldered_device": "STM32C031C6",
+      "hardware_added": "2024-09-23",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32C031C6": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F072RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F072RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f072rb.html",
+      "category": "shield",
+      "soldered_device": "STM32F072RB",
+      "hardware_added": "2024-09-23",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F072RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F103RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F103RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f103rb.html",
+      "category": "shield",
+      "soldered_device": "STM32F103RB",
+      "hardware_added": "2024-09-24",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F103RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F302R8 MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F302R8_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f302r8.html",
+      "category": "shield",
+      "soldered_device": "STM32F302R8",
+      "hardware_added": "2024-09-24",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F302R8": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F303RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F303RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f303re.html",
+      "category": "shield",
+      "soldered_device": "STM32F303RE",
+      "hardware_added": "2024-09-25",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F303RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F334R8 MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F334R8_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f334r8.html",
+      "category": "shield",
+      "soldered_device": "STM32F334R8",
+      "hardware_added": "2024-09-25",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F334R8": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F410RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F410RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f410rb.html",
+      "category": "shield",
+      "soldered_device": "STM32F410RB",
+      "hardware_added": "2024-09-26",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F410RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F411RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F411RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f411re.html",
+      "category": "shield",
+      "soldered_device": "STM32F411RE",
+      "hardware_added": "2024-09-26",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F411RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32F446RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32F446RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-f446re.html",
+      "category": "shield",
+      "soldered_device": "STM32F446RE",
+      "hardware_added": "2024-09-27",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32F446RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G070RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G070RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g070rb.html",
+      "category": "shield",
+      "soldered_device": "STM32G070RB",
+      "hardware_added": "2024-09-27",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G070RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G071RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G071RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g071rb.html",
+      "category": "shield",
+      "soldered_device": "STM32G071RB",
+      "hardware_added": "2024-09-30",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G071RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G0B1RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G0B1RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g0b1re.html",
+      "category": "shield",
+      "soldered_device": "STM32G0B1RE",
+      "hardware_added": "2024-09-30",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G0B1RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G431RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G431RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g431rb.html",
+      "category": "shield",
+      "soldered_device": "STM32G431RB",
+      "hardware_added": "2024-10-01",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G431RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G474RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G474RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g474re.html",
+      "category": "shield",
+      "soldered_device": "STM32G474RE",
+      "hardware_added": "2024-10-01",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G474RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32G491RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32G491RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-g491re.html",
+      "category": "shield",
+      "soldered_device": "STM32G491RE",
+      "hardware_added": "2024-09-20",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32G491RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32L053R8 MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32L053R8_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l053r8.html",
+      "category": "shield",
+      "soldered_device": "STM32L053R8",
+      "hardware_added": "2024-10-03",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L053R8": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32L152RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32L152RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l152re.html",
+      "category": "shield",
+      "soldered_device": "STM32L152RE",
+      "hardware_added": "2024-10-03",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L152RE": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32L412RB MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32L412RB_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l412rb-p.html",
+      "category": "shield",
+      "soldered_device": "STM32L412RB",
+      "hardware_added": "2024-11-13",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L412RB": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32L433RC MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32L433RC_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l433rc-p.html",
+      "category": "shield",
+      "soldered_device": "STM32L433RC",
+      "hardware_added": "2024-10-04",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L433RC": "baseline"
+      }
+    },
+    {
+      "name": "Nucleo 64 with STM32L452RE MCU",
+      "board_uid": "NUCLEO_64_WITH_STM32L452RE_MCU",
+      "url": "https://www.st.com/content/st_com/en/products/evaluation-tools/product-evaluation-tools/mcu-mpu-eval-tools/stm32-mcu-mpu-eval-tools/stm32-nucleo-boards/nucleo-l452re.html",
+      "category": "shield",
+      "soldered_device": "STM32L452RE",
+      "hardware_added": "2024-10-04",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "STM32L452RE": "baseline"
+      }
+    },
+    {
+      "name": "NuMaker M2354",
+      "board_uid": "NUMAKER_M2354",
+      "url": "https://www.nuvoton.com/board/numaker-m2354/",
+      "category": "shield",
+      "soldered_device": "M2354KJFAE",
+      "hardware_added": "2025-10-23",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "M2354KJFAE": "baseline"
+      }
+    },
+    {
+      "name": "PIC-IOT WA DEVELOPMENT BOARD",
+      "board_uid": "PIC_IOT_WA_DEVELOPMENT_BOARD",
+      "url": "https://www.microchip.com/en-us/development-tool/EV54Y39A",
+      "category": "mikrobus",
+      "soldered_device": "PIC24FJ128GA705",
+      "hardware_added": "2025-03-17",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC24FJ128GA705": "baseline"
+      }
+    },
+    {
+      "name": "PIC-IOT WG DEVELOPMENT BOARD",
+      "board_uid": "PIC_IOT_WG_DEVELOPMENT_BOARD",
+      "url": "https://www.microchip.com/en-us/development-tool/AC164164",
+      "category": "mikrobus",
+      "soldered_device": "PIC24FJ128GA705",
+      "hardware_added": "2025-03-18",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC24FJ128GA705": "baseline"
+      }
+    },
+    {
+      "name": "PIC-IOT WM DEVELOPMENT BOARD",
+      "board_uid": "PIC_IOT_WM_DEVELOPMENT_BOARD",
+      "url": "https://www.microchip.com/en-us/development-tool/PIC-IOT-WMX",
+      "category": "mikrobus",
+      "soldered_device": "PIC24FJ128GA705",
+      "hardware_added": "2025-03-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC24FJ128GA705": "baseline"
+      }
+    },
+    {
+      "name": "PIC18 POE Main Board",
+      "board_uid": "PIC18_POE_MAIN_BOARD",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.tools.development-boards/mcu08.dm160230/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "PIC18F67J60",
+      "hardware_added": "2024-12-20",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC18F67J60": "baseline"
+      }
+    },
+    {
+      "name": "PIC18F57Q84 Curiosity Nano Evaluation Kit",
+      "board_uid": "CURIOSITY_NANO_WITH_PIC18F57Q84",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.modules-and-peripherals.communication.can.Others/mcu08.dm182030/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "PIC18F57Q84",
+      "hardware_added": "2025-04-07",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC18F57Q84": "baseline"
+      }
+    },
+    {
+      "name": "PIC24F Curiosity Development Board",
+      "board_uid": "PIC24F_CURIOSITY_DEVELOPMENT_BOARD",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.tools.development-boards/mcu08.dm240004/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "PIC24FJ128GA204",
+      "hardware_added": "2025-01-07",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC24FJ128GA204": "baseline"
+      }
+    },
+    {
+      "name": "PIC32MZ MXS Data Capture Board",
+      "board_uid": "PIC32MZ_MXS_DATA_CAPTURE_BOARD",
+      "url": "https://www.microchip.com/en-us/development-tool/EV64F02A",
+      "category": "mikrobus",
+      "soldered_device": "PIC32MZ2048EFG064",
+      "hardware_added": "2024-11-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC32MZ2048EFG064": "baseline"
+      }
+    },
+    {
+      "name": "PICDEM Lab II Development Platform",
+      "board_uid": "PICDEM_LAB_II_DEVELOPMENT_PLATFORM",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/Others/mcu08.dm163046/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": "2025-02-27",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "PIC18F2455": "baseline",
+        "PIC18F2458": "baseline",
+        "PIC18F24J11": "baseline",
+        "PIC18F24J50": "baseline",
+        "PIC18F24K50": "baseline",
+        "PIC18F2515": "baseline",
+        "PIC18F2525": "baseline",
+        "PIC18F2550": "baseline",
+        "PIC18F2553": "baseline",
+        "PIC18F2585": "baseline",
+        "PIC18F25J11": "baseline",
+        "PIC18F25J50": "baseline",
+        "PIC18F25K40": "baseline",
+        "PIC18F25K42": "baseline",
+        "PIC18F25K50": "baseline",
+        "PIC18F25K80": "baseline",
+        "PIC18F2610": "baseline",
+        "PIC18F2620": "baseline",
+        "PIC18F2680": "baseline",
+        "PIC18F2682": "baseline",
+        "PIC18F2685": "baseline",
+        "PIC18F26J11": "baseline",
+        "PIC18F26J13": "baseline",
+        "PIC18F26J50": "baseline",
+        "PIC18F26J53": "baseline",
+        "PIC18F26K20": "baseline",
+        "PIC18F26K22": "baseline",
+        "PIC18F26K40": "baseline",
+        "PIC18F26K42": "baseline",
+        "PIC18F26K80": "baseline",
+        "PIC18F27J13": "baseline",
+        "PIC18F27J53": "baseline",
+        "PIC18F27K40": "baseline",
+        "PIC18F27K42": "baseline",
+        "PIC18F4455": "baseline",
+        "PIC18F4458": "baseline",
+        "PIC18F4515": "baseline",
+        "PIC18F4525": "baseline",
+        "PIC18F4550": "baseline",
+        "PIC18F4553": "baseline",
+        "PIC18F4585": "baseline",
+        "PIC18F45K22": "baseline",
+        "PIC18F45K40": "baseline",
+        "PIC18F45K42": "baseline",
+        "PIC18F45K50": "baseline",
+        "PIC18F45K80": "baseline",
+        "PIC18F4610": "baseline",
+        "PIC18F4620": "baseline",
+        "PIC18F4680": "baseline",
+        "PIC18F4682": "baseline",
+        "PIC18F4685": "baseline",
+        "PIC18F46K20": "baseline",
+        "PIC18F46K22": "baseline",
+        "PIC18F46K40": "baseline",
+        "PIC18F46K42": "baseline",
+        "PIC18F46K80": "baseline",
+        "PIC18F47K40": "baseline",
+        "PIC18F47K42": "baseline",
+        "PIC18F47Q10": "baseline",
+        "PIC18LF2455": "baseline",
+        "PIC18LF2458": "baseline",
+        "PIC18LF24J11": "baseline",
+        "PIC18LF24J50": "baseline",
+        "PIC18LF24K50": "baseline",
+        "PIC18LF2515": "baseline",
+        "PIC18LF2525": "baseline",
+        "PIC18LF2550": "baseline",
+        "PIC18LF2553": "baseline",
+        "PIC18LF2585": "baseline",
+        "PIC18LF25J11": "baseline",
+        "PIC18LF25J50": "baseline",
+        "PIC18LF25K40": "baseline",
+        "PIC18LF25K42": "baseline",
+        "PIC18LF25K50": "baseline",
+        "PIC18LF25K80": "baseline",
+        "PIC18LF2610": "baseline",
+        "PIC18LF2620": "baseline",
+        "PIC18LF2680": "baseline",
+        "PIC18LF2682": "baseline",
+        "PIC18LF2685": "baseline",
+        "PIC18LF26J11": "baseline",
+        "PIC18LF26J13": "baseline",
+        "PIC18LF26J50": "baseline",
+        "PIC18LF26J53": "baseline",
+        "PIC18LF26K22": "baseline",
+        "PIC18LF26K40": "baseline",
+        "PIC18LF26K42": "baseline",
+        "PIC18LF26K80": "baseline",
+        "PIC18LF27J13": "baseline",
+        "PIC18LF27J53": "baseline",
+        "PIC18LF27K40": "baseline",
+        "PIC18LF27K42": "baseline",
+        "PIC18LF4455": "baseline",
+        "PIC18LF4458": "baseline",
+        "PIC18LF4515": "baseline",
+        "PIC18LF4525": "baseline",
+        "PIC18LF4550": "baseline",
+        "PIC18LF4553": "baseline",
+        "PIC18LF4585": "baseline",
+        "PIC18LF45K22": "baseline",
+        "PIC18LF45K40": "baseline",
+        "PIC18LF45K42": "baseline",
+        "PIC18LF45K50": "baseline",
+        "PIC18LF45K80": "baseline",
+        "PIC18LF4610": "baseline",
+        "PIC18LF4620": "baseline",
+        "PIC18LF4680": "baseline",
+        "PIC18LF4682": "baseline",
+        "PIC18LF4685": "baseline",
+        "PIC18LF46K22": "baseline",
+        "PIC18LF46K40": "baseline",
+        "PIC18LF46K42": "baseline",
+        "PIC18LF46K80": "baseline",
+        "PIC18LF47K40": "baseline",
+        "PIC18LF47K42": "baseline"
+      }
+    },
+    {
+      "name": "RA0E1 Fast Prototyping Board",
+      "board_uid": "BOARD_FPB_RA0E1",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra0e1",
+      "category": "shield",
+      "soldered_device": "R7FA0E1073CFJ",
+      "hardware_added": "2026-01-16",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA0E1073CFJ": "baseline"
+      }
+    },
+    {
+      "name": "RA0E3 Fast Prototyping Board",
+      "board_uid": "BOARD_FPB_RA0E3",
+      "url": "https://www.renesas.com/en/design-resources/boards-kits/fpb-ra0e3",
+      "category": "shield",
+      "soldered_device": "R7FA0E3034ZSD",
+      "hardware_added": "2026-04-14",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA0E3034ZSD": "baseline"
+      }
+    },
+    {
+      "name": "RA4M1 Clicker",
+      "board_uid": "RA4M1_CLICKER",
+      "url": "https://www.mikroe.com/ra4m1-clicker?srsltid=AfmBOopQMCMr9QKHzM9fM5MVmUx_fcJw6scPiZChIDJGVL6m35nV8ahj",
+      "category": "mikrobus",
+      "soldered_device": "R7FA4M1AB3CFM",
+      "hardware_added": "2025-05-19",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "R7FA4M1AB3CFM": "baseline"
+      }
+    },
+    {
+      "name": "SAM E70 XPLAINED ULTRA EVALUATION KIT",
+      "board_uid": "SAM_E70_XPLAINED_ULTRA_EVALUATION_KIT",
+      "url": "https://mplab-discover.microchip.com/v2/item/com.microchip.portal.evalboard/com.microchip.subcategories.tools.debugging-icd/mcu32.dm320113/1.0.0?view=about",
+      "category": "mikrobus",
+      "soldered_device": "ATSAME70Q21B",
+      "hardware_added": "2025-01-17",
+      "first_reported_in": "baseline",
+      "reason": "baseline",
+      "devices": {
+        "ATSAME70Q21B": "baseline"
+      }
+    },
+    {
+      "name": "Sparkfun MicroMod MikroBUS Carrier",
+      "board_uid": "SPARKFUN_MICROMOD_MIKROBUS_CARRIER",
+      "url": null,
+      "category": "mikrobus",
+      "soldered_device": null,
+      "hardware_added": null,
+      "first_reported_in": "manual",
+      "reason": "manual",
+      "devices": {
+        "SPARKFUN_MICROMOD_WITH_STM32F405RG": "manual"
+      }
+    }
+  ]
+}

@@ -219,6 +219,9 @@ jobs:
     name: Filter SDK Boards
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.filter_sdk_boards }}
     needs: index
+    permissions:
+      contents: write
+      pull-requests: write
     uses: ./.github/workflows/filterSdkBoards.yaml
     with:
       release_version: ${{ inputs.release_version }}

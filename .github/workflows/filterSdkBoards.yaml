@@ -21,11 +21,23 @@ on:
         required: false
         default: false
 
+      mattermost_webhook_url:
+        type: string
+        description: Optional Mattermost webhook URL; overrides the default EW webhook when set
+        required: false
+        default: ""
+
       update_google_sheet:
         type: boolean
         description: Synchronize eligible vendor/MCU/package rows with the EW Google Sheet?
         required: false
         default: false
+
+      update_ledger:
+        type: boolean
+        description: Open a pull request recording the reported boards in the EmbeddedWiki ledger?
+        required: false
+        default: true
 
   workflow_call:
     inputs:
@@ -46,11 +58,23 @@ on:
         required: false
         default: false
 
+      mattermost_webhook_url:
+        type: string
+        description: Optional Mattermost webhook URL; overrides the default EW webhook when set
+        required: false
+        default: ""
+
       update_google_sheet:
         type: boolean
         description: Synchronize eligible vendor/MCU/package rows with the EW Google Sheet?
         required: false
         default: false
+
+      update_ledger:
+        type: boolean
+        description: Open a pull request recording the reported boards in the EmbeddedWiki ledger?
+        required: false
+        default: true
 
     secrets:
       MATTERMOST_WEBHOOK_URL_EW:
@@ -59,7 +83,8 @@ on:
         required: false
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 # Serializes spreadsheet synchronization so two releases cannot read and write
 # the EW table at the same time.
@@ -70,6 +95,8 @@ concurrency:
 env:
   MCU_LIST_SHEET_URL: "https://docs.google.com/spreadsheets/d/1LHcPYnc8tPOm7Ma2PK1Gf7fr9-chJ_uWvhWTAp1AB80/edit#gid=53979511"
   MCU_LIST_SHEET_NAME: "EW"
+  BOARDS_SHEET_NAME: "EW Boards"
+  LEDGER_PATH: "scripts/data/embedded_wiki_boards.json"
   MCU_LIST_TIMEZONE: "Europe/Belgrade"
 
 jobs:
@@ -150,6 +177,7 @@ jobs:
           RELEASE_VERSION: ${{ inputs.release_version }}
           PREVIOUS_VERSION: ${{ inputs.previous_version }}
           UPDATE_GOOGLE_SHEET: ${{ inputs.update_google_sheet }}
+          UPDATE_LEDGER: ${{ inputs.update_ledger }}
         run: |
           set -euo pipefail
 
@@ -181,6 +209,8 @@ jobs:
               "${MCU_LIST_SHEET_URL}"
               "--sheet-name"
               "${MCU_LIST_SHEET_NAME}"
+              "--boards-sheet-name"
+              "${BOARDS_SHEET_NAME}"
               "--google-credentials-path"
               "${GOOGLE_CREDENTIALS_PATH}"
               "--sheet-date-added"
@@ -188,13 +218,21 @@ jobs:
             )
           fi
 
+          ledger_args=()
+          if [[ "${UPDATE_LEDGER}" == "true" ]]; then
+            ledger_args=("--update-ledger")
+          fi
+
           echo "Processing boards for ${RELEASE_VERSION}..."
 
-          # Complete JSON data and the single Google Sheet synchronization.
+          # Complete JSON data, the single Google Sheet synchronization and the
+          # ledger update. Later runs read the updated ledger, which still
+          # reports entries recorded for this release, so all outputs match.
           python -u scripts/extract_sdk_boards.py \
             "${RELEASE_VERSION}" \
             "${previous_args[@]}" \
             "${sheet_args[@]}" \
+            "${ledger_args[@]}" \
             --format json \
             --output "${output_dir}/boards.json"
 
@@ -237,16 +275,27 @@ jobs:
         if: ${{ inputs.notify_mattermost }}
         shell: bash
         env:
-          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
+          DEFAULT_MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL_EW }}
+          OVERRIDE_MATTERMOST_WEBHOOK_URL: ${{ inputs.mattermost_webhook_url }}
         run: |
           set -euo pipefail
 
           report_file="artifacts/sdk-board-support/boards_mattermost.md"
           payload_file="artifacts/sdk-board-support/mattermost-payload.json"
 
-          if [[ -z "${MATTERMOST_WEBHOOK_URL:-}" ]]; then
-            echo "::error::Mattermost notification was requested, but MATTERMOST_WEBHOOK_URL_EW is not available."
-            exit 1
+          # A webhook passed as an input takes precedence over the default secret.
+          # Inputs are not secrets, so mask it before anything can print it.
+          if [[ -n "${OVERRIDE_MATTERMOST_WEBHOOK_URL// /}" ]]; then
+            MATTERMOST_WEBHOOK_URL="$(printf '%s' "${OVERRIDE_MATTERMOST_WEBHOOK_URL}" | xargs)"
+            echo "::add-mask::${MATTERMOST_WEBHOOK_URL}"
+            echo "Sending to the Mattermost webhook passed as input."
+          else
+            MATTERMOST_WEBHOOK_URL="${DEFAULT_MATTERMOST_WEBHOOK_URL:-}"
+            if [[ -z "${MATTERMOST_WEBHOOK_URL}" ]]; then
+              echo "::error::Mattermost notification was requested, but neither mattermost_webhook_url nor MATTERMOST_WEBHOOK_URL_EW is available."
+              exit 1
+            fi
+            echo "Sending to the default EW Mattermost webhook."
           fi
 
           if [[ ! -s "${report_file}" ]]; then
@@ -281,6 +330,42 @@ jobs:
           echo
           echo "Mattermost report sent successfully."
 
+      - name: Open pull request with ledger update
+        if: ${{ inputs.update_ledger }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          # The branch this run was started from, so a test run from a
+          # feature branch opens its ledger PR against that branch.
+          BASE_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- "${LEDGER_PATH}"; then
+            echo "Ledger is unchanged; no pull request needed."
+            exit 0
+          fi
+
+          branch="automation/embedded-wiki-ledger/${RELEASE_VERSION}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "${branch}"
+          git add "${LEDGER_PATH}"
+          git commit -m "Update EmbeddedWiki board ledger for ${RELEASE_VERSION}"
+          git push --force origin "${branch}"
+
+          if [[ "$(gh pr view "${branch}" --json state --jq .state 2>/dev/null || true)" == "OPEN" ]]; then
+            echo "Pull request for ${branch} already exists; branch updated."
+          else
+            gh pr create \
+              --base "${BASE_BRANCH}" \
+              --head "${branch}" \
+              --title "Update EmbeddedWiki board ledger for ${RELEASE_VERSION}" \
+              --body "Records the boards and MCUs reported as EmbeddedWiki candidates for ${RELEASE_VERSION}. Merge before processing the next release, otherwise these boards are reported again."
+          fi
+
       - name: Upload board filtering files
         uses: actions/upload-artifact@v6
         with:
@@ -289,5 +374,6 @@ jobs:
             artifacts/sdk-board-support/boards.json
             artifacts/sdk-board-support/boards.md
             artifacts/sdk-board-support/boards_mattermost.md
+            ${{ env.LEDGER_PATH }}
           if-no-files-found: error
           retention-days: 25
