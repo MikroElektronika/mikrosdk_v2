@@ -18,6 +18,7 @@
   - [Changes](#changes)
     - [New features](#new-features)
       - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### New features
@@ -40,6 +41,11 @@
     + Added validation test under `tests/trace`.
 + **Timestamped plot**
   + Added `plot_ts()` to `plot.h`: like `plot()`, with the time the value was taken on the device, so NECTO Studio keeps the real spacing of the values.
+
+### Fixes
+
++ Fixed mikroBUS 1 I2C pins in `board.h` for Curiosity PIC32MZ EF 2.0 Development Board
+  + SCL/SDA moved from `PA2`/`PA3` (I2C2) to `PA14`/`PA15` (I2C1), where the socket is wired; Click boards on I2C got no answer before
 
 ### NEW HARDWARE
 

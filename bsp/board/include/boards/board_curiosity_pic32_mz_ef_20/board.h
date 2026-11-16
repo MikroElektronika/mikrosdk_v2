@@ -68,8 +68,8 @@ extern "C"
 #define MIKROBUS_1_INT  PF12
 #define MIKROBUS_1_RX   PC4
 #define MIKROBUS_1_TX   PC1
-#define MIKROBUS_1_SCL  PA2
-#define MIKROBUS_1_SDA  PA3
+#define MIKROBUS_1_SCL  PA14
+#define MIKROBUS_1_SDA  PA15
 
 #define MIKROBUS_2      2
 #define MIKROBUS_2_AN   PB11
