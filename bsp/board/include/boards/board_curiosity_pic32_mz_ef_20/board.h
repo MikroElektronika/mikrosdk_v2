@@ -82,8 +82,8 @@ extern "C"
 #define MIKROBUS_2_INT  PD10
 #define MIKROBUS_2_RX   PE9
 #define MIKROBUS_2_TX   PG9
-#define MIKROBUS_2_SCL  PA2
-#define MIKROBUS_2_SDA  PA3
+#define MIKROBUS_2_SCL  PA14
+#define MIKROBUS_2_SDA  PA15
 
 // LEDs
 #define LED_1       PJ7

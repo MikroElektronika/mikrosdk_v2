@@ -44,8 +44,8 @@
 
 ### Fixes
 
-+ Fixed mikroBUS 1 I2C pins in `board.h` for Curiosity PIC32MZ EF 2.0 Development Board
-  + SCL/SDA moved from `PA2`/`PA3` (I2C2) to `PA14`/`PA15` (I2C1), where the socket is wired; Click boards on I2C got no answer before
++ Fixed mikroBUS 1 and mikroBUS 2 I2C pins in `board.h` for Curiosity PIC32MZ EF 2.0 Development Board
+  + SCL/SDA moved from `PA2`/`PA3` (I2C2) to `PA14`/`PA15` (I2C1), where both sockets are wired; Click boards on I2C got no answer before
 
 ### NEW HARDWARE
 
