@@ -51,6 +51,9 @@
 + Fixed IPS Display Click (first variant) using the wrong mikroBUS socket with the Graphic Library / Visual TFT
   + The build now reads the `MIKROBUS_POSITION_IPSDISPLAY` setting for this board, instead of `MIKROBUS_POSITION_IPSDISPLAY1`, which is never set
   + IPS Display 2 Click is not affected
++ Fixed IPS Display Click build failing when a mikroBUS pin doesn't exist on the selected MCU
+  + e.g. PIC18F4455 on EasyPIC v7, which has no `RC3` (mikroBUS SCK)
+  + Such pins are now mapped to `HAL_PIN_NC`, all other pins are unchanged
 + SPI Ethernet fixes
   + Fixed SPI Ethernet libraries not showing up in the NECTO Studio Library Manager
     + SPI Ethernet middleware (`MikroSDK.Ethernet.Transport`, `MikroSDK.Ethernet.Spi`, `MikroSDK.Ethernet.Net`) and controller libraries (`MikroSDK.Ethernet.ENC28J60`, `MikroSDK.Ethernet.LAN8651`, `MikroSDK.Ethernet.LAN9250`, `MikroSDK.Ethernet.W5500`, `MikroSDK.Ethernet.W6100`) are now installed with the SDK

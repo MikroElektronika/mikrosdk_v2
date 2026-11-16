@@ -189,9 +189,9 @@ static inline void display_configure( void )
     // Initialize communication pins.
     spi_master_configure_default( &spi_cfg );
 
-    spi_cfg.sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );
-    spi_cfg.miso = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO );
-    spi_cfg.mosi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI );
+    spi_cfg.sck = IPS_MIKROBUS_PIN( MIKROBUS_SCK );
+    spi_cfg.miso = IPS_MIKROBUS_PIN( MIKROBUS_MISO );
+    spi_cfg.mosi = IPS_MIKROBUS_PIN( MIKROBUS_MOSI );
 
     spi_master_open( &disp_spi, &spi_cfg );
     spi_master_set_default_write_data( &disp_spi, SPI_DUMMY );
@@ -199,10 +199,10 @@ static inline void display_configure( void )
     spi_master_set_speed( &disp_spi, 5000000 );
 
     // Initialize control pins.
-    digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
-    digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
-    digital_out_init( &pin_dc, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) );
-    digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ) );
+    digital_out_init( &pin_cs, IPS_MIKROBUS_PIN( MIKROBUS_CS ) );
+    digital_out_init( &pin_rst, IPS_MIKROBUS_PIN( MIKROBUS_RST ) );
+    digital_out_init( &pin_dc, IPS_MIKROBUS_PIN( MIKROBUS_INT ) );
+    digital_out_init( &pin_bck, IPS_MIKROBUS_PIN( MIKROBUS_AN ) );
     digital_out_high( &pin_bck );
     CS_HIGH;
 
