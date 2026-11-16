@@ -51,6 +51,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define LAN9250_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -94,7 +98,8 @@ err_t    lan9250_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan9250_cf
  * the digital reset, reads the chip identification, configures the TX FIFO,
  * programs the MAC address and enables transmission and reception.
  * @param[in] eth Ethernet transport instance.
- * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR if the device
+ * does not become ready, the chip ID is not 0x9250 or a bus transaction fails.
  * @pre lan9250_configure() must have been called beforehand.
  */
 err_t    lan9250_init( eth_transport_t *eth );
@@ -103,8 +108,9 @@ err_t    lan9250_init( eth_transport_t *eth );
  * @brief Send an Ethernet frame through the TX data FIFO.
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS).
- * @param[in] len Frame length in bytes, at most LAN9250_FRAME_SIZE.
- * @return Number of bytes sent, 0 if the frame is too long or the TX FIFO is full.
+ * @param[in] len Frame length in bytes (without FCS), at most LAN9250_TX_FRAME_SIZE.
+ * @return Number of bytes sent, 0 if the frame is too long, the TX FIFO is full
+ * or a bus transaction fails (the TX data FIFO is flushed).
  */
 uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
@@ -113,7 +119,7 @@ uint16_t lan9250_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len )
  * @param[in] eth Ethernet transport instance.
  * @param[out] buf Buffer receiving the frame.
  * @param[in] len Size of @p buf in bytes, longer frames are truncated.
- * @return Number of bytes read, 0 if no valid frame is available.
+ * @return Number of bytes read (frame without FCS), 0 if no valid frame is available.
  */
 uint16_t lan9250_read_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
@@ -149,7 +155,7 @@ uint32_t lan9250_get_id_rev( eth_transport_t *eth );
  * @brief Program the host MAC address registers.
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    lan9250_set_mac( eth_transport_t *eth, uint8_t *mac );
 
@@ -191,6 +197,10 @@ extern eth_transport_driver_t lan9250_driver;
 // TX_CFG bits
 #define LAN9250_TX_CFG_TXSAO  0x00000004UL          // TX status all-ones (host ignores TX status)
 #define LAN9250_TX_CFG_TX_ON  0x00000002UL
+#define LAN9250_TX_CFG_TXD_DUMP 0x00004000UL       // Flush the TX data FIFO, self clearing
+
+// RX_CFG bits
+#define LAN9250_RX_CFG_RX_DUMP  0x00008000UL       // Flush the RX data and status FIFOs, self clearing
 
 // RX_DP_CTRL bits
 #define LAN9250_RX_DP_CTRL_RX_FFWD 0x80000000UL
@@ -254,7 +264,13 @@ extern eth_transport_driver_t lan9250_driver;
 #define LAN9250_PHY_BASIC_STATUS_LINK_STATUS 0x0004
 
 // Maximum Ethernet frame size handled
-#define LAN9250_FRAME_SIZE 1518
+#define LAN9250_FRAME_SIZE 1518                // Maximum frame length including FCS
+#define LAN9250_TX_FRAME_SIZE 1514             // Largest frame lan9250_send_packet() accepts, the MAC appends the FCS
+#define LAN9250_FCS_SIZE   4
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
