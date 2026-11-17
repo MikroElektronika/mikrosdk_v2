@@ -46,7 +46,6 @@
 
 static i2c_master_t *_owner = NULL;
 
-
 #if !DRV_TO_HAL
 extern hal_i2c_master_handle_register_t DRV_TO_HAL_PREFIXED(i2c, hal_module_state)[ I2C_MODULE_COUNT ];
 
