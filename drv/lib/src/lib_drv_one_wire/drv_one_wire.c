@@ -44,7 +44,7 @@
 #include "drv_one_wire.h"
 #include "drv_trace.h"
 
-// TODO - Redefined for OW, as 
+// TODO - Redefined for OW, as
 // there is no real benefit at the moment
 #ifdef DRV_TO_HAL
 #undef DRV_TO_HAL
