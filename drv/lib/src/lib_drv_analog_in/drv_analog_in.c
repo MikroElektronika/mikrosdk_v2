@@ -46,7 +46,6 @@
 
 static analog_in_t *_owner = NULL;
 
-
 #if !DRV_TO_HAL
 extern hal_adc_handle_register_t DRV_TO_HAL_PREFIXED(adc, hal_module_state)[ADC_MODULE_COUNT];
 
