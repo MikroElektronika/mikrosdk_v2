@@ -53,6 +53,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define W5500_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -96,6 +100,8 @@ err_t    w5500_configure( eth_transport_t *eth, eth_bus_spi_t *bus, w5500_cfg_t 
  * addresses and opens socket 0 in MACRAW mode.
  * @param[in] eth Ethernet transport instance.
  * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @note Fails if VERSIONR is not 0x04 (no chip responding), socket 0 does not
+ * reach SOCK_MACRAW or a bus transaction fails.
  * @pre w5500_configure() must have been called beforehand.
  */
 err_t    w5500_init( eth_transport_t *eth );
@@ -105,7 +111,8 @@ err_t    w5500_init( eth_transport_t *eth );
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS).
  * @param[in] len Frame length in bytes, at most W5500_FRAME_SIZE.
- * @return Number of bytes sent, 0 if the frame is too long.
+ * @return Number of bytes sent, 0 if the frame is too long, the TX buffer does
+ * not free up or the chip does not confirm the transmission (SENDOK).
  */
 uint16_t w5500_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
 
@@ -143,7 +150,7 @@ uint8_t  w5500_get_rev( eth_transport_t *eth );
  * @brief Program the source hardware address register (SHAR).
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    w5500_set_mac( eth_transport_t *eth, uint8_t *mac );
 
@@ -151,7 +158,7 @@ err_t    w5500_set_mac( eth_transport_t *eth, uint8_t *mac );
  * @brief Program the source IP address register (SIPR).
  * @param[in] eth Ethernet transport instance.
  * @param[in] ip 4-byte IPv4 address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    w5500_set_ip( eth_transport_t *eth, uint8_t *ip );
 
@@ -211,7 +218,8 @@ extern eth_transport_driver_t w5500_driver;
 #define W5500_Sn_MR_UDP       0x02
 #define W5500_Sn_MR_MACRAW    0x04
 #define W5500_MR_PB           0x10
-#define W5500_Sn_MR_MF        0x40
+#define W5500_Sn_MR_MF        0x80      // MACRAW: MAC filter enable
+#define W5500_Sn_MR_BCASTB    0x40      // MACRAW/UDP: broadcast blocking
 /* Sn_CR commands */
 #define W5500_Sn_CR_OPEN      0x01
 #define W5500_Sn_CR_CLOSE     0x10
@@ -225,7 +233,11 @@ extern eth_transport_driver_t w5500_driver;
 #define W5500_PHYCFGR_LNK_MASK  0x01
 #define W5500_PHYCFGR_RST       0x80
 
-#define W5500_FRAME_SIZE 1518
+#define W5500_FRAME_SIZE 1514      // MACRAW TX limit, FCS is appended by the chip
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
