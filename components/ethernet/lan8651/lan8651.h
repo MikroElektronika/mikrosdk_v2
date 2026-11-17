@@ -56,6 +56,10 @@
 #include "eth_bus_spi.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define LAN8651_MAP_MIKROBUS( cfg, mikrobus ) \
     ETH_BUS_SPI_MAP_MIKROBUS( cfg.bus, mikrobus ) \
     ETH_TRANSPORT_MAP_MIKROBUS( cfg.eth, mikrobus )
@@ -77,7 +81,8 @@ typedef struct {
 #define LAN8651_CHUNK_SIZE          ( LAN8651_CHUNK_PAYLOAD_SIZE + 4 )
 #define LAN8651_FCS_SIZE            4
 #define LAN8651_MIN_FRAME_SIZE      60
-#define LAN8651_FRAME_SIZE          1518
+#define LAN8651_FRAME_SIZE          1518    // Maximum frame length including FCS
+#define LAN8651_TX_FRAME_SIZE       1514    // Largest frame lan8651_send_packet() accepts, the MAC appends the FCS
 
 /**
  * @brief Per-device driver state, referenced through eth_transport_t.driver_ctx.
@@ -122,7 +127,9 @@ err_t    lan8651_configure( eth_transport_t *eth, eth_bus_spi_t *bus, lan8651_cf
  * configuration fixups, configures PLCA/CSMA-CD, programs the MAC address
  * and enables the MAC transmitter and receiver.
  * @param[in] eth Ethernet transport instance.
- * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR otherwise.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR if the reset
+ * does not complete, the PHY ID is not valid (no chip responding) or a bus
+ * transaction fails.
  * @pre lan8651_configure() must have been called beforehand.
  */
 err_t    lan8651_init( eth_transport_t *eth );
@@ -131,7 +138,7 @@ err_t    lan8651_init( eth_transport_t *eth );
  * @brief Send an Ethernet frame as a sequence of TC6 data chunks.
  * @param[in] eth Ethernet transport instance.
  * @param[in] buf Ethernet frame (without FCS), runt frames are padded.
- * @param[in] len Frame length in bytes, at most LAN8651_FRAME_SIZE.
+ * @param[in] len Frame length in bytes (without FCS), at most LAN8651_TX_FRAME_SIZE.
  * @return Number of bytes sent, 0 on failure.
  */
 uint16_t lan8651_send_packet( eth_transport_t *eth, uint8_t *buf, uint16_t len );
@@ -180,7 +187,7 @@ uint32_t lan8651_get_phy_id( eth_transport_t *eth );
  * @brief Program the MAC address filter (SAB1/SAT1).
  * @param[in] eth Ethernet transport instance.
  * @param[in] mac 6-byte MAC address.
- * @return ETH_TRANSPORT_SUCCESS.
+ * @return ETH_TRANSPORT_SUCCESS on success, ETH_TRANSPORT_ERROR on a bus failure.
  */
 err_t    lan8651_set_mac( eth_transport_t *eth, uint8_t *mac );
 
@@ -212,6 +219,7 @@ extern eth_transport_driver_t lan8651_driver;
 #define LAN8651_DATA_FTR_DV         0x00200000UL
 #define LAN8651_DATA_FTR_SV         0x00100000UL
 #define LAN8651_DATA_FTR_SWO_SHIFT  16
+#define LAN8651_DATA_FTR_FD         0x00008000UL
 #define LAN8651_DATA_FTR_EV         0x00004000UL
 #define LAN8651_DATA_FTR_EBO_SHIFT  8
 #define LAN8651_DATA_FTR_TXC_SHIFT  1
@@ -249,6 +257,10 @@ extern eth_transport_driver_t lan8651_driver;
 #define LAN8651_PLCA_CTRL1          0xCA02
 #define LAN8651_PLCA_STS            0xCA03
 #define LAN8651_PLCA_STS_PST        0x00008000UL
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

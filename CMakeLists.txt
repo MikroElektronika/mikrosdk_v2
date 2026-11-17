@@ -50,6 +50,33 @@ if (NOT DEFINED MSDK_BUILD_TFT_MODULES)
     set(MSDK_BUILD_TFT_MODULES TRUE)
 endif()
 
+## Note that DIP packages with less than 40 pins
+## do not have pins routed to the TFT connector.
+## Make sure to select a DIP40 MCU if using a board
+## with DIP sockets.
+## Additionally, EasyMx PRO v7 for Tiva C Series MCU card with TM4C123GH6PMI
+## does not have adequate connections as well.
+## In such cases ILI9341/TP_MIKROE pins expand to nothing, so skip TFT modules.
+if(${MSDK_BUILD_TFT_MODULES} AND ("${_MSDK_TFT_BOARD_}" MATCHES "^TFT_BOARD_EASY$"))
+    set(ILI9341_SUPPORT_CHECK FALSE)
+    if(DEFINED _MSDK_MCU_CARD_NAME_ AND NOT ("${_MSDK_MCU_CARD_NAME_}" STREQUAL ""))
+        if("${_MSDK_MCU_CARD_NAME_}" STREQUAL "EASYMX_PRO_V7_FOR_TIVA_MCU_CARD_WITH_TM4C123GH6PMI")
+            set(ILI9341_SUPPORT_CHECK TRUE)
+            set(ERR_MESSAGE "EasyMx PRO v7 for Tiva C Series MCU card with TM4C123GH6PMI does not have necessary ILI9341 connections for selected board! Select a different card.")
+        endif()
+    elseif(DEFINED _MSDK_DIP_SOCKET_TYPE_ AND NOT ("${_MSDK_DIP_SOCKET_TYPE_}" STREQUAL ""))
+        if(NOT ("${_MSDK_DIP_SOCKET_TYPE_}" STREQUAL "DIP40"))
+            set(ILI9341_SUPPORT_CHECK TRUE)
+            set(ERR_MESSAGE "${_MSDK_DIP_SOCKET_TYPE_} ${MCU_NAME} does not have necessary ILI9341 connections for selected board! Select a DIP40 package MCU.")
+        endif()
+    endif()
+
+    if(${ILI9341_SUPPORT_CHECK})
+        message(WARNING "${ERR_MESSAGE} TFT modules will not be built.")
+        set(MSDK_BUILD_TFT_MODULES FALSE)
+    endif()
+endif()
+
 include(utils)
 include(mikroeUtils)
 include(GNUInstallDirs)
