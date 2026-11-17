@@ -856,6 +856,15 @@ void trace_value( const char *name, float value )
     trace_port_unlock( irq_state );
 }
 
+// ---------------------------------------------------- DRIVER HOOK DEFINITIONS
+
+// The hooks declared in drv_trace.h, which the drivers call. They keep their drv_trace_ names
+// on purpose: MikroSDK.Driver.Trace (drv_trace.c) defines them as weak, empty stubs, and these
+// strong definitions replace the stubs by name when MikroSDK.Trace is linked. Under any other
+// name the drivers would keep calling the empty stubs. They live here and not in drv_trace.c
+// because they write to the trace buffer and lanes, which a project without the trace library
+// must not link.
+
 uint32_t drv_trace_now( void )
 {
     return trace_ensure_started() ? trace_ticks() : 0;
