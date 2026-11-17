@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_MCB_RX74M",
+    "name": "Renesas Flexible Motor Control CPU Board for RX74M MCU Group",
+    "icon": "images/boards/board-mcb-rx74m.png",
+    "default_device": "",
+    "soldered_device": "R5K574MCB4AE",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_MCB_RX74M\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "320/LFBGA"
+}

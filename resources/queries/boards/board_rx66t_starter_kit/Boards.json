@@ -1,0 +1,16 @@
+{
+    "uid": "RX66T_STARTER_KIT",
+    "name": "Renesas Starter Kit for RX66T",
+    "icon": "images/boards/board-rx66t-starter-kit.png",
+    "default_device": "",
+    "soldered_device": "R5F566TEADFP",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"RX66T_STARTER_KIT\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LFQFP"
+}

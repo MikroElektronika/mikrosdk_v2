@@ -1,15 +1,23 @@
-import support, sqlite3, os, requests, json
+import support, sqlite3, os, requests, json, io, py7zr
 
 db_path = os.path.join(os.path.dirname(__file__), 'necto_db.db')
 
-# Function to download the database
-def download_database(db_url, download_path):
-    response = requests.get(db_url)
-    if response.status_code == 200:
-        with open(download_path, 'wb') as db_file:
-            db_file.write(response.content)
-    else:
-        raise Exception("Failed to download database!")
+# Download a database archive from general_packages and extract necto_db.db.
+def download_database_archive(archive_url, download_path):
+    response = requests.get(archive_url, timeout=60)
+    response.raise_for_status()
+    with py7zr.SevenZipFile(io.BytesIO(response.content), mode='r') as archive:
+        names = archive.getnames()
+        db_name = next((name for name in names if name.endswith('necto_db.db')), None)
+        if not db_name:
+            raise RuntimeError(f'necto_db.db missing from {archive_url}')
+        extract_dir = os.path.join(os.path.dirname(download_path), '.db_extract')
+        os.makedirs(extract_dir, exist_ok=True)
+        archive.extract(path=extract_dir, targets=[db_name])
+        extracted = os.path.join(extract_dir, db_name)
+        os.replace(extracted, download_path)
+        import shutil
+        shutil.rmtree(extract_dir, ignore_errors=True)
 
 def get_board_info_from_db(db_path, board_name):
     try:
@@ -258,10 +266,16 @@ def form_extra_information(asset_type, package_name, asset_url, token):
 
 def add(indexed_item_source, gh_token, es_index):
     # Download corresponding database from github
-    if 'test' in es_index:
-        download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db_dev.db?raw=true', db_path)
+    if 'experimental' in es_index:
+        archive = 'database_experimental.7z'
+    elif 'test' in es_index:
+        archive = 'database_dev.7z'
     else:
-        download_database('https://github.com/MikroElektronika/core_packages/blob/main/necto_db.db?raw=true', db_path)
+        archive = 'database_live.7z'
+    download_database_archive(
+        f'https://github.com/MikroElektronika/general_packages/releases/latest/download/{archive}',
+        db_path,
+    )
 
     doc_extra_info = {}
     if 'category' in indexed_item_source:

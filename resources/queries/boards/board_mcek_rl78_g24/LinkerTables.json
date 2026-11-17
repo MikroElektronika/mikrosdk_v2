@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_MCEK_RL78_G24",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R7F101GLG"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

@@ -240,7 +240,7 @@ def package_board_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/general_packages/releases/latest/download/database_live.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 
@@ -360,7 +360,7 @@ def package_card_files(repo_root, files_root_dir, path_list, sdk_version):
     os.makedirs(os.path.join(repo_root, f'tmp/assets/{asset_type}'), exist_ok=True)
 
     support.extract_archive_from_url(
-        'https://github.com/MikroElektronika/core_packages/releases/latest/download/database.7z',
+        'https://github.com/MikroElektronika/general_packages/releases/latest/download/database_live.7z',
         os.path.join(repo_root, 'tmp/db')
     )
 

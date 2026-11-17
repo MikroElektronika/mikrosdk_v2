@@ -39,6 +39,9 @@
 /*!
  * @file  board.h
  * @brief Main board pin mapping.
+ *
+ * @note For board-specific changes and version history, refer to the changelogs:
+ *       https://github.com/MikroElektronika/mikrosdk_v2/blob/master/changelog/v2.18.3/new_hw/2026-08-10.md
  */
 
 #ifndef _BOARD_H_
@@ -49,7 +52,7 @@ extern "C"
 {
 #endif
 
-#define BOARD_NAME "CLICKER 4 for TMPM3H"
+#define BOARD_NAME "Clicker 4 for TMPM3H"
 
 #include "mikrobus.h"
 

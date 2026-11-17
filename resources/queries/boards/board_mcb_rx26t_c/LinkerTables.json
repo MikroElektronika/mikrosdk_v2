@@ -1,0 +1,22 @@
+{
+    "board_uid": "MCB_RX26T_TYPE_C",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "R5F526TACDFM"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

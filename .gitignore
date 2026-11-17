@@ -1,5 +1,7 @@
 *.asm
+.mikrobus
 .vscode
+.mikrobus
 output
 __pycache__
 *.7z
@@ -17,3 +19,4 @@ settings.json
 flatten_me.h
 eth_driver.h
 .venv
+service-account.json

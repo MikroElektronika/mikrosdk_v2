@@ -1,6 +1,6 @@
 {
     "uid": "CLICKER_4_FOR_TMPM3H",
-    "name": "CLICKER 4 for TMPM3H",
+    "name": "Clicker 4 for TMPM3H",
     "icon": "images/boards/board-clicker-4-for-tmpm3h.png",
     "default_device": "",
     "soldered_device": "TMPM3HQF10BFG",
@@ -12,5 +12,5 @@
     "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"CLICKER_4_FOR_TMPM3H\",\"HAS_MIKROBUS\":\"true\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
-    "package_uid": "144/LQFP"
+    "package_uid": "144/QFP"
 }

@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FPB_RL78_L23",
+    "name": "RL78 L23 Fast Prototyping Board",
+    "icon": "images/boards/board-fpb-rl78-l23.png",
+    "default_device": "",
+    "soldered_device": "R7F100LPL",
+    "category": "Starter boards",
+    "mikrobus_count": 0,
+    "sort_order": 7,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FPB_RL78_L23\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

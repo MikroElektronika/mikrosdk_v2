@@ -115,6 +115,8 @@ extern "C" {
 // Note: Changed for MikroE implementation.
 #ifndef __PROJECT_MIKROSDK_MIKROE__
   #include "stm32f7xx.h"
+#else
+  #define HSE_VALUE    25000000U /*!< Value of the External oscillator in Hz */
 #endif
   #define EP_MAX_FS       6
   #define EP_FIFO_SIZE_FS 1280

@@ -40,7 +40,7 @@
 /*!
  * \file
  *
- * \brief The API for interfacing with TFT BOARD CAPCAITIVE display boards.
+ * \brief The API for interfacing with TFT BOARD CAPACITIVE display boards.
  */
 #ifndef _TFT8_H_
 #define _TFT8_H_
@@ -210,13 +210,13 @@ uint16_t tft8_display_width();
 uint16_t tft8_display_height();
 
 /*!
- * \brief Sets display's backlight intenisty.
+ * \brief Sets display's backlight intensity.
  *
- * \param intenisty Backlight intenisty.
+ * \param intensity Backlight intensity.
  *
  * \see TFT8_MIN_BACKLIGHT, TFT8_MAX_BACKLIGHT
  */
-void tft8_set_backlight(uint8_t intenisty);
+void tft8_set_backlight(uint8_t intensity);
 
 // TODO Implement set gamma.
 // TODO Implement display on/off.
