@@ -38,7 +38,7 @@
 ****************************************************************************/
 /*!
  * @file  hal_ll_gpio_port.c
- * @brief GPIO HAL LOW LEVEL ported layer implementation — RX26T.
+ * @brief GPIO HAL LOW LEVEL ported layer implementation — RX.
  */
 
 #include "hal_ll_gpio_port.h"
@@ -48,7 +48,7 @@
 
 #define GPIO_ALT_FUNC_MASK (0xFF00)
 
-#define RX26T_PORT_BASE   ( 0x0008C000UL )
+#define HAL_LL_RX_PORT_BASE   ( 0x0008C000UL )
 
 static const uint32_t hal_ll_gpio_port_base_arr[] =
 {
@@ -112,6 +112,11 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     #else
     0,
     #endif
+    #ifdef __PORT_C_CN
+    GPIO_PORTC_BASE,
+    #else
+    0,
+    #endif
     #ifdef __PORT_D_CN
     GPIO_PORTD_BASE,
     #else
@@ -119,6 +124,26 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
     #endif
     #ifdef __PORT_E_CN
     GPIO_PORTE_BASE,
+    #else
+    0,
+    #endif
+    #ifdef __PORT_F_CN
+    GPIO_PORTF_BASE,
+    #else
+    0,
+    #endif
+    #ifdef __PORT_G_CN
+    GPIO_PORTG_BASE,
+    #else
+    0,
+    #endif
+    #ifdef __PORT_H_CN
+    GPIO_PORTH_BASE,
+    #else
+    0,
+    #endif
+    #ifdef __PORT_K_CN
+    GPIO_PORTK_BASE,
     #else
     0,
     #endif
@@ -145,6 +170,11 @@ static const uint32_t hal_ll_gpio_port_base_arr[] =
 #define HAL_LL_MPC_PFS_ISEL_BIT      ( 6U )
 #define HAL_LL_MPC_PFS_ASEL_BIT      ( 7U )
 #define HAL_LL_MPC_PFS_PSEL_MASK     ( 0x3FU )
+
+/*!< @brief Ports without a drive capacity control register: P4, P5, P6 and PH. */
+#define HAL_LL_GPIO_PORTH_ID         ( 0x11UL )
+#define hal_ll_gpio_port_has_dscr(_real_id) ( ( ( ( _real_id ) < 4U ) || ( ( _real_id ) > 6U ) ) && \
+                                              ( HAL_LL_GPIO_PORTH_ID != ( _real_id ) ) )
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 
@@ -198,9 +228,9 @@ uint32_t hal_ll_gpio_port_base( hal_ll_port_name_t name ) {
 void hal_ll_gpio_analog_input( uint32_t *port, uint16_t pin_mask ) {
     volatile uint8_t *pdr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PDR_OFFSET );
     volatile uint8_t *pmr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PMR_OFFSET );
-    volatile uint8_t *pwpr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
-    uint32_t real_id = ( uint32_t )port - RX26T_PORT_BASE;
-    uint32_t pfs_base = RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET + ( real_id * HAL_LL_MPC_PFS_PORT_STRIDE );
+    volatile uint8_t *pwpr = ( volatile uint8_t * )( HAL_LL_RX_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
+    uint32_t real_id = ( uint32_t )port - HAL_LL_RX_PORT_BASE;
+    uint32_t pfs_base = HAL_LL_RX_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET + ( real_id * HAL_LL_MPC_PFS_PORT_STRIDE );
     uint8_t pin;
 
     if ( 0 == ( uint32_t )port ) {
@@ -257,12 +287,12 @@ static inline uint32_t hal_ll_gpio_get_base_addr( uint8_t port_index )
 }
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
-    uint32_t real_id = ( uint32_t )port - RX26T_PORT_BASE;
+    uint32_t real_id = ( uint32_t )port - HAL_LL_RX_PORT_BASE;
     volatile uint8_t *pdr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PDR_OFFSET );
     volatile uint8_t *pmr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PMR_OFFSET );
     volatile uint8_t *pcr = ( volatile uint8_t * )( ( uint32_t )port + HAL_LL_GPIO_PCR_OFFSET );
-    volatile uint8_t *dscr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_GPIO_DSCR_OFFSET + real_id );
-    volatile uint8_t *odr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_GPIO_ODR_OFFSET + ( real_id * 2U ) );
+    volatile uint8_t *dscr = ( volatile uint8_t * )( HAL_LL_RX_PORT_BASE + HAL_LL_GPIO_DSCR_OFFSET + real_id );
+    volatile uint8_t *odr = ( volatile uint8_t * )( HAL_LL_RX_PORT_BASE + HAL_LL_GPIO_ODR_OFFSET + ( real_id * 2U ) );
     uint8_t pin;
 
     if ( 0 == ( uint32_t )port ) {
@@ -282,7 +312,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
         *pcr |= ( uint8_t )pin_mask;
     }
 
-    if ( ( 0 != ( config & GPIO_CFG_PORT_MIDDLE_DRIVE ) ) && ( ( real_id < 4U ) || ( real_id > 6U ) ) ) {
+    if ( ( 0 != ( config & GPIO_CFG_PORT_MIDDLE_DRIVE ) ) && hal_ll_gpio_port_has_dscr( real_id ) ) {
         *dscr |= ( uint8_t )pin_mask;
     }
 
@@ -311,10 +341,10 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
         return;
     }
 
-    real_id = port_base - RX26T_PORT_BASE;
+    real_id = port_base - HAL_LL_RX_PORT_BASE;
     pmr = ( volatile uint8_t * )( port_base + HAL_LL_GPIO_PMR_OFFSET );
-    pwpr = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
-    pfs = ( volatile uint8_t * )( RX26T_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET +
+    pwpr = ( volatile uint8_t * )( HAL_LL_RX_PORT_BASE + HAL_LL_MPC_PWPR_OFFSET );
+    pfs = ( volatile uint8_t * )( HAL_LL_RX_PORT_BASE + HAL_LL_MPC_PFS_BASE_OFFSET +
                                   real_id * HAL_LL_MPC_PFS_PORT_STRIDE +
                                   pin );
 

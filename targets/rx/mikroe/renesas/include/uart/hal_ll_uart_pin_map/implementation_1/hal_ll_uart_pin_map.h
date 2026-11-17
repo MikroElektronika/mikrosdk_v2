@@ -65,6 +65,9 @@ typedef struct {
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+    #ifdef SCI11_TX_PA00_AF11
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PA00, HAL_LL_SCI11_BASE_ADDR, 11},
+    #endif
     #ifdef SCI11_TX_P902_AF45
     {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_P902, HAL_LL_SCI11_BASE_ADDR, 45},
     #endif
@@ -122,6 +125,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
     #ifdef SCI6_TX_PB02_AF10
     {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PB02, HAL_LL_SCI6_BASE_ADDR, 10},
     #endif
+    #ifdef SCI8_TX_P203_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P203, HAL_LL_SCI8_BASE_ADDR, 10},
+    #endif
     #ifdef SCI8_TX_P201_AF44
     {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P201, HAL_LL_SCI8_BASE_ADDR, 44},
     #endif
@@ -164,6 +170,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+    #ifdef SCI11_RX_PA01_AF11
+    {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_PA01, HAL_LL_SCI11_BASE_ADDR, 11},
+    #endif
     #ifdef SCI11_RX_P903_AF45
     {hal_ll_uart_module_num( SCI_MODULE_11 ), GPIO_P903, HAL_LL_SCI11_BASE_ADDR, 45},
     #endif
@@ -220,6 +229,9 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
     #endif
     #ifdef SCI6_RX_PB01_AF10
     {hal_ll_uart_module_num( SCI_MODULE_6 ), GPIO_PB01, HAL_LL_SCI6_BASE_ADDR, 10},
+    #endif
+    #ifdef SCI8_RX_P202_AF10
+    {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P202, HAL_LL_SCI8_BASE_ADDR, 10},
     #endif
     #ifdef SCI8_RX_P200_AF45
     {hal_ll_uart_module_num( SCI_MODULE_8 ), GPIO_P200, HAL_LL_SCI8_BASE_ADDR, 45},

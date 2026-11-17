@@ -219,6 +219,9 @@ static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
     #ifdef TIM7_PD05_CHA_AF23
     {GPIO_PD05, HAL_LL_TIM7_BASE_ADDR, 23, hal_ll_tim_module_num( TIM_MODULE_7 ), HAL_LL_TIM_PIN_A},
     #endif
+    #ifdef TIM9_P903_CHA_AF21
+    {GPIO_P903, HAL_LL_TIM9_BASE_ADDR, 21, hal_ll_tim_module_num( TIM_MODULE_9 ), HAL_LL_TIM_PIN_A},
+    #endif
 
     { HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC }
 };

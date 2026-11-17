@@ -69,6 +69,12 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_CORE_INTB_CREG                       (0xC)
 extern void * const rvectors_start[];
 
+/*!< @brief True if any SCI receive error (ERI) interrupt is routed through ICU group vector @p _vec. */
+#define hal_ll_sci_eri_uses_group(_vec) ( ( SCI1_ERI_GROUP_VECTOR == ( _vec ) ) || ( SCI5_ERI_GROUP_VECTOR == ( _vec ) ) ||\
+                                          ( SCI6_ERI_GROUP_VECTOR == ( _vec ) ) || ( SCI8_ERI_GROUP_VECTOR == ( _vec ) ) ||\
+                                          ( SCI9_ERI_GROUP_VECTOR == ( _vec ) ) || ( SCI11_ERI_GROUP_VECTOR == ( _vec ) ) ||\
+                                          ( SCI12_ERI_GROUP_VECTOR == ( _vec ) ) )
+
 /*!< @brief UART baud rate structure. */
 typedef struct {
     uint32_t baud;
@@ -395,91 +401,91 @@ void hal_ll_uart_register_irq_handler( handle_t *handle, hal_ll_uart_isr_t handl
     switch ( hal_ll_uart_hw_specifics_map_local->module_index ) {
         #ifdef SCI_MODULE_1
         case hal_ll_uart_module_num( SCI_MODULE_1 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI1_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI1_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI1_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENBL0, SCI1_ERI_GROUP_BIT );
+            set_reg_bit( SCI1_ERI_GROUP_ENABLE_REG, SCI1_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI1_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI1_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI1_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_5
         case hal_ll_uart_module_num( SCI_MODULE_5 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI5_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI5_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI5_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENBL0, SCI5_ERI_GROUP_BIT );
+            set_reg_bit( SCI5_ERI_GROUP_ENABLE_REG, SCI5_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI5_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI5_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI5_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_6
         case hal_ll_uart_module_num( SCI_MODULE_6 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI6_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI6_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI6_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENBL0, SCI6_ERI_GROUP_BIT );
+            set_reg_bit( SCI6_ERI_GROUP_ENABLE_REG, SCI6_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI6_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI6_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI6_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_8
         case hal_ll_uart_module_num( SCI_MODULE_8 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI8_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI8_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI8_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENAL0, SCI8_ERI_GROUP_BIT );
+            set_reg_bit( SCI8_ERI_GROUP_ENABLE_REG, SCI8_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI8_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI8_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI8_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_9
         case hal_ll_uart_module_num( SCI_MODULE_9 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI9_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI9_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI9_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENAL0, SCI9_ERI_GROUP_BIT );
+            set_reg_bit( SCI9_ERI_GROUP_ENABLE_REG, SCI9_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI9_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI9_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI9_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_11
         case hal_ll_uart_module_num( SCI_MODULE_11 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPAL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI11_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI11_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI11_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENAL0, SCI11_ERI_GROUP_BIT );
+            set_reg_bit( SCI11_ERI_GROUP_ENABLE_REG, SCI11_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPAL0_VECTOR );
+            hal_ll_core_enable_irq( SCI11_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI11_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI11_TXI_VECTOR );
             break;
         #endif
         #ifdef SCI_MODULE_12
         case hal_ll_uart_module_num( SCI_MODULE_12 ):
-            hal_ll_core_set_priority_irq( ICU_GROUPBL0_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
+            hal_ll_core_set_priority_irq( SCI12_ERI_GROUP_VECTOR, HAL_LL_SCI_ERI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI12_RXI_VECTOR, HAL_LL_SCI_RXI_INTERRUPT_PRIORITY );
             hal_ll_core_set_priority_irq( SCI12_TXI_VECTOR, HAL_LL_SCI_TXI_INTERRUPT_PRIORITY );
 
-            set_reg_bit( HAL_LL_ICU_GENBL0, SCI12_ERI_GROUP_BIT );
+            set_reg_bit( SCI12_ERI_GROUP_ENABLE_REG, SCI12_ERI_GROUP_BIT );
 
-            hal_ll_core_enable_irq( ICU_GROUPBL0_VECTOR );
+            hal_ll_core_enable_irq( SCI12_ERI_GROUP_VECTOR );
             hal_ll_core_enable_irq( SCI12_RXI_VECTOR );
             hal_ll_core_enable_irq( SCI12_TXI_VECTOR );
             break;
@@ -629,48 +635,60 @@ void __attribute__(( interrupt( ".rvectors", SCI12_RXI_VECTOR ))) hal_ll_sci12_r
 }
 #endif
 
-#if defined( SCI_MODULE_1 ) || defined( SCI_MODULE_5 ) || defined( SCI_MODULE_6 ) || defined( SCI_MODULE_12 )
-void __attribute__(( interrupt( ".rvectors", ICU_GROUPBL0_VECTOR ))) hal_ll_icu_groupbl0_isr( void ) {
+/*!< @brief Clears receive errors of every SCI whose ERI interrupt is pending in ICU group status register @p group_status. */
+static inline void hal_ll_uart_eri_group_handler( volatile uint32_t *group_status ) {
     #if defined( SCI_MODULE_1 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI1_ERI_GROUP_BIT ) ) {
+    if ( ( SCI1_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI1_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI1_BASE_ADDR );
     }
     #endif
     #if defined( SCI_MODULE_5 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI5_ERI_GROUP_BIT ) ) {
+    if ( ( SCI5_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI5_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI5_BASE_ADDR );
     }
     #endif
     #if defined( SCI_MODULE_6 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI6_ERI_GROUP_BIT ) ) {
+    if ( ( SCI6_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI6_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI6_BASE_ADDR );
     }
     #endif
-    #if defined( SCI_MODULE_12 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPBL0, SCI12_ERI_GROUP_BIT ) ) {
-        hal_ll_sci_uart_clear_errors( HAL_LL_SCI12_BASE_ADDR );
-    }
-    #endif
-}
-#endif
-
-#if defined( SCI_MODULE_8 ) || defined( SCI_MODULE_9 ) || defined( SCI_MODULE_11 )
-void __attribute__(( interrupt( ".rvectors", ICU_GROUPAL0_VECTOR ))) hal_ll_icu_groupal0_isr( void ) {
     #if defined( SCI_MODULE_8 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI8_ERI_GROUP_BIT ) ) {
+    if ( ( SCI8_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI8_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI8_BASE_ADDR );
     }
     #endif
     #if defined( SCI_MODULE_9 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI9_ERI_GROUP_BIT ) ) {
+    if ( ( SCI9_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI9_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI9_BASE_ADDR );
     }
     #endif
     #if defined( SCI_MODULE_11 )
-    if ( check_reg_bit( HAL_LL_ICU_GRPAL0, SCI11_ERI_GROUP_BIT ) ) {
+    if ( ( SCI11_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI11_ERI_GROUP_BIT ) ) {
         hal_ll_sci_uart_clear_errors( HAL_LL_SCI11_BASE_ADDR );
     }
     #endif
+    #if defined( SCI_MODULE_12 )
+    if ( ( SCI12_ERI_GROUP_STATUS_REG == group_status ) && check_reg_bit( group_status, SCI12_ERI_GROUP_BIT ) ) {
+        hal_ll_sci_uart_clear_errors( HAL_LL_SCI12_BASE_ADDR );
+    }
+    #endif
+}
+
+#if defined( ICU_GROUPBL0_VECTOR ) && hal_ll_sci_eri_uses_group( ICU_GROUPBL0_VECTOR )
+void __attribute__(( interrupt( ".rvectors", ICU_GROUPBL0_VECTOR ))) hal_ll_icu_groupbl0_isr( void ) {
+    hal_ll_uart_eri_group_handler( HAL_LL_ICU_GRPBL0 );
+}
+#endif
+
+#if defined( ICU_GROUPBL1_VECTOR ) && hal_ll_sci_eri_uses_group( ICU_GROUPBL1_VECTOR )
+void __attribute__(( interrupt( ".rvectors", ICU_GROUPBL1_VECTOR ))) hal_ll_icu_groupbl1_isr( void ) {
+    hal_ll_uart_eri_group_handler( HAL_LL_ICU_GRPBL1 );
+}
+#endif
+
+#if defined( ICU_GROUPAL0_VECTOR ) && hal_ll_sci_eri_uses_group( ICU_GROUPAL0_VECTOR )
+void __attribute__(( interrupt( ".rvectors", ICU_GROUPAL0_VECTOR ))) hal_ll_icu_groupal0_isr( void ) {
+    hal_ll_uart_eri_group_handler( HAL_LL_ICU_GRPAL0 );
 }
 #endif
 

@@ -226,7 +226,7 @@
 // Bit rate = PCLK / ( F/2 * 4^n * ( N + 1 )), F = 64, 32 or 16 depending on BGDM/ABCS (Table 33.10).
 #define HAL_LL_RSCI_UART_STEP_COUNT     (3)
 
-/*!< @brief SCI register structure (SCI1, SCI5, SCI6, RX26T Group manual sec. 32.2) */
+/*!< @brief SCI register structure (SCI1/5/6/12 on all families, SCI8/9/11 on families without RSCI) */
 typedef struct {
     uint8_t smr;
     uint8_t brr;
@@ -246,7 +246,7 @@ typedef struct {
     uint8_t sptr;
 } hal_ll_sci_base_handle_t;
 
-/*!< @brief RSCI register structure (RSCI8, RSCI9, RSCI11, RX26T Group manual sec. 33.2) */
+/*!< @brief RSCI register structure (RSCI8, RSCI9, RSCI11 on RX26T) */
 typedef struct {
     uint32_t rdr;           // 0x00
     uint32_t tdr;           // 0x04
@@ -426,7 +426,7 @@ static bool hal_ll_sci_is_rsci( uint32_t base );
 /**
   * @brief  Returns the source clock of the SCI module.
   *
-  * RSCI11 is clocked from PCLKA, RSCI8, RSCI9 and SCI1/5/6/12 from PCLKB (RX26T manual sec. 33).
+  * SCI11 (RSCI11 on RX26T) is clocked from PCLKA, all other SCI channels from PCLKB.
   *
   * @param[in]  base - SCI module base address.
   * @return Source clock frequency in Hz.
@@ -1566,6 +1566,8 @@ static void hal_ll_sci_uart_set_baud_bare_metal( hal_ll_sci_uart_hw_specifics_ma
 static bool hal_ll_sci_is_rsci( uint32_t base ) {
     ( void )base;
 
+    // Only RX26T implements SCI8, SCI9 and SCI11 as RSCI; on other families (e.g. RX66T) they are regular SCI modules.
+    #if defined( R526T )
     #ifdef SCI_MODULE_8
     if ( HAL_LL_SCI8_BASE_ADDR == base )
         return true;
@@ -1577,6 +1579,7 @@ static bool hal_ll_sci_is_rsci( uint32_t base ) {
     #ifdef SCI_MODULE_11
     if ( HAL_LL_SCI11_BASE_ADDR == base )
         return true;
+    #endif
     #endif
 
     return false;
