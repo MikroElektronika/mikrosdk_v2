@@ -10,42 +10,88 @@
 
 # `v2.20.3`
 
-+ released: TBD
++ released: 2026-11-17
 
 ## Changes
 
 - [`v2.20.3`](#v2203)
   - [Changes](#changes)
-    - [New features](#new-features)
-      - [mikroSDK](#mikrosdk)
+    - [TOSHIBA](#toshiba)
+    - [Improvements](#improvements)
     - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
-### New features
+### TOSHIBA
 
-#### mikroSDK
+**TMPM4L MCUs supported!**
 
-+ **Firmware trace library (`MikroSDK.Trace`)**
-  + Records driver activity on the device and hands it to the debugger, so NECTO Studio can show it on a timeline.
-  + Key changes:
-    + Added the `MikroSDK.Trace` platform library (`trace.h`); linking it is all an application needs, the trace starts with the first recorded event.
-    + Recorded events: I2C Master and SPI Master transfers, SPI chip select changes, UART writes and reads, 1-Wire operations (reset, ROM commands, byte writes and reads), ADC reads (raw and voltage), GPIO output writes and GPIO input level changes, plus named values through `trace_value()`.
-    + Trace format version 4 (1-Wire records, injected events, bus bursts); NECTO Studio needs a trace decoder that reads version 4.
-    + Fault injection while debugging: NECTO Studio can make an I2C device stop answering, hold SPI MISO at a byte, hold a GPIO input at a level, force an ADC value, and take the devices off a 1-Wire bus. The debugger writes the faults to the trace library (`__traceFaults`); the drivers ask fault hooks (`drv_trace_fault_*()`) before or after each call, and the trace marks the calls a fault changed.
-    + Records are kept in a RAM buffer (512 bytes by default, `TRACE_BUFFER( size )` to change it) and handed to the debugger when the buffer is full, on `trace_flush()`, or every 500 ms of program time (`trace_set_flush_interval()`).
-    + Fast GPIO writes (a display strobe, a bit-banged bus) and fast bus transfers (a display filled pixel by pixel over SPI) are coalesced into bursts, so they do not stop the program over and over.
-    + Time base: the core cycle counter (DWT CYCCNT on Cortex-M3 and newer, `mcycle` on RISC-V, CP0 Count on PIC32); Cortex-M0/M0+ keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
-    + Added trace hooks to the GPIO Out, GPIO In, I2C Master, SPI Master, UART, ADC and 1-Wire drivers (`drv_trace.h`). Without the trace library the hooks cost one load and a branch per call.
-    + The library is built for ARM (GCC, Clang and mikroC), RISC-V (GCC) and PIC32 (XC32 and mikroC); the architecture-specific code (interrupt lock, cycle counter) is in `trace_port.h`. dsPIC/PIC24 (XC16) is not ported yet. With XC8 and the other mikroC compilers the drivers are built without hooks.
-    + The empty driver hooks are defined once, in the new `MikroSDK.Driver.Trace` library that every traced driver links (mikroC rejects a weak symbol defined in two libraries).
-    + Added validation test under `tests/trace`.
-+ **Timestamped plot**
-  + Added `plot_ts()` to `plot.h`: like `plot()`, with the time the value was taken on the device, so NECTO Studio keeps the real spacing of the values.
+| **TMPM4L1FWAUG** | **TMPM4L1FYAUG** |
+| :-----------: | :-----------: |
+| **TMPM4L2FWADUG** | **TMPM4L2FWAQG** |
+| **TMPM4L2FYADUG** | **TMPM4L2FYAQG** |
+| **TMPM4L4FWAUG**  | **TMPM4L4FYAUG** |
+
+**Supported modules:**
+
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
++ 1-Wire (Full module support)
+
+### Improvements
+
++ Defined all base addresses in `mcu_reg_addresses.h` file for all TOSHIBA devices
+  + This makes adding new TOSHIBA devices to SDK easier
 
 ### Fixes
 
-+ Fixed mikroBUS 1 and mikroBUS 2 I2C pins in `board.h` for Curiosity PIC32MZ EF 2.0 Development Board
-  + SCL/SDA moved from `PA2`/`PA3` (I2C2) to `PA14`/`PA15` (I2C1), where both sockets are wired; Click boards on I2C got no answer before
++ Fixed IPS Display Click (first variant) using the wrong mikroBUS socket with the Graphic Library / Visual TFT
+  + The build now reads the `MIKROBUS_POSITION_IPSDISPLAY` setting for this board, instead of `MIKROBUS_POSITION_IPSDISPLAY1`, which is never set
+  + IPS Display 2 Click is not affected
++ Fixed IPS Display Click build failing when a mikroBUS pin doesn't exist on the selected MCU
+  + e.g. PIC18F4455 on EasyPIC v7, which has no `RC3` (mikroBUS SCK)
+  + Such pins are now mapped to `HAL_PIN_NC`, all other pins are unchanged
++ SPI Ethernet fixes
+  + Fixed SPI Ethernet libraries not showing up in the NECTO Studio Library Manager
+    + SPI Ethernet middleware (`MikroSDK.Ethernet.Transport`, `MikroSDK.Ethernet.Spi`, `MikroSDK.Ethernet.Net`) and controller libraries (`MikroSDK.Ethernet.ENC28J60`, `MikroSDK.Ethernet.LAN8651`, `MikroSDK.Ethernet.LAN9250`, `MikroSDK.Ethernet.W5500`, `MikroSDK.Ethernet.W6100`) are now installed with the SDK
+  + Fixed SPI Ethernet controller register and protocol bugs
+    + W5500 no longer blocks broadcast frames, ARP requests and DHCP replies are received again
+    + W6100 now clears the send interrupt through `Sn_IRCLR` and locks the network registers with the documented key, MAC/IP can still be changed after initialization (e.g. after DHCP)
+    + W6100 MACRAW socket now enables MAC filtering, frames addressed to other devices are no longer received
+    + ENC28J60 PHY register reads (link status, PHY ID) now return the correct value, PHY duplex now follows the full duplex setting
+    + ENC28J60 releases receive buffer space for dropped frames and reports failed transmissions
+    + LAN8651 validates the receive footer parity and discards frames marked for dropping
+    + LAN9250 received frames no longer include the 4-byte FCS, consistent with the other controllers
+    + ENC28J60, LAN8651 and LAN9250 reject frames longer than 1514 bytes on send, the MAC appends the 4-byte FCS
+  + Fixed SPI Ethernet build issues
+    + ENC28J60 register names (`MACON1`, `ECON1`, `EIR`, ...) no longer clash with PIC18F97J60 family SFRs
+    + Controller driver headers can be included from C++ sources (`extern "C"` guards)
+  + SPI Ethernet now reports initialization and bus failures
+    + Initialization verifies the chip identity and fails if no controller responds, e.g. wrong mikroBUS position
+    + Failed SPI transactions and controller timeouts are reported instead of returning success
+    + W5500/W6100 transmit waits for free buffer space and reports success only after the frame was sent
+    + Corrupt receive headers are recovered from (socket reopen / receive buffer reset) instead of losing synchronization
+    + Cached MAC/IP addresses are updated only after the controller accepted them
+  + SPI Ethernet network helpers validate received packets
+    + New `eth_net_ipv4_payload()` validates IPv4 version, header length, total length and checksum and rejects fragments
+    + ICMP echo requests are checked for code and checksum, ARP requests for address sizes
+    + DHCP replies are checked for client MAC, server ports, UDP checksum and the selected server
+    + `tests/spi_ethernet` uses a per-device DHCP transaction ID, restarts discovery on DHCPNAK and checks TCP segment bounds
+
+> NOTE:
+>> SPI Ethernet API changes compared to v2.20.2:
+>>
+>> + `eth_net_handle_dhcp()` takes the device MAC address as a new third parameter
+>> + `W5500_FRAME_SIZE` and `W6100_FRAME_SIZE` are now 1514 (MACRAW frame without FCS)
+>> + `W5500_Sn_MR_MF` and `W6100_Sn_MR_MF` corrected to `0x80`, `W6100_PHYSR_RST` replaced by `W6100_PHYSR_CAB` and `W6100_PHYCR1_RST`
+>> + LAN9250 `read_packet` returns the frame without FCS (4 bytes shorter)
+>> + `eth_transport_t` has a new `bus_error` member
+>> + New `ENC28J60_TX_FRAME_SIZE`, `LAN8651_TX_FRAME_SIZE` and `LAN9250_TX_FRAME_SIZE` (1514), the largest frame `send_packet` accepts
+>> + ENC28J60 control register and memory layout macros (`MACON1`, `ECON1`, `RAM_SIZE`, `TRANSMIT_START`, ...) are no longer in `enc28j60.h`, PHY register macros remain
+>> + `ETH_NET_TX_BUF_SIZE` can no longer be redefined by the application, the library is shipped precompiled with a 400-byte buffer
 
 ### NEW HARDWARE
 
