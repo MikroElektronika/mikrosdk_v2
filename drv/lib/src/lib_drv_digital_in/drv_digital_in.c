@@ -43,7 +43,6 @@
 
 #include "drv_digital_in.h"
 
-
 err_t digital_in_init( digital_in_t *in, pin_name_t name )
 {
     if ( HAL_PIN_NC == name )
