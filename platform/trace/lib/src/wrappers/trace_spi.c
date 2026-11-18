@@ -37,14 +37,14 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_spi.c
+ * @file  trace_spi.c
  * @brief Firmware trace wrappers of the SPI Master driver.
  *
- * @details See trace_wrap_i2c.c.
+ * @details See trace_i2c.c.
  */
 
 #include "drv_spi_master.h"
-#include "trace_hooks.h"
+#include "../trace_hooks.h"
 
 // Defined by the HAL in both driver modes.
 extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;

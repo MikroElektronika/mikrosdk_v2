@@ -37,14 +37,14 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_one_wire.c
+ * @file  trace_one_wire.c
  * @brief Firmware trace wrappers of the 1-Wire driver.
  *
- * @details See trace_wrap_i2c.c.
+ * @details See trace_i2c.c.
  */
 
 #include "drv_one_wire.h"
-#include "trace_hooks.h"
+#include "../trace_hooks.h"
 
 err_t __real_one_wire_reset( one_wire_t *obj );
 err_t __real_one_wire_read_rom( one_wire_t *obj, one_wire_rom_address_t *device_rom_address );

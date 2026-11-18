@@ -76,7 +76,7 @@
 // bus rate at the end of LANE_DEF.
 #define TRACE_FORMAT_VERSION (5)
 #define TRACE_MAX_LANES (32)
-// The UART wrapper hands uart_println() text over in a buffer of this size (trace_wrap_uart.c).
+// The UART wrapper hands uart_println() text over in a buffer of this size (wrappers/trace_uart.c).
 #define TRACE_MAX_DATA (16)
 #define TRACE_MAX_NAME (16)
 #define TRACE_MAX_RECORD (52)
@@ -857,7 +857,7 @@ void trace_value( const char *name, float value )
 
 // ---------------------------------------------------------- HOOK DEFINITIONS
 
-// The hooks declared in trace_hooks.h, called by the driver wrappers (trace_wrap_*.c) and by
+// The hooks declared in trace_hooks.h, called by the driver wrappers (wrappers/trace_*.c) and by
 // the flattened GPIO macros.
 
 uint32_t trace_hook_now( void )

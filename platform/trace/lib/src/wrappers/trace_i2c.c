@@ -37,7 +37,7 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_i2c.c
+ * @file  trace_i2c.c
  * @brief Firmware trace wrappers of the I2C Master driver.
  *
  * @details The linker sends every call of the wrapped functions here (--wrap, see
@@ -45,7 +45,7 @@
  */
 
 #include "drv_i2c_master.h"
-#include "trace_hooks.h"
+#include "../trace_hooks.h"
 
 err_t __real_i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data );
 err_t __real_i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data );

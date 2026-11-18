@@ -41,7 +41,7 @@
  * @brief Firmware trace hooks, private to MikroSDK.Trace.
  *
  * @details The drivers know nothing of the trace. The linker sends the driver calls to the
- * wrappers of trace_wrap_*.c instead (--wrap, see CMakeLists.txt), and the wrappers report each
+ * wrappers in wrappers/trace_*.c instead (--wrap, see CMakeLists.txt), and the wrappers report each
  * transfer and pin change to these hooks, implemented in trace.c.
  *
  * The flattened GPIO macros (FLATTEN_ME_LEVEL_HIGH) have no function to wrap: drv_digital_out.h

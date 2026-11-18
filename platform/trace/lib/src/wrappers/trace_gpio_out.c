@@ -37,15 +37,15 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_gpio_out.c
+ * @file  trace_gpio_out.c
  * @brief Firmware trace wrappers of the GPIO Out driver.
  *
- * @details See trace_wrap_i2c.c. With FLATTEN_ME_LEVEL_HIGH the pin functions are macros
+ * @details See trace_i2c.c. With FLATTEN_ME_LEVEL_HIGH the pin functions are macros
  * (drv_digital_out.h), which call the hook themselves: only digital_out_init() is wrapped.
  */
 
 #include "drv_digital_out.h"
-#include "trace_hooks.h"
+#include "../trace_hooks.h"
 
 err_t __real_digital_out_init( digital_out_t *out, pin_name_t name );
 

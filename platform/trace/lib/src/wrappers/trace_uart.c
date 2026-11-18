@@ -37,14 +37,14 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_uart.c
+ * @file  trace_uart.c
  * @brief Firmware trace wrappers of the UART driver.
  *
- * @details See trace_wrap_i2c.c.
+ * @details See trace_i2c.c.
  */
 
 #include "drv_uart.h"
-#include "trace_hooks.h"
+#include "../trace_hooks.h"
 
 err_t __real_uart_write( uart_t *obj, uint8_t *buffer, size_t size );
 err_t __real_uart_print( uart_t *obj, char *text );

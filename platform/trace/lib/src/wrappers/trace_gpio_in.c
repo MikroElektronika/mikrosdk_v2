@@ -37,51 +37,37 @@
 **
 ****************************************************************************/
 /*!
- * @file  trace_wrap_adc.c
- * @brief Firmware trace wrappers of the ADC driver.
+ * @file  trace_gpio_in.c
+ * @brief Firmware trace wrappers of the GPIO In driver.
  *
- * @details See trace_wrap_i2c.c.
+ * @details See trace_i2c.c. With FLATTEN_ME_LEVEL_HIGH digital_in_read() is a macro
+ * (drv_digital_in.h), which calls the hook itself: only digital_in_init() is wrapped.
  */
 
-#include "drv_analog_in.h"
-#include "trace_hooks.h"
+#include "drv_digital_in.h"
+#include "../trace_hooks.h"
 
-err_t __real_analog_in_read( analog_in_t *obj, uint16_t *readDatabuf );
-err_t __real_analog_in_read_voltage( analog_in_t *obj, float *readDatabuf );
+err_t __real_digital_in_init( digital_in_t *in, pin_name_t name );
 
-err_t __wrap_analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
+err_t __wrap_digital_in_init( digital_in_t *in, pin_name_t name )
 {
-    // A value forced by fault injection is given without reading the input.
-    float forced;
-    err_t result;
-    if ( readDatabuf && trace_hook_fault_adc( obj, obj->config.input_pin, 0, &forced ) )
+    err_t result = __real_digital_in_init( in, name );
+    if ( DIGITAL_IN_SUCCESS == result )
     {
-        *readDatabuf = (uint16_t)forced;
-        result = ADC_SUCCESS;
-    } else {
-        result = __real_analog_in_read( obj, readDatabuf );
-    }
-    if ( ADC_SUCCESS == result )
-    {
-        trace_hook_adc( obj, obj->config.input_pin, 0, (float)*readDatabuf );
+        trace_hook_gpio_init( in, name, 0 );
     }
     return result;
 }
 
-err_t __wrap_analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
+#if (FLATTEN_ME_LEVEL < FLATTEN_ME_LEVEL_HIGH)
+uint8_t __real_digital_in_read( digital_in_t *in );
+
+uint8_t __wrap_digital_in_read( digital_in_t *in )
 {
-    err_t result;
-    if ( readDatabuf && trace_hook_fault_adc( obj, obj->config.input_pin, 1, readDatabuf ) )
-    {
-        result = ADC_SUCCESS;
-    } else {
-        result = __real_analog_in_read_voltage( obj, readDatabuf );
-    }
-    if ( ADC_SUCCESS == result )
-    {
-        trace_hook_adc( obj, obj->config.input_pin, 1, *readDatabuf );
-    }
-    return result;
+    uint8_t level = __real_digital_in_read( in );
+    // The hook gives the level back, or the level of a fault holding the pin.
+    return in->pin.base ? trace_hook_gpio_in( in, level ) : level;
 }
+#endif
 
 // ------------------------------------------------------------------------- END
