@@ -10,7 +10,7 @@
 
 # `v2.20.4`
 
-+ released: TBD
++ released: 2026-11-24
 
 ## Changes
 
