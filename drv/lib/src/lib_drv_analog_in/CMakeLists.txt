@@ -9,13 +9,11 @@ mikrosdk_add_library(lib_drv_adc MikroSDK.Driver.ADC
     drv_analog_in.c
 
     ../../include/drv_analog_in.h
-    ../../include/drv_trace.h
     ../../include/drv_name.h
 )
 
 target_link_libraries(lib_drv_adc  PUBLIC
     MikroC.Core
-    MikroSDK.Driver.Trace
     MikroSDK.Hal.ADC
 )
 target_compile_definitions(lib_drv_adc
@@ -33,4 +31,4 @@ target_include_directories(lib_drv_adc
 resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.ADC)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.ADC ../../include/drv_analog_in.h ../../include/drv_trace.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.ADC ../../include/drv_analog_in.h)

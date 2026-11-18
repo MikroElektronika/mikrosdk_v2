@@ -42,7 +42,6 @@
  */
 
 #include "drv_analog_in.h"
-#include "drv_trace.h"
 
 static analog_in_t *_owner = NULL;
 
@@ -203,7 +202,7 @@ err_t analog_in_set_vref_value( analog_in_t *obj, float vref_value )
     }
 }
 
-static err_t _analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
+err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -242,7 +241,7 @@ static err_t _analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
     }
 }
 
-static err_t _analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
+err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
 {
     if ( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -313,49 +312,6 @@ static err_t _analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
     } else {
         return ADC_ERROR;
     }
-}
-
-err_t analog_in_read( analog_in_t *obj, uint16_t *readDatabuf )
-{
-    #if DRV_TRACE_ENABLED
-    // A value forced by fault injection is given without reading the input.
-    float forced;
-    err_t result;
-    if ( readDatabuf && DRV_TRACE_FAULT( drv_trace_fault_adc( obj, obj->config.input_pin, 0, &forced ) ) )
-    {
-        *readDatabuf = (uint16_t)forced;
-        result = ADC_SUCCESS;
-    } else {
-        result = _analog_in_read( obj, readDatabuf );
-    }
-    if ( ADC_SUCCESS == result )
-    {
-        DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 0, (float)*readDatabuf ) );
-    }
-    return result;
-    #else
-    return _analog_in_read( obj, readDatabuf );
-    #endif
-}
-
-err_t analog_in_read_voltage( analog_in_t *obj, float *readDatabuf )
-{
-    #if DRV_TRACE_ENABLED
-    err_t result;
-    if ( readDatabuf && DRV_TRACE_FAULT( drv_trace_fault_adc( obj, obj->config.input_pin, 1, readDatabuf ) ) )
-    {
-        result = ADC_SUCCESS;
-    } else {
-        result = _analog_in_read_voltage( obj, readDatabuf );
-    }
-    if ( ADC_SUCCESS == result )
-    {
-        DRV_TRACE( drv_trace_adc( obj, obj->config.input_pin, 1, *readDatabuf ) );
-    }
-    return result;
-    #else
-    return _analog_in_read_voltage( obj, readDatabuf );
-    #endif
 }
 
 err_t analog_in_close( analog_in_t *obj )

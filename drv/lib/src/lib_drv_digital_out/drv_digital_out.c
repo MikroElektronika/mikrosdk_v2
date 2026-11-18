@@ -51,9 +51,6 @@ err_t digital_out_init( digital_out_t *out, pin_name_t name )
     }
 
     hal_gpio_configure_pin( &out->pin, name, (hal_gpio_direction_t)GPIO_DIGITAL_OUTPUT );
-    #if DRV_TRACE_ENABLED
-    DRV_TRACE( drv_trace_gpio_init( out, name, 1 ) );
-    #endif
     return DIGITAL_OUT_SUCCESS;
 }
 
@@ -62,9 +59,6 @@ err_t digital_out_high( digital_out_t *out )
 {
     if ( out->pin.base )
     {
-        #if DRV_TRACE_ENABLED
-        DRV_TRACE( drv_trace_gpio_out( out, 1 ) );
-        #endif
         hal_gpio_set_pin_output( &out->pin );
     } else {
         return DIGITAL_OUT_UNSUPPORTED_PIN;
@@ -77,9 +71,6 @@ err_t digital_out_low( digital_out_t *out )
 {
     if ( out->pin.base )
     {
-        #if DRV_TRACE_ENABLED
-        DRV_TRACE( drv_trace_gpio_out( out, 0 ) );
-        #endif
         hal_gpio_clear_pin_output( &out->pin );
     } else {
         return DIGITAL_OUT_UNSUPPORTED_PIN;
@@ -92,9 +83,6 @@ err_t digital_out_toggle( digital_out_t *out )
 {
     if ( out->pin.base )
     {
-        #if DRV_TRACE_ENABLED
-        DRV_TRACE( drv_trace_gpio_out( out, !hal_gpio_read_pin_output( &out->pin ) ) );
-        #endif
         hal_gpio_toggle_pin_output( &out->pin );
     } else {
         return DIGITAL_OUT_UNSUPPORTED_PIN;
@@ -107,9 +95,6 @@ err_t digital_out_write( digital_out_t *out, uint8_t value )
 {
     if ( out->pin.base )
     {
-        #if DRV_TRACE_ENABLED
-        DRV_TRACE( drv_trace_gpio_out( out, value ) );
-        #endif
         hal_gpio_write_pin_output( &out->pin, value );
     } else {
         return DIGITAL_OUT_UNSUPPORTED_PIN;

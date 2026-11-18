@@ -3,13 +3,11 @@ mikrosdk_add_library(lib_drv_one_wire MikroSDK.Driver.OneWire
     drv_one_wire.c
 
     ../../include/drv_one_wire.h
-    ../../include/drv_trace.h
     ../../include/drv_name.h
 )
 
 target_link_libraries(lib_drv_one_wire  PUBLIC
     MikroC.Core
-    MikroSDK.Driver.Trace
     MikroSDK.Hal.OneWire
 )
 
@@ -24,4 +22,4 @@ target_include_directories(lib_drv_one_wire
 resolve_compiler_definitions(REDUCE_LAYER)
 
 mikrosdk_install(MikroSDK.Driver.OneWire)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.OneWire ../../include/drv_one_wire.h ../../include/drv_trace.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/drv MikroSDK.Driver.OneWire ../../include/drv_one_wire.h)

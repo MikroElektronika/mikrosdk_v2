@@ -46,7 +46,7 @@
  */
 
 #include "trace.h"
-#include "drv_trace.h"
+#include "trace_hooks.h"
 #include "drv_i2c_master.h"
 #include "drv_spi_master.h"
 #include "drv_uart.h"
@@ -54,8 +54,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-#if !DRV_TRACE_ENABLED
-#error "The firmware trace needs a toolchain with weak symbols."
+// The drivers reach the trace through linker wrapping (--wrap, see CMakeLists.txt), which the
+// mikroC linker does not have.
+#if defined(__MIKROC_AI__)
+#error "The firmware trace needs a linker with --wrap: GCC, Clang or XC32."
 #endif
 
 // mikroC has neither attribute. It keeps what the code uses (the faults are read, the break is
@@ -74,7 +76,7 @@
 // bus rate at the end of LANE_DEF.
 #define TRACE_FORMAT_VERSION (5)
 #define TRACE_MAX_LANES (32)
-// The UART driver hands uart_println() text over in a buffer of this size (drv_uart.c).
+// The UART wrapper hands uart_println() text over in a buffer of this size (trace_wrap_uart.c).
 #define TRACE_MAX_DATA (16)
 #define TRACE_MAX_NAME (16)
 #define TRACE_MAX_RECORD (52)
@@ -192,9 +194,6 @@ typedef struct
 } trace_record_t;
 
 // ------------------------------------------------------------------ VARIABLES
-
-// Tells the drivers that their hooks are here (drv_trace.h).
-DRV_TRACE_PRESENT_TYPE drv_trace_present = 1;
 
 // Read by the debugger, see the file comment.
 // Weak: an application with TRACE_BUFFER( size ) replaces both. The size is read at run time
@@ -856,16 +855,12 @@ void trace_value( const char *name, float value )
     trace_port_unlock( irq_state );
 }
 
-// ---------------------------------------------------- DRIVER HOOK DEFINITIONS
+// ---------------------------------------------------------- HOOK DEFINITIONS
 
-// The hooks declared in drv_trace.h, which the drivers call. They keep their drv_trace_ names
-// on purpose: MikroSDK.Driver.Trace (drv_trace.c) defines them as weak, empty stubs, and these
-// strong definitions replace the stubs by name when MikroSDK.Trace is linked. Under any other
-// name the drivers would keep calling the empty stubs. They live here and not in drv_trace.c
-// because they write to the trace buffer and lanes, which a project without the trace library
-// must not link.
+// The hooks declared in trace_hooks.h, called by the driver wrappers (trace_wrap_*.c) and by
+// the flattened GPIO macros.
 
-uint32_t drv_trace_now( void )
+uint32_t trace_hook_now( void )
 {
     return trace_ensure_started() ? trace_ticks() : 0;
 }
@@ -897,7 +892,7 @@ static uint32_t trace_i2c_rate( uint32_t speed )
     }
 }
 
-void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
+void trace_hook_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
     if ( !trace_ensure_started() )
@@ -936,7 +931,7 @@ void drv_trace_i2c( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     trace_port_unlock( irq_state );
 }
 
-void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
+void trace_hook_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_t write_len,
                     const uint8_t *read_buf, size_t read_len, err_t result, uint32_t start )
 {
     if ( !trace_ensure_started() )
@@ -982,7 +977,7 @@ void drv_trace_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size_
     trace_port_unlock( irq_state );
 }
 
-void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
+void trace_hook_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t len, uint32_t start )
 {
     if ( !trace_ensure_started() )
     {
@@ -1022,7 +1017,7 @@ void drv_trace_uart( const void *obj, uint8_t is_tx, const uint8_t *buf, size_t 
     trace_port_unlock( irq_state );
 }
 
-void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
+void trace_hook_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
 {
     // Kept before trace_init too: drivers are often initialized first.
     uint32_t irq_state = trace_port_lock();
@@ -1047,7 +1042,7 @@ void drv_trace_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
     trace_port_unlock( irq_state );
 }
 
-void drv_trace_gpio_out( const void *obj, uint8_t level )
+void trace_hook_gpio_out( const void *obj, uint8_t level )
 {
     if ( trace_ensure_started() )
     {
@@ -1055,7 +1050,7 @@ void drv_trace_gpio_out( const void *obj, uint8_t level )
     }
 }
 
-uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
+uint8_t trace_hook_gpio_in( const void *obj, uint8_t level )
 {
     if ( !trace_ensure_started() )
     {
@@ -1081,7 +1076,7 @@ uint8_t drv_trace_gpio_in( const void *obj, uint8_t level )
     return level;
 }
 
-void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
+void trace_hook_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
 {
     if ( ( HAL_PIN_NC == chip_select ) || !trace_ensure_started() )
     {
@@ -1128,7 +1123,7 @@ void drv_trace_spi_cs( pin_name_t chip_select, uint8_t selected, uint8_t level )
     }
 }
 
-void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
+void trace_hook_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float value )
 {
     if ( !trace_ensure_started() )
     {
@@ -1154,7 +1149,7 @@ void drv_trace_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float v
     trace_port_unlock( irq_state );
 }
 
-void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
+void trace_hook_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint8_t *buf, size_t len,
                          err_t result, uint32_t start )
 {
     if ( !trace_ensure_started() )
@@ -1173,8 +1168,8 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     }
 
     // Data read by a failed operation is not valid; data written is kept.
-    bool is_read = ( DRV_TRACE_ONE_WIRE_READ_ROM == op ) || ( DRV_TRACE_ONE_WIRE_SEARCH_FIRST == op ) ||
-                   ( DRV_TRACE_ONE_WIRE_SEARCH_NEXT == op ) || ( DRV_TRACE_ONE_WIRE_READ == op );
+    bool is_read = ( TRACE_ONE_WIRE_READ_ROM == op ) || ( TRACE_ONE_WIRE_SEARCH_FIRST == op ) ||
+                   ( TRACE_ONE_WIRE_SEARCH_NEXT == op ) || ( TRACE_ONE_WIRE_READ == op );
     // Transfers too fast to record each (a display filled pixel by pixel) are counted.
     if ( lane && trace_bus_burst( id, lane, start, start + duration, is_read ? 0 : len, is_read ? len : 0, result ) )
     {
@@ -1197,7 +1192,7 @@ void drv_trace_one_wire( const void *obj, pin_name_t pin, uint8_t op, const uint
     trace_port_unlock( irq_state );
 }
 
-uint8_t drv_trace_fault_i2c( const void *obj )
+uint8_t trace_hook_fault_i2c( const void *obj )
 {
     const i2c_master_t *i2c = (const i2c_master_t *)obj;
     if ( !trace_fault( TRACE_FAULT_I2C_NO_ANSWER, i2c->config.scl, i2c->config.addr ) )
@@ -1208,7 +1203,7 @@ uint8_t drv_trace_fault_i2c( const void *obj )
     return 1;
 }
 
-void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
+void trace_hook_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
 {
     // MISO is shared by the devices of the bus: the fault holds the bus, by its clock pin.
     const spi_master_t *spi = (const spi_master_t *)obj;
@@ -1220,7 +1215,7 @@ void drv_trace_fault_spi( const void *obj, uint8_t *read_buf, size_t read_len )
     }
 }
 
-uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value )
+uint8_t trace_hook_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage, float *value )
 {
     const volatile trace_fault_t *fault =
         trace_fault( is_voltage ? TRACE_FAULT_ADC_VOLTAGE : TRACE_FAULT_ADC, pin, 0 );
@@ -1239,7 +1234,7 @@ uint8_t drv_trace_fault_adc( const void *obj, pin_name_t pin, uint8_t is_voltage
     return 1;
 }
 
-uint8_t drv_trace_fault_one_wire( const void *obj, pin_name_t pin )
+uint8_t trace_hook_fault_one_wire( const void *obj, pin_name_t pin )
 {
     if ( !trace_fault( TRACE_FAULT_ONE_WIRE_NO_DEVICE, pin, 0 ) )
     {

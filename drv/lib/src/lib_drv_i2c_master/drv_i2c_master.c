@@ -42,7 +42,6 @@
  */
 
 #include "drv_i2c_master.h"
-#include "drv_trace.h"
 
 static i2c_master_t *_owner = NULL;
 
@@ -198,7 +197,7 @@ err_t i2c_master_set_slave_address( i2c_master_t *obj, uint8_t address )
     }
 }
 
-static err_t _i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
+err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
 {
     if(_acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -249,7 +248,7 @@ static err_t _i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size
     }
 }
 
-static err_t _i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
+err_t i2c_master_read(i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -300,8 +299,8 @@ static err_t _i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t
     }
 }
 
-static err_t _i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
-                                                             uint8_t *read_data_buf, size_t len_read_data )
+err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
+                                                     uint8_t *read_data_buf, size_t len_read_data )
 {
     if( _acquire( obj, false ) != ACQUIRE_FAIL )
     {
@@ -352,50 +351,6 @@ static err_t _i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data
     } else {
         return I2C_MASTER_ERROR;
     }
-}
-
-err_t i2c_master_write( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data )
-{
-    #if DRV_TRACE_ENABLED
-    uint32_t trace_start = DRV_TRACE_NOW();
-    // A device made not to answer (fault injection) fails the transfer before it starts.
-    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
-                   _i2c_master_write( obj, write_data_buf, len_write_data );
-    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE, write_data_buf, len_write_data, NULL, 0, result, trace_start ) );
-    return result;
-    #else
-    return _i2c_master_write( obj, write_data_buf, len_write_data );
-    #endif
-}
-
-err_t i2c_master_read( i2c_master_t *obj, uint8_t *read_data_buf, size_t len_read_data )
-{
-    #if DRV_TRACE_ENABLED
-    uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
-                   _i2c_master_read( obj, read_data_buf, len_read_data );
-    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_READ, NULL, 0, read_data_buf, len_read_data, result, trace_start ) );
-    return result;
-    #else
-    return _i2c_master_read( obj, read_data_buf, len_read_data );
-    #endif
-}
-
-err_t i2c_master_write_then_read( i2c_master_t *obj, uint8_t *write_data_buf, size_t len_write_data,
-                                                     uint8_t *read_data_buf, size_t len_read_data )
-{
-    #if DRV_TRACE_ENABLED
-    uint32_t trace_start = DRV_TRACE_NOW();
-    err_t result = DRV_TRACE_FAULT( drv_trace_fault_i2c( obj ) ) ? I2C_MASTER_ERROR :
-                   _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
-                                                read_data_buf, len_read_data );
-    DRV_TRACE( drv_trace_i2c( obj, DRV_TRACE_OP_WRITE_THEN_READ, write_data_buf, len_write_data,
-                              read_data_buf, len_read_data, result, trace_start ) );
-    return result;
-    #else
-    return _i2c_master_write_then_read( obj, write_data_buf, len_write_data,
-                                        read_data_buf, len_read_data );
-    #endif
 }
 
 err_t i2c_master_close( i2c_master_t *obj )

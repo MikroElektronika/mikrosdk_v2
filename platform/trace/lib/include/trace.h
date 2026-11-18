@@ -40,9 +40,10 @@
  * @file  trace.h
  * @brief Firmware trace: driver activity recorded for the NECTO Studio timeline.
  *
- * @details Linking this library replaces the empty trace hooks of the drivers (drv_trace.h).
- * I2C, SPI, UART and 1-Wire transfers, ADC reads and GPIO pin changes are then written as
- * binary records to a RAM buffer.
+ * @details Linking this library wraps the driver calls (linker --wrap): I2C, SPI, UART and 1-Wire
+ * transfers, ADC reads and GPIO pin changes are then written as binary records to a RAM buffer.
+ * The drivers themselves are not changed, and a project without this library builds them as
+ * if the trace did not exist.
  * When the buffer is full, the firmware stops in #traceBuffFullBreak; the debugger reads the
  * buffer, empties it and lets the firmware continue. Without a debugger the records are
  * dropped and counted.

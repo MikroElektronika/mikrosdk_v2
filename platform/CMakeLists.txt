@@ -5,14 +5,17 @@ if (NOT ${IS_BARE_METAL})
     add_subdirectory(ring)
     add_subdirectory(mikrosdk_version)
     add_subdirectory(mikrobus)
-    # Firmware trace: needs weak symbols and a port in platform/trace/lib/src/trace_port.h:
-    # Cortex-M, RISC-V and PIC32 with GCC, Clang and XC32; Cortex-M and PIC32 with mikroC.
-    # Clang for Arm is "clang-llvm", for RISC-V "clang-llvm-riscv" (caught by CORE_NAME).
-    if (((NOT ${TOOLCHAIN_LANGUAGE} MATCHES "MikroC") AND
-         ((${TOOLCHAIN_ID} MATCHES "arm") OR (${TOOLCHAIN_ID} STREQUAL "clang-llvm") OR
-          (${CORE_NAME} MATCHES "RISCV") OR (${TOOLCHAIN_ID} STREQUAL "mchp_xc32"))) OR
-        (${TOOLCHAIN_ID} STREQUAL "mikrocarm") OR (${TOOLCHAIN_ID} STREQUAL "mikrocpic32"))
-        add_subdirectory(trace)
+    # Following implementation is NECTO Studio specific, so it is not added if
+    # the SDK is not used in NECTO Studio.
+    if (${IS_NECTO})
+        # Firmware trace: needs a linker with --wrap and a port in platform/trace/lib/src/trace_port.h:
+        # Cortex-M, RISC-V and PIC32 with GCC, Clang and XC32. Not mikroC: its linker cannot wrap.
+        # Clang for Arm is "clang-llvm", for RISC-V "clang-llvm-riscv" (caught by CORE_NAME).
+        if ((NOT ${TOOLCHAIN_LANGUAGE} MATCHES "MikroC") AND
+            ((${TOOLCHAIN_ID} MATCHES "arm") OR (${TOOLCHAIN_ID} STREQUAL "clang-llvm") OR
+            (${CORE_NAME} MATCHES "RISCV") OR (${TOOLCHAIN_ID} STREQUAL "mchp_xc32")))
+            add_subdirectory(trace)
+        endif()
     endif()
     add_subdirectory(simulation)
     add_subdirectory(sprint)

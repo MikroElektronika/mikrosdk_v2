@@ -366,10 +366,9 @@ static inline bool trace_port_counter_start( void )
 // ======================================================================== PIC 8-bit (XC8)
 #elif defined(__XC8) || defined(__XC8__)
 
-// Not ported yet, and not reachable: drv_trace.h compiles no hooks for XC8, so trace.c stops
-// at its DRV_TRACE_ENABLED check before this file. A port needs more than this header:
-// - The hooks: the drivers rely on weak symbols to switch the trace on at link time. XC8
-//   needs a compile-time switch (MIKROSDK_TRACE) around every hook call instead.
+// Not ported yet, and not reachable: platform/CMakeLists.txt does not build the trace for XC8.
+// A port needs more than this header:
+// - The wrappers: the drivers are traced through linker --wrap, which the XC8 linker lacks.
 // - The XC8 compiled stack: a function called from both main and an interrupt is duplicated
 //   or rejected, and the UART callbacks call the hooks from interrupts.
 // - Lock: save INTCON.GIE (and GIEH/GIEL with priorities), clear it, restore it.

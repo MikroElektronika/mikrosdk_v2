@@ -51,9 +51,6 @@ err_t digital_in_init( digital_in_t *in, pin_name_t name )
     }
 
     hal_gpio_configure_pin( &in->pin, name, (hal_gpio_direction_t)GPIO_DIGITAL_INPUT );
-    #if DRV_TRACE_ENABLED
-    DRV_TRACE( drv_trace_gpio_init( in, name, 0 ) );
-    #endif
     return DIGITAL_IN_SUCCESS;
 }
 
@@ -62,13 +59,7 @@ uint8_t digital_in_read( digital_in_t *in )
 {
     if ( in->pin.base )
     {
-        #if DRV_TRACE_ENABLED
-        // The hook gives the level back, or the level of a fault holding the pin.
-        uint8_t level = hal_gpio_read_pin_input( &in->pin );
-        return drv_trace_present ? drv_trace_gpio_in( in, level ) : level;
-        #else
         return hal_gpio_read_pin_input( &in->pin );
-        #endif
     } else {
         return 0;
     }
