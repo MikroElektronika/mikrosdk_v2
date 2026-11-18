@@ -5,6 +5,14 @@ if (NOT DEFINED IS_BARE_METAL)
     set(IS_BARE_METAL FALSE)
 endif()
 
+## NECTO Studio always sets NECTO_APPLICATION_DIR. NECTO Studio specific
+## libraries (firmware trace) are built only then.
+if (NECTO_APPLICATION_DIR)
+    set(IS_NECTO TRUE)
+else()
+    set(IS_NECTO FALSE)
+endif()
+
 if (NOT DEFINED MIKROSDK_CURRENT_VERSION)
     set(MIKROSDK_CURRENT_VERSION 2.0.0)
 endif()
