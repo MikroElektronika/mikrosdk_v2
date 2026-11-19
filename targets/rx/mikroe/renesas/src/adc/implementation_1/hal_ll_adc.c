@@ -70,7 +70,11 @@
 // ADCER bits
 #define HAL_LL_ADC_ADCER_ADRFMT_POS    ( 15 )  /* 0 = right-justified */
 
-#define HAL_LL_ADC_MODULE_STOP_WAIT_US ( 1 )   /* wait after module-stop release, per manual */
+#define HAL_LL_ADC_MODULE_STOP_WAIT_US ( 1 )   /* wait after module-stop release */
+
+// Channel select / data register layout
+#define HAL_LL_ADC_ANSA0_CHANNEL_COUNT  ( 16 )  /* ADANSA0 covers channels 0-15, ADANSA1 the rest */
+#define HAL_LL_ADC_DATA_REGISTER_COUNT  ( 32 )  /* ADDRn is at unit base + 0x20 + 2*n */
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -80,12 +84,13 @@ static hal_ll_adc_handle_register_t hal_ll_module_state[ ADC_MODULE_COUNT ] = { 
 typedef struct {
     volatile uint16_t adcsr;
     volatile uint8_t  _unused0[2];
-    volatile uint16_t adansa0;
-    volatile uint8_t  _unused1[8];
+    volatile uint16_t adansa0;           /* channels 0-15 */
+    volatile uint16_t adansa1;           /* channels 16 and up */
+    volatile uint8_t  _unused1[6];
     volatile uint16_t adcer;
     volatile uint16_t adstrgr;
     volatile uint8_t  _unused2[14];
-    volatile uint16_t addr[7];
+    volatile uint16_t addr[HAL_LL_ADC_DATA_REGISTER_COUNT];
 
     // Note: register ADSSTR is not used in this implementation, so the following part
     // of the struct is commented out to save space. Uncomment if needed in the future.
@@ -344,17 +349,26 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
         return HAL_LL_MODULE_ERROR;
     }
 
-    if ( 0xFF == hal_ll_adc_hw_specifics_map_local->channel ) {
+    uint8_t channel = hal_ll_adc_hw_specifics_map_local->channel;
+
+    if ( ( 0xFF == channel ) || ( HAL_LL_ADC_DATA_REGISTER_COUNT <= channel ) ) {
         return HAL_LL_ADC_WRONG_CHANNEL;
     }
 
-    write_reg( &base->adansa0, ( 1U << hal_ll_adc_hw_specifics_map_local->channel ) );
+    // Select only the requested channel; the other select register must be cleared.
+    if ( HAL_LL_ADC_ANSA0_CHANNEL_COUNT > channel ) {
+        write_reg( &base->adansa0, ( uint16_t )( 1U << channel ) );
+        clear_reg( &base->adansa1 );
+    } else {
+        clear_reg( &base->adansa0 );
+        write_reg( &base->adansa1, ( uint16_t )( 1U << ( channel - HAL_LL_ADC_ANSA0_CHANNEL_COUNT ) ) );
+    }
     write_reg( &base->adcsr, HAL_LL_ADC_ADCSR_ADCS_SINGLE );
     set_reg_bit( &base->adcsr, HAL_LL_ADC_ADCSR_ADST_POS );
 
     while ( check_reg_bit( &base->adcsr, HAL_LL_ADC_ADCSR_ADST_POS ) );
 
-    *readDatabuf = read_reg( &base->addr[ hal_ll_adc_hw_specifics_map_local->channel ] );
+    *readDatabuf = read_reg( &base->addr[ channel ] );
 
     return HAL_LL_ADC_SUCCESS;
 }
@@ -490,6 +504,7 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     clear_reg_bit( &base->adcer, HAL_LL_ADC_ADCER_ADRFMT_POS );
     clear_reg( &base->adstrgr );
     clear_reg( &base->adansa0 );
+    clear_reg( &base->adansa1 );
 }
 
 static void hal_ll_adc_init( hal_ll_adc_hw_specifics_map_t *map ) {

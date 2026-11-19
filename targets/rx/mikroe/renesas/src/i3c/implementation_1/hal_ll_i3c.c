@@ -50,7 +50,7 @@
 // ------------------------------------------------------------- PRIVATE MACROS
 #define I3C_REG(base, offset)  (*(volatile uint32_t *)((base) + (offset)))
 
-/*!< @brief RI3C register offsets (RX26T Group manual sec. 35.2, RI3C0 base 000E C000h). */
+/*!< @brief RI3C register offsets (RI3C0 base 000E C000h). */
 #define HAL_LL_I3C_ICMR_REG_OFFSET       (0x000UL)
 #define HAL_LL_I3C_ICCR_REG_OFFSET       (0x014UL)
 #define HAL_LL_I3C_ICCAR_REG_OFFSET      (0x018UL)
@@ -98,7 +98,7 @@
 #define HAL_LL_I3C_ICBFTR_MAX         (0x1FEUL)
 #define HAL_LL_I3C_ICBITR_MASK        (0x3FFFFUL)
 
-/*!< @brief Command Descriptor fields (manual sec. 35.3.1). */
+/*!< @brief Command Descriptor fields. */
 #define HAL_LL_I3C_CMD_ATTR_REGULAR   (0UL)
 #define HAL_LL_I3C_CMD_ATTR_IMMEDIATE (1UL)
 #define HAL_LL_I3C_CMD_TID            (3)
@@ -112,7 +112,7 @@
 #define HAL_LL_I3C_CMD_MODE_I2C_FMP   (1UL) /* ICEBR register setting */
 #define HAL_LL_I3C_CMD_IMMEDIATE_MAX  (4)
 
-/*!< @brief Response Descriptor fields (manual sec. 35.3.2). */
+/*!< @brief Response Descriptor fields. */
 #define HAL_LL_I3C_RESP_TID           (24)
 #define HAL_LL_I3C_RESP_TID_MASK      (0xFUL)
 #define HAL_LL_I3C_RESP_ERR_MASK      (0xF0000000UL)
@@ -121,7 +121,7 @@
 #define HAL_LL_I3C_TID_WRITE          (1UL)
 #define HAL_LL_I3C_TID_READ           (2UL)
 
-/*!< @brief Transmit data buffer is 2 stages of 4 bytes (manual table 35.5). */
+/*!< @brief Transmit data buffer is 2 stages of 4 bytes. */
 #define HAL_LL_I3C_TX_BUFFER_SIZE     (8)
 
 /*!< @brief Dynamic address RI3C self-assigns as the Active Controller. */
@@ -134,9 +134,7 @@
 #define HAL_LL_I3C_MASTER_SPEED_100K    (100000UL)
 #define HAL_LL_I3C_MASTER_SPEED_400K    (400000UL)
 
-/* I2C spec minimums (ns) per mode from the official I2C specification and user manual
- * https://www.nxp.com/docs/en/user-guide/UM10204.pdf
- */
+/* I2C bus timing minimums (ns) per speed mode. */
 typedef struct {
     uint32_t th;
     uint32_t tl;

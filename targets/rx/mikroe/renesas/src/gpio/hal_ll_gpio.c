@@ -195,7 +195,8 @@ void hal_ll_gpio_write_port_output(hal_ll_gpio_port_t *port, hal_ll_port_size_t 
         return;
     }
 
-    hal_ll_gpio_reg->podr = ( uint8_t )( port->mask & value );
+    // Update only the masked pins; the rest of the port keeps its current output state.
+    hal_ll_gpio_reg->podr = ( uint8_t )( ( hal_ll_gpio_reg->podr & ~port->mask ) | ( port->mask & value ) );
 }
 #endif
 

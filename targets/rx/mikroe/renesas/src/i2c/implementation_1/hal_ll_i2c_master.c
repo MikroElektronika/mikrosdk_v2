@@ -67,9 +67,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define hal_ll_i2c_get_real_bitrate(bus_speed, brhl, constant) ((float)bus_speed / (float)(brhl + 2 * constant))
 #define hal_ll_i2c_get_bitrate_error(real_bitrate, bitrate) (((float)real_bitrate - (float)bitrate)/(float)bitrate)
 
-// TODO: confirm GPIO_CFG_PORT_PULL_UP_ENABLE / GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE / GPIO_CFG_PERIPHERAL_PIN
-// exist in this project's hal_ll_gpio.h and map to real ODR0/ODR1 + PMR/PFS writes -- RIIC needs open-drain
-// SCL0/SDA0 pins routed to the peripheral, this is not the RL78-style "no such bit" case the old stub assumed.
+/*!< @brief RIIC pins: open-drain outputs with internal pull-up. */
 #define HAL_LL_I2C_AF_CONFIG (GPIO_CFG_PORT_PULL_UP_ENABLE |\
                               GPIO_CFG_DIGITAL_OUTPUT |\
                               GPIO_CFG_NMOS_OPEN_DRAIN_ENABLE)
@@ -128,7 +126,7 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 
 #define HAL_LL_I2C_DEFAULT_PASS_COUNT   (10000)
 
-/*!< @brief I2C register structure (RIIC0, RX26T Group manual sec. 34.2, base 0x0008 8300h) */
+/*!< @brief I2C register structure (RIIC0, base 0x0008 8300h) */
 typedef struct {
     uint8_t iccr1;  /*!< ICCR1  0x00 */
     uint8_t iccr2;  /*!< ICCR2  0x01 */
@@ -684,6 +682,32 @@ void hal_ll_i2c_master_close( handle_t *handle ) {
     }
 }
 // ----------------------------------------------- PRIVATE FUNCTION DEFINITIONS
+/**
+ * @brief  Ends a transfer the slave did not acknowledge.
+ * @details Issues a STOP condition, waits for it and returns the IIC to its default state.
+ * @param[in] map - Object specific context handler.
+ * @return HAL_LL_I2C_MASTER_ERROR, or HAL_LL_I2C_MASTER_TIMEOUT_STOP if the STOP was not detected.
+ */
+static hal_ll_err_t hal_ll_i2c_master_nack_stop( hal_ll_i2c_hw_specifics_map_t *map ) {
+    volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
+    uint16_t time_counter = map->timeout;
+
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+    set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+
+    while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP )) {
+        if( map->timeout ) {
+            if( !time_counter-- )
+                return HAL_LL_I2C_MASTER_TIMEOUT_STOP;
+        }
+    }
+
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
+    clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
+
+    return HAL_LL_I2C_MASTER_ERROR;
+}
+
 static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_map_t *map,
                                                         uint8_t *write_data_buf,
                                                         size_t len_write_data,
@@ -719,13 +743,17 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
         }
     }
 
-    // If no ACK was received - end reception by issuing STOP condition.
+    // If the slave did not acknowledge its address - issue STOP and report the error.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
-        set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
+        return hal_ll_i2c_master_nack_stop( map );
 
     // Transmit data.
     time_counter = map->timeout;
-    for( uint8_t i = 0; i < len_write_data; i++ ) {
+    for( size_t i = 0; i < len_write_data; i++ ) {
+        // Stop sending as soon as the slave rejects a byte.
+        if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
+            return hal_ll_i2c_master_nack_stop( map );
+
         // Wait while the transmit buffer is empty.
         while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_TDRE )) {
             if( map->timeout ) {
@@ -755,6 +783,10 @@ static hal_ll_err_t hal_ll_i2c_master_write_bare_metal( hal_ll_i2c_hw_specifics_
                 return HAL_LL_I2C_MASTER_TIMEOUT_WRITE;
         }
     }
+
+    // The slave did not acknowledge the last byte - issue STOP and report the error.
+    if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF ))
+        return hal_ll_i2c_master_nack_stop( map );
 
     // If there is no need in RESTART condition - issue a STOP condition.
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
@@ -789,6 +821,12 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
     volatile hal_ll_i2c_base_handle_t *hal_ll_hw_reg = hal_ll_i2c_get_base_struct( map->base );
     uint16_t time_counter = map->timeout;
     uint8_t dummy_read;
+    bool slave_nack = false;
+
+    // Nothing to read; the last-byte handling below needs at least one byte.
+    if ( 0 == len_read_data ) {
+        return HAL_LL_I2C_MASTER_ERROR;
+    }
 
     if ( HAL_LL_I2C_MASTER_WRITE_THEN_READ != mode ) {
         // Read the BBSY flag in ICCR2 to check that the bus is free.
@@ -854,7 +892,8 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
 
     // If no ACK was received - end reception by issuing STOP condition.
     if( check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF )) {
-        // Error
+        // Error - reported once the STOP condition has been issued.
+        slave_nack = true;
         clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
         set_reg_bit( &hal_ll_hw_reg->iccr2, HAL_LL_I2C_ICCR2_SP );
         // Empty receive buffer.
@@ -868,7 +907,7 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         if( 1 != len_read_data ) {
 
             // Receive all bytes till the second-to-last.
-            for( uint8_t i = 0; i < len_read_data - 2; i++ ) {
+            for( size_t i = 0; i < len_read_data - 2; i++ ) {
                 // Wait while the first byte is not received.
                 time_counter = map->timeout;
                 while( !check_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_RDRF )) {
@@ -934,12 +973,15 @@ static hal_ll_err_t hal_ll_i2c_master_read_bare_metal( hal_ll_i2c_hw_specifics_m
         }
     }
 
-    // Return IIC to the default state.
+    // Return IIC to the default state; ACKBT goes back to ACK so the next read acknowledges its bytes.
     clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_WAIT );
+    set_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
+    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKBT );
+    clear_reg_bit( &hal_ll_hw_reg->icmr3, HAL_LL_I2C_ICMR3_ACKWP );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_NACKF );
     clear_reg_bit( &hal_ll_hw_reg->icsr2, HAL_LL_I2C_ICSR2_STOP );
 
-    return HAL_LL_I2C_MASTER_SUCCESS;
+    return slave_nack ? HAL_LL_I2C_MASTER_ERROR : HAL_LL_I2C_MASTER_SUCCESS;
 }
 
 static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_specifics_map_t *map,
@@ -1183,41 +1225,7 @@ static void hal_ll_i2c_master_module_enable( hal_ll_i2c_hw_specifics_map_t *map,
     volatile uint16_t *prcr = ( uint16_t * )HAL_LL_MSTPCR_PRCR_ADDR;
     write_reg( prcr, HAL_LL_MSTPCR_PRCR_UNLOCK_VAL );
 
-    #ifdef SCI_MODULE_1
-    if ( hal_ll_i2c_module_num( SCI_MODULE_1 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB30_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_5
-    if ( hal_ll_i2c_module_num( SCI_MODULE_5 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB26_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_6
-    if ( hal_ll_i2c_module_num( SCI_MODULE_6 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB25_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_8
-    if ( hal_ll_i2c_module_num( SCI_MODULE_8 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC27_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_9
-    if ( hal_ll_i2c_module_num( SCI_MODULE_9 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC26_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_11
-    if ( hal_ll_i2c_module_num( SCI_MODULE_11 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS ) : set_reg_bit( _MSTPCRC, MSTPCRC_MSTPC24_POS );
-    }
-    #endif
-    #ifdef SCI_MODULE_12
-    if ( hal_ll_i2c_module_num( SCI_MODULE_12 ) == map->module_index ) {
-        hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB4_POS );
-    }
-    #endif
+    // Only the RIIC module is handled here; SCI and I3C use their own module-enable functions.
     #ifdef I2C_MODULE_0
     if ( hal_ll_i2c_module_num( I2C_MODULE_0 ) == map->module_index ) {
         hal_ll_state ? clear_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS ) : set_reg_bit( _MSTPCRB, MSTPCRB_MSTPB21_POS );
