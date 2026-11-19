@@ -42,7 +42,7 @@ jobs:
             core_packages
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.release_branch }}  # Dynamically using the branch input
           token: ${{ steps.app-token.outputs.token }}
