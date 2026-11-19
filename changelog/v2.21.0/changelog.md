@@ -17,6 +17,9 @@
 - [`v2.21.0`](#v2210)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [Improvements](#improvements)
+      - [mikroSDK](#mikrosdk)
+    - [Fixes](#fixes)
     - [NEW HARDWARE](#new-hardware)
 
 ### <font color=red>RENESAS</font>
@@ -81,6 +84,21 @@ The RX26T is a 32-bit MCU family built around the RXv3 core, aimed at motor cont
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### Improvements
+
+#### mikroSDK
+
++ **Faster SPI Master chip select**
+  + `spi_master_select_device()` and `spi_master_deselect_device()` (and `hal_spi_master_select_device()` / `hal_spi_master_deselect_device()`) no longer reconfigure the chip select pin on every call.
+  + The pin is configured as a digital output the first time it is used and kept; it is reconfigured only when a different chip select pin is passed in. Selecting or deselecting a device is now a single pin write.
+  + The API is unchanged; Click libraries and applications need no changes.
+
+### Fixes
+
++ Fixed SPI Master chip select handling of `HAL_PIN_NC`
+  + A not connected chip select pin is now ignored before any GPIO is touched; before, the pin was configured first, which on STM32 read past the end of the GPIO port table and wrote to an invalid address
+  + The HAL now checks against `HAL_PIN_NC` instead of a hard-coded `0xFFFF`, which never matched on targets with 32-bit pin names (PIC32, AVR)
 
 ### NEW HARDWARE
 
