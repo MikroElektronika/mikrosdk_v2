@@ -303,6 +303,87 @@ hal_ll_err_t hal_ll_dma_transfer_abort( hal_ll_dma_t *obj );
  */
 hal_ll_err_t hal_ll_dma_deinit( hal_ll_dma_t *dma_obj );
 
+#if defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx)
+/**
+ * @brief Interrupts, status and FIFO control are implemented for this target.
+ * @details The HAL and driver layers forward their interrupt/status/FIFO APIs
+ *          to the functions below only when this is defined; on other targets
+ *          those APIs return an error.
+ */
+#define HAL_LL_DMA_EXT_SUPPORTED
+
+/**
+ * @details Stream event flags, used both as interrupt enable mask
+ *          (#hal_ll_dma_set_interrupts) and as status (#hal_ll_dma_get_status).
+ */
+#define HAL_LL_DMA_EVENT_TRANSFER_COMPLETE (0x01U) /*!< Transfer complete. */
+#define HAL_LL_DMA_EVENT_HALF_TRANSFER     (0x02U) /*!< Half of the transfer done. */
+#define HAL_LL_DMA_EVENT_TRANSFER_ERROR    (0x04U) /*!< Bus error during the transfer. */
+#define HAL_LL_DMA_EVENT_DIRECT_MODE_ERROR (0x08U) /*!< Direct mode: a peripheral request arrived
+                                                        before the previous one was served. */
+#define HAL_LL_DMA_EVENT_FIFO_ERROR        (0x10U) /*!< FIFO under/overrun. */
+
+/**
+ * @brief Stream interrupt callback.
+ * @param[in] context Context passed to #hal_ll_dma_register_irq_handler.
+ * @param[in] events Events that caused the interrupt (HAL_LL_DMA_EVENT_*),
+ *                   already cleared in hardware.
+ */
+typedef void ( *hal_ll_dma_isr_t )( void *context, uint8_t events );
+
+/**
+ * @brief Enables stream interrupts.
+ * @details Enables the given events (HAL_LL_DMA_EVENT_*) for the stream and
+ *          its NVIC line; 0 disables them. The setting persists across
+ *          reconfiguration (transfer config, mode, direction, priority), which
+ *          otherwise clears the stream's interrupt enables.
+ * @param[in] obj DMA HAL LL object.
+ * @param[in] events Event mask.
+ * @return HAL_LL_DMA_SUCCESS or HAL_LL_DMA_ERROR.
+ */
+hal_ll_err_t hal_ll_dma_set_interrupts( hal_ll_dma_t *obj, uint8_t events );
+
+/**
+ * @brief Registers the stream interrupt callback.
+ * @details The SDK then provides the stream's interrupt handler
+ *          (DMAx_StreamY_IRQHandler); the application must not define it.
+ *          The handler clears the reported flags and calls @p handler.
+ * @param[in] obj DMA HAL LL object.
+ * @param[in] handler Callback, or NULL to unregister.
+ * @param[in] context Passed back to the callback.
+ * @return HAL_LL_DMA_SUCCESS or HAL_LL_DMA_ERROR.
+ */
+hal_ll_err_t hal_ll_dma_register_irq_handler( hal_ll_dma_t *obj, hal_ll_dma_isr_t handler, void *context );
+
+/**
+ * @brief Returns the stream's pending event flags (HAL_LL_DMA_EVENT_*).
+ * @param[in] obj DMA HAL LL object.
+ * @return Event mask.
+ */
+uint8_t hal_ll_dma_get_status( hal_ll_dma_t *obj );
+
+/**
+ * @brief Clears the given event flags (HAL_LL_DMA_EVENT_*) of the stream.
+ * @details A stream cannot be enabled while any of its flags is pending.
+ * @param[in] obj DMA HAL LL object.
+ * @param[in] events Event mask.
+ * @return HAL_LL_DMA_SUCCESS or HAL_LL_DMA_ERROR.
+ */
+hal_ll_err_t hal_ll_dma_clear_status( hal_ll_dma_t *obj, uint8_t events );
+
+/**
+ * @brief Selects FIFO or direct mode.
+ * @details By default memory-to-peripheral and peripheral-to-memory streams in
+ *          normal mode use the FIFO. Direct mode (@p enable false) moves exactly
+ *          one item per peripheral request, which timer-paced transfers need.
+ *          The setting persists across reconfiguration.
+ * @param[in] obj DMA HAL LL object.
+ * @param[in] enable true for FIFO mode, false for direct mode.
+ * @return HAL_LL_DMA_SUCCESS or HAL_LL_DMA_ERROR.
+ */
+hal_ll_err_t hal_ll_dma_set_fifo( hal_ll_dma_t *obj, bool enable );
+#endif
+
 #ifdef __cplusplus
 }
 #endif

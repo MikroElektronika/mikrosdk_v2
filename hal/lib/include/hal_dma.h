@@ -789,6 +789,70 @@ err_t hal_dma_transfer_abort( hal_dma_t *obj );
  */
 err_t hal_dma_close( hal_dma_t *obj );
 
+/**
+ * @details Stream event flags: interrupt enable mask (#hal_dma_set_interrupts)
+ *          and status (#hal_dma_get_status).
+ */
+#define HAL_DMA_EVENT_TRANSFER_COMPLETE (0x01U) /*!< Transfer complete. */
+#define HAL_DMA_EVENT_HALF_TRANSFER     (0x02U) /*!< Half of the transfer done. */
+#define HAL_DMA_EVENT_TRANSFER_ERROR    (0x04U) /*!< Bus error during the transfer. */
+#define HAL_DMA_EVENT_DIRECT_MODE_ERROR (0x08U) /*!< Request arrived before the previous one was served. */
+#define HAL_DMA_EVENT_FIFO_ERROR        (0x10U) /*!< FIFO under/overrun. */
+
+/**
+ * @brief DMA interrupt callback.
+ * @param[in] context Context given to #hal_dma_register_irq_handler.
+ * @param[in] events Events that caused the interrupt (HAL_DMA_EVENT_*), already cleared.
+ */
+typedef void ( *hal_dma_isr_t )( void *context, uint8_t events );
+
+/**
+ * @brief Enables DMA interrupts.
+ * @details Enables the given events (HAL_DMA_EVENT_*) and the stream's NVIC
+ *          line; 0 disables them. Kept across #hal_dma_set_transfer_config and
+ *          the other reconfiguration calls.
+ * @param[in] obj DMA HAL object.
+ * @param[in] events Event mask.
+ * @return HAL_DMA_SUCCESS, or HAL_DMA_ERROR (also when the target has no support).
+ */
+err_t hal_dma_set_interrupts( hal_dma_t *obj, uint8_t events );
+
+/**
+ * @brief Registers the DMA interrupt callback.
+ * @details The SDK then provides the stream's interrupt handler, which clears
+ *          the reported events and calls @p handler. The application must not
+ *          define that handler itself.
+ * @param[in] obj DMA HAL object.
+ * @param[in] handler Callback, or NULL to unregister.
+ * @param[in] context Passed back to the callback.
+ * @return HAL_DMA_SUCCESS, or HAL_DMA_ERROR (also when the target has no support).
+ */
+err_t hal_dma_register_irq_handler( hal_dma_t *obj, hal_dma_isr_t handler, void *context );
+
+/**
+ * @brief Returns pending DMA events (HAL_DMA_EVENT_*); 0 when the target has no support.
+ * @param[in] obj DMA HAL object.
+ * @return Event mask.
+ */
+uint8_t hal_dma_get_status( hal_dma_t *obj );
+
+/**
+ * @brief Clears the given DMA events (HAL_DMA_EVENT_*).
+ * @param[in] obj DMA HAL object.
+ * @param[in] events Event mask.
+ * @return HAL_DMA_SUCCESS, or HAL_DMA_ERROR (also when the target has no support).
+ */
+err_t hal_dma_clear_status( hal_dma_t *obj, uint8_t events );
+
+/**
+ * @brief Selects FIFO (@p enable true) or direct mode (one item per peripheral request).
+ * @details Kept across reconfiguration calls.
+ * @param[in] obj DMA HAL object.
+ * @param[in] enable FIFO on/off.
+ * @return HAL_DMA_SUCCESS, or HAL_DMA_ERROR (also when the target has no support).
+ */
+err_t hal_dma_set_fifo( hal_dma_t *obj, bool enable );
+
 /*! @} */ // haldmagroup
 /*! @} */ // halgroup
 /*! @} */ // pergroup
