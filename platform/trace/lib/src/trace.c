@@ -185,8 +185,6 @@ typedef struct
     uint32_t burst_written;
     uint32_t burst_read;
     uint16_t burst_failed;
-    // An output: trace_spi_transfers + 1 when it was driven low, 0 while high (or not known).
-    uint32_t low_at;
 } trace_lane_t;
 
 typedef struct
@@ -232,13 +230,6 @@ static pin_name_t trace_cs_pins[ TRACE_MAX_CS ];
 static uint8_t trace_cs_count = 0;
 static bool trace_cs_selected = false;
 static pin_name_t trace_cs_pin;    // selected chip select, while trace_cs_selected
-
-// A chip select driven as a plain output (digital_out_low, the transfer, digital_out_high: display
-// libraries do so) is not seen by spi_master_select_device(). It is the output that went low
-// before a transfer of an SPI lane without a chip select and is the first to go high after it:
-// a D/C pin changes after the select and stays as it is after the transfer.
-static uint32_t trace_spi_transfers = 0;           // transfers of SPI lanes without a chip select
-static trace_lane_t *trace_spi_unselected = NULL;  // the lane of the last, until an output rises
 
 // Driver object whose call a fault just changed: its record is marked injected.
 static const void *trace_injected = NULL;
@@ -969,11 +960,6 @@ void trace_hook_spi( const void *obj, uint8_t op, const uint8_t *write_buf, size
         lane->pin_count = 4;
         lane->defined = false;
     }
-    if ( lane && ( 3 == lane->pin_count ) )
-    {
-        trace_spi_transfers++;
-        trace_spi_unselected = lane;
-    }
 
     // Transfers too fast to record each (a display filled pixel by pixel) are counted.
     if ( lane && trace_bus_burst( id, lane, start, start + duration, write_len, read_len, result ) )
@@ -1052,49 +1038,16 @@ void trace_hook_gpio_init( const void *obj, pin_name_t pin, uint8_t is_output )
         lane->defined = false;
         lane->written = false;
         lane->fast_writes = 0;
-        lane->low_at = 0;
     }
     trace_port_unlock( irq_state );
 }
 
 void trace_hook_gpio_out( const void *obj, uint8_t level )
 {
-    if ( !trace_ensure_started() )
+    if ( trace_ensure_started() )
     {
-        return;
+        trace_level( obj, TRACE_LANE_GPIO_OUT, level, false, 0 );
     }
-
-    uint32_t irq_state = trace_port_lock();
-    uint8_t id;
-    trace_lane_t *lane = trace_lane( obj, TRACE_LANE_GPIO_OUT, &id );
-    if ( lane && lane->pin_count )
-    {
-        if ( !level )
-        {
-            // Written low again: it went low at the first write.
-            if ( !lane->low_at )
-            {
-                lane->low_at = trace_spi_transfers + 1;
-            }
-        }
-        else if ( lane->low_at )
-        {
-            // The first output to go high after the transfer: its chip select when it went low
-            // before it. A driver object is one device: its first chip select stays.
-            if ( trace_spi_unselected && ( lane->low_at <= trace_spi_transfers ) &&
-                 ( 3 == trace_spi_unselected->pin_count ) )
-            {
-                trace_spi_unselected->pins[ 3 ] = lane->pins[ 0 ];
-                trace_spi_unselected->pin_count = 4;
-                trace_spi_unselected->defined = false;
-            }
-            trace_spi_unselected = NULL;
-            lane->low_at = 0;
-        }
-    }
-    trace_port_unlock( irq_state );
-
-    trace_level( obj, TRACE_LANE_GPIO_OUT, level, false, 0 );
 }
 
 uint8_t trace_hook_gpio_in( const void *obj, uint8_t level )
