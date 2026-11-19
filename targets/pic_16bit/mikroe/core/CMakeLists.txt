@@ -1,9 +1,11 @@
 ## ./targets/pic_16bit/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
 
-## Generate dsPIC specific IVT/IRQ control macros.
+## Generate dsPIC specific IVT/IRQ control macros. They depend on the selected MCU, so the header goes to the
+## build directory, never to the source tree: builds for different MCUs can run in parallel on the same SDK.
+set(CORE_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/include)
 dspic_core_set_macros(coreParameters)
-dspic_core_generate_macros(${CMAKE_CURRENT_SOURCE_DIR}/include hal_ll_core_macros.h ${coreParameters})
+dspic_core_generate_macros(${CORE_GENERATED_DIR} hal_ll_core_macros.h ${coreParameters})
 
 core_implementation_select(${MCU_NAME} core_implementation)
 
@@ -17,7 +19,7 @@ mikrosdk_add_library(lib_hal_ll_core MikroSDK.HalLowLevelCore
     src/${core_implementation}
 
     include/hal_ll_core_defines.h
-    include/hal_ll_core_macros.h
+    ${CORE_GENERATED_DIR}/hal_ll_core_macros.h
     include/hal_ll_core_port.h
     include/hal_ll_core.h
 )
@@ -34,8 +36,11 @@ target_link_libraries(lib_hal_ll_core PUBLIC
 
 target_include_directories(lib_hal_ll_core
     PRIVATE
+        ## Generated macros first (an older SDK version may have left a copy in include/).
+        ${CORE_GENERATED_DIR}
         include
     INTERFACE
+        $<BUILD_INTERFACE:${CORE_GENERATED_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )

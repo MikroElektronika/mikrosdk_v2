@@ -1,9 +1,13 @@
 ## ./api/usb/tinyusb/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
+## Files generated for the selected MCU go to the build directory, never to the source tree:
+## builds for different MCUs can run in parallel on the same SDK source tree.
+set(USB_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
+
 ## Generate source file and header first.
-usb_generate_isr_source(${CMAKE_CURRENT_SOURCE_DIR}/isr/src usb_isr_routines.c)
-usb_generate_isr_header(${CMAKE_CURRENT_SOURCE_DIR}/isr/include usb_isr_routines.h)
+usb_generate_isr_source(${USB_GENERATED_DIR}/isr/src usb_isr_routines.c)
+usb_generate_isr_header(${USB_GENERATED_DIR}/isr/include usb_isr_routines.h)
 
 ## Get USB module list for PLDs.
 check_usb_components(has_usb has_usb_interrupts usb_module_list)
@@ -23,7 +27,7 @@ usb_get_device_lib_files(source_list header_list)
 
 ## Generate adequate USB config file for selected MCU.
 usb_get_mcu_opt(USB_TINY_OPT_MCU)
-usb_generate_config(${CMAKE_CURRENT_SOURCE_DIR}/config tusb_config.h ${USB_TINY_OPT_MCU})
+usb_generate_config(${USB_GENERATED_DIR}/config tusb_config.h ${USB_TINY_OPT_MCU})
 
 ## Add tinyusb as a library.
 mikrosdk_add_library(lib_tinyusb MikroSDK.USB.Tiny
@@ -42,8 +46,8 @@ mikrosdk_add_library(lib_tinyusb MikroSDK.USB.Tiny
     ## MikroE default weak callback routines.
     ${CMAKE_CURRENT_SOURCE_DIR}/callbacks/callbacks_default.c
     ## MikroE default interrupt service routines.
-    ${CMAKE_CURRENT_SOURCE_DIR}/isr/src/usb_isr_routines.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/isr/include/usb_isr_routines.h
+    ${USB_GENERATED_DIR}/isr/src/usb_isr_routines.c
+    ${USB_GENERATED_DIR}/isr/include/usb_isr_routines.h
 )
 
 target_compile_options(lib_tinyusb PRIVATE
@@ -71,7 +75,7 @@ target_link_libraries(lib_tinyusb PUBLIC
 )
 
 ## Generic configuration file path included.
-add_compile_definitions(CFG_TUSB_CONFIG_FILE=${CMAKE_CURRENT_SOURCE_DIR}/config/)
+add_compile_definitions(CFG_TUSB_CONFIG_FILE=${USB_GENERATED_DIR}/config/)
 
 ## Include search paths.
 target_include_directories(lib_tinyusb
@@ -82,24 +86,24 @@ target_include_directories(lib_tinyusb
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/device
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/networking
         ## Generic configuration file path included.
-        ${CMAKE_CURRENT_SOURCE_DIR}/config
+        ${USB_GENERATED_DIR}/config
         ## MikroE default interrupt service routines path included.
-        ${CMAKE_CURRENT_SOURCE_DIR}/isr/include
+        ${USB_GENERATED_DIR}/isr/include
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/host>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/device>
         ## Generic configuration file path included.
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/config>
+        $<BUILD_INTERFACE:${USB_GENERATED_DIR}/config>
         ## ISR header file path included.
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/isr/include>
+        $<BUILD_INTERFACE:${USB_GENERATED_DIR}/isr/include>
         $<INSTALL_INTERFACE:include/thirdparty/usb/tinyusb>
 )
 
 ## First generate library with `MikroSDK.USB.Tiny` alias and generis `tusb.h` header file.
 mikrosdk_install(MikroSDK.USB.Tiny)
-install_headers(${CMAKE_INSTALL_PREFIX}/include/thirdparty/usb/tinyusb MikroSDK.USB.Tiny isr/include/usb_isr_routines.h config/tusb_config.h lib/tusb.h)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/thirdparty/usb/tinyusb MikroSDK.USB.Tiny ${USB_GENERATED_DIR}/isr/include/usb_isr_routines.h ${USB_GENERATED_DIR}/config/tusb_config.h lib/tusb.h)
 
 ## TODO - Add library definitions here as needed.
 ## TODO - If cases for inclusion - only include if user selects it.

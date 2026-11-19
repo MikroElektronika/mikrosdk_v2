@@ -6,7 +6,7 @@ function(usb_get_device_lib_files libSourceList libHeaderList)
     set(listLocalHeaders "")
 
     ## Default config header
-    list(APPEND listLocalHeaders "${CMAKE_CURRENT_SOURCE_DIR}/config/tusb_config.h")
+    list(APPEND listLocalHeaders "${USB_GENERATED_DIR}/config/tusb_config.h")
     ## Host headers
     list(APPEND listLocalHeaders "${CMAKE_CURRENT_SOURCE_DIR}/lib/host/hcd.h")
     list(APPEND listLocalHeaders "${CMAKE_CURRENT_SOURCE_DIR}/lib/host/hub.h")
@@ -82,7 +82,7 @@ function(usb_get_header_list header_list selector)
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/lib/common/tusb_verify.h")
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/lib/common/tusb_types.h")
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/lib/common/tusb_debug.h")
-        list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/config/tusb_config.h")
+        list(APPEND listLocal "${USB_GENERATED_DIR}/config/tusb_config.h")
     elseif(${selector} STREQUAL "OSAL")
         ## Osal headers
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/lib/osal/osal.h")

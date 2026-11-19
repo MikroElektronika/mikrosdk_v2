@@ -94,7 +94,7 @@ function(ethernet_get_device_lib_files libSourceList libHeaderList)
     set(listLocalSources "")
     set(listLocalHeaders "")
 
-    list(APPEND listLocalHeaders "./eth_driver.h")
+    list(APPEND listLocalHeaders "${ETH_GENERATED_DIR}/eth_driver.h")
 
     if(NOT ${CORE_NAME} MATCHES "MIPS32|MICROAPTIV")
         list(APPEND listLocalHeaders "./arm/core/mpu_armv7.h")
@@ -306,7 +306,7 @@ function(ethernet_get_header_list header_list selector)
     set(listLocal "")
 
     if(${selector} STREQUAL "MIKROE_CONFIG")
-        list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/eth_driver.h")
+        list(APPEND listLocal "${ETH_GENERATED_DIR}/eth_driver.h")
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/net_config.h")
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/os_port_config.h")
         list(APPEND listLocal "${CMAKE_CURRENT_SOURCE_DIR}/fs_port_config.h")
