@@ -1,6 +1,10 @@
 ## ./thirdparty/ethernet/cyclonetcp/config/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
+## The active driver header (eth_driver.h) is generated for the selected MCU, so it goes to the build directory,
+## never to the source tree: builds for different MCUs can run in parallel on the same SDK source tree.
+set(ETH_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
+
 ## Get current MCU specific source files.
 ethernet_get_device_lib_files(source_list_device header_list_device)
 
@@ -9,10 +13,10 @@ ethernet_get_device_lib_include_directories(include_directories_private "PRIVATE
 ethernet_get_device_lib_include_directories(include_directories_interface "INTERFACE")
 
 ## Set active driver header.
-set_active_driver(${CMAKE_CURRENT_SOURCE_DIR} eth_driver.h)
+set_active_driver(${ETH_GENERATED_DIR} eth_driver.h)
 
 mikrosdk_add_library(lib_cyclone_tcp_config MikroSDK.Ethernet.CycloneTCP.Config
-    ./eth_driver.h
+    ${ETH_GENERATED_DIR}/eth_driver.h
     ./net_config.h
     ./os_port_config.h
     ${source_list_device}
@@ -62,10 +66,13 @@ target_link_libraries(lib_cyclone_tcp_config PUBLIC
 ## Include search paths.
 target_include_directories(lib_cyclone_tcp_config
     PRIVATE
+        ## Generated driver header first (an older SDK version may have left one in the source tree).
+        ${ETH_GENERATED_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}
         ## Generic root cmake file path included.
         ${include_directories_private}
     INTERFACE
+        $<BUILD_INTERFACE:${ETH_GENERATED_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         ## Generic root cmake file path included.
         ${include_directories_interface}
