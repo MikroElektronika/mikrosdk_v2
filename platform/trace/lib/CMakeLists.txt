@@ -6,6 +6,32 @@
 # a library that calls a driver (a click) may come after MikroSDK.Trace on the link line, and the
 # linker would not go back to the archive for its __wrap_ symbol. Objects of the application are
 # always linked; --gc-sections drops the wrappers of the drivers it does not call.
+#
+# The trace is read by the debugger, so only a Debug build records it. NECTO Studio installs the
+# SDK once per build type (setups/<id>/Debug and Release), and an application that links
+# MikroSDK.Trace must build with both: the Release library is header only, with no code and no
+# linker options, and trace.h turns the trace API into no-ops without MIKROSDK_TRACE.
+string(TOUPPER "${CMAKE_BUILD_TYPE}" trace_build_type)
+if (NOT trace_build_type STREQUAL "DEBUG")
+    mikrosdk_add_interface_library(lib_trace MikroSDK.Trace
+        include/trace.h
+    )
+
+    target_link_libraries(lib_trace INTERFACE
+        MikroC.Core
+    )
+
+    target_include_directories(lib_trace
+        INTERFACE
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<INSTALL_INTERFACE:include/platform>
+    )
+
+    mikrosdk_install(MikroSDK.Trace)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/platform MikroSDK.Trace include/trace.h)
+    return()
+endif()
+
 set(module_list "")
 set(module_list_supported "")
 set_module_support(module_list module_list_supported ${MCU_NAME} "drv_layer")
@@ -84,13 +110,14 @@ target_include_directories(lib_trace
 )
 
 # Linking the library is all an application needs. trace_init is kept by name, so that the trace
-# (and the buffer the debugger reads) is linked even when no driver is called. The flattened GPIO
-# macros need MIKROSDK_TRACE in the application.
+# (and the buffer the debugger reads) is linked even when no driver is called. MIKROSDK_TRACE is
+# public: trace.h declares the trace API only with it (trace.c included), and the flattened GPIO
+# macros need it in the application.
 foreach(symbol ${trace_wrapped})
     target_link_options(lib_trace INTERFACE "LINKER:--wrap=${symbol}")
 endforeach()
 target_link_options(lib_trace INTERFACE "LINKER:--undefined=trace_init")
-target_compile_definitions(lib_trace INTERFACE MIKROSDK_TRACE)
+target_compile_definitions(lib_trace PUBLIC MIKROSDK_TRACE)
 
 mikrosdk_install(MikroSDK.Trace)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/platform MikroSDK.Trace include/trace.h)
