@@ -52,6 +52,22 @@ extern const uint8_t DRV_TO_HAL_PREFIXED(spi, module_state_count);
 
 extern hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity;
 
+// Chip select pin configured on the last select/deselect call.
+// Reconfigured only when a different pin is passed in.
+static pin_name_t cs_cached_name = HAL_PIN_NC;
+static hal_gpio_pin_t cs_cached;
+
+static hal_gpio_pin_t *spi_master_cs_resolve( pin_name_t chip_select )
+{
+    if ( chip_select != cs_cached_name )
+    {
+        hal_gpio_configure_pin( &cs_cached, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+        cs_cached_name = chip_select;
+    }
+
+    return &cs_cached;
+}
+
 static handle_t hal_is_handle_null( handle_t *hal_module_handle )
 {
     uint8_t hal_module_state_count = DRV_TO_HAL_PREFIXED(spi, module_state_count);
@@ -126,18 +142,18 @@ void spi_master_select_device( pin_name_t chip_select )
     #if DRV_TO_HAL
     hal_spi_master_select_device( chip_select );
     #else
-    hal_gpio_pin_t struct_cs;
-    hal_gpio_configure_pin( &struct_cs, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+    hal_gpio_pin_t *struct_cs;
 
-    if ( chip_select != HAL_PIN_NC )
+    if ( chip_select == HAL_PIN_NC )
     {
-        if ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
-        {
-            hal_gpio_set_pin_output( &struct_cs );
-        } else {
-            hal_gpio_clear_pin_output( &struct_cs );
-        }
+        return;
     }
+
+    struct_cs = spi_master_cs_resolve( chip_select );
+
+    ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH ) ?
+        hal_gpio_set_pin_output( struct_cs ) :
+        hal_gpio_clear_pin_output( struct_cs );
     #endif
 }
 
@@ -146,18 +162,18 @@ void spi_master_deselect_device( pin_name_t chip_select )
     #if DRV_TO_HAL
     hal_spi_master_deselect_device( chip_select );
     #else
-    hal_gpio_pin_t struct_cs;
-    hal_gpio_configure_pin( &struct_cs, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+    hal_gpio_pin_t *struct_cs;
 
-    if ( chip_select != HAL_PIN_NC )
+    if ( chip_select == HAL_PIN_NC )
     {
-        if ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
-        {
-            hal_gpio_clear_pin_output( &struct_cs );
-        } else {
-            hal_gpio_set_pin_output( &struct_cs );
-        }
+        return;
     }
+
+    struct_cs = spi_master_cs_resolve( chip_select );
+
+    ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH ) ?
+        hal_gpio_clear_pin_output( struct_cs ) :
+        hal_gpio_set_pin_output( struct_cs );
     #endif
 }
 
