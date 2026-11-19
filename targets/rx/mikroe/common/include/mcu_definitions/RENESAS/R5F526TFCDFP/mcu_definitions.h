@@ -796,12 +796,33 @@
 #define ICU_GROUPBL0_VECTOR                      (110)
 #define ICU_GROUPBL1_VECTOR                      (111)
 #define ICU_GROUPAL0_VECTOR                      (112)
+#define SCI1_ERI_GROUP_VECTOR                    ICU_GROUPBL0_VECTOR
+#define SCI1_ERI_GROUP_ENABLE_REG                HAL_LL_ICU_GENBL0
+#define SCI1_ERI_GROUP_STATUS_REG                HAL_LL_ICU_GRPBL0
 #define SCI1_ERI_GROUP_BIT                       (3)
+#define SCI5_ERI_GROUP_VECTOR                    ICU_GROUPBL0_VECTOR
+#define SCI5_ERI_GROUP_ENABLE_REG                HAL_LL_ICU_GENBL0
+#define SCI5_ERI_GROUP_STATUS_REG                HAL_LL_ICU_GRPBL0
 #define SCI5_ERI_GROUP_BIT                       (11)
+#define SCI6_ERI_GROUP_VECTOR                    ICU_GROUPBL0_VECTOR
+#define SCI6_ERI_GROUP_ENABLE_REG                HAL_LL_ICU_GENBL0
+#define SCI6_ERI_GROUP_STATUS_REG                HAL_LL_ICU_GRPBL0
 #define SCI6_ERI_GROUP_BIT                       (13)
+#define SCI8_ERI_GROUP_VECTOR                    ICU_GROUPAL0_VECTOR
+#define SCI8_ERI_GROUP_ENABLE_REG                HAL_LL_ICU_GENAL0
+#define SCI8_ERI_GROUP_STATUS_REG                HAL_LL_ICU_GRPAL0
 #define SCI8_ERI_GROUP_BIT                       (25)
+#define SCI9_ERI_GROUP_VECTOR                    ICU_GROUPAL0_VECTOR
+#define SCI9_ERI_GROUP_ENABLE_REG                HAL_LL_ICU_GENAL0
+#define SCI9_ERI_GROUP_STATUS_REG                HAL_LL_ICU_GRPAL0
 #define SCI9_ERI_GROUP_BIT                       (27)
+#define SCI11_ERI_GROUP_VECTOR                   ICU_GROUPAL0_VECTOR
+#define SCI11_ERI_GROUP_ENABLE_REG               HAL_LL_ICU_GENAL0
+#define SCI11_ERI_GROUP_STATUS_REG               HAL_LL_ICU_GRPAL0
 #define SCI11_ERI_GROUP_BIT                      (13)
+#define SCI12_ERI_GROUP_VECTOR                   ICU_GROUPBL0_VECTOR
+#define SCI12_ERI_GROUP_ENABLE_REG               HAL_LL_ICU_GENBL0
+#define SCI12_ERI_GROUP_STATUS_REG               HAL_LL_ICU_GRPBL0
 #define SCI12_ERI_GROUP_BIT                      (17)
 //EOF IVT_TABLE
 

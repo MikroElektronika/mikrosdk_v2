@@ -39,7 +39,7 @@
 /*!
  * @file  hal_ll_core_port.c
  * @brief This file contains all low level function definitions for chip specific core functionality.
- * @note  Refers to RX26T (RXv3 core, ICU).
+ * @note  Refers to RX26T and RX66T (RXv3 core, ICU).
  */
 
 #include "hal_ll_core_defines.h"

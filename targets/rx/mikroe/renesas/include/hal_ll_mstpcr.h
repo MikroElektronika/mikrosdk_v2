@@ -76,11 +76,11 @@ extern "C"{
 #define MSTPCRB_MSTPB26_POS  26 // SCI5
 #define MSTPCRB_MSTPB30_POS  30 // SCI1
 
-#define MSTPCRC_MSTPC24_POS  24 // RSCI11
-#define MSTPCRC_MSTPC26_POS  26 // RSCI9
-#define MSTPCRC_MSTPC27_POS  27 // RSCI8
+#define MSTPCRC_MSTPC24_POS  24 // SCI11 (RSCI11 on RX26T)
+#define MSTPCRC_MSTPC26_POS  26 // SCI9 (RSCI9 on RX26T)
+#define MSTPCRC_MSTPC27_POS  27 // SCI8 (RSCI8 on RX26T)
 
-#define MSTPCRD_MSTPD5_POS   5  // RI3C0
+#define MSTPCRD_MSTPD5_POS   5  // RI3C0 (RX26T only)
 
 /**
  * @brief System clocks structure.
@@ -91,12 +91,12 @@ extern "C"{
 typedef struct
 {
     uint32_t iclk;    // System clock frequency in Hz
-    uint32_t pclka;   // PCLKA clock frequency in Hz (RSCI11, RSPIA, RI3C)
-    uint32_t pclkb;   // PCLKB clock frequency in Hz (SCI, RSCI8, RSCI9, RIIC)
+    uint32_t pclka;   // PCLKA clock frequency in Hz (SCI11, RSPI, RSPIA, RI3C)
+    uint32_t pclkb;   // PCLKB clock frequency in Hz (SCI, RIIC)
     uint32_t pclkc;   // PCLKC clock frequency in Hz (GPTW)
     uint32_t pclkd;   // PCLKD clock frequency in Hz (ADC)
     uint32_t fclk;    // Flash interface clock frequency in Hz
-    uint32_t cfdclk;  // CANFD clock frequency in Hz
+    uint32_t cfdclk;  // CANFD clock frequency in Hz (RX26T only, not filled in on other families)
 } system_clocks_t;
 
 /**
