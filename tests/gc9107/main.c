@@ -11,14 +11,15 @@
 
 // -------------------------------------------------------------------- MACROS
 
-// IPS Display 3 Click in mikroBUS 1. The backlight (BCK) is on the PWM pin.
-#define TEST_GC9107_PIN_BCK  MIKROBUS( MIKROBUS_1, MIKROBUS_PWM )
-#define TEST_GC9107_PIN_RST  MIKROBUS( MIKROBUS_1, MIKROBUS_RST )
-#define TEST_GC9107_PIN_CS   MIKROBUS( MIKROBUS_1, MIKROBUS_CS )
-#define TEST_GC9107_PIN_SCK  MIKROBUS( MIKROBUS_1, MIKROBUS_SCK )
-#define TEST_GC9107_PIN_SDI  MIKROBUS( MIKROBUS_1, MIKROBUS_MOSI )
-#define TEST_GC9107_PIN_SDO  MIKROBUS( MIKROBUS_1, MIKROBUS_MISO )
-#define TEST_GC9107_PIN_RS   MIKROBUS( MIKROBUS_1, MIKROBUS_INT )
+// IPS Display 3 Click pins. Set them to match the board the click is connected to,
+// for example the mikroBUS socket. The backlight (BCK) is on the PWM pin.
+#define TEST_GC9107_PIN_BCK  HAL_PIN_NC
+#define TEST_GC9107_PIN_RST  HAL_PIN_NC
+#define TEST_GC9107_PIN_CS   HAL_PIN_NC
+#define TEST_GC9107_PIN_SCK  HAL_PIN_NC
+#define TEST_GC9107_PIN_SDI  HAL_PIN_NC // MOSI
+#define TEST_GC9107_PIN_SDO  HAL_PIN_NC // MISO, not wired
+#define TEST_GC9107_PIN_RS   HAL_PIN_NC
 
 // Visible area of the display.
 #define TEST_GC9107_WIDTH    128

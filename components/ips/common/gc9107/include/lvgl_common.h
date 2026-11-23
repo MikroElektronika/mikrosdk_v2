@@ -114,7 +114,7 @@ extern "C"
 #define CS_LOW             ( digital_out_low( &pin_cs ) )
 /*!< Set RST pin high. */
 #define RST_HIGH           ( digital_out_high( &pin_rst ) )
-/*!< Set WR pin low. */
+/*!< Set RST pin low. */
 #define RST_LOW            ( digital_out_low( &pin_rst ) )
 /*!< Set DC pin high. RS on mikroBUS*/
 #define DC_HIGH            ( digital_out_high( &pin_dc ) )

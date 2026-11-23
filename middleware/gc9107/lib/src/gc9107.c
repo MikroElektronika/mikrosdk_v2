@@ -262,4 +262,54 @@ void gc9107_set_backlight( uint8_t intensity )
     digital_out_write( &pin_bck, intensity );
 }
 
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_err_t tp_gc9107_process( tp_gc9107_t *ctx )
+{
+    return TP_OK;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static tp_event_t tp_gc9107_press_detect( tp_gc9107_t *ctx )
+{
+    return TP_EVENT_PRESS_NOT_DET;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_gc9107_gesture( tp_gc9107_t *ctx, tp_event_t *event )
+{
+    *event = TP_EVENT_GEST_NONE;
+}
+
+/**
+ * @note Not implemented, Hardware does not support tp.
+ */
+static void tp_gc9107_coord( void *ctx, tp_touch_item_t *coord )
+{
+    coord->n_touches = 0;
+    return;
+}
+
+tp_err_t tp_gc9107_init( tp_gc9107_t *ctx, tp_gc9107_cfg_t *cfg, tp_drv_t *drv )
+{
+    drv->tp_press_detect_f = tp_gc9107_press_detect;
+    drv->tp_press_coordinates_f = tp_gc9107_coord;
+    drv->tp_gesture_f = tp_gc9107_gesture;
+    drv->tp_process_f = tp_gc9107_process;
+    return TP_OK;
+}
+
+void tp_gc9107_cfg_setup( tp_gc9107_cfg_t *cfg )
+{
+}
+
+void tp_gc9107_default_cfg( tp_gc9107_t *ctx )
+{
+}
+
 // ------------------------------------------------------------------------- END

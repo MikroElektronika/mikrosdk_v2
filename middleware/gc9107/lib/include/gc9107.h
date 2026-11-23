@@ -46,6 +46,7 @@
 
 #include "drv_digital_out.h"
 #include "drv_spi_master.h"
+#include "tp.h"
 
 /**
  * @brief GC9107 Configuration Object.
@@ -163,6 +164,73 @@ void gc9107_configure();
  * @retval Nothing
  */
 void gc9107_set_backlight( uint8_t intensity );
+
+/**
+ * @brief Map adequate control pins.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ */
+#define TP_GC9107_MAP_PINS( cfg )  \
+    do                             \
+    {                              \
+    } while ( 0 )
+
+/**
+ * @brief GC9107 Touch Configuration Object.
+ * @details Configuration object definition for TP GC9107 touch controller.
+ */
+typedef struct
+{
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
+} tp_gc9107_cfg_t;
+
+/**
+ * @brief TP GC9107 Context Object.
+ * @details Context object definition for GC9107 touch controller.
+ *          This structure holds information about the current state of the
+ *          controller.
+ */
+typedef struct
+{
+    uint16_t width;  /**< Touch panel width in pixels. */
+    uint16_t height; /**< Touch panel height in pixels. */
+} tp_gc9107_t;
+
+/**
+ * @brief TP GC9107 Initialization Function.
+ * @details  This function initializes TP GC9107 context object using configuration values
+ * from TP GC9107 configuration object.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[in] ctx Initialized TP GC9107 context structure.
+ * @param[in] cfg TP GC9107 configuration object.
+ * @param[out] drv TP driver interface object. See @ref tp_drv_t structure
+ * definition for detailed explanation.
+ * @retval @li @c TP_OK OK,
+ * See @ref tp_err_t structure definition for detailed explanation.
+ */
+tp_err_t tp_gc9107_init( tp_gc9107_t *ctx, tp_gc9107_cfg_t *cfg, tp_drv_t *drv );
+
+/**
+ * @brief TP GC9107 configuration object setup function.
+ * @details This function initializes TP GC9107 configuration structure to default values.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[out] cfg TP GC9107 configuration object.
+ * @retval Nothing.
+ */
+void tp_gc9107_cfg_setup( tp_gc9107_cfg_t *cfg );
+
+/**
+ * @brief TP GC9107 Default Configuration Function.
+ * @details Configures the device to default configuration.
+ * @note This function is a placeholder, current screens based on this driver do not have
+ * touch screen drivers yet.
+ * @param[in] ctx Initialized TP GC9107 context structure.
+ * @retval Nothing.
+ */
+void tp_gc9107_default_cfg( tp_gc9107_t *ctx );
 
 /*! @} */ // GC9107
 /*! @} */ // middlewaregroup

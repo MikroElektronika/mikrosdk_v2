@@ -1,3 +1,4 @@
+## ./middleware/gc9107/lib/CMakeLists.txt
 mikrosdk_add_library(lib_gc9107 MikroSDK.GC9107
     src/gc9107.c
     src/gc9107_gl.c
@@ -9,6 +10,7 @@ mikrosdk_add_library(lib_gc9107 MikroSDK.GC9107
 
 target_link_libraries(lib_gc9107 PUBLIC
     MikroC.Core
+    MikroSDK.TouchPanel
     MikroSDK.GraphicLibrary
     MikroSDK.Driver.GPIO.Out
     MikroSDK.Driver.SPI.Master

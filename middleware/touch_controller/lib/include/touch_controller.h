@@ -63,6 +63,9 @@ extern "C"{
 #elif defined(tp_st7789)
     #include "st7789.h"
     #include "ips.h"
+#elif defined(tp_gc9107)
+    #include "gc9107.h"
+    #include "ips.h"
 #else
     #error "touch_ic not defined"
 #endif
