@@ -82,5 +82,98 @@ static const hal_ll_base_addr_t HAL_LL_UART2_BASE_ADDR = ( hal_ll_base_addr_t ) 
 static const hal_ll_base_addr_t HAL_LL_UART3_BASE_ADDR = ( hal_ll_base_addr_t ) (0xFFF14UL); // SDR12 (TXD3)
 // EOF REGISTER DEFINITIONS
 
+// R7F100LPL MODULE SPECIFICS
+// PIOR0-PIOR13 are consecutive.
+#define hal_ll_pior_reg_addr(_index) ( 0xF04E0UL + ( _index ) )
+
+// GPIO
+// PMCAn sits at HAL_LL_GPIO_PMCA_BASE + n, masks list the analog capable pins per port.
+#define HAL_LL_GPIO_PMCA_BASE (0xF0060UL)
+#define HAL_LL_GPIO_PMCA_MASKS { 0x00, 0x1F, 0xFF, 0x00, 0x3C }
+// PDIDISn sits at HAL_LL_GPIO_PDIDIS_BASE + n, bit n of the mask is set if port n has one.
+#define HAL_LL_GPIO_PDIDIS_BASE (0xF02B0UL)
+#define HAL_LL_GPIO_PDIDIS_PORTS (0x73FFU)
+// LCD port function and input switch control registers.
+#define HAL_LL_GPIO_PFSEG0_ADDR (0xF0290UL)
+#define HAL_LL_GPIO_PFSEG1_ADDR (0xF0291UL)
+#define HAL_LL_GPIO_ISCLCD_ADDR (0xF0298UL)
+
+// ADC
+#define HAL_LL_ADC_RESULT_ADDR (0xF0020UL) // ADCR0, ADCR0H at +1
+#define HAL_LL_ADC_AVREFP_PIN (GPIO_P021)
+
+// I2C, IICAn 2nd SFR area, INTIICAn flag/mask and PIOR12 field.
+#define HAL_LL_I2C0_CTRL_BASE_ADDR (0xF0230UL) // IICCTL00
+#define HAL_LL_I2C0_IF_ADDR (0xFFFE2UL) // IF1L
+#define HAL_LL_I2C0_MK_ADDR (0xFFFE6UL) // MK1L
+#define HAL_LL_I2C0_INT_BIT (3)
+#define HAL_LL_I2C0_PIOR_REG (12)
+#define HAL_LL_I2C0_PIOR_MASK (0x03)
+#define HAL_LL_I2C1_CTRL_BASE_ADDR (0xF0238UL) // IICCTL10
+#define HAL_LL_I2C1_IF_ADDR (0xFFFD1UL) // IF2H
+#define HAL_LL_I2C1_MK_ADDR (0xFFFD5UL) // MK2H
+#define HAL_LL_I2C1_INT_BIT (7)
+#define HAL_LL_I2C1_PIOR_REG (12)
+#define HAL_LL_I2C1_PIOR_MASK (0x0C)
+
+// SPI, INTCSIp flag and PIOR10/PIOR11 field.
+#define HAL_LL_SPI0_IF_ADDR (0xFFFE1UL) // IF0H
+#define HAL_LL_SPI0_IF_BIT (5)
+#define HAL_LL_SPI0_PIOR_REG (10)
+#define HAL_LL_SPI0_PIOR_MASK (0x03)
+#define HAL_LL_SPI1_IF_ADDR (0xFFFE2UL) // IF1L
+#define HAL_LL_SPI1_IF_BIT (4)
+#define HAL_LL_SPI1_PIOR_REG (10)
+#define HAL_LL_SPI1_PIOR_MASK (0x0C)
+#define HAL_LL_SPI2_IF_ADDR (0xFFFE2UL) // IF1L
+#define HAL_LL_SPI2_IF_BIT (0)
+#define HAL_LL_SPI2_PIOR_REG (10)
+#define HAL_LL_SPI2_PIOR_MASK (0x30)
+#define HAL_LL_SPI3_IF_ADDR (0xFFFE2UL) // IF1L
+#define HAL_LL_SPI3_IF_BIT (1)
+#define HAL_LL_SPI3_PIOR_REG (10)
+#define HAL_LL_SPI3_PIOR_MASK (0xC0)
+#define HAL_LL_SPI4_IF_ADDR (0xFFFE1UL) // IF0H
+#define HAL_LL_SPI4_IF_BIT (0)
+#define HAL_LL_SPI4_PIOR_REG (11)
+#define HAL_LL_SPI4_PIOR_MASK (0x03)
+#define HAL_LL_SPI5_IF_ADDR (0xFFFE1UL) // IF0H
+#define HAL_LL_SPI5_IF_BIT (1)
+#define HAL_LL_SPI5_PIOR_REG (11)
+#define HAL_LL_SPI5_PIOR_MASK (0x0C)
+#define HAL_LL_SPI6_IF_ADDR (0xFFFE3UL) // IF1H
+#define HAL_LL_SPI6_IF_BIT (4)
+#define HAL_LL_SPI6_PIOR_REG (11)
+#define HAL_LL_SPI6_PIOR_MASK (0x30)
+#define HAL_LL_SPI7_IF_ADDR (0xFFFE3UL) // IF1H
+#define HAL_LL_SPI7_IF_BIT (5)
+#define HAL_LL_SPI7_PIOR_REG (11)
+#define HAL_LL_SPI7_PIOR_MASK (0xC0)
+
+// TIM, PIOR field routing TO0(2n+1).
+#define HAL_LL_TIM0_PIOR_REG (0)
+#define HAL_LL_TIM0_PIOR_MASK (0x1C)
+#define HAL_LL_TIM1_PIOR_REG (1)
+#define HAL_LL_TIM1_PIOR_MASK (0x07)
+#define HAL_LL_TIM2_PIOR_REG (1)
+#define HAL_LL_TIM2_PIOR_MASK (0xE0)
+#define HAL_LL_TIM3_PIOR_REG (2)
+#define HAL_LL_TIM3_PIOR_MASK (0x0C)
+
+// UART, receive data register (SDRm1/SDRm3) and PIOR10/PIOR11 field.
+#define HAL_LL_UART0_RX_DATA_ADDR (0xFFF12UL) // SDR01
+#define HAL_LL_UART0_PIOR_REG (10)
+#define HAL_LL_UART0_PIOR_MASK (0x03)
+#define HAL_LL_UART1_RX_DATA_ADDR (0xFFF46UL) // SDR03
+#define HAL_LL_UART1_PIOR_REG (10)
+#define HAL_LL_UART1_PIOR_MASK (0x30)
+#define HAL_LL_UART2_RX_DATA_ADDR (0xFFF4AUL) // SDR11
+#define HAL_LL_UART2_PIOR_REG (11)
+#define HAL_LL_UART2_PIOR_MASK (0x03)
+#define HAL_LL_UART3_RX_DATA_ADDR (0xFFF16UL) // SDR13
+#define HAL_LL_UART3_PIOR_REG (11)
+#define HAL_LL_UART3_PIOR_MASK (0x30)
+// EOF MODULE SPECIFICS
+
 #endif // _MCU_REG_ADDRESSES_H_
 // ------------------------------------------------------------------------- END

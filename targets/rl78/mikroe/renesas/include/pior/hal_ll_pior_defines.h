@@ -62,23 +62,58 @@ typedef enum
     HAL_LL_PIOR_MODULE_ERROR
 } hal_ll_pior_err_t;
 
-/*!< @brief PIOR register block base address.
- * PIOR0..PIOR13 are byte-wide registers at consecutive offsets from this
- * base - hal_ll_pior_set_field() computes the exact register/bit/width
- * per entry in hal_ll_pior_connection_defs.h. */
-#define HAL_LL_PIOR_BASE ( 0xF04E0UL )
+/*!< @brief PIORn register address.
+ * Where the PIOR registers sit differs between RL78 groups, every chip
+ * provides hal_ll_pior_reg_addr() in its mcu_reg_addresses.h. */
+#ifndef hal_ll_pior_reg_addr
+#error "hal_ll_pior_reg_addr() is not defined for this MCU."
+#endif
 
-/*!< @brief Writes a value into one field of a PIOR register. Moved here
- * from hal_ll_gpio_port.c - it's used exclusively by the PIOR module now
- * (GPIO no longer touches PIOR at all), and being static there made it
- * invisible to this file's translation unit. */
-static inline void hal_ll_pior_set_field( uint8_t pior_index, uint8_t shift, uint8_t width, uint8_t value ) {
-    volatile uint8_t *reg = ( volatile uint8_t * ) ( HAL_LL_PIOR_BASE + pior_index );
-    uint8_t mask = ( uint8_t ) ( ( ( 1U << width ) - 1U ) << shift );
+/*!< @brief Writes the bits selected by mask in PIORn.
+ * @param pior_index PIOR register number (n in PIORn).
+ * @param mask       Bits that route the peripheral.
+ * @param value      Register value for those bits, already in position.
+ */
+static inline void hal_ll_pior_write( uint8_t pior_index, uint8_t mask, uint8_t value ) {
+    volatile uint8_t *reg = ( volatile uint8_t * ) hal_ll_pior_reg_addr( pior_index );
+
+    if ( !mask ) {
+        return;
+    }
 
     // PIORx only supports 8-bit access, a single write also avoids
     // briefly routing the function to the value 0 pin.
-    *reg = ( uint8_t ) ( ( *reg & ( uint8_t ) ~mask ) | ( ( value << shift ) & mask ) );
+    *reg = ( uint8_t ) ( ( *reg & ( uint8_t ) ~mask ) | ( value & mask ) );
+}
+
+/*!< @brief Spreads a pin map AF value over the routing bits of a module.
+ * Bit i of af goes to the i-th lowest set bit of mask. For a contiguous
+ * mask this is af shifted to the mask position. Some modules are routed
+ * by bits that are not next to each other, e.g. one UART on RL78/G24 uses
+ * PIOR0 bits 1 and 6, so AF 1 sets bit 1 and AF 2 sets bit 6.
+ * @param mask Bits that route the module.
+ * @param af   Pin map AF value.
+ * @return Register value for the mask bits.
+ */
+static inline uint8_t hal_ll_pior_af_to_value( uint8_t mask, uint8_t af ) {
+    uint8_t value = 0;
+    uint8_t bit;
+
+    for ( bit = 0; bit < 8; bit++ ) {
+        if ( mask & ( 1U << bit ) ) {
+            if ( af & 1U ) {
+                value |= ( uint8_t ) ( 1U << bit );
+            }
+            af >>= 1;
+        }
+    }
+
+    return value;
+}
+
+/*!< @brief Routes a module to the pins selected by a pin map AF value. */
+static inline void hal_ll_pior_route( uint8_t pior_index, uint8_t mask, uint8_t af ) {
+    hal_ll_pior_write( pior_index, mask, hal_ll_pior_af_to_value( mask, af ) );
 }
 
 /*!< @brief Used in low level source, same shape as the PIC32 pps_defines

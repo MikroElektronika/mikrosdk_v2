@@ -49,12 +49,10 @@ hal_ll_pior_err_t hal_ll_pior_port_map( hal_ll_port_name_t port_name, hal_ll_pin
     }
 
     if ( true == hal_ll_state ) {
-        if ( 0 != hal_ll_pior_map[ map_index_num ].pior_width ) {
-            hal_ll_pior_set_field( hal_ll_pior_map[ map_index_num ].pior_reg,
-                                    hal_ll_pior_map[ map_index_num ].pior_shift,
-                                    hal_ll_pior_map[ map_index_num ].pior_width,
-                                    hal_ll_pior_map[ map_index_num ].pior_value );
-        }
+        // A zero mask (pin not redirectable) is skipped by hal_ll_pior_write().
+        hal_ll_pior_write( hal_ll_pior_map[ map_index_num ].pior_reg,
+                           hal_ll_pior_map[ map_index_num ].pior_mask,
+                           hal_ll_pior_map[ map_index_num ].pior_value );
     }
     // hal_ll_state == false: intentionally a no-op, same reasoning as before -
     // RL78 has no "unroute" bit; writing 0 into a PIOR field just routes to

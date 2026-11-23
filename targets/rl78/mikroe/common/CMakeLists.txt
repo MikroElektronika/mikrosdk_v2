@@ -1,5 +1,5 @@
 ## ./targets/rl78/mikroe/common/CMakeLists.txt
-if(${MCU_NAME} MATCHES "(^R7F100.+$)")
+if(${MCU_NAME} MATCHES "(^R7F10[01].+$)")
     set(architecture "RL78")
     set(vendor "RENESAS")
 endif()

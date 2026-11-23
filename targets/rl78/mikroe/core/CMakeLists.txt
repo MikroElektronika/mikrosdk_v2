@@ -1,6 +1,6 @@
 ## ./targets/rl78/mikroe/core/CMakeLists.txt
 set(hal_ll_core_def_list "")
-if(${MCU_NAME} MATCHES "^R7F100.*")
+if(${MCU_NAME} MATCHES "^R7F10[01].*")
     set(chip_vendor "renesas")
     list(APPEND hal_ll_core_def_list ${chip_vendor})
     string(SUBSTRING ${MCU_NAME} 0 9 STRIPED_MCU_NAME)

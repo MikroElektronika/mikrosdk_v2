@@ -53,38 +53,31 @@
 #define HAL_LL_GPIO_P_OFFSET       ( 0x00UL )
 #define HAL_LL_GPIO_PM_OFFSET      ( 0x20UL )
 
-/* Per-port register banks, one byte per port index. */
-#define HAL_LL_GPIO_PDIDIS_BASE    ( 0xF02B0UL )
+/* PMCAn and PDIDISn are one byte per port index, HAL_LL_GPIO_PMCA_BASE,
+ * HAL_LL_GPIO_PMCA_MASKS, HAL_LL_GPIO_PDIDIS_BASE and HAL_LL_GPIO_PDIDIS_PORTS
+ * come from mcu_reg_addresses.h. Unimplemented PMCA bits must be kept at
+ * their reset value (1), hence the masks. */
+static const uint8_t hal_ll_gpio_pmca_masks[] = HAL_LL_GPIO_PMCA_MASKS;
 
-/* PMCAxx only exists for ports 1, 2 and 4. Unimplemented
- * bits must be kept at their reset value (1), hence the masks. */
-#define HAL_LL_PMCA1_BASE ( 0xF0061UL )
-#define HAL_LL_PMCA2_BASE ( 0xF0062UL )
-#define HAL_LL_PMCA4_BASE ( 0xF0064UL )
-#define HAL_LL_PMCA1_MASK ( 0x1FU )
-#define HAL_LL_PMCA2_MASK ( 0xFFU )
-#define HAL_LL_PMCA4_MASK ( 0x3CU )
-
+#ifdef HAL_LL_GPIO_PFSEG0_ADDR
 /* LCD port function registers. PFSEG0 bits 0-3 are
  * PFCOM0-3 (P90-P93), PFSEGz lives in PFSEG(1 + z / 8) bit (z % 8). Most of
- * these reset to 1, i.e. the pin is an LCD output with digital I/O disabled. */
-#define HAL_LL_PFSEG0_BASE         ( 0xF0290UL )
-#define HAL_LL_PFSEG1_BASE         ( 0xF0291UL )
-
-/* LCD input switch control register. Resets to 0, i.e.
+ * these reset to 1, i.e. the pin is an LCD output with digital I/O disabled.
+ * LCD input switch control register ISCLCD resets to 0, i.e.
  * P85-P87 and P125-P127 are LCD pins with digital input disabled. */
-#define HAL_LL_ISCLCD_ADDR         ( 0xF0298UL )
 #define HAL_LL_ISCLCD_ISCCAP       ( 0x01U )
 #define HAL_LL_ISCLCD_ISCVL1       ( 0x02U )
 #define HAL_LL_ISCLCD_ISCVL2       ( 0x04U )
 #define HAL_LL_ISCLCD_ISCVL3       ( 0x08U )
 #define HAL_LL_ISCLCD_ISCVL4       ( 0x10U )
+#endif
 
 /* Port 13 has no PM register (P130 output only, P137 input only). */
 #define HAL_LL_GPIO_PORT_13_INDEX  ( 13 )
 
 #define HAL_LL_GPIO_PORT_INDEX_MAX ( sizeof( hal_ll_gpio_port_base_arr ) / sizeof( hal_ll_gpio_port_base_arr[ 0 ] ) )
 
+#ifdef HAL_LL_GPIO_PFSEG0_ADDR
 /*!< @brief Pins of a port that have a PFSEGz bit, PFSEGz = seg_offset + pin. */
 typedef struct {
     uint8_t pin_mask;
@@ -110,14 +103,24 @@ static const hal_ll_gpio_seg_map_t hal_ll_gpio_seg_map[] =
     { 0x01, 28 }, /* P130 -> SEG28 */
     { 0x3E, 50 }  /* P141-P145 -> SEG51-SEG55 */
 };
+#endif
 
 static inline hal_ll_base_addr_t hal_ll_gpio_analog_ctrl_base( uint8_t port_index, uint8_t *implemented ) {
-    switch ( port_index ) {
-        case 1:  *implemented = HAL_LL_PMCA1_MASK; return HAL_LL_PMCA1_BASE;
-        case 2:  *implemented = HAL_LL_PMCA2_MASK; return HAL_LL_PMCA2_BASE;
-        case 4:  *implemented = HAL_LL_PMCA4_MASK; return HAL_LL_PMCA4_BASE;
-        default: *implemented = 0; return 0;
+    if ( ( sizeof( hal_ll_gpio_pmca_masks ) > port_index ) && hal_ll_gpio_pmca_masks[ port_index ] ) {
+        *implemented = hal_ll_gpio_pmca_masks[ port_index ];
+        return HAL_LL_GPIO_PMCA_BASE + port_index;
     }
+
+    *implemented = 0;
+    return 0;
+}
+
+static inline hal_ll_base_addr_t hal_ll_gpio_pdidis_reg( uint8_t port_index ) {
+    if ( HAL_LL_GPIO_PDIDIS_PORTS & ( 1UL << port_index ) ) {
+        return HAL_LL_GPIO_PDIDIS_BASE + port_index;
+    }
+
+    return 0;
 }
 
 /*!< @brief GPIO PORT array */
@@ -228,6 +231,7 @@ static void hal_ll_gpio_config_pin_alternate_enable( uint32_t module_pin, uint32
   */
 static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
 
+#ifdef HAL_LL_GPIO_PFSEG0_ADDR
 /**
   * @brief  Enable or disable the digital buffers of pins shared with LCD functions.
   * @details PFSEGx/PFCOMy reset to 1 and ISCLCD to 0, leaving most pins in
@@ -239,6 +243,10 @@ static uint8_t hal_ll_gpio_pin_index( hal_ll_pin_name_t name );
   * @return none
   */
 static void hal_ll_gpio_set_digital_mode( uint8_t port_index, uint8_t mask, bool digital );
+#else
+/* No LCD port functions, every pin keeps its digital buffer. */
+#define hal_ll_gpio_set_digital_mode( _port_index, _mask, _digital )
+#endif
 
 // ------------------------------------------------ PUBLIC FUNCTION DEFINITIONS
 
@@ -301,6 +309,7 @@ static uint8_t hal_ll_gpio_get_port_number(uint32_t base_addr)
     return 0xFF; // Not found.
 }
 
+#ifdef HAL_LL_GPIO_PFSEG0_ADDR
 static void hal_ll_gpio_set_digital_mode( uint8_t port_index, uint8_t mask, bool digital ) {
     uint8_t pin;
     uint8_t seg;
@@ -310,9 +319,9 @@ static void hal_ll_gpio_set_digital_mode( uint8_t port_index, uint8_t mask, bool
     // P90-P93 -> PFCOM0-PFCOM3.
     if ( 9 == port_index ) {
         if ( !digital ) {
-            set_reg_bits( ( uint8_t * ) HAL_LL_PFSEG0_BASE, mask & 0x0F );
+            set_reg_bits( ( uint8_t * ) HAL_LL_GPIO_PFSEG0_ADDR, mask & 0x0F );
         } else {
-            clear_reg_bits( ( uint8_t * ) HAL_LL_PFSEG0_BASE, mask & 0x0F );
+            clear_reg_bits( ( uint8_t * ) HAL_LL_GPIO_PFSEG0_ADDR, mask & 0x0F );
         }
     }
 
@@ -323,7 +332,7 @@ static void hal_ll_gpio_set_digital_mode( uint8_t port_index, uint8_t mask, bool
             }
 
             seg = hal_ll_gpio_seg_map[ port_index ].seg_offset + pin;
-            reg = HAL_LL_PFSEG1_BASE + ( seg >> 3 );
+            reg = HAL_LL_GPIO_PFSEG1_ADDR + ( seg >> 3 );
 
             if ( !digital ) {
                 set_reg_bit( ( uint8_t * ) reg, seg & 0x07 );
@@ -345,12 +354,13 @@ static void hal_ll_gpio_set_digital_mode( uint8_t port_index, uint8_t mask, bool
 
     if ( iscl ) {
         if ( !digital ) {
-            clear_reg_bits( ( uint8_t * ) HAL_LL_ISCLCD_ADDR, iscl );
+            clear_reg_bits( ( uint8_t * ) HAL_LL_GPIO_ISCLCD_ADDR, iscl );
         } else {
-            set_reg_bits( ( uint8_t * ) HAL_LL_ISCLCD_ADDR, iscl );
+            set_reg_bits( ( uint8_t * ) HAL_LL_GPIO_ISCLCD_ADDR, iscl );
         }
     }
 }
+#endif
 
 static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t config ) {
     hal_ll_base_addr_t port_addr = ( hal_ll_base_addr_t ) port;
@@ -370,7 +380,7 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
     }
 
     analog_reg = hal_ll_gpio_analog_ctrl_base( port_index, &analog_implemented );
-    pdidis_reg = HAL_LL_GPIO_PDIDIS_BASE + port_index;
+    pdidis_reg = hal_ll_gpio_pdidis_reg( port_index );
 
     switch ( config ) {
         case GPIO_CFG_DIGITAL_INPUT:
@@ -381,7 +391,9 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             if ( HAL_LL_GPIO_PORT_13_INDEX != port_index ) {
                 set_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
             }
-            clear_reg_bits( ( uint8_t * ) pdidis_reg, mask );
+            if ( 0 != pdidis_reg ) {
+                clear_reg_bits( ( uint8_t * ) pdidis_reg, mask );
+            }
             break;
 
         case GPIO_CFG_DIGITAL_OUTPUT:
@@ -397,13 +409,15 @@ static void hal_ll_gpio_config( uint32_t *port, uint16_t pin_mask, uint32_t conf
             if ( HAL_LL_GPIO_PORT_13_INDEX != port_index ) {
                 clear_reg_bits( ( uint8_t * ) ( port_addr + HAL_LL_GPIO_PM_OFFSET ), mask );
             }
-            clear_reg_bits( ( uint8_t * ) pdidis_reg, mask );
+            if ( 0 != pdidis_reg ) {
+                clear_reg_bits( ( uint8_t * ) pdidis_reg, mask );
+            }
             break;
 
         case GPIO_CFG_ANALOG_INPUT:
-            /* Only P10-P14, P20-P27 and P42-P45 have an analog function
-             * (PMCAxx). Analog requires PMCAmn = 1, PFSEGz = 1 (where the pin
-             * has one) and PMmn = 1. */
+            /* Only pins with a PMCAmn bit have an analog function. Analog
+             * requires PMCAmn = 1, PFSEGz = 1 (where the pin has one) and
+             * PMmn = 1. */
             if ( 0 == analog_reg ) {
                 break;
             }

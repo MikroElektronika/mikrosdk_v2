@@ -59,12 +59,18 @@ extern "C"{
 typedef struct {
     hal_ll_pin_name_t pin;
     hal_ll_base_addr_t base;
-    uint8_t af; /*!< PIOR0/PIOR1/PIOR2 field value routing this pin. */
+    uint8_t af; /*!< PIOR routing value, see hal_ll_pior_af_to_value(). */
     hal_ll_pin_name_t module_index;
 } hal_ll_tim_pin_map_t;
 
 /*!< TIM pins. */
 static const hal_ll_tim_pin_map_t hal_ll_tim_pin_map[] = {
+    #ifdef TIM0_P016_CH1_AF0
+    {GPIO_P016, HAL_LL_TIM0_BASE_ADDR, 0, hal_ll_tim_module_num( TIM_MODULE_0 )},
+    #endif
+    #ifdef TIM1_P031_CH3_AF0
+    {GPIO_P031, HAL_LL_TIM1_BASE_ADDR, 0, hal_ll_tim_module_num( TIM_MODULE_1 )},
+    #endif
     #ifdef TIM1_P064_CH3_AF4
     {GPIO_P064, HAL_LL_TIM1_BASE_ADDR, 4, hal_ll_tim_module_num( TIM_MODULE_1 )},
     #endif

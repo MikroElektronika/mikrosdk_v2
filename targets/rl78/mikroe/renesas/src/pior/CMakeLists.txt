@@ -2,7 +2,7 @@
 set(hal_ll_def_list "")
 
 ## BEGIN PIOR
-if(${MCU_NAME} MATCHES "^R7F100.+$") # TODO
+if(${MCU_NAME} MATCHES "^R7F10[01].+$")
     list(APPEND hal_ll_def_list "__rl78__")
 else()
     list(APPEND hal_ll_def_list "__family_not_supported__")

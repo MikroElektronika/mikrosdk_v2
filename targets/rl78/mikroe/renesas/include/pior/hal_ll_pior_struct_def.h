@@ -18,8 +18,9 @@ extern "C"{
  * direction mirrors the manual's own Input/Output/Input-output column -
  * it's informational here (hal_ll_gpio_config() already does the real
  * PM/PDIDIS work), not a register to write.
- * pior_width == 0 means "not redirectable, skip the PIOR write entirely"
- * (matches the pior_width check already in hal_ll_gpio_port.c). */
+ * pior_mask selects the PIORn bits routing the function and pior_value
+ * holds those bits in position. pior_mask == 0 means "not redirectable,
+ * skip the PIOR write entirely". */
 typedef struct
 {
     hal_ll_pin_name_t            pin;
@@ -28,8 +29,7 @@ typedef struct
     hal_ll_pior_functionality_t  pior_func;
     hal_ll_pior_module_index_t   module_index;
     uint8_t                      pior_reg;
-    uint8_t                      pior_shift;
-    uint8_t                      pior_width;
+    uint8_t                      pior_mask;
     uint8_t                      pior_value;
     bool                         open_drain;   // true for every SDA row
 } hal_ll_pior_pin_map_t;

@@ -63,6 +63,12 @@ typedef enum
 {
     HAL_LL_ADC_CHANNEL_0 = 0,
     HAL_LL_ADC_CHANNEL_1 = 1,
+    HAL_LL_ADC_CHANNEL_2 = 2,
+    HAL_LL_ADC_CHANNEL_3 = 3,
+    HAL_LL_ADC_CHANNEL_4 = 4,
+    HAL_LL_ADC_CHANNEL_5 = 5,
+    HAL_LL_ADC_CHANNEL_6 = 6,
+    HAL_LL_ADC_CHANNEL_7 = 7,
     HAL_LL_ADC_CHANNEL_16 = 16,
     HAL_LL_ADC_CHANNEL_17 = 17,
     HAL_LL_ADC_CHANNEL_18 = 18,
@@ -74,6 +80,10 @@ typedef enum
     HAL_LL_ADC_CHANNEL_24 = 24,
     HAL_LL_ADC_CHANNEL_25 = 25,
     HAL_LL_ADC_CHANNEL_26 = 26,
+    HAL_LL_ADC_CHANNEL_27 = 27,
+    HAL_LL_ADC_CHANNEL_28 = 28,
+    HAL_LL_ADC_CHANNEL_29 = 29,
+    HAL_LL_ADC_CHANNEL_30 = 30,
 
     HAL_LL_ADC_CHANNEL_NC = 0xFF
 } hal_ll_adc_channel_t;
@@ -91,6 +101,9 @@ static const hal_ll_pin_channel_list_t hal_ll_analog_in_register_list[] =
 {
     #ifdef ADC0_P027_AN021
     {GPIO_P027, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_21},
+    #endif
+    #ifdef ADC0_P022_AN002
+    {GPIO_P022, HAL_LL_ADC0_BASE_ADDR, hal_ll_adc_module_num( ADC_MODULE_0 ), HAL_LL_ADC_CHANNEL_2},
     #endif
 
     {HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_ADC_CHANNEL_NC}
