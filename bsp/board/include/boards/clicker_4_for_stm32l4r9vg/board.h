@@ -1,4 +1,4 @@
-/home/ivan-ruzavin/.MIKROE/NECTOStudio7/databases//****************************************************************************
+/****************************************************************************
 **
 ** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
