@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC_2GO_XMC1100_V1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC1100-Q024F0064"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
