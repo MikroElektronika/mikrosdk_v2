@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC48_IOT_AWS_WIFI",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC4800-F100K2048"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

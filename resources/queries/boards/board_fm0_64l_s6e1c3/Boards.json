@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FM0_64L_S6E1C3",
+    "name": "FM0 PLUS S6E1C-Series Starter Kit",
+    "icon": "images/boards/board-fm0-64l-s6e1c3.png",
+    "default_device": "",
+    "soldered_device": "S6E1C32D0AGV20000",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FM0_64L_S6E1C3\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/LQFP"
+}

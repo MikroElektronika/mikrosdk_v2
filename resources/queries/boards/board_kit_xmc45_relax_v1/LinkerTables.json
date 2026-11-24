@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC45_RELAX_V1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC4500-F100F1024"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

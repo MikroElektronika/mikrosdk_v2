@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC43_RELAX_ECAT_V1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC4300-F100K256"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

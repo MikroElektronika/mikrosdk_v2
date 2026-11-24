@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_KIT_XMC48_IOT_AWS_WIFI",
+    "name": "XMC4800 IoT Amazon FreeRTOS Connectivity Kit",
+    "icon": "images/boards/board-kit-xmc48-iot-aws-wifi.png",
+    "default_device": "",
+    "soldered_device": "XMC4800-F100K2048",
+    "category": "Development Systems",
+    "mikrobus_count": 1,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_KIT_XMC48_IOT_AWS_WIFI\",\"HAS_MIKROBUS\":\"true\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

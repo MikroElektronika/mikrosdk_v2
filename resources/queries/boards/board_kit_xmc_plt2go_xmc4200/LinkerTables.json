@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC_PLT2GO_XMC4200",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC4200-F64K256"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
