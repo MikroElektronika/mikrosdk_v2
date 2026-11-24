@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FM4_216_ETH",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "S6E2CCAL0AGL2000A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

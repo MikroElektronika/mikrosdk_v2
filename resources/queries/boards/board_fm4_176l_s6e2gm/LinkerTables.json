@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FM4_176L_S6E2GM",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "S6E2GM8J0AGV2000A"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
