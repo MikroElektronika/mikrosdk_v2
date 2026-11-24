@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_CY8CKIT_041S_MAX",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "CY8C4149AZI-S598"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

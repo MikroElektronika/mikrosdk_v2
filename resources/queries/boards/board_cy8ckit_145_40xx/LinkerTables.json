@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_CY8CKIT_145_40XX",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "CY8C4045AZI-S413"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

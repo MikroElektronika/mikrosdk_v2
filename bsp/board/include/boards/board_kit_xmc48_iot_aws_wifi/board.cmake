@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_KIT_XMC48_IOT_AWS_WIFI")
+    set(BOARD_PATH "include/boards/board_kit_xmc48_iot_aws_wifi")
+    set(MCU_CARD FALSE)
+    set(SHIELD TRUE)
+    set(DIP_SOCKET FALSE)
+endif()

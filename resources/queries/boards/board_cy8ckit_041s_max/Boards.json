@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_CY8CKIT_041S_MAX",
+    "name": "PSoC 4100S Max Pioneer Kit",
+    "icon": "images/boards/board-cy8ckit-041s-max.png",
+    "default_device": "",
+    "soldered_device": "CY8C4149AZI-S598",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_CY8CKIT_041S_MAX\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/TQFP"
+}

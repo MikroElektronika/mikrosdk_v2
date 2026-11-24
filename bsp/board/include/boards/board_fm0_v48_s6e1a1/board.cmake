@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_FM0_V48_S6E1A1")
+    set(BOARD_PATH "include/boards/board_fm0_v48_s6e1a1")
+    set(MCU_CARD FALSE)
+    set(SHIELD FALSE)
+    set(DIP_SOCKET FALSE)
+endif()

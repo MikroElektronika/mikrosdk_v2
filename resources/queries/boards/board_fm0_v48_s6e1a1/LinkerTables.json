@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FM0_V48_S6E1A1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "S6E1A12C0AGV20000"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
