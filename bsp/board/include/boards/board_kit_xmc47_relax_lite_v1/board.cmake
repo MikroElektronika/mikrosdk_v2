@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_KIT_XMC47_RELAX_LITE_V1")
+    set(BOARD_PATH "include/boards/board_kit_xmc47_relax_lite_v1")
+    set(MCU_CARD FALSE)
+    set(SHIELD TRUE)
+    set(DIP_SOCKET FALSE)
+endif()

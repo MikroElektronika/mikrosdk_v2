@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_KIT_XMC_PLT2GO_XMC4200")
+    set(BOARD_PATH "include/boards/board_kit_xmc_plt2go_xmc4200")
+    set(MCU_CARD FALSE)
+    set(SHIELD TRUE)
+    set(DIP_SOCKET FALSE)
+endif()

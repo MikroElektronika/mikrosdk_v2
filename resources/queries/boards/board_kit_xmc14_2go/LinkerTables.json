@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC14_2GO",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC1404-Q040X0200"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC1300_DC_V1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC1302-T038X0200"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
