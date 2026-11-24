@@ -72,23 +72,6 @@ static volatile hal_ll_i2c_master_handle_register_t hal_ll_module_state[I2C_MODU
 #define HAL_LL_I2C_PER0_ADDR            ( 0xF00F0UL )
 #define HAL_LL_I2C_PRR0_ADDR            ( 0xF00F1UL )
 
-/*!< @brief IICA0 2nd SFR area and INTIICA0 flag/mask (IICAIF0 = IF1L.3, IICAMK0 = MK1L.3). */
-#define HAL_LL_I2C0_CTRL_BASE_ADDR      ( 0xF0230UL ) // IICCTL00
-#define HAL_LL_I2C0_IF_ADDR             ( 0xFFFE2UL ) // IF1L
-#define HAL_LL_I2C0_MK_ADDR             ( 0xFFFE6UL ) // MK1L
-#define HAL_LL_I2C0_INT_BIT             ( 3 )
-
-/*!< @brief IICA1 2nd SFR area and INTIICA1 flag/mask (IICAIF1 = IF2H.7, IICAMK1 = MK2H.7). */
-#define HAL_LL_I2C1_CTRL_BASE_ADDR      ( 0xF0238UL ) // IICCTL10
-#define HAL_LL_I2C1_IF_ADDR             ( 0xFFFD1UL ) // IF2H
-#define HAL_LL_I2C1_MK_ADDR             ( 0xFFFD5UL ) // MK2H
-#define HAL_LL_I2C1_INT_BIT             ( 7 )
-
-/*!< @brief PIOR12 routes IICA0 (bits 1:0) and IICA1 (bits 3:2). */
-#define HAL_LL_I2C_PIOR_REG             ( 12 )
-#define hal_ll_i2c_pior_shift(_index)   ( ( _index ) << 1 )
-#define HAL_LL_I2C_PIOR_WIDTH           ( 2 )
-
 /*!< @brief IICCTLn0 bits */
 #define HAL_LL_I2C_IICCTL0_IICE         (7)
 #define HAL_LL_I2C_IICCTL0_LREL         (6)
@@ -165,6 +148,8 @@ typedef struct {
     hal_ll_base_addr_t if_reg;    /*!< IFxx register holding IICAIFn */
     hal_ll_base_addr_t mk_reg;    /*!< MKxx register holding IICAMKn */
     uint8_t int_bit;
+    uint8_t pior_reg;             /*!< PIORn routing SCLAn and SDAAn */
+    uint8_t pior_mask;            /*!< PIORn bits routing SCLAn and SDAAn */
     hal_ll_pin_name_t module_index;
     hal_ll_i2c_pins_t pins;
     uint32_t speed;
@@ -217,16 +202,18 @@ typedef enum {
 static hal_ll_i2c_hw_specifics_map_t hal_ll_i2c_hw_specifics_map[ I2C_MODULE_COUNT + 1 ] = {
     #ifdef I2C_MODULE_0
     {HAL_LL_I2C0_BASE_ADDR, HAL_LL_I2C0_CTRL_BASE_ADDR, HAL_LL_I2C0_IF_ADDR, HAL_LL_I2C0_MK_ADDR, HAL_LL_I2C0_INT_BIT,
+     HAL_LL_I2C0_PIOR_REG, HAL_LL_I2C0_PIOR_MASK,
      hal_ll_i2c_module_num( I2C_MODULE_0 ), {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
      HAL_LL_I2C_MASTER_SPEED_100K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
     #ifdef I2C_MODULE_1
     {HAL_LL_I2C1_BASE_ADDR, HAL_LL_I2C1_CTRL_BASE_ADDR, HAL_LL_I2C1_IF_ADDR, HAL_LL_I2C1_MK_ADDR, HAL_LL_I2C1_INT_BIT,
+     HAL_LL_I2C1_PIOR_REG, HAL_LL_I2C1_PIOR_MASK,
      hal_ll_i2c_module_num( I2C_MODULE_1 ), {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}},
      HAL_LL_I2C_MASTER_SPEED_100K, 0, HAL_LL_I2C_DEFAULT_PASS_COUNT},
     #endif
 
-    {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 0,
+    {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 0, 0, 0,
      HAL_LL_MODULE_ERROR, {{HAL_LL_PIN_NC, 0}, {HAL_LL_PIN_NC, 0}}, 0, 0, 0}
 };
 
@@ -270,8 +257,8 @@ static void hal_ll_i2c_init( hal_ll_i2c_hw_specifics_map_t *map );
 /**
   * @brief  Sets I2C pin alternate function state.
   *
-  * Routes SCLAn/SDAAn through PIOR12 and leaves both pins in input mode,
-  * so they never drive the bus while IICEn = 0.
+  * Routes SCLAn/SDAAn through the module's PIOR bits and leaves both pins
+  * in input mode, so they never drive the bus while IICEn = 0.
   *
   * @param[in]  *map - Object specific context handler.
   * @param[in]  hal_ll_state - Init/De-init
@@ -813,9 +800,8 @@ static void hal_ll_i2c_master_alternate_functions_set_state( hal_ll_i2c_hw_speci
                                                              bool hal_ll_state ) {
     if ( ( map->pins.pin_scl.pin_name != HAL_LL_PIN_NC ) && ( map->pins.pin_sda.pin_name != HAL_LL_PIN_NC ) ) {
         if ( hal_ll_state ) {
-            // One PIOR12 field routes both SCLAn and SDAAn.
-            hal_ll_pior_set_field( HAL_LL_I2C_PIOR_REG, hal_ll_i2c_pior_shift( map->module_index ),
-                                   HAL_LL_I2C_PIOR_WIDTH, map->pins.pin_scl.pin_af );
+            // The same PIOR bits route both SCLAn and SDAAn.
+            hal_ll_pior_route( map->pior_reg, map->pior_mask, map->pins.pin_scl.pin_af );
         }
 
         // Input in both cases, the pins only become outputs once IICEn = 1 (see hal_ll_i2c_init()).
