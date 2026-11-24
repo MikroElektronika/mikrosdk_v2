@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_KIT_XMC14_BOOT_001",
+    "name": "XMC1400 Boot Kit",
+    "icon": "images/boards/board-kit-xmc14-boot-001.png",
+    "default_device": "",
+    "soldered_device": "XMC1404-Q064X0200",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_KIT_XMC14_BOOT_001\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/VQFN"
+}

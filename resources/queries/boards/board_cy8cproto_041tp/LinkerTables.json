@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_CY8CPROTO_041TP",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "CY8C4147AZQ-T495"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}
