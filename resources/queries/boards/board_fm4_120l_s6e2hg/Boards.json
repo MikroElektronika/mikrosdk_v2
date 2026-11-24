@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FM4_120L_S6E2HG",
+    "name": "FM4 S6E2H-Series Starter Kit",
+    "icon": "images/boards/board-fm4-120l-s6e2hg.png",
+    "default_device": "",
+    "soldered_device": "S6E2HG6G0AGV20000",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FM4_120L_S6E2HG\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "120/LQFP"
+}
