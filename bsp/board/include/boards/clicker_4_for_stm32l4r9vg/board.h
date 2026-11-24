@@ -1,4 +1,4 @@
-/****************************************************************************
+/home/ivan-ruzavin/.MIKROE/NECTOStudio7/databases//****************************************************************************
 **
 ** Copyright (C) ${COPYRIGHT_YEAR} MikroElektronika d.o.o.
 ** Contact: https://www.mikroe.com/contact
@@ -69,13 +69,13 @@ extern "C"
 #define MIKROBUS_1_SDA GPIO_PB11
 
 #define MIKROBUS_2 2
-#define MIKROBUS_2_AN GPIO_PC5
+#define MIKROBUS_2_AN GPIO_PA0
 #define MIKROBUS_2_RST GPIO_PE7
 #define MIKROBUS_2_CS GPIO_PE8
 #define MIKROBUS_2_SCK GPIO_PA5
 #define MIKROBUS_2_MISO GPIO_PA6
 #define MIKROBUS_2_MOSI GPIO_PA7
-#define MIKROBUS_2_PWM GPIO_PD12
+#define MIKROBUS_2_PWM GPIO_PE6
 #define MIKROBUS_2_INT GPIO_PB2
 #define MIKROBUS_2_RX GPIO_PB7
 #define MIKROBUS_2_TX GPIO_PB6
@@ -84,8 +84,8 @@ extern "C"
 
 #define MIKROBUS_3 3
 #define MIKROBUS_3_AN GPIO_PB0
-#define MIKROBUS_3_RST GPIO_PD11
-#define MIKROBUS_3_CS GPIO_PD13
+#define MIKROBUS_3_RST GPIO_PD7
+#define MIKROBUS_3_CS GPIO_PD6
 #define MIKROBUS_3_SCK GPIO_PA5
 #define MIKROBUS_3_MISO GPIO_PA6
 #define MIKROBUS_3_MOSI GPIO_PA7
