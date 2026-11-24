@@ -60,13 +60,19 @@ typedef struct {
     uint8_t module_index;
     hal_ll_pin_name_t pin;
     hal_ll_base_addr_t base;
-    uint8_t af; /*!< PIOR10/PIOR11 field value routing this pin. */
+    uint8_t af; /*!< PIOR routing value, see hal_ll_pior_af_to_value(). */
 } hal_ll_uart_pin_map_t;
 
 /*!< UART TX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
+    #ifdef UART1_TX_P002_AF0
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_P002, HAL_LL_UART1_BASE_ADDR, 0},
+    #endif
     #ifdef UART2_TX_P077_AF0
     {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P077, HAL_LL_UART2_BASE_ADDR, 0},
+    #endif
+    #ifdef UART2_TX_P077_AF1
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P077, HAL_LL_UART2_BASE_ADDR, 1},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}
@@ -74,8 +80,14 @@ static const hal_ll_uart_pin_map_t hal_ll_uart_tx_map[] = {
 
 /*!< UART RX Pins. */
 static const hal_ll_uart_pin_map_t hal_ll_uart_rx_map[] = {
+    #ifdef UART1_RX_P003_AF0
+    {hal_ll_uart_module_num(UART_MODULE_1), GPIO_P003, HAL_LL_UART1_BASE_ADDR, 0},
+    #endif
     #ifdef UART2_RX_P076_AF0
     {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P076, HAL_LL_UART2_BASE_ADDR, 0},
+    #endif
+    #ifdef UART2_RX_P076_AF1
+    {hal_ll_uart_module_num(UART_MODULE_2), GPIO_P076, HAL_LL_UART2_BASE_ADDR, 1},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC, HAL_LL_MODULE_ERROR, HAL_LL_PIN_NC}

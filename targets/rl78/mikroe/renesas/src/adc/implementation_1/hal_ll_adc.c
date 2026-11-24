@@ -78,8 +78,8 @@
 #define HAL_LL_ADC_ADUL_ADDR          ( 0xF0011UL )
 #define HAL_LL_ADC_ADLL_ADDR          ( 0xF0012UL )
 #define HAL_LL_ADC_ADTES_ADDR         ( 0xF0013UL )
-#define HAL_LL_ADC_ADCR0_ADDR         ( 0xF0020UL )
-#define HAL_LL_ADC_ADCR0H_ADDR        ( 0xF0021UL )
+/*!< @brief Conversion result register, HAL_LL_ADC_RESULT_ADDR comes from mcu_reg_addresses.h. */
+#define HAL_LL_ADC_RESULT_H_ADDR      ( HAL_LL_ADC_RESULT_ADDR + 1 )
 
 // ADC bit positions and masks
 #define HAL_LL_ADC_PER0_ADCEN_BIT     ( 5 )
@@ -87,31 +87,27 @@
 #define HAL_LL_ADC_ADM0_ADCE_BIT      ( 0 )
 #define HAL_LL_ADC_ADM0_FR_SHIFT      ( 3 )     /* Conversion clock, bits 5:3 */
 #define HAL_LL_ADC_ADM0_LV_NORMAL1    ( 0x00 )  /* Normal mode 1, LV1:LV0 = 00 */
-#define HAL_LL_ADC_ADM0_LV_LOW1       ( 0x04 )  /* Low-voltage mode 1, LV1:LV0 = 10 */
 #define HAL_LL_ADC_ADM1_ADSCM         ( 0x20 )  /* One-shot conversion mode */
 #define HAL_LL_ADC_ADM1_ADLSP         ( 0x08 )  /* 1 MHz <= fCLK <= 4 MHz */
 
 #define HAL_LL_ADC_ADM2_ADTYP_10BIT   ( 0x00 )
 #define HAL_LL_ADC_ADM2_ADTYP_8BIT    ( 0x01 )
 #define HAL_LL_ADC_ADM2_ADTYP_12BIT   ( 0x02 )
-#define HAL_LL_ADC_ADM2_ADREFP_EXT    ( 0x40 )  /* P21/AVREFP pin */
-#define HAL_LL_ADC_ADM2_ADREFP_INT    ( 0x80 )  /* Internal reference */
-#define HAL_LL_ADC_ADM2_ADREFP_DISCH  ( 0xC0 )  /* Required before switching to internal ref */
+#define HAL_LL_ADC_ADM2_ADREFP_VDD    ( 0x00 )  /* VDD */
+#define HAL_LL_ADC_ADM2_ADREFP_EXT    ( 0x40 )  /* AVREFP pin */
 
 #define HAL_LL_ADC_ADS_CHANNEL_MASK   ( 0x1F )
-#define HAL_LL_ADC_10BIT_SHIFT        ( 6 )     /* 10-bit result is left aligned in ADCR0 */
+#define HAL_LL_ADC_10BIT_SHIFT        ( 6 )     /* 10-bit result is left aligned in the result register */
 
 #define HAL_LL_ADC_FAD_MAX_HZ         ( 2000000UL ) /* Keeps fAD in 1-2 MHz, valid for every mode */
 #define HAL_LL_ADC_ADLSP_MAX_HZ       ( 4000000UL )
 #define HAL_LL_ADC_FR_FCLK            ( 5 )     /* FR2:FR0 = 101 -> fAD = fCLK */
 
-/*!< @brief P21 is shared between ANI0 and AVREFP. */
-#define HAL_LL_ADC_AVREFP_PIN         ( GPIO_P021 )
+/*!< @brief Pin shared between an ANIx input and AVREFP, HAL_LL_ADC_AVREFP_PIN comes from mcu_reg_addresses.h. */
 
 #define HAL_LL_ADC_STOP_WAIT_US       ( 5 )  /* 0.2us before FR/LV change, 5us before re-enabling */
 #define HAL_LL_ADC_REF_STABILIZE_US   ( 5 )  /* Reference voltage stabilization time A */
 #define HAL_LL_ADC_STABILIZATION_US   ( 3 )  /* Time B: 1us + 2 fAD cycles, fAD >= 1 MHz */
-#define HAL_LL_ADC_DISCHARGE_US       ( 1 )  /* Reference discharge time */
 
 // -------------------------------------------------------------- PRIVATE TYPES
 /*!< @brief Local handle list. */
@@ -212,7 +208,7 @@ static void hal_ll_adc_module_enable( hal_ll_adc_hw_specifics_map_t *map, bool h
 static void hal_ll_adc_set_clock( uint8_t lv_mode );
 
 /**
-  * @brief  Set the ADM2 positive reference source (AVREFP pin or internal) and resolution.
+  * @brief  Set the ADM2 positive reference source (VDD or AVREFP pin) and resolution.
   * @param[in]  vref - Voltage reference.
   * @param[in]  adm2_adtyp_resolution - ADTYP1:ADTYP0 bits.
   * @return None
@@ -268,7 +264,7 @@ hal_ll_err_t hal_ll_adc_register_handle(hal_ll_pin_name_t pin,
 
     switch ( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            // ANI0 and AVREFP share P21.
+            // This ANIx input and AVREFP share one pin.
             if ( HAL_LL_ADC_AVREFP_PIN == pin ) {
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
             }
@@ -357,7 +353,7 @@ hal_ll_err_t hal_ll_adc_set_vref_input( handle_t *handle, hal_ll_adc_voltage_ref
 
     switch( vref_input ) {
         case HAL_LL_ADC_VREF_EXTERNAL:
-            // ANI0 and AVREFP share P21.
+            // This ANIx input and AVREFP share one pin.
             if ( HAL_LL_ADC_AVREFP_PIN == hal_ll_adc_hw_specifics_map_local->pin ) {
                 return HAL_LL_ADC_UNSUPPORTED_VREF;
             }
@@ -410,13 +406,13 @@ hal_ll_err_t hal_ll_adc_read( handle_t *handle, uint16_t *readDatabuf ) {
 
     switch ( hal_ll_adc_hw_specifics_map_local->resolution ) {
         case HAL_ADC_8BIT_RES_VAL:
-            *readDatabuf = read_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADCR0H_ADDR ) );
+            *readDatabuf = read_reg( hal_ll_adc_reg8( HAL_LL_ADC_RESULT_H_ADDR ) );
             break;
         case HAL_ADC_10BIT_RES_VAL:
-            *readDatabuf = read_reg( hal_ll_adc_reg16( HAL_LL_ADC_ADCR0_ADDR ) ) >> HAL_LL_ADC_10BIT_SHIFT;
+            *readDatabuf = read_reg( hal_ll_adc_reg16( HAL_LL_ADC_RESULT_ADDR ) ) >> HAL_LL_ADC_10BIT_SHIFT;
             break;
         default:
-            *readDatabuf = read_reg( hal_ll_adc_reg16( HAL_LL_ADC_ADCR0_ADDR ) ) & HAL_ADC_12BIT_RES_VAL;
+            *readDatabuf = read_reg( hal_ll_adc_reg16( HAL_LL_ADC_RESULT_ADDR ) ) & HAL_ADC_12BIT_RES_VAL;
             break;
     }
 
@@ -545,11 +541,8 @@ static void hal_ll_adc_set_clock( uint8_t lv_mode ) {
 
 static void hal_ll_adc_set_reference( hal_ll_adc_voltage_reference_t vref, uint8_t adm2_adtyp_resolution ) {
     if ( HAL_LL_ADC_VREF_INTERNAL == vref ) {
-        // Discharge first when switching to the internal reference.
-        write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM2_ADDR ), HAL_LL_ADC_ADM2_ADREFP_DISCH | adm2_adtyp_resolution );
-        Delay_us( HAL_LL_ADC_DISCHARGE_US );
-
-        write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM2_ADDR ), HAL_LL_ADC_ADM2_ADREFP_INT | adm2_adtyp_resolution );
+        // Internal reference is the VDD supply.
+        write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM2_ADDR ), HAL_LL_ADC_ADM2_ADREFP_VDD | adm2_adtyp_resolution );
     } else {
         write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM2_ADDR ), HAL_LL_ADC_ADM2_ADREFP_EXT | adm2_adtyp_resolution );
     }
@@ -565,9 +558,12 @@ static void hal_ll_adc_hw_init( hal_ll_adc_hw_specifics_map_t *map ) {
     write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM0_ADDR ), 0 );
     Delay_us( HAL_LL_ADC_STOP_WAIT_US );
 
-    // Internal reference is only allowed in low-voltage mode.
-    hal_ll_adc_set_clock( ( HAL_LL_ADC_VREF_INTERNAL == map->vref_input ) ?
-                          HAL_LL_ADC_ADM0_LV_LOW1 : HAL_LL_ADC_ADM0_LV_NORMAL1 );
+    #ifdef HAL_LL_ADC_ADM3_ADDR
+    // ADVMOD = 0: normal mode, one channel selected through ADS, result in the result register.
+    write_reg( hal_ll_adc_reg8( HAL_LL_ADC_ADM3_ADDR ), 0 );
+    #endif
+
+    hal_ll_adc_set_clock( HAL_LL_ADC_ADM0_LV_NORMAL1 );
 
     switch ( map->resolution ) {
         case HAL_ADC_8BIT_RES_VAL:

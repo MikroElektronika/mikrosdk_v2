@@ -78,22 +78,12 @@ static volatile hal_ll_uart_handle_register_t hal_ll_module_state[ UART_MODULE_C
 #define HAL_LL_UART_PRR0_ADDR           ( 0xF00F1UL )
 #define HAL_LL_UART_NFEN0_ADDR          ( 0xF0070UL )
 
-/*!< @brief Receive data registers, SDRm1/SDRm3 (RXDq). */
-#define HAL_LL_UART0_RX_DATA_ADDR       ( 0xFFF12UL ) // SDR01
-#define HAL_LL_UART1_RX_DATA_ADDR       ( 0xFFF46UL ) // SDR03
-#define HAL_LL_UART2_RX_DATA_ADDR       ( 0xFFF4AUL ) // SDR11
-#define HAL_LL_UART3_RX_DATA_ADDR       ( 0xFFF16UL ) // SDR13
-
 /*!< @brief UARTq uses channels 2*(q%2) (TX) and 2*(q%2)+1 (RX) of SAU q/2. */
 #define hal_ll_uart_unit(_index)        ( ( _index ) >> 1 )
 #define hal_ll_uart_tx_channel(_index)  ( ( ( _index ) & 1 ) << 1 )
 #define hal_ll_uart_rx_channel(_index)  ( hal_ll_uart_tx_channel( _index ) + 1 )
 /*!< @brief Each UART owns one SPSm prescaler (CKm0 for UART0/2, CKm1 for UART1/3). */
 #define hal_ll_uart_cks(_index)         ( ( _index ) & 1 )
-/*!< @brief PIOR10 routes SAU0, PIOR11 routes SAU1; UART0/2 use bits 1:0, UART1/3 bits 5:4. */
-#define hal_ll_uart_pior_reg(_index)    ( 10 + hal_ll_uart_unit( _index ) )
-#define hal_ll_uart_pior_shift(_index)  ( ( ( _index ) & 1 ) << 2 )
-#define HAL_LL_UART_PIOR_WIDTH          ( 2 )
 /*!< @brief NFEN0 SNFENq0 bit for RxDq. */
 #define hal_ll_uart_nfen_bit(_index)    ( ( _index ) << 1 )
 
@@ -165,7 +155,9 @@ typedef struct {
     hal_ll_base_addr_t sau_base;      /*!< SAU unit register block. */
     hal_ll_pin_name_t module_index;
     hal_ll_uart_pins_t pins;
-    uint8_t pior_value;
+    uint8_t pior_reg;                 /*!< PIORn routing the TxDq/RxDq pair. */
+    uint8_t pior_mask;                /*!< PIORn bits routing the TxDq/RxDq pair. */
+    uint8_t pior_value;               /*!< Pin map AF value of the mapped pins. */
     hal_ll_uart_baud_t baud_rate;
     hal_ll_uart_parity_t parity;
     hal_ll_uart_stop_bits_t stop_bit;
@@ -199,23 +191,23 @@ typedef enum {
 static hal_ll_uart_hw_specifics_map_t hal_ll_uart_hw_specifics_map[ UART_MODULE_COUNT + 1 ] = {
     #ifdef UART_MODULE_0
     {HAL_LL_UART0_BASE_ADDR, HAL_LL_UART0_RX_DATA_ADDR, HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_0 ),
-     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, HAL_LL_UART0_PIOR_REG, HAL_LL_UART0_PIOR_MASK, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
     #ifdef UART_MODULE_1
     {HAL_LL_UART1_BASE_ADDR, HAL_LL_UART1_RX_DATA_ADDR, HAL_LL_SAU0_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_1 ),
-     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, HAL_LL_UART1_PIOR_REG, HAL_LL_UART1_PIOR_MASK, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
     #ifdef UART_MODULE_2
     {HAL_LL_UART2_BASE_ADDR, HAL_LL_UART2_RX_DATA_ADDR, HAL_LL_SAU1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_2 ),
-     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, HAL_LL_UART2_PIOR_REG, HAL_LL_UART2_PIOR_MASK, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
     #ifdef UART_MODULE_3
     {HAL_LL_UART3_BASE_ADDR, HAL_LL_UART3_RX_DATA_ADDR, HAL_LL_SAU1_BASE_ADDR, hal_ll_uart_module_num( UART_MODULE_3 ),
-     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
+     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, HAL_LL_UART3_PIOR_REG, HAL_LL_UART3_PIOR_MASK, 0, {115200, 0}, HAL_LL_UART_PARITY_DEFAULT, HAL_LL_UART_STOP_BITS_DEFAULT, HAL_LL_UART_DATA_BITS_DEFAULT, 10000},
     #endif
 
     {HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR,
-     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000}
+     {HAL_LL_PIN_NC, HAL_LL_PIN_NC}, 0, 0, 0, {0, 0}, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 10000}
 };
 
 /*!< @brief Global handle variables used in functions. */
@@ -227,8 +219,50 @@ static hal_ll_uart_isr_t irq_handler;
 static handle_t objects[UART_MODULE_COUNT];
 
 /*!< @brief TX/RX interrupt vectors, indexed by UART module number. */
-static const uint8_t hal_ll_uart_irq_tx[] = { UART0_TX_IVT, UART1_TX_IVT, UART2_TX_IVT, UART3_TX_IVT };
-static const uint8_t hal_ll_uart_irq_rx[] = { UART0_RX_IVT, UART1_RX_IVT, UART2_RX_IVT, UART3_RX_IVT };
+static const uint8_t hal_ll_uart_irq_tx[] = {
+    #ifdef UART_MODULE_0
+    UART0_TX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_1
+    UART1_TX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_2
+    UART2_TX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_3
+    UART3_TX_IVT,
+    #else
+    0,
+    #endif
+};
+static const uint8_t hal_ll_uart_irq_rx[] = {
+    #ifdef UART_MODULE_0
+    UART0_RX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_1
+    UART1_RX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_2
+    UART2_RX_IVT,
+    #else
+    0,
+    #endif
+    #ifdef UART_MODULE_3
+    UART3_RX_IVT,
+    #else
+    0,
+    #endif
+};
 
 // ---------------------------------------------- PRIVATE FUNCTION DECLARATIONS
 /**
@@ -266,7 +300,7 @@ static void hal_ll_uart_map_pins( uint8_t module_index, hal_ll_uart_pin_id *inde
 /**
   * @brief  Sets UART pin alternate function state.
   *
-  * Routes TxDq/RxDq through PIOR10/PIOR11 and configures
+  * Routes TxDq/RxDq through the module's PIOR bits and configures
   * pin directions. TX output latch is left high, since
   * the pin outputs the latch ANDed with the serial output.
   *
@@ -890,10 +924,8 @@ static void hal_ll_uart_alternate_functions_set_state( hal_ll_uart_hw_specifics_
         ( map->pins.tx_pin != HAL_LL_PIN_NC ))
     {
         if ( hal_ll_state ) {
-            // Written directly, hal_ll_pior_map() can match a PIOR13 (UARTA) row for the same pin and module index.
-            hal_ll_pior_set_field( hal_ll_uart_pior_reg( map->module_index ),
-                                   hal_ll_uart_pior_shift( map->module_index ),
-                                   HAL_LL_UART_PIOR_WIDTH, map->pior_value );
+            // Written directly, hal_ll_pior_map() can match a UARTA row for the same pin and module index.
+            hal_ll_pior_route( map->pior_reg, map->pior_mask, map->pior_value );
         }
 
         module.pins[0] = map->pins.tx_pin;

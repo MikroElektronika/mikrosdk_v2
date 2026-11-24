@@ -146,6 +146,12 @@
 //EOF I2C
 
 //UART
+#ifdef __P002_CN
+#define UART1_TX_P002_AF0
+#endif
+#ifdef __P003_CN
+#define UART1_RX_P003_AF0
+#endif
 #ifdef __P077_CN
 #define UART2_TX_P077_AF1
 #endif
