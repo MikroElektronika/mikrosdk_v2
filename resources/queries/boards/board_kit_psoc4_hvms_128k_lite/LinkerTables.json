@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_PSOC4_HVMS_128K_LITE",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "CY8C4147LWE-HVS135X"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

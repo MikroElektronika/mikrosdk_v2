@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_KIT_XMC47_RELAX_LITE_V1",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "XMC4700-F144K2048"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

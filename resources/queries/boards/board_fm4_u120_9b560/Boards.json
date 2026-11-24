@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FM4_U120_9B560",
+    "name": "FM4 MB9B560R Series Starter Kit",
+    "icon": "images/boards/board-fm4-u120-9b560.png",
+    "default_device": "",
+    "soldered_device": "CY9BF568RPMC-GNE2",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FM4_U120_9B560\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "120/LQFP"
+}

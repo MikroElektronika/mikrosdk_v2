@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_CY8CKIT_145_40XX",
+    "name": "PSoC 4000S CAPSENSE Prototyping Kit",
+    "icon": "images/boards/board-cy8ckit-145-40xx.png",
+    "default_device": "",
+    "soldered_device": "CY8C4045AZI-S413",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_CY8CKIT_145_40XX\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/TQFP"
+}

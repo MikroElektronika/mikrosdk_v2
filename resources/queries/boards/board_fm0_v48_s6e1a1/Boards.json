@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_FM0_V48_S6E1A1",
+    "name": "FM0 PLUS S6E1A1 Evaluation Board",
+    "icon": "images/boards/board-fm0-v48-s6e1a1.png",
+    "default_device": "",
+    "soldered_device": "S6E1A12C0AGV20000",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_FM0_V48_S6E1A1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "48/LQFP"
+}
