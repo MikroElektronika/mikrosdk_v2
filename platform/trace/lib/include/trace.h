@@ -66,6 +66,10 @@
  * Linking MikroSDK.Trace is all an application needs: the library is always linked in
  * (not only when something calls it), it starts with the first recorded event, and it defines
  * MIKROSDK_TRACE for the application, which flattened GPIO macros (FLATTEN_ME_LEVEL_HIGH) need.
+ *
+ * Only Debug builds record. In a Release build MikroSDK.Trace is header only: it does not define
+ * MIKROSDK_TRACE, the drivers are not wrapped, and the calls below compile to nothing, so the
+ * same application builds both ways.
  */
 
 #ifndef _TRACE_H_
@@ -102,9 +106,14 @@ extern "C"{
  * @endcode
  * Sizes below 128 bytes leave the trace off.
  */
+#ifdef MIKROSDK_TRACE
 #define TRACE_BUFFER( size ) \
     volatile uint8_t __traceBuffer[ size ]; \
     TRACE_BUFFER_SIZE_TYPE __traceBufferSize = ( size )
+#else
+// Release build: no buffer. A declaration, so that the ";" written after it stays valid.
+#define TRACE_BUFFER( size ) extern int trace_buffer_unused_
+#endif
 
 /**
  * @brief Type of the buffer size the debugger reads.
@@ -182,6 +191,15 @@ void trace_set_flush_interval( uint32_t ms );
  * @endcode
  */
 void trace_value( const char *name, float value );
+
+#ifndef MIKROSDK_TRACE
+// Release build: MikroSDK.Trace is header only and these calls compile to nothing. Their
+// arguments are still evaluated, as in a Debug build.
+#define trace_init() ( (void)0 )
+#define trace_flush() ( (void)0 )
+#define trace_set_flush_interval( ms ) ( (void)( ms ) )
+#define trace_value( name, value ) ( (void)( name ), (void)( value ) )
+#endif
 
 /**
  * @brief Time base of the trace, in ticks.

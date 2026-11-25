@@ -36,6 +36,7 @@
     + Fast GPIO writes (a display strobe, a bit-banged bus) and fast bus transfers (a display filled pixel by pixel over SPI) are coalesced into bursts, so they do not stop the program over and over.
     + Time base: the core cycle counter (DWT CYCCNT on Cortex-M3 and newer, `mcycle` on RISC-V, CP0 Count on PIC32); Cortex-M0/M0+ keep the order of events but not the timing. Applications can supply their own timer through the weak `trace_ticks()` and `trace_tick_hz()`.
     + The GPIO Out, GPIO In, I2C Master, SPI Master, UART, ADC and 1-Wire drivers are traced through linker wrapping (`--wrap`): linking `MikroSDK.Trace` sends their calls through the trace, and the drivers themselves are unchanged. Projects without the trace library build exactly as before, and outside NECTO Studio (no `NECTO_APPLICATION_DIR`) the library is not built at all. Flattened GPIO macros (`FLATTEN_ME_LEVEL_HIGH`) report to the trace only when `MIKROSDK_TRACE` is defined, which the library does for the application.
+    + Only Debug builds record the trace. In Release builds `MikroSDK.Trace` is header only: no code, no linker options, and `trace_init()`, `trace_flush()`, `trace_set_flush_interval()`, `trace_value()` and `TRACE_BUFFER()` compile to nothing, so a project that links `MikroSDK.Trace` builds in both.
     + The library is built for ARM (GCC and Clang), RISC-V (GCC) and PIC32 (XC32); the architecture-specific code (interrupt lock, cycle counter) is in `trace_port.h`. mikroC is not supported (its linker cannot wrap symbols), nor are dsPIC/PIC24 (XC16) and XC8.
     + Added validation test under `tests/trace`.
 + **Timestamped plot**
@@ -50,6 +51,111 @@
 
 > NOTE:
 >> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2026-11-24](./new_hw/2026-11-24.md)**
++ **[2026-11-25](./new_hw/2026-11-25.md)**
++ **[2026-11-26](./new_hw/2026-11-26.md)**
++ **[2026-11-27](./new_hw/2026-11-27.md)**
++ **[2026-11-30](./new_hw/2026-11-30.md)**
++ **[2026-12-01](./new_hw/2026-12-01.md)**
++ **[2026-12-02](./new_hw/2026-12-02.md)**
++ **[2026-12-03](./new_hw/2026-12-03.md)**
++ **[2026-12-04](./new_hw/2026-12-04.md)**
++ **[2026-12-07](./new_hw/2026-12-07.md)**
++ **[2026-12-08](./new_hw/2026-12-08.md)**
++ **[2026-12-09](./new_hw/2026-12-09.md)**
++ **[2026-12-10](./new_hw/2026-12-10.md)**
++ **[2026-12-11](./new_hw/2026-12-11.md)**
++ **[2026-12-14](./new_hw/2026-12-14.md)**
++ **[2026-12-15](./new_hw/2026-12-15.md)**
++ **[2026-12-16](./new_hw/2026-12-16.md)**
++ **[2026-12-17](./new_hw/2026-12-17.md)**
++ **[2026-12-18](./new_hw/2026-12-18.md)**
++ **[2026-12-21](./new_hw/2026-12-21.md)**
++ **[2026-12-22](./new_hw/2026-12-22.md)**
++ **[2026-12-23](./new_hw/2026-12-23.md)**
++ **[2026-12-24](./new_hw/2026-12-24.md)**
++ **[2026-12-25](./new_hw/2026-12-25.md)**
++ **[2026-12-28](./new_hw/2026-12-28.md)**
++ **[2026-12-29](./new_hw/2026-12-29.md)**
++ **[2026-12-30](./new_hw/2026-12-30.md)**
++ **[2026-12-31](./new_hw/2026-12-31.md)**
++ **[2027-01-01](./new_hw/2027-01-01.md)**
++ **[2027-01-04](./new_hw/2027-01-04.md)**
++ **[2027-01-05](./new_hw/2027-01-05.md)**
++ **[2027-01-06](./new_hw/2027-01-06.md)**
++ **[2027-01-07](./new_hw/2027-01-07.md)**
++ **[2027-01-08](./new_hw/2027-01-08.md)**
++ **[2027-01-11](./new_hw/2027-01-11.md)**
++ **[2027-01-12](./new_hw/2027-01-12.md)**
++ **[2027-01-13](./new_hw/2027-01-13.md)**
++ **[2027-01-14](./new_hw/2027-01-14.md)**
++ **[2027-01-15](./new_hw/2027-01-15.md)**
++ **[2027-01-18](./new_hw/2027-01-18.md)**
++ **[2027-01-19](./new_hw/2027-01-19.md)**
++ **[2027-01-20](./new_hw/2027-01-20.md)**
++ **[2027-01-21](./new_hw/2027-01-21.md)**
++ **[2027-01-22](./new_hw/2027-01-22.md)**
++ **[2027-01-25](./new_hw/2027-01-25.md)**
++ **[2027-01-26](./new_hw/2027-01-26.md)**
++ **[2027-01-27](./new_hw/2027-01-27.md)**
++ **[2027-01-28](./new_hw/2027-01-28.md)**
++ **[2027-01-29](./new_hw/2027-01-29.md)**
++ **[2027-02-01](./new_hw/2027-02-01.md)**
++ **[2027-02-02](./new_hw/2027-02-02.md)**
++ **[2027-02-03](./new_hw/2027-02-03.md)**
++ **[2027-02-04](./new_hw/2027-02-04.md)**
++ **[2027-02-05](./new_hw/2027-02-05.md)**
++ **[2027-02-08](./new_hw/2027-02-08.md)**
++ **[2027-02-09](./new_hw/2027-02-09.md)**
++ **[2027-02-10](./new_hw/2027-02-10.md)**
++ **[2027-02-11](./new_hw/2027-02-11.md)**
++ **[2027-02-12](./new_hw/2027-02-12.md)**
++ **[2027-02-15](./new_hw/2027-02-15.md)**
++ **[2027-02-16](./new_hw/2027-02-16.md)**
++ **[2027-02-17](./new_hw/2027-02-17.md)**
++ **[2027-02-18](./new_hw/2027-02-18.md)**
++ **[2027-03-03](./new_hw/2027-03-03.md)**
++ **[2027-03-04](./new_hw/2027-03-04.md)**
++ **[2027-03-05](./new_hw/2027-03-05.md)**
++ **[2027-03-08](./new_hw/2027-03-08.md)**
++ **[2027-03-09](./new_hw/2027-03-09.md)**
++ **[2027-03-10](./new_hw/2027-03-10.md)**
++ **[2027-03-11](./new_hw/2027-03-11.md)**
++ **[2027-03-12](./new_hw/2027-03-12.md)**
++ **[2027-03-15](./new_hw/2027-03-15.md)**
++ **[2027-03-16](./new_hw/2027-03-16.md)**
++ **[2027-03-17](./new_hw/2027-03-17.md)**
++ **[2027-03-18](./new_hw/2027-03-18.md)**
++ **[2027-03-19](./new_hw/2027-03-19.md)**
++ **[2027-03-22](./new_hw/2027-03-22.md)**
++ **[2027-03-23](./new_hw/2027-03-23.md)**
++ **[2027-03-24](./new_hw/2027-03-24.md)**
++ **[2027-03-25](./new_hw/2027-03-25.md)**
++ **[2027-03-26](./new_hw/2027-03-26.md)**
++ **[2027-03-29](./new_hw/2027-03-29.md)**
++ **[2027-03-30](./new_hw/2027-03-30.md)**
++ **[2027-03-31](./new_hw/2027-03-31.md)**
++ **[2027-04-01](./new_hw/2027-04-01.md)**
++ **[2027-04-02](./new_hw/2027-04-02.md)**
++ **[2027-04-05](./new_hw/2027-04-05.md)**
++ **[2027-04-06](./new_hw/2027-04-06.md)**
++ **[2027-04-07](./new_hw/2027-04-07.md)**
++ **[2027-04-08](./new_hw/2027-04-08.md)**
++ **[2027-04-09](./new_hw/2027-04-09.md)**
++ **[2027-04-12](./new_hw/2027-04-12.md)**
++ **[2027-04-13](./new_hw/2027-04-13.md)**
++ **[2027-04-14](./new_hw/2027-04-14.md)**
++ **[2027-04-15](./new_hw/2027-04-15.md)**
++ **[2027-04-16](./new_hw/2027-04-16.md)**
++ **[2027-04-19](./new_hw/2027-04-19.md)**
++ **[2027-04-20](./new_hw/2027-04-20.md)**
++ **[2027-04-21](./new_hw/2027-04-21.md)**
++ **[2027-04-22](./new_hw/2027-04-22.md)**
++ **[2027-04-23](./new_hw/2027-04-23.md)**
++ **[2027-04-26](./new_hw/2027-04-26.md)**
 
 ---
 
