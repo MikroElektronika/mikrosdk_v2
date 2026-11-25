@@ -10,7 +10,7 @@
 
 # `v2.21.0`
 
-+ released: 2026-12-01
++ released: 2026-12-08
 
 ## Changes
 
@@ -19,7 +19,7 @@
     - [RENESAS](#renesas)
     - [NEW HARDWARE](#new-hardware)
 
-### <font color=red>RENESAS</font>
+### RENESAS
 
 **RX architecture supported!**
 
