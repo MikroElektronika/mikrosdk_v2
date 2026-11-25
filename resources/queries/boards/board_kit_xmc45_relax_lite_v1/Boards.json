@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_KIT_XMC45_RELAX_LITE_V1",
+    "name": "XMC4500 Relax Lite Kit",
+    "icon": "images/boards/board-kit-xmc45-relax-lite-v1.png",
+    "default_device": "",
+    "soldered_device": "XMC4500-F100F1024",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_KIT_XMC45_RELAX_LITE_V1\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "100/LQFP"
+}

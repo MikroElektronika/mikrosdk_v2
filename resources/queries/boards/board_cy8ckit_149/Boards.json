@@ -1,0 +1,16 @@
+{
+    "uid": "BOARD_CY8CKIT_149",
+    "name": "PSoC 4100S Plus Prototyping Kit",
+    "icon": "images/boards/board-cy8ckit-149.png",
+    "default_device": "",
+    "soldered_device": "CY8C4147AZI-S475",
+    "category": "Development Systems",
+    "mikrobus_count": 0,
+    "sort_order": 6,
+    "min_pin_count": 0,
+    "display_socket": "NO_DISPLAY",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_CY8CKIT_149\"}",
+    "necto_config": "",
+    "display": "NO_DISPLAY",
+    "package_uid": "64/TQFP"
+}

@@ -186,10 +186,10 @@ static inline void write_array_data( uint16_t *array, uint16_t length )
 static inline void display_configure( void )
 {
     // Initialize control pins.
-    digital_out_init( &pin_cs, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS ) );
-    digital_out_init( &pin_rst, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST ) );
-    digital_out_init( &pin_dc, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT ) );
-    digital_out_init( &pin_bck, MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN ) );
+    digital_out_init( &pin_cs, IPS_MIKROBUS_PIN( MIKROBUS_CS ) );
+    digital_out_init( &pin_rst, IPS_MIKROBUS_PIN( MIKROBUS_RST ) );
+    digital_out_init( &pin_dc, IPS_MIKROBUS_PIN( MIKROBUS_INT ) );
+    digital_out_init( &pin_bck, IPS_MIKROBUS_PIN( MIKROBUS_AN ) );
     digital_out_high( &pin_bck );
     CS_HIGH;
 

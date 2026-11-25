@@ -1,0 +1,113 @@
+<p align="center">
+  <img src="http://www.mikroe.com/img/designs/beta/logo_small.png?raw=true" alt="MikroElektronika"/>
+</p>
+
+---
+
+**[BACK TO MAIN FILE](../../changelog.md)**
+
+---
+
+# `v2.20.3`
+
++ released: 2026-11-17
+
+## Changes
+
+- [`v2.20.3`](#v2203)
+  - [Changes](#changes)
+    - [TOSHIBA](#toshiba)
+    - [Improvements](#improvements)
+    - [Fixes](#fixes)
+    - [NEW HARDWARE](#new-hardware)
+
+### TOSHIBA
+
+**TMPM4L MCUs supported!**
+
+| **TMPM4L1FWAUG** | **TMPM4L1FYAUG** |
+| :-----------: | :-----------: |
+| **TMPM4L2FWADUG** | **TMPM4L2FWAQG** |
+| **TMPM4L2FYADUG** | **TMPM4L2FYAQG** |
+| **TMPM4L4FWAUG**  | **TMPM4L4FYAUG** |
+
+**Supported modules:**
+
++ ADC (Full module support)
++ SPI (Full module support)
++ UART (Full module support)
++ I2C (Full module support)
++ PWM (Full module support)
++ GPIO (Full module support)
++ 1-Wire (Full module support)
+
+### Improvements
+
++ Defined all base addresses in `mcu_reg_addresses.h` file for all TOSHIBA devices
+  + This makes adding new TOSHIBA devices to SDK easier
+
+### Fixes
+
++ Fixed IPS Display Click (first variant) using the wrong mikroBUS socket with the Graphic Library / Visual TFT
+  + The build now reads the `MIKROBUS_POSITION_IPSDISPLAY` setting for this board, instead of `MIKROBUS_POSITION_IPSDISPLAY1`, which is never set
+  + IPS Display 2 Click is not affected
++ Fixed IPS Display Click build failing when a mikroBUS pin doesn't exist on the selected MCU
+  + e.g. PIC18F4455 on EasyPIC v7, which has no `RC3` (mikroBUS SCK)
+  + Such pins are now mapped to `HAL_PIN_NC`, all other pins are unchanged
++ SPI Ethernet fixes
+  + Fixed SPI Ethernet libraries not showing up in the NECTO Studio Library Manager
+    + SPI Ethernet middleware (`MikroSDK.Ethernet.Transport`, `MikroSDK.Ethernet.Spi`, `MikroSDK.Ethernet.Net`) and controller libraries (`MikroSDK.Ethernet.ENC28J60`, `MikroSDK.Ethernet.LAN8651`, `MikroSDK.Ethernet.LAN9250`, `MikroSDK.Ethernet.W5500`, `MikroSDK.Ethernet.W6100`) are now installed with the SDK
+  + Fixed SPI Ethernet controller register and protocol bugs
+    + W5500 no longer blocks broadcast frames, ARP requests and DHCP replies are received again
+    + W6100 now clears the send interrupt through `Sn_IRCLR` and locks the network registers with the documented key, MAC/IP can still be changed after initialization (e.g. after DHCP)
+    + W6100 MACRAW socket now enables MAC filtering, frames addressed to other devices are no longer received
+    + ENC28J60 PHY register reads (link status, PHY ID) now return the correct value, PHY duplex now follows the full duplex setting
+    + ENC28J60 releases receive buffer space for dropped frames and reports failed transmissions
+    + LAN8651 validates the receive footer parity and discards frames marked for dropping
+    + LAN9250 received frames no longer include the 4-byte FCS, consistent with the other controllers
+    + ENC28J60, LAN8651 and LAN9250 reject frames longer than 1514 bytes on send, the MAC appends the 4-byte FCS
+  + Fixed SPI Ethernet build issues
+    + ENC28J60 register names (`MACON1`, `ECON1`, `EIR`, ...) no longer clash with PIC18F97J60 family SFRs
+    + Controller driver headers can be included from C++ sources (`extern "C"` guards)
+  + SPI Ethernet now reports initialization and bus failures
+    + Initialization verifies the chip identity and fails if no controller responds, e.g. wrong mikroBUS position
+    + Failed SPI transactions and controller timeouts are reported instead of returning success
+    + W5500/W6100 transmit waits for free buffer space and reports success only after the frame was sent
+    + Corrupt receive headers are recovered from (socket reopen / receive buffer reset) instead of losing synchronization
+    + Cached MAC/IP addresses are updated only after the controller accepted them
+  + SPI Ethernet network helpers validate received packets
+    + New `eth_net_ipv4_payload()` validates IPv4 version, header length, total length and checksum and rejects fragments
+    + ICMP echo requests are checked for code and checksum, ARP requests for address sizes
+    + DHCP replies are checked for client MAC, server ports, UDP checksum and the selected server
+    + `tests/spi_ethernet` uses a per-device DHCP transaction ID, restarts discovery on DHCPNAK and checks TCP segment bounds
+
+> NOTE:
+>> SPI Ethernet API changes compared to v2.20.2:
+>>
+>> + `eth_net_handle_dhcp()` takes the device MAC address as a new third parameter
+>> + `W5500_FRAME_SIZE` and `W6100_FRAME_SIZE` are now 1514 (MACRAW frame without FCS)
+>> + `W5500_Sn_MR_MF` and `W6100_Sn_MR_MF` corrected to `0x80`, `W6100_PHYSR_RST` replaced by `W6100_PHYSR_CAB` and `W6100_PHYCR1_RST`
+>> + LAN9250 `read_packet` returns the frame without FCS (4 bytes shorter)
+>> + `eth_transport_t` has a new `bus_error` member
+>> + New `ENC28J60_TX_FRAME_SIZE`, `LAN8651_TX_FRAME_SIZE` and `LAN9250_TX_FRAME_SIZE` (1514), the largest frame `send_packet` accepts
+>> + ENC28J60 control register and memory layout macros (`MACON1`, `ECON1`, `RAM_SIZE`, `TRANSMIT_START`, ...) are no longer in `enc28j60.h`, PHY register macros remain
+>> + `ETH_NET_TX_BUF_SIZE` can no longer be redefined by the application, the library is shipped precompiled with a 400-byte buffer
+
+### NEW HARDWARE
+
+> NOTE:
+>> If any new hardware was added to current version, it will be listed here.
+
+Support added for following hardware:
+
++ **[2026-11-17](./new_hw/2026-11-17.md)**
++ **[2026-11-18](./new_hw/2026-11-18.md)**
++ **[2026-11-19](./new_hw/2026-11-19.md)**
++ **[2026-11-20](./new_hw/2026-11-20.md)**
++ **[2026-11-23](./new_hw/2026-11-23.md)**
+
+---
+
+**[BACK TO MAIN FILE](../../changelog.md)**
+
+---

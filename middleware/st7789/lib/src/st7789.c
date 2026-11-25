@@ -58,13 +58,10 @@
 #define SPI_DUMMY 0x00
 
 /**
- * @remark Configuration copy for display controller driver, API was
+ * @remark SPI object opened in st7789_init, API was
  * built for single display applications which covers most use-cases.
  */
-static spi_master_t display_spi;
-
-/*!< SPI handler. */
-static spi_master_t disp_spi;
+static spi_master_t *display_spi;
 /*!< CS pin handle. */
 static digital_out_t pin_cs;
 /*!< RST pin handle. */
@@ -96,7 +93,62 @@ uint16_t st7789_get_display_height()
     return display_height;
 }
 
-void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv )
+static void _st7789_begin_frame( gl_rectangle_t *rect )
+{
+    uint16_t start_column = rect->top_left.x;
+    uint16_t end_column = rect->top_left.x + rect->width - 1;
+    uint16_t start_page = rect->top_left.y;
+    uint16_t end_page = rect->top_left.y + rect->height - 1;
+
+    st7789_write_command( ST7789_CMD_CASET );
+    st7789_write_param( Hi( start_column ) );
+    st7789_write_param( Lo( start_column ) );
+    st7789_write_param( Hi( end_column ) );
+    st7789_write_param( Lo( end_column ) );
+
+    st7789_write_command( ST7789_CMD_RASET );
+    st7789_write_param( Hi( start_page ) );
+    st7789_write_param( Lo( start_page ) );
+    st7789_write_param( Hi( end_page ) );
+    st7789_write_param( Lo( end_page ) );
+
+    st7789_write_command( ST7789_CMD_RAMWR );
+
+    CS_ACTIVE();
+    DATA_SELECT();
+}
+
+static void _st7789_end_frame()
+{
+    CS_DEACTIVE();
+}
+
+static void _st7789_frame_data( gl_color_t color )
+{
+    uint8_t color_bytes[2];
+
+    // RAMCTRL is configured with ENDIAN = 1 (little endian), send low byte first.
+    color_bytes[0] = Lo( color );
+    color_bytes[1] = Hi( color );
+    spi_master_write( display_spi, color_bytes, 2 );
+}
+
+static void _st7789_fill( gl_rectangle_t *rect, gl_color_t color )
+{
+    uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+
+    if ( !length )
+        return;
+
+    _st7789_begin_frame( rect );
+
+    while ( length-- )
+        _st7789_frame_data( color );
+
+    _st7789_end_frame();
+}
+
+void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, gl_driver_t *__generic_ptr driver )
 {
     spi_master_config_t spi_cfg;
 
@@ -112,7 +164,7 @@ void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv )
     spi_master_set_mode( &ctx->spi, SPI_MASTER_MODE_0 );
     spi_master_set_speed( &ctx->spi, 5000000 );
 
-    display_spi = ctx->spi;
+    display_spi = &ctx->spi;
 
     // Initialize control pins.
     digital_out_init( &pin_cs, cfg->cs );
@@ -120,13 +172,24 @@ void st7789_init( st7789_t *ctx, st7789_cfg_t *cfg, tp_drv_t *drv )
     digital_out_init( &pin_dc, cfg->rs );
     digital_out_init( &pin_bck, cfg->bck );
     CS_DEACTIVE();
+
+    display_width = cfg->width;
+    display_height = cfg->height;
+
+    // Link Graphic Library driver interface.
+    driver->display_width = cfg->width;
+    driver->display_height = cfg->height;
+    driver->fill_f = _st7789_fill;
+    driver->begin_frame_f = _st7789_begin_frame;
+    driver->frame_data_f = _st7789_frame_data;
+    driver->end_frame_f = _st7789_end_frame;
 }
 
 void st7789_write_command( uint8_t command )
 {
     CS_ACTIVE();
     COMMAND_SELECT();
-    spi_master_write( &display_spi, &command, 1 );
+    spi_master_write( display_spi, &command, 1 );
     CS_DEACTIVE();
 }
 
@@ -134,7 +197,7 @@ void st7789_write_param( uint8_t param )
 {
     CS_ACTIVE();
     DATA_SELECT();
-    spi_master_write( &display_spi, &param, 1 );
+    spi_master_write( display_spi, &param, 1 );
     CS_DEACTIVE();
 }
 
