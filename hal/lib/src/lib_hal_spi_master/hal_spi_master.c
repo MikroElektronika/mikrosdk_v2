@@ -48,6 +48,22 @@ hal_spi_master_chip_select_polarity_t hal_spi_master_chip_select_polarity = HAL_
 
 static handle_t *hal_owner = NULL;
 
+// Chip select pin configured on the last select/deselect call.
+// Reconfigured only when a different pin is passed in.
+static hal_pin_name_t cs_cached_name = HAL_PIN_NC;
+static hal_gpio_pin_t cs_cached;
+
+static hal_gpio_pin_t *hal_spi_master_cs_resolve( hal_pin_name_t chip_select )
+{
+    if ( chip_select != cs_cached_name )
+    {
+        hal_gpio_configure_pin( &cs_cached, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+        cs_cached_name = chip_select;
+    }
+
+    return &cs_cached;
+}
+
 DRV_TO_HAL_STATIC volatile hal_spi_master_handle_register_t DRV_TO_HAL_PREFIXED(spi, hal_module_state)[ SPI_MODULE_COUNT ];
 
 DRV_TO_HAL_STATIC const uint8_t DRV_TO_HAL_PREFIXED(spi, module_state_count) = sizeof( DRV_TO_HAL_PREFIXED(spi, hal_module_state) ) / ( sizeof( hal_spi_master_handle_register_t ) );
@@ -155,34 +171,34 @@ void hal_spi_master_configure_default( hal_spi_master_config_t *config )
 
 void hal_spi_master_select_device( hal_pin_name_t chip_select )
 {
-    hal_gpio_pin_t struct_cs;
-    hal_gpio_configure_pin( &struct_cs, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+    hal_gpio_pin_t *struct_cs;
 
-    if ( chip_select != 0xFFFF )
+    if ( chip_select == HAL_PIN_NC )
     {
-        if ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
-        {
-            hal_gpio_set_pin_output( &struct_cs );
-        } else {
-            hal_gpio_clear_pin_output( &struct_cs );
-        }
+        return;
     }
+
+    struct_cs = hal_spi_master_cs_resolve( chip_select );
+
+    ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH ) ?
+        hal_gpio_set_pin_output( struct_cs ) :
+        hal_gpio_clear_pin_output( struct_cs );
 }
 
 void hal_spi_master_deselect_device( hal_pin_name_t chip_select )
 {
-    hal_gpio_pin_t struct_cs;
-    hal_gpio_configure_pin( &struct_cs, chip_select, HAL_GPIO_DIGITAL_OUTPUT );
+    hal_gpio_pin_t *struct_cs;
 
-    if ( chip_select != 0xFFFF )
+    if ( chip_select == HAL_PIN_NC )
     {
-        if ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH )
-        {
-            hal_gpio_clear_pin_output( &struct_cs );
-        } else {
-            hal_gpio_set_pin_output( &struct_cs );
-        }
+        return;
     }
+
+    struct_cs = hal_spi_master_cs_resolve( chip_select );
+
+    ( hal_spi_master_chip_select_polarity == HAL_SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH ) ?
+        hal_gpio_clear_pin_output( struct_cs ) :
+        hal_gpio_set_pin_output( struct_cs );
 }
 
 void hal_spi_master_set_chip_select_polarity( hal_spi_master_chip_select_polarity_t polarity )
