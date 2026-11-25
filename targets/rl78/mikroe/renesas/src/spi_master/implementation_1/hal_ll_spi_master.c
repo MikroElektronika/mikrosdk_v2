@@ -73,11 +73,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define HAL_LL_SPI_MASTER_PER0_ADDR             ( 0xF00F0UL )
 #define HAL_LL_SPI_MASTER_PRR0_ADDR             ( 0xF00F1UL )
 
-/*!< @brief Interrupt request flag registers holding the INTCSIp flags. */
-#define HAL_LL_SPI_MASTER_IF0H_ADDR             ( 0xFFFE1UL )
-#define HAL_LL_SPI_MASTER_IF1L_ADDR             ( 0xFFFE2UL )
-#define HAL_LL_SPI_MASTER_IF1H_ADDR             ( 0xFFFE3UL )
-
 /*!< @brief SPIx is channel x%4 of SAU x/4 (CSI00 to CSI31). */
 #define hal_ll_spi_master_unit(_index)          ( ( _index ) >> 2 )
 #define hal_ll_spi_master_channel(_index)       ( ( _index ) & 3 )
@@ -85,10 +80,6 @@ static volatile hal_ll_spi_master_handle_register_t hal_ll_module_state[ SPI_MOD
 #define hal_ll_spi_master_cks(_index)           ( hal_ll_spi_master_channel( _index ) >> 1 )
 /*!< @brief Channels of a unit sharing the prescaler of the given channel. */
 #define hal_ll_spi_master_cks_channels(_index)  ( 3U << ( hal_ll_spi_master_cks( _index ) << 1 ) )
-/*!< @brief PIOR10 routes SAU0, PIOR11 routes SAU1, two bits per channel. */
-#define hal_ll_spi_master_pior_reg(_index)      ( 10 + hal_ll_spi_master_unit( _index ) )
-#define hal_ll_spi_master_pior_shift(_index)    ( hal_ll_spi_master_channel( _index ) << 1 )
-#define HAL_LL_SPI_MASTER_PIOR_WIDTH            ( 2 )
 
 /*!< @brief SMRmn bits. */
 #define HAL_LL_SPI_MASTER_SMR_CKS               ( 15 )
@@ -165,6 +156,8 @@ typedef struct {
     hal_ll_base_addr_t sau_base;      /*!< SAU unit register block. */
     hal_ll_base_addr_t if_reg;        /*!< Interrupt request flag register holding CSIIFp. */
     uint8_t if_bit;                   /*!< CSIIFp bit position. */
+    uint8_t pior_reg;                 /*!< PIORn routing SCKp, SIp and SOp. */
+    uint8_t pior_mask;                /*!< PIORn bits routing SCKp, SIp and SOp. */
     uint8_t module_index;
     hal_ll_spi_master_pins_t pins;
     uint8_t dummy_data;
@@ -182,47 +175,55 @@ static volatile hal_ll_spi_master_hw_specifics_map_t *hal_ll_spi_master_hw_speci
 /*!< @brief SPI Master hardware specific info. */
 static hal_ll_spi_master_hw_specifics_map_t hal_ll_spi_master_hw_specifics_map[ SPI_MODULE_COUNT + 1 ] = {
     #ifdef SPI_MODULE_0
-    { HAL_LL_SPI0_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI_MASTER_IF0H_ADDR, 5, hal_ll_spi_master_module_num(SPI_MODULE_0),
+    { HAL_LL_SPI0_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI0_IF_ADDR, HAL_LL_SPI0_IF_BIT,
+      HAL_LL_SPI0_PIOR_REG, HAL_LL_SPI0_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_0),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_1
-    { HAL_LL_SPI1_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI_MASTER_IF1L_ADDR, 4, hal_ll_spi_master_module_num(SPI_MODULE_1),
+    { HAL_LL_SPI1_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI1_IF_ADDR, HAL_LL_SPI1_IF_BIT,
+      HAL_LL_SPI1_PIOR_REG, HAL_LL_SPI1_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_1),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_2
-    { HAL_LL_SPI2_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI_MASTER_IF1L_ADDR, 0, hal_ll_spi_master_module_num(SPI_MODULE_2),
+    { HAL_LL_SPI2_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI2_IF_ADDR, HAL_LL_SPI2_IF_BIT,
+      HAL_LL_SPI2_PIOR_REG, HAL_LL_SPI2_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_2),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_3
-    { HAL_LL_SPI3_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI_MASTER_IF1L_ADDR, 1, hal_ll_spi_master_module_num(SPI_MODULE_3),
+    { HAL_LL_SPI3_BASE_ADDR, HAL_LL_SAU0_BASE_ADDR, HAL_LL_SPI3_IF_ADDR, HAL_LL_SPI3_IF_BIT,
+      HAL_LL_SPI3_PIOR_REG, HAL_LL_SPI3_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_3),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_4
-    { HAL_LL_SPI4_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI_MASTER_IF0H_ADDR, 0, hal_ll_spi_master_module_num(SPI_MODULE_4),
+    { HAL_LL_SPI4_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI4_IF_ADDR, HAL_LL_SPI4_IF_BIT,
+      HAL_LL_SPI4_PIOR_REG, HAL_LL_SPI4_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_4),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_5
-    { HAL_LL_SPI5_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI_MASTER_IF0H_ADDR, 1, hal_ll_spi_master_module_num(SPI_MODULE_5),
+    { HAL_LL_SPI5_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI5_IF_ADDR, HAL_LL_SPI5_IF_BIT,
+      HAL_LL_SPI5_PIOR_REG, HAL_LL_SPI5_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_5),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_6
-    { HAL_LL_SPI6_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI_MASTER_IF1H_ADDR, 4, hal_ll_spi_master_module_num(SPI_MODULE_6),
+    { HAL_LL_SPI6_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI6_IF_ADDR, HAL_LL_SPI6_IF_BIT,
+      HAL_LL_SPI6_PIOR_REG, HAL_LL_SPI6_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_6),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
     #ifdef SPI_MODULE_7
-    { HAL_LL_SPI7_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI_MASTER_IF1H_ADDR, 5, hal_ll_spi_master_module_num(SPI_MODULE_7),
+    { HAL_LL_SPI7_BASE_ADDR, HAL_LL_SAU1_BASE_ADDR, HAL_LL_SPI7_IF_ADDR, HAL_LL_SPI7_IF_BIT,
+      HAL_LL_SPI7_PIOR_REG, HAL_LL_SPI7_PIOR_MASK, hal_ll_spi_master_module_num(SPI_MODULE_7),
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0,
       HAL_LL_SPI_MASTER_SPEED_100K, 0, HAL_LL_SPI_MASTER_MODE_DEFAULT },
     #endif
 
-    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 0, HAL_LL_MODULE_ERROR,
+    { HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, HAL_LL_MODULE_ERROR, 0, 0, 0, HAL_LL_MODULE_ERROR,
      { HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0, HAL_LL_PIN_NC, 0 }, 0, 0, 0, 0 }
 };
 
@@ -389,7 +390,7 @@ static void hal_ll_spi_master_transfer_bare_metal( hal_ll_spi_master_hw_specific
 /**
   * @brief  Sets SPI Master pin alternate function state.
   *
-  * Routes SCKp/SIp/SOp through PIOR10/PIOR11 and configures
+  * Routes SCKp/SIp/SOp through the module's PIOR bits and configures
   * pin directions. SCK and MOSI output latches are left high,
   * since the pins output the latch ANDed with the serial output.
   *
@@ -778,9 +779,7 @@ static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_h
         ( map->pins.mosi.pin_name != HAL_LL_PIN_NC ) ) {
 
         if ( hal_ll_state ) {
-            hal_ll_pior_set_field( hal_ll_spi_master_pior_reg( map->module_index ),
-                                   hal_ll_spi_master_pior_shift( map->module_index ),
-                                   HAL_LL_SPI_MASTER_PIOR_WIDTH, map->pins.sck.pin_af );
+            hal_ll_pior_route( map->pior_reg, map->pior_mask, map->pins.sck.pin_af );
         }
 
         module.pins[0] = map->pins.sck.pin_name;

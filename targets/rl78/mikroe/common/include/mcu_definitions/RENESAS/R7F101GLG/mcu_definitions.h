@@ -167,6 +167,15 @@
 //EOF UART
 
 //SPI
+#ifdef __P010_CN
+#define SPI3_SCK_P010_AF0
+#endif
+#ifdef __P011_CN
+#define SPI3_MISO_P011_AF0
+#endif
+#ifdef __P012_CN
+#define SPI3_MOSI_P012_AF0
+#endif
 #ifdef __P070_CN
 #define SPI5_SCK_P070_AF0
 #endif

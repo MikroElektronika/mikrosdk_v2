@@ -130,9 +130,8 @@ typedef struct
     uint32_t                 max_period;    /*!< Counts per PWM period, TDR of the master channel + 1. */
     uint32_t                 freq_hz;
     hal_ll_pin_name_t        module_index;
-    uint8_t                  pior_reg;
-    uint8_t                  pior_shift;
-    uint8_t                  pior_width;
+    uint8_t                  pior_reg;      /*!< PIORn routing TO0p. */
+    uint8_t                  pior_mask;     /*!< PIORn bits routing TO0p. */
     float                    duty_ratio;
 } hal_ll_tim_hw_specifics_map_t;
 
@@ -151,19 +150,23 @@ typedef enum
 static hal_ll_tim_hw_specifics_map_t hal_ll_tim_hw_specifics_map[] =
 {
     #ifdef TIM_MODULE_0
-    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0), 0, 2, 3, 0},
+    {HAL_LL_TIM0_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_0),
+     HAL_LL_TIM0_PIOR_REG, HAL_LL_TIM0_PIOR_MASK, 0},
     #endif
     #ifdef TIM_MODULE_1
-    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1), 1, 0, 3, 0},
+    {HAL_LL_TIM1_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_1),
+     HAL_LL_TIM1_PIOR_REG, HAL_LL_TIM1_PIOR_MASK, 0},
     #endif
     #ifdef TIM_MODULE_2
-    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2), 1, 5, 3, 0},
+    {HAL_LL_TIM2_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_2),
+     HAL_LL_TIM2_PIOR_REG, HAL_LL_TIM2_PIOR_MASK, 0},
     #endif
     #ifdef TIM_MODULE_3
-    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3), 2, 2, 2, 0},
+    {HAL_LL_TIM3_BASE_ADDR, {HAL_LL_PIN_NC, 0}, 0, 0, hal_ll_tim_module_num(TIM_MODULE_3),
+     HAL_LL_TIM3_PIOR_REG, HAL_LL_TIM3_PIOR_MASK, 0},
     #endif
 
-    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0}, 0, 0, HAL_LL_PIN_NC, 0, 0, 0, 0}
+    {HAL_LL_MODULE_ERROR, {HAL_LL_PIN_NC, 0}, 0, 0, HAL_LL_PIN_NC, 0, 0, 0}
 };
 
 /*!< @brief Global handle variables used in functions */
@@ -240,7 +243,7 @@ static void hal_ll_tim_map_pin( uint8_t module_index, uint8_t index );
 /**
   * @brief  Sets TIM pin alternate function state.
   *
-  * Routes TO0p through PIOR0/PIOR1/PIOR2 and sets the pin
+  * Routes TO0p through the module's PIOR bits and sets the pin
   * as an output with a low latch, since the pin outputs
   * the latch ORed with the timer output.
   *
@@ -518,7 +521,7 @@ static void hal_ll_tim_alternate_functions_set_state( hal_ll_tim_hw_specifics_ma
 
     if ( map->config.pin != HAL_LL_PIN_NC ) {
         if ( hal_ll_state ) {
-            hal_ll_pior_set_field( map->pior_reg, map->pior_shift, map->pior_width, map->config.af );
+            hal_ll_pior_route( map->pior_reg, map->pior_mask, map->config.af );
         }
 
         module.pins[0] = map->config.pin;

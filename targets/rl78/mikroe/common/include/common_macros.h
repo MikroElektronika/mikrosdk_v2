@@ -50,12 +50,13 @@ extern "C"{
 
 #include "flatten_me.h"
 
-#ifdef __MIKROC_AI__
-    #define __weak __attribute__((weak))
-#else
+#ifndef __MIKROC_AI__
     #include "core_header.h"
     #define Get_Fosc_kHz() (FOSC_KHZ_VALUE)
-    #define __weak
+#endif
+
+#ifndef __weak
+    #define __weak __attribute__((weak))
 #endif
 
 // One Wire

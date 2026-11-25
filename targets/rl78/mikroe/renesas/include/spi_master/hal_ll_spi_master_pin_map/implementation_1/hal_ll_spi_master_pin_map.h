@@ -65,6 +65,9 @@ typedef struct {
 
 /*!< SPI SCK pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
+    #ifdef SPI3_SCK_P010_AF0
+    {GPIO_P010, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3), 0},
+    #endif
     #ifdef SPI7_SCK_P140_AF0
     {GPIO_P140, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
     #endif
@@ -77,6 +80,9 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_sck_map[] = {
 
 /*!< SPI MOSI pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
+    #ifdef SPI3_MOSI_P012_AF0
+    {GPIO_P012, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3), 0},
+    #endif
     #ifdef SPI7_MOSI_P047_AF0
     {GPIO_P047, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
     #endif
@@ -89,6 +95,9 @@ static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_mosi_map[] = {
 
 /*!< SPI MISO pins. */
 static const hal_ll_spi_master_pin_map_t hal_ll_spi_master_miso_map[] = {
+    #ifdef SPI3_MISO_P011_AF0
+    {GPIO_P011, HAL_LL_SPI3_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_3), 0},
+    #endif
     #ifdef SPI7_MISO_P046_AF0
     {GPIO_P046, HAL_LL_SPI7_BASE_ADDR, hal_ll_spi_master_module_num(SPI_MODULE_7), 0},
     #endif
