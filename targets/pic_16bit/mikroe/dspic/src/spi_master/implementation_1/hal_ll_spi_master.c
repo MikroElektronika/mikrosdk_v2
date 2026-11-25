@@ -692,8 +692,42 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
     uint16_t mosi_index;
     uint16_t sck_index;
 
-    if ( ( HAL_LL_PIN_NC == sck_pin ) || ( HAL_LL_PIN_NC == miso_pin ) || ( HAL_LL_PIN_NC == mosi_pin ) ) {
+    if ( ( HAL_LL_PIN_NC == sck_pin ) || ( HAL_LL_PIN_NC == mosi_pin ) ) {
         return HAL_LL_PIN_NC;
+    }
+
+    // MISO is not used (write-only device), so match only SCK and MOSI.
+    if ( HAL_LL_PIN_NC == miso_pin ) {
+        for ( sck_index = 0; sck_index < sck_map_size; sck_index++ ) {
+            if ( _spi_sck_map[sck_index].pin == sck_pin ) {
+                for ( mosi_index = 0; mosi_index < mosi_map_size; mosi_index++ ) {
+                    if ( _spi_mosi_map[mosi_index].pin == mosi_pin ) {
+                        if ( _spi_sck_map[sck_index].module_index == _spi_mosi_map[mosi_index].module_index ) {
+                            // Get module number
+                            hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
+
+                            // Map pin names
+                            index_list[hal_ll_module_id].sck = sck_index;
+                            index_list[hal_ll_module_id].miso = HAL_LL_PIN_NC;
+                            index_list[hal_ll_module_id].mosi = mosi_index;
+
+                            // Check if module is taken
+                            if ( NULL == handle_map[hal_ll_module_id].hal_drv_spi_master_handle ) {
+                                return hal_ll_module_id;
+                            } else if ( SPI_MODULE_COUNT == ++index_counter ) {
+                                return --index_counter;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ( index_counter ) {
+            return hal_ll_module_id;
+        } else {
+            return HAL_LL_PIN_NC;
+        }
     }
 
     // Check pins from the specific pin maps with the user defined pins.
@@ -738,7 +772,12 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
 static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_master_pins_t *index_list ) {
 
     hal_ll_spi_master_hw_specifics_map[module_index].pins.sck  = _spi_sck_map[index_list[module_index].sck].pin;
-    hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index].miso].pin;
+    if ( HAL_LL_PIN_NC == index_list[module_index].miso ) {
+        // MISO is not used (write-only device), so store "not connected".
+        hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = HAL_LL_PIN_NC;
+    } else {
+        hal_ll_spi_master_hw_specifics_map[module_index].pins.miso = _spi_miso_map[index_list[module_index].miso].pin;
+    }
     hal_ll_spi_master_hw_specifics_map[module_index].pins.mosi = _spi_mosi_map[index_list[module_index].mosi].pin;
     hal_ll_spi_master_hw_specifics_map[module_index].hal_ll_pps_module_index = _spi_mosi_map[index_list[module_index].mosi].module_index;
 }
@@ -762,11 +801,15 @@ static void hal_ll_spi_master_configure_pins( hal_ll_spi_master_hw_specifics_map
     hal_ll_gpio_pin_t pin;
 
     if (hal_ll_state) {
-        hal_ll_gpio_configure_pin( &pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT );
+        if ( map->pins.miso != HAL_LL_PIN_NC ) {
+            hal_ll_gpio_configure_pin( &pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT );
+        }
         hal_ll_gpio_configure_pin( &pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_OUTPUT );
         hal_ll_gpio_configure_pin( &pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_OUTPUT );
     } else {
-        hal_ll_gpio_configure_pin( &pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT );
+        if ( map->pins.miso != HAL_LL_PIN_NC ) {
+            hal_ll_gpio_configure_pin( &pin, map->pins.miso, HAL_LL_GPIO_DIGITAL_INPUT );
+        }
         hal_ll_gpio_configure_pin( &pin, map->pins.mosi, HAL_LL_GPIO_DIGITAL_INPUT );
         hal_ll_gpio_configure_pin( &pin, map->pins.sck, HAL_LL_GPIO_DIGITAL_INPUT );
     }
@@ -927,7 +970,7 @@ static void hal_ll_spi_master_hw_init( hal_ll_spi_master_hw_specifics_map_t *map
 static hal_ll_pps_err_t _hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state) {
     hal_ll_pps_err_t hal_ll_status = HAL_LL_PPS_SUCCESS;
 
-    if( (map->pins.sck != HAL_LL_PIN_NC) && (map->pins.miso != HAL_LL_PIN_NC) && (map->pins.mosi != HAL_LL_PIN_NC) ) {
+    if( (map->pins.sck != HAL_LL_PIN_NC) && (map->pins.mosi != HAL_LL_PIN_NC) ) {
 
         hal_ll_status = hal_ll_pps_map((map->pins.sck & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.sck & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,
                                                 HAL_LL_PPS_FUNCTIONALITY_SPI_SCK, map->hal_ll_pps_module_index, hal_ll_state);
@@ -945,11 +988,13 @@ static hal_ll_pps_err_t _hal_ll_pps_set_state(hal_ll_spi_master_hw_specifics_map
         }
         #endif
 
-        hal_ll_status = hal_ll_pps_map((map->pins.miso & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.miso & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_INPUT,
-                                                HAL_LL_PPS_FUNCTIONALITY_SPI_MISO, map->hal_ll_pps_module_index, hal_ll_state);
+        if ( map->pins.miso != HAL_LL_PIN_NC ) {
+            hal_ll_status = hal_ll_pps_map((map->pins.miso & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.miso & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_INPUT,
+                                                    HAL_LL_PPS_FUNCTIONALITY_SPI_MISO, map->hal_ll_pps_module_index, hal_ll_state);
 
-        if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
-            return hal_ll_status;
+            if (hal_ll_status != HAL_LL_PPS_SUCCESS) {
+                return hal_ll_status;
+            }
         }
 
         hal_ll_status = hal_ll_pps_map((map->pins.mosi & HAL_LL_NIBBLE_HIGH_8BIT) >> 4, map->pins.mosi & HAL_LL_NIBBLE_LOW_8BIT, HAL_LL_GPIO_DIGITAL_OUTPUT,

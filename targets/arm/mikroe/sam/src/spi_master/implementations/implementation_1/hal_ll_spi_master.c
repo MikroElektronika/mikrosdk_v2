@@ -302,6 +302,12 @@ hal_ll_err_t hal_ll_spi_master_register_handle( hal_ll_pin_name_t sck, hal_ll_pi
     hal_ll_spi_pin_id index_list[ SPI_MODULE_COUNT ] = { HAL_LL_PIN_NC, HAL_LL_PIN_NC, HAL_LL_PIN_NC };
     uint16_t pin_check_result;
 
+    // HAL passes HAL_PIN_NC (0xFFFFFFFF). On this target hal_ll_pin_name_t is 32-bit
+    // while HAL_LL_PIN_NC is 0xFFFF, so they do not compare equal; normalize it.
+    if ( ( hal_ll_pin_name_t )0xFFFFFFFF == miso ) {
+        miso = HAL_LL_PIN_NC;
+    }
+
     // Check user-defined pins.
     if ( ( pin_check_result = hal_ll_spi_master_check_pins( sck, miso, mosi, &index_list, handle_map ) ) == HAL_LL_PIN_NC ) {
         return HAL_LL_SPI_MASTER_WRONG_PINS;
@@ -549,8 +555,42 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
     uint16_t mosi_index;
     uint16_t sck_index;
 
-    if ( ( HAL_LL_PIN_NC == sck_pin ) || ( HAL_LL_PIN_NC == miso_pin ) || ( HAL_LL_PIN_NC == mosi_pin ) ) {
+    if ( ( HAL_LL_PIN_NC == sck_pin ) || ( HAL_LL_PIN_NC == mosi_pin ) ) {
         return HAL_LL_PIN_NC;
+    }
+
+    // MISO is not used (write-only device), so match only SCK and MOSI.
+    if ( HAL_LL_PIN_NC == miso_pin ) {
+        for ( sck_index = 0; sck_index < sck_map_size; sck_index++ ) {
+            if ( _spi_sck_map[ sck_index ].pin == sck_pin ) {
+                for ( mosi_index = 0; mosi_index < mosi_map_size; mosi_index++ ) {
+                    if ( _spi_mosi_map[ mosi_index ].pin == mosi_pin ) {
+                        if ( _spi_sck_map[ sck_index ].module_index == _spi_mosi_map[ mosi_index ].module_index ) {
+                            // Get module number
+                            hal_ll_module_id = _spi_sck_map[ sck_index ].module_index;
+
+                            // Map pin names
+                            index_list[ hal_ll_module_id ].pin_sck = sck_index;
+                            index_list[ hal_ll_module_id ].pin_miso = HAL_LL_PIN_NC;
+                            index_list[ hal_ll_module_id ].pin_mosi = mosi_index;
+
+                            // Check if module is taken
+                            if ( NULL == handle_map[hal_ll_module_id].hal_drv_spi_master_handle ) {
+                                return hal_ll_module_id;
+                            } else if ( SPI_MODULE_COUNT == ++index_counter ) {
+                                return --index_counter;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ( index_counter ) {
+            return hal_ll_module_id;
+        } else {
+            return HAL_LL_PIN_NC;
+        }
     }
 
     // Check pins from the specific pin maps with the user defined pins.
@@ -595,12 +635,21 @@ static hal_ll_pin_name_t hal_ll_spi_master_check_pins( hal_ll_pin_name_t sck_pin
 static void hal_ll_spi_master_map_pins( uint8_t module_index, hal_ll_spi_pin_id *index_list ) {
     // if every single pin is OK, insert them into this new map, and use this map in all low level functions.
     hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_name  = _spi_sck_map[ index_list[ module_index ].pin_sck ].pin;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_name = _spi_miso_map[ index_list[ module_index ].pin_miso ].pin;
+    if ( HAL_LL_PIN_NC == index_list[ module_index ].pin_miso ) {
+        // MISO is not used (write-only device), so store "not connected".
+        hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_name = HAL_LL_PIN_NC;
+    } else {
+        hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_name = _spi_miso_map[ index_list[ module_index ].pin_miso ].pin;
+    }
     hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_name = _spi_mosi_map[ index_list[ module_index ].pin_mosi ].pin;
 
     // SCK, MISO and MOSI pins could have different alternate function settings, hence save all the AF-s.
     hal_ll_spi_master_hw_specifics_map[ module_index ].pins.sck.pin_af   = _spi_sck_map[ index_list[ module_index ].pin_sck ].af;
-    hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_af  = _spi_miso_map[ index_list[ module_index ].pin_miso ].af;
+    if ( HAL_LL_PIN_NC == index_list[ module_index ].pin_miso ) {
+        hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_af = 0;
+    } else {
+        hal_ll_spi_master_hw_specifics_map[ module_index ].pins.miso.pin_af = _spi_miso_map[ index_list[ module_index ].pin_miso ].af;
+    }
     hal_ll_spi_master_hw_specifics_map[ module_index ].pins.mosi.pin_af  = _spi_mosi_map[ index_list[ module_index ].pin_mosi ].af;
 }
 
@@ -641,19 +690,24 @@ static void hal_ll_spi_master_set_clock( hal_ll_spi_master_hw_specifics_map_t *m
 
 static void hal_ll_spi_master_alternate_functions_set_state( hal_ll_spi_master_hw_specifics_map_t *map, bool hal_ll_state ) {
     module_struct module;
+    uint8_t count = 0;
 
-    if((map->pins.sck.pin_name != HAL_LL_PIN_NC) && (map->pins.miso.pin_name != HAL_LL_PIN_NC) && (map->pins.miso.pin_name != HAL_LL_PIN_NC)) {
-        module.pins[0] = map->pins.sck.pin_name;
-        module.pins[1] = map->pins.miso.pin_name;
-        module.pins[2] = map->pins.mosi.pin_name;
-        module.pins[3] = GPIO_MODULE_STRUCT_END;
+    if ( ( map->pins.sck.pin_name != HAL_LL_PIN_NC ) && ( map->pins.mosi.pin_name != HAL_LL_PIN_NC ) ) {
+        module.pins[ count ]      = map->pins.sck.pin_name;
+        module.configs[ count++ ] = map->pins.sck.pin_af;
 
-        module.configs[0] = map->pins.sck.pin_af;
-        module.configs[1] = map->pins.miso.pin_af;
-        module.configs[2] = map->pins.mosi.pin_af;
-        module.configs[3] = GPIO_MODULE_STRUCT_END;
+        if ( map->pins.miso.pin_name != HAL_LL_PIN_NC ) {
+            module.pins[ count ]      = map->pins.miso.pin_name;
+            module.configs[ count++ ] = map->pins.miso.pin_af;
+        }
 
-        hal_ll_gpio_module_struct_init(&module, hal_ll_state);
+        module.pins[ count ]      = map->pins.mosi.pin_name;
+        module.configs[ count++ ] = map->pins.mosi.pin_af;
+
+        module.pins[ count ]    = GPIO_MODULE_STRUCT_END;
+        module.configs[ count ] = GPIO_MODULE_STRUCT_END;
+
+        hal_ll_gpio_module_struct_init( &module, hal_ll_state );
     }
 }
 
