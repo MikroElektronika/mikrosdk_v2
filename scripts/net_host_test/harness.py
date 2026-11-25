@@ -94,6 +94,86 @@ def serve(server):
     return server
 
 
+# ---------------------------------------------------------------- HTTP server checks
+
+def raw_request(ip, port, data, pause_after=None, then=b'', timeout=8):
+    """Send raw bytes, optionally wait for a reply part before sending `then`; return all bytes received."""
+    with socket.create_connection((ip, port), timeout=timeout) as c:
+        c.sendall(data)
+        got = b''
+        if pause_after is not None:
+            while pause_after not in got:
+                chunk = c.recv(4096)
+                if not chunk:
+                    return got
+                got += chunk
+            c.sendall(then)
+        while True:
+            try:
+                chunk = c.recv(65536)
+            except ConnectionResetError:
+                return got + b'<RESET>'
+            if not chunk:
+                return got
+            got += chunk
+
+
+def parse_response(raw):
+    head, _, body = raw.partition(b'\r\n\r\n')
+    lines = head.decode('latin-1').split('\r\n')
+    status = int(lines[0].split()[1]) if lines and lines[0].startswith('HTTP/1.1 ') else 0
+    headers = {k.lower(): v.strip() for k, _, v in (l.partition(':') for l in lines[1:])}
+    return status, headers, body
+
+
+def http_server_checks(ip, port):
+    def req(method, path, body=b'', headers=''):
+        h = f'{method} {path} HTTP/1.1\r\nHost: board\r\n{headers}'
+        if body:
+            h += f'Content-Length: {len(body)}\r\n'
+        return (h + '\r\n').encode() + body
+
+    def check(name, raw, status, body=None, extra=None):
+        st, hd, bd = parse_response(raw)
+        ok = st == status and (body is None or bd == body) and \
+            hd.get('connection') == 'close' and hd.get('content-length') == str(len(bd))
+        if ok and extra:
+            ok = extra(hd, bd)
+        return name, ok, f'got {st} {bd[:80]!r} headers {hd}'
+
+    payload = bytes(range(256)) + b'{"k":"v"}' * 5
+    big = bytes((i % 251) for i in range(30000))
+    yield check('get-index', raw_request(ip, port, req('GET', '/')), 200, b'index page',
+                lambda h, b: h.get('content-type') == 'text/html')
+    yield check('query-params', raw_request(ip, port, req('GET', '/api?name=Hello+World%21&x=42')), 200,
+                b'name=Hello World!;x=42')
+    yield check('post-echo', raw_request(ip, port, req('POST', '/echo', payload)), 200, payload)
+    yield check('body-too-large-413', raw_request(ip, port, req('POST', '/echo', b'x' * 2000)), 413)
+    yield check('unknown-path-404', raw_request(ip, port, req('GET', '/nope')), 404)
+    yield check('wrong-method-405', raw_request(ip, port, req('DELETE', '/')), 405)
+    yield check('any-method-route', raw_request(ip, port, req('PUT', '/any')), 200, b'PUT')
+    yield check('streamed-30k', raw_request(ip, port, req('GET', '/big')), 200, big,
+                lambda h, b: h.get('x-pieces') == '30')
+    yield check('no-response-500', raw_request(ip, port, req('GET', '/forgot')), 500)
+    yield check('garbage-400', raw_request(ip, port, b'GARBAGE\r\n\r\n'), 400)
+    yield check('lowercase-method-400', raw_request(ip, port, b'get / HTTP/1.1\r\n\r\n'), 400)
+    yield check('header-too-large-431',
+                raw_request(ip, port, req('GET', '/', headers='X-Fill: ' + 'a' * 600 + '\r\n')), 431)
+    yield check('chunked-body-501',
+                raw_request(ip, port, req('POST', '/echo', headers='Transfer-Encoding: chunked\r\n') + b'5\r\nhello\r\n0\r\n\r\n'), 501)
+    body = b'z' * 200
+    head = f'POST /echo HTTP/1.1\r\nHost: board\r\nExpect: 100-continue\r\nContent-Length: {len(body)}\r\n\r\n'.encode()
+    raw = raw_request(ip, port, head, pause_after=b'100 Continue\r\n\r\n', then=body)
+    interim, _, rest = raw.partition(b'HTTP/1.1 100 Continue\r\n\r\n')
+    yield check('expect-100-continue', rest, 200, body) if interim == b'' else ('expect-100-continue', False, repr(raw[:80]))
+    t0 = time.time()
+    raw = raw_request(ip, port, b'GET / HTTP/1.1\r\nHost: ')      # stalls in the header
+    took = time.time() - t0
+    name, ok, detail = check('stalled-client-408', raw, 408)
+    yield name, ok and 2.5 < took < 6, f'{detail} after {took:.1f} s'
+    yield check('serves-after-timeout', raw_request(ip, port, req('GET', '/')), 200, b'index page')
+
+
 # ---------------------------------------------------------------- test run
 
 def run_test(binary, mode, failures):
@@ -113,6 +193,14 @@ def run_test(binary, mode, failures):
             print(f'   {"OK" if ok else "FAIL"} harness-ping {stack_ip}', flush=True)
             if not ok:
                 failures.append(f'{mode}: ping {stack_ip} failed: {ping.stdout[-200:]}')
+            proc.stdin.write('GO\n')
+            proc.stdin.flush()
+        elif line.startswith('HTTPSERVER '):
+            port = int(line.split()[1])
+            for name, ok, detail in http_server_checks(stack_ip, port):
+                print(f'   {"OK" if ok else "FAIL"} harness-{name}{"" if ok else ": " + detail}', flush=True)
+                if not ok:
+                    failures.append(f'{mode}: http server {name}: {detail}')
             proc.stdin.write('GO\n')
             proc.stdin.flush()
         elif line.startswith('LISTEN '):

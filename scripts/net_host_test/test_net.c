@@ -22,6 +22,7 @@
 
 #include "net_api.h"
 #include "net_http.h"
+#include "net_http_server.h"
 #include "tap_driver.h"
 
 static int failures;
@@ -56,8 +57,15 @@ static void on_assert( const char *message, const char *file, int line )
     abort();
 }
 
-/* Keep the stack running until the harness writes "GO" (it pings us or connects meanwhile). */
+/* Keep the stack (and an HTTP server, if given) running until the harness writes
+ * "GO" (it pings us or connects meanwhile). */
+static void wait_for_go_serving( uint32_t timeout_ms, net_http_server_t *srv );
 static void wait_for_go( uint32_t timeout_ms )
+{
+    wait_for_go_serving( timeout_ms, NULL );
+}
+
+static void wait_for_go_serving( uint32_t timeout_ms, net_http_server_t *srv )
 {
     char line[ 16 ];
     size_t len = 0;
@@ -66,6 +74,10 @@ static void wait_for_go( uint32_t timeout_ms )
     while ( net_now_ms() - start < timeout_ms )
     {
         net_poll();
+        if ( srv )
+        {
+            net_http_server_poll( srv );
+        }
         char c;
         while ( read( 0, &c, 1 ) == 1 )
         {
@@ -356,6 +368,106 @@ static void test_http( void )
     CHECK( "http-malformed", NET_ERROR == err, "err %d", err );
 }
 
+/* ------------------------------------------------------- HTTP server --- */
+
+static int handler_calls;
+
+static void on_index( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    ( void )req;
+    handler_calls++;
+    net_http_server_respond( conn, 200, "text/html", "index page", 10 );
+}
+
+static void on_api( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    char name[ 32 ], x[ 8 ], out[ 64 ];
+    handler_calls++;
+    if ( net_http_server_param( req->query, "name", name, sizeof( name ) ) < 0 ||
+         net_http_server_param( req->query, "x", x, sizeof( x ) ) < 0 )
+    {
+        net_http_server_respond( conn, 400, "text/plain", "missing", 7 );
+        return;
+    }
+    snprintf( out, sizeof( out ), "name=%s;x=%s", name, x );
+    net_http_server_respond( conn, 200, "text/plain", out, ( uint32_t )strlen( out ) );
+}
+
+static void on_echo( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    handler_calls++;
+    net_http_server_respond( conn, 200, "application/octet-stream", req->body, req->body_len );
+}
+
+static void on_any( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    handler_calls++;
+    net_http_server_respond( conn, 200, "text/plain", req->method, ( uint32_t )strlen( req->method ) );
+}
+
+static void on_big( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    static uint8_t piece[ 1000 ];
+    ( void )req;
+    handler_calls++;
+    net_http_server_respond_begin( conn, 200, "application/octet-stream", "X-Pieces: 30\r\n", 30000 );
+    for ( int i = 0; i < 30; i++ )
+    {
+        for ( int j = 0; j < 1000; j++ )
+        {
+            piece[ j ] = ( uint8_t )( ( i * 1000 + j ) % 251 );
+        }
+        net_http_server_send( conn, piece, sizeof( piece ) );
+    }
+}
+
+static void on_forgot( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    ( void )req;
+    ( void )conn;
+    handler_calls++;        /* answers nothing: the server must send 500 */
+}
+
+static void test_http_server( void )
+{
+    static const net_http_route_t routes[] = {
+        { "GET", "/", on_index },
+        { "GET", "/api", on_api },
+        { "POST", "/echo", on_echo },
+        { NULL, "/any", on_any },
+        { "GET", "/big", on_big },
+        { "GET", "/forgot", on_forgot },
+    };
+    static char buffer[ 512 ];
+    static net_http_server_t srv;
+
+    char v[ 16 ];
+    CHECK( "param-decode", 5 == net_http_server_param( "a=1&b=x%20y%2Bz&c", "b", v, sizeof( v ) ) &&
+           0 == strcmp( v, "x y+z" ), "value \"%s\"", v );
+    CHECK( "param-plus-and-empty", 3 == net_http_server_param( "q=a+b&e=", "q", v, sizeof( v ) ) &&
+           0 == strcmp( v, "a b" ) && 0 == net_http_server_param( "q=a+b&e=", "e", v, sizeof( v ) ), "value \"%s\"", v );
+    CHECK( "param-missing-and-prefix", -1 == net_http_server_param( "ab=1&c", "a", v, sizeof( v ) ) &&
+           -1 == net_http_server_param( "ab=1&c", "c", v, sizeof( v ) ), "value \"%s\"", v );
+    CHECK( "param-too-long-and-nul", -1 == net_http_server_param( "k=0123456789abcdef", "k", v, sizeof( v ) ) &&
+           -1 == net_http_server_param( "k=a%00b", "k", v, sizeof( v ) ), "value \"%s\"", v );
+    CHECK( "param-bad-escape-kept", 3 == net_http_server_param( "k=%zz", "k", v, sizeof( v ) ) &&
+           0 == strcmp( v, "%zz" ), "value \"%s\"", v );
+
+    net_err_t err = net_http_server_start( &srv, 8081, routes, sizeof( routes ) / sizeof( routes[ 0 ] ),
+                                           buffer, sizeof( buffer ) );
+    CHECK( "http-server-start", NET_OK == err, "err %d", err );
+    if ( NET_OK != err )
+    {
+        return;
+    }
+    printf( "HTTPSERVER 8081\n" );
+    fflush( stdout );
+    wait_for_go_serving( 60000, &srv );     /* the harness sends its requests meanwhile */
+    CHECK( "http-server-handlers", 8 == handler_calls, "%d handler calls", handler_calls );
+    CHECK( "http-server-requests", srv.requests >= 15, "%u requests", srv.requests );
+    net_http_server_stop( &srv );
+}
+
 static void test_link( void )
 {
     tap.link = false;
@@ -418,6 +530,7 @@ int main( int argc, char **argv )
     test_socket_limit();
     test_http();
     test_tcp_server();
+    test_http_server();
     if ( dhcp )
     {
         test_link();

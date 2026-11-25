@@ -11,6 +11,7 @@ add_executable(test_net
     tap_driver.c
     ${SDK_ROOT}/middleware/net/src/net_common.c
     ${SDK_ROOT}/middleware/net/src/net_http.c
+    ${SDK_ROOT}/middleware/net/src/net_http_server.c
     ${SDK_ROOT}/middleware/net/src/net_lwip.c
     ${LWIP_SOURCES}
 )
@@ -27,7 +28,7 @@ target_compile_definitions(test_net PRIVATE code= _GNU_SOURCE)
 target_compile_options(test_net PRIVATE -g -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer)
 target_link_options(test_net PRIVATE -fsanitize=address,undefined)
 
-## Unit tests of the on-chip MAC support, no network needed.
+## Unit tests (on-chip MAC support, time base), no network needed.
 set(UNIT_OPTIONS -g -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer
     -Wall -Wextra -Werror)
 
@@ -45,7 +46,12 @@ target_include_directories(test_pic32mz PRIVATE
 ## PHYS() keeps 32 bits of a host pointer: harmless here, the fake controller never follows them.
 target_compile_options(test_pic32mz PRIVATE -Wno-pointer-to-int-cast)
 
-foreach(t test_phy test_pic32mz)
+## platform/systime with a fake cycle counter (168 MHz).
+add_executable(test_systime test_systime.c ${SDK_ROOT}/platform/systime/lib/src/systime.c)
+target_include_directories(test_systime PRIVATE ${SDK_ROOT}/platform/systime/lib/include)
+target_compile_definitions(test_systime PRIVATE SYSTIME_TEST_COUNTER SYSTIME_TEST_TICKS_PER_MS=168000u)
+
+foreach(t test_phy test_pic32mz test_systime)
     set_property(TARGET ${t} PROPERTY C_STANDARD 99)
     target_compile_definitions(${t} PRIVATE code=)
     target_compile_options(${t} PRIVATE ${UNIT_OPTIONS})
@@ -56,6 +62,7 @@ endforeach()
 set_source_files_properties(
     ${SDK_ROOT}/middleware/net/src/net_common.c
     ${SDK_ROOT}/middleware/net/src/net_http.c
+    ${SDK_ROOT}/middleware/net/src/net_http_server.c
     ${SDK_ROOT}/middleware/net/src/net_lwip.c
     PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Werror;-Wshadow;-Wconversion;-Wno-sign-conversion"
 )

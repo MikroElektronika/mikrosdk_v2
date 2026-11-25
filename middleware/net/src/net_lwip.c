@@ -52,6 +52,9 @@
 #include <string.h>
 
 #include "net_api.h"
+#ifdef NET_HAVE_SYSTIME
+#include "systime.h"        /* stdint only: no err_t */
+#endif
 
 #include "lwip/init.h"
 #include "lwip/netif.h"
@@ -266,6 +269,9 @@ void net_config_default( net_config_t *cfg )
     {
         memset( cfg, 0, sizeof( *cfg ) );
         cfg->use_dhcp = true;
+#ifdef NET_HAVE_SYSTIME
+        cfg->now_ms = systime_ms;
+#endif
     }
 }
 

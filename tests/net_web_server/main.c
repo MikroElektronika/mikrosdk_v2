@@ -80,7 +80,7 @@
 #include "board.h"
 #include "log.h"
 #include "net_api.h"
-#include "net_clock.h"
+#include "net_http_server.h"
 
 #if NET_INTERFACE == NET_IF_SPI
     #include "transport_select.h"
@@ -99,7 +99,7 @@
 static const uint8_t local_mac[ 6 ] = LOCAL_MAC;
 static log_t logger;
 static net_driver_t driver;
-static uint32_t requests;
+static net_http_server_t server;
 static char addr_text[ 16 ];
 
 #if NET_INTERFACE == NET_IF_SPI
@@ -176,91 +176,61 @@ static void append( char *dst, uint32_t size, const char *src )
     dst[ len ] = '\0';
 }
 
-static int32_t send_text( net_socket_t client, const char *text )
-{
-    return net_tcp_send( client, text, ( uint32_t )strlen( text ), 3000 );
-}
-
 // --------------------------------------------------------------- Web server
 
-static void serve( net_socket_t client )
+// Refresh the address text: DHCP may give a new one after a link loss.
+static void update_address( void )
 {
-    static char request[ 512 ];
-    static char body[ 640 ];
-    char num[ 11 ];
-    uint32_t len = 0;
-
-    // Read the request header (the body of a GET is empty).
-    while ( len < sizeof( request ) - 1 )
-    {
-        int32_t got = net_tcp_receive( client, request + len, sizeof( request ) - 1 - len, 3000 );
-        if ( got <= 0 )
-        {
-            break;
-        }
-        len += ( uint32_t )got;
-        request[ len ] = '\0';
-        if ( strstr( request, "\r\n\r\n" ) )
-        {
-            break;
-        }
-    }
-    request[ len ] = '\0';
-    requests++;
-
     net_ip4_t ip;
     if ( NET_OK == net_get_address( &ip, NULL, NULL ) )
     {
-        net_ip4_to_string( &ip, addr_text );   // DHCP may give a new one after a link loss
+        net_ip4_to_string( &ip, addr_text );
     }
-
-    const char *status = "200 OK";
-    const char *type = "text/html";
-    uint32_t uptime_s = net_now_ms() / 1000u;
-    body[ 0 ] = '\0';
-
-    if ( 0 == strncmp( request, "GET / ", 6 ) )
-    {
-        append( body, sizeof( body ), "<!DOCTYPE html><html><head><title>mikroSDK</title></head><body>"
-                                      "<h1>Hello from mikroSDK</h1><p>Network layer: lwIP over " INTERFACE_NAME
-                                      "</p><ul><li>Address: " );
-        append( body, sizeof( body ), addr_text );
-        append( body, sizeof( body ), "</li><li>Uptime: " );
-        append( body, sizeof( body ), u32_to_text( uptime_s, num ) );
-        append( body, sizeof( body ), " s</li><li>Requests: " );
-        append( body, sizeof( body ), u32_to_text( requests, num ) );
-        append( body, sizeof( body ), "</li></ul></body></html>" );
-    }
-    else if ( 0 == strncmp( request, "GET /api/status ", 16 ) )
-    {
-        type = "application/json";
-        append( body, sizeof( body ), "{\"interface\":\"" INTERFACE_NAME "\",\"address\":\"" );
-        append( body, sizeof( body ), addr_text );
-        append( body, sizeof( body ), "\",\"uptime_s\":" );
-        append( body, sizeof( body ), u32_to_text( uptime_s, num ) );
-        append( body, sizeof( body ), ",\"requests\":" );
-        append( body, sizeof( body ), u32_to_text( requests, num ) );
-        append( body, sizeof( body ), "}" );
-    }
-    else
-    {
-        status = "404 Not Found";
-        type = "text/plain";
-        append( body, sizeof( body ), "Not found" );
-    }
-
-    send_text( client, "HTTP/1.1 " );
-    send_text( client, status );
-    send_text( client, "\r\nContent-Type: " );
-    send_text( client, type );
-    send_text( client, "\r\nContent-Length: " );
-    send_text( client, u32_to_text( ( uint32_t )strlen( body ), num ) );
-    send_text( client, "\r\nConnection: close\r\n\r\n" );
-    send_text( client, body );
-    net_close( client );
-
-    log_printf( &logger, "%s -> %s\r\n", ( len > 6 && request[ 0 ] == 'G' ) ? "GET" : "request", status );
 }
+
+static void on_index( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    static char body[ 640 ];
+    char num[ 11 ];
+    ( void )req;
+    update_address();
+    body[ 0 ] = '\0';
+    append( body, sizeof( body ), "<!DOCTYPE html><html><head><title>mikroSDK</title></head><body>"
+                                  "<h1>Hello from mikroSDK</h1><p>Network layer: lwIP over " INTERFACE_NAME
+                                  "</p><ul><li>Address: " );
+    append( body, sizeof( body ), addr_text );
+    append( body, sizeof( body ), "</li><li>Uptime: " );
+    append( body, sizeof( body ), u32_to_text( net_now_ms() / 1000u, num ) );
+    append( body, sizeof( body ), " s</li><li>Requests: " );
+    append( body, sizeof( body ), u32_to_text( server.requests + 1, num ) );
+    append( body, sizeof( body ), "</li></ul></body></html>" );
+    net_http_server_respond( conn, 200, "text/html", body, ( uint32_t )strlen( body ) );
+    log_printf( &logger, "GET / -> 200\r\n" );
+}
+
+static void on_status( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    static char body[ 160 ];
+    char num[ 11 ];
+    ( void )req;
+    update_address();
+    body[ 0 ] = '\0';
+    append( body, sizeof( body ), "{\"interface\":\"" INTERFACE_NAME "\",\"address\":\"" );
+    append( body, sizeof( body ), addr_text );
+    append( body, sizeof( body ), "\",\"uptime_s\":" );
+    append( body, sizeof( body ), u32_to_text( net_now_ms() / 1000u, num ) );
+    append( body, sizeof( body ), ",\"requests\":" );
+    append( body, sizeof( body ), u32_to_text( server.requests + 1, num ) );
+    append( body, sizeof( body ), "}" );
+    net_http_server_respond( conn, 200, "application/json", body, ( uint32_t )strlen( body ) );
+    log_printf( &logger, "GET /api/status -> 200\r\n" );
+}
+
+// Other paths get 404 and other methods 405 from the server.
+static const net_http_route_t routes[ ] = {
+    { "GET", "/", on_index },
+    { "GET", "/api/status", on_status },
+};
 
 // ---------------------------------------------------------------------- Main
 
@@ -275,13 +245,11 @@ int main( void )
     log_init( &logger, &log_cfg );
     log_printf( &logger, "\r\n=== mikroSDK network layer: web server over %s ===\r\n", INTERFACE_NAME );
 
-    net_clock_init();
     interface_init();
 
     net_config_t cfg;
-    net_config_default( &cfg );
+    net_config_default( &cfg );      // time source: systime_ms (core cycle counter)
     cfg.driver = &driver;
-    cfg.now_ms = net_clock_ms;
     cfg.hostname = "mikrosdk";
     memcpy( cfg.mac, local_mac, 6 );
     #if !USE_DHCP
@@ -307,8 +275,9 @@ int main( void )
     net_ip4_to_string( &ip, addr_text );
     log_printf( &logger, "\r\nReady: open http://%s/\r\n", addr_text );
 
-    net_socket_t listener;
-    if ( NET_OK != net_tcp_listen( &listener, 80 ) )
+    static char request_buffer[ 1024 ];
+    if ( NET_OK != net_http_server_start( &server, 80, routes, sizeof( routes ) / sizeof( routes[ 0 ] ),
+                                          request_buffer, sizeof( request_buffer ) ) )
     {
         log_printf( &logger, "Cannot listen on port 80\r\n" );
         for ( ; ; );
@@ -318,17 +287,12 @@ int main( void )
     for ( ; ; )
     {
         net_poll();
+        net_http_server_poll( &server );
 
         if ( net_link_up() != link )
         {
             link = !link;
             log_printf( &logger, link ? ">>> LINK UP\r\n" : ">>> LINK DOWN\r\n" );
-        }
-
-        net_socket_t client;
-        if ( NET_OK == net_tcp_accept( listener, &client, 0 ) )
-        {
-            serve( client );
         }
     }
 

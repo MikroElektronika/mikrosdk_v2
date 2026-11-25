@@ -13,4 +13,4 @@ Test is considered successful if, on the same network:
 - other paths return 404,
 - after unplugging and plugging the cable the terminal shows LINK DOWN / LINK UP and the page works again.
 
-NOTE: An Ethernet cable connection to a local network is required. Needs a Cortex-M3 or newer ARM core or a PIC32 (the millisecond clock uses the core's cycle counter) and about 40 KB of RAM.
+NOTE: An Ethernet cable connection to a local network is required. Needs a Cortex-M3 or newer ARM core or a PIC32 (the time source, platform/systime, uses the core's cycle counter) and about 40 KB of RAM.

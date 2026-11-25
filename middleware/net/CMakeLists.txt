@@ -11,8 +11,10 @@ mikrosdk_add_library(lib_net MikroSDK.Net
     include/net_api.h
     include/net_driver.h
     include/net_http.h
+    include/net_http_server.h
     src/net_common.c
     src/net_http.c
+    src/net_http_server.c
     src/net_lwip.c
     ${LWIP_SOURCES}
 )
@@ -31,11 +33,18 @@ target_link_libraries(lib_net PUBLIC
     MikroC.Core
 )
 
+## Default time source (net_config_t.now_ms) where the core has a cycle counter.
+if (TARGET MikroSDK.Systime)
+    target_link_libraries(lib_net PUBLIC MikroSDK.Systime)
+    target_compile_definitions(lib_net PRIVATE NET_HAVE_SYSTIME)
+endif()
+
 mikrosdk_install(MikroSDK.Net)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net
     include/net_api.h
     include/net_driver.h
     include/net_http.h
+    include/net_http_server.h
 )
 
 ## Driver for the controllers of middleware/ethernet (eth_transport_* API).

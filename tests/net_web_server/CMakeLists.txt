@@ -2,7 +2,6 @@
 ## Web server on the mikroSDK network layer (MIKROSDK_NET_STACK=LWIP).
 add_executable(test_net_web_server
     main.c
-    net_clock.h
     ReadMe.txt
 )
 

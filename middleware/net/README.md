@@ -26,6 +26,7 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
 | --- | --- |
 | `include/net_api.h` | Interface, DNS, TCP, UDP |
 | `include/net_http.h` | HTTP client (built on `net_api.h` only) |
+| `include/net_http_server.h` | HTTP server: routes (method + path → handler), query/form parameters, complete or streamed responses, one request at a time from `net_http_server_poll()` (built on `net_api.h` only) |
 | `include/net_driver.h` | Frame driver interface: what an Ethernet controller driver implements |
 | `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100); they are used unchanged |
 | `drivers/pic32mz/net_driver_pic32mz.h` | On-chip Ethernet of PIC32MZ EC/EF (RMII, polled DMA descriptor rings in uncached memory) — `MikroSDK.Net.Pic32mz`, built only for PIC32MZ with Ethernet |
@@ -74,6 +75,27 @@ for ( ; ; )
 }
 ```
 
+HTTP server:
+
+```c
+static void on_status( const net_http_server_request_t *req, net_http_server_conn_t *conn )
+{
+    char led[ 8 ];
+    if ( net_http_server_param( req->query, "led", led, sizeof( led ) ) >= 0 ) { /* ?led=on */ }
+    net_http_server_respond( conn, 200, "application/json", "{\"ok\":true}", 11 );
+}
+static const net_http_route_t routes[] = { { "GET", "/api/status", on_status } };
+static char buffer[ 1024 ];          // one request: header and body
+static net_http_server_t server;
+
+net_http_server_start( &server, 80, routes, 1, buffer, sizeof( buffer ) );
+for ( ; ; ) { net_poll(); net_http_server_poll( &server ); }
+```
+
+Unknown paths get 404, a known path with another method 405, a handler that does not answer 500. Requests that
+do not fit the buffer get 413 / 431, malformed ones 400, chunked request bodies 501, clients that stall 408
+(`NET_HTTP_SERVER_TIMEOUT_MS`, 3 s). `Expect: 100-continue` is answered.
+
 TCP: `net_tcp_connect()`, `net_tcp_send()`, `net_tcp_receive()`, `net_tcp_listen()`, `net_tcp_accept()`,
 `net_close()`. UDP: `net_udp_open()`, `net_udp_send_to()`, `net_udp_receive_from()`. Errors are `net_err_t` values;
 functions that return a length return a negative `net_err_t` on failure.
@@ -101,8 +123,11 @@ definitions:
 
 [tests/net_web_server](../../tests/net_web_server/ReadMe.txt): a web server (HTML page and `/api/status`) that
 runs unchanged on an SPI Ethernet Click (the same controller selection as `tests/spi_ethernet`) or on the on-chip
-Ethernet of the mikromedia 4/5 for PIC32MZ, chosen with `NET_INTERFACE` in `main.c`. Its `net_clock.h` gives the
-millisecond time source from the core's cycle counter (Cortex-M3 and newer, PIC32) without interrupts.
+Ethernet of the mikromedia 4/5 for PIC32MZ, chosen with `NET_INTERFACE` in `main.c`.
+
+**Time source.** `net_config_default()` sets `now_ms` to `systime_ms` ([platform/systime](../../platform/systime)):
+milliseconds from the core's cycle counter, no interrupt or timer needed (Cortex-M3 and newer, PIC32, RISC-V).
+On Cortex-M0/M23 set `now_ms` to a millisecond counter of your own.
 
 ## PIC32MZ on-chip Ethernet
 
@@ -129,10 +154,10 @@ drivers (GPL).
 ## Testing
 
 `scripts/net_host_test/run.sh` builds this library and lwIP for Linux and runs, with AddressSanitizer and UBSan:
-unit tests of the PHY code (simulated PHY) and of the PIC32MZ driver (fake registers, the test playing the DMA
-controller), then 84 checks against the Linux TCP/IP stack in a private network namespace (DHCP and DNS from
-dnsmasq, TCP/UDP echo, HTTP server, TCP server mode, link loss, error cases). See
-[its README](../../scripts/net_host_test/README.md).
+unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulated PHY) and of the PIC32MZ driver
+(fake registers, the test playing the DMA controller), then the network checks against the Linux TCP/IP stack in a
+private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP client and server, TCP server mode, link
+loss, error cases). See [its README](../../scripts/net_host_test/README.md).
 
 ## Next steps
 

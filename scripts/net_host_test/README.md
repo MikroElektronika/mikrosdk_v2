@@ -17,10 +17,14 @@ namespace, so the TAP device, dnsmasq and the servers exist only there.
 | `tap_driver.c` | `net_driver_t` on a Linux TAP device |
 | `harness.py` | Creates `tap0` (192.168.77.1/24), runs dnsmasq (DHCP, DNS) and the servers (TCP echo 7007, UDP echo 7008, HTTP 8000), pings the stack and connects to its TCP server |
 | `CMakeLists.txt` | Host build: `-Dcode=` as in every mikroSDK library, AddressSanitizer and UBSan (fatal), strict warnings for the mikroSDK files |
+| `test_systime.c` | Unit test of `platform/systime` with a fake cycle counter: exact milliseconds across counter wraps |
 | `test_phy.c` | Unit test of `drivers/phy` with a simulated PHY: address scan, reset, latched link bit, negotiated mode |
 | `test_pic32mz.c`, `fakes/pic32mz/` | Unit test of the PIC32MZ driver with fake registers and a simulated LAN8720; the test fills the receive descriptors like the DMA controller. Tests the driver logic and descriptor format, not the silicon |
 
 What is checked: init errors, DHCP and static addresses, ping, address parsing, DNS (found, not found, literal),
 300 KB TCP echo through small windows, refused and timed-out connections, UDP echo and timeout, socket limits and
 invalid handles, HTTP GET/POST/chunked/404/truncated/close-delimited/malformed responses and header injection,
-TCP server mode (accept, peer address, peer close) and link loss with DHCP recovery.
+TCP server mode (accept, peer address, peer close), link loss with DHCP recovery, and the HTTP server against raw
+requests from the harness (routes, query decoding, POST echo, 30 KB streamed body, 404/405/500, 400 for garbage and
+lowercase methods, 413/431 for oversize requests, 501 for chunked bodies, `Expect: 100-continue`, 408 for a stalled
+client and service afterwards).
