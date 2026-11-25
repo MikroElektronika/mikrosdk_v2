@@ -36,7 +36,9 @@
   #include "rusb2_rx.h"
 #elif TU_CHECK_MCU(OPT_MCU_RAXXX)
   #include "rusb2_ra.h"
-  #if defined(RENESAS_CORTEX_M23)
+  // Note: Changed for MikroE implementation.
+  // USB_HW_RA_CFIFO_ONLY is defined in usb_hw.h for MCUs whose data pipes have to use CFIFO port.
+  #if defined(RENESAS_CORTEX_M23) || defined(USB_HW_RA_CFIFO_ONLY)
     #define D0FIFO CFIFO
     #define D0FIFOSEL CFIFOSEL
     #define D0FIFOSEL_b CFIFOSEL_b

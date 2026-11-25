@@ -91,6 +91,13 @@ extern "C"{
 #define USB_HW_RA_PIPE04567
 
 /**
+ * @brief Data pipes use the CFIFO port (no D0FIFO/D1FIFO on these MCUs),
+ * same as Renesas FSP USB driver without DMA.
+ * @note Used by TinyUSB rusb2 driver.
+ */
+#define USB_HW_RA_CFIFO_ONLY
+
+/**
  * @brief UCKSEL register settings.
  */
 #define USB_HW_RA_SCKSCR_CKSEL_MSK    (0x7U)
