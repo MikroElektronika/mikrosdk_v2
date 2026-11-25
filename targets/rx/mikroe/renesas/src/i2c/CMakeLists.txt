@@ -1,0 +1,78 @@
+## ./targets/rx/mikroe/renesas/src/i2c/CMakeLists.txt
+set(mcu_header_path ${MCU_NAME})
+
+configure_family_name(hal_ll_def_list)
+
+
+set(sci_subimplementation "")
+## BEGIN I2C
+set(i2c_subimplementation "implementation_1/hal_ll_i2c_master.c")
+set(i3c_subimplementation "../i3c/implementation_1/hal_ll_i3c.c")
+set(i2c_pin_map "hal_ll_i2c_pin_map/implementation_1")
+set(sci_subimplementation "../sci/implementation_1/hal_ll_sci.c")
+
+## END I2C
+
+# TSC2003 Special case
+if (NOT DEFINED _MSDK_TFT_TP_)
+    list(APPEND hal_ll_def_list "__TFT_NON_TSC2003__")
+else()
+    if (${_MSDK_TFT_TP_} MATCHES "__TP_TSC2003__")
+        list(APPEND hal_ll_def_list "__TFT_RESISTIVE_TSC2003__")
+    else()
+        list(APPEND hal_ll_def_list "__TFT_NON_TSC2003__")
+    endif()
+endif()
+
+mikrosdk_add_library(lib_hal_ll_i2c_master MikroSDK.HalLowLevel.I2C.Master
+    ${i2c_subimplementation}
+    ${sci_subimplementation}
+    ${i3c_subimplementation}
+
+    ../../include/hal_ll_mstpcr.h
+    ../../include/hal_ll_target.h
+
+#  BEGIN I2C
+    ../../include/sci/hal_ll_sci.h
+    ../../include/sci/hal_ll_sci_i2c.h
+    ../../include/i3c/hal_ll_i3c.h
+    ../../include/i2c/hal_ll_i2c_master.h
+    ../../include/i2c/${i2c_pin_map}/hal_ll_i2c_pin_map.h
+#  END I2C
+)
+
+target_compile_definitions(lib_hal_ll_i2c_master PUBLIC
+    ${hal_ll_def_list}
+)
+
+target_link_libraries(lib_hal_ll_i2c_master PUBLIC
+    MikroC.Core
+    MikroSDK.HalLowLevelCore
+    MikroSDK.HalLowLevelCommon
+)
+
+string(TOLOWER ${mcu_header_path} MCU_HEADER_PATH_LOWER)
+target_include_directories(lib_hal_ll_i2c_master
+    PRIVATE
+        ../../include
+        ../../include/gpio
+        #  BEGIN I2C
+        ../../include/i2c
+        ../../include/sci
+        ../../include/i3c
+        ../../include/i2c/${i2c_pin_map}
+        #  END I2C
+
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/gpio>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/sci>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i3c>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/i2c/${i2c_pin_map}>
+        $<INSTALL_INTERFACE:include/hal_ll_port>
+        $<INSTALL_INTERFACE:include/${MCU_HEADER_PATH_LOWER}>
+    )
+
+mikrosdk_install(MikroSDK.HalLowLevel.I2C.Master)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/hal_ll_port MikroSDK.HalLowLevel.I2C.Master ../../include/sci/hal_ll_sci.h ../../include/sci/hal_ll_sci_i2c.h ../../include/i2c/hal_ll_i2c_master.h ../../include/i3c/hal_ll_i3c.h)
