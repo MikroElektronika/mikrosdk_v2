@@ -1,6 +1,7 @@
 ## ./drv/lib/src/lib_drv_dma/CMakeLists.txt
 mikrosdk_add_library(lib_drv_dma MikroSDK.Driver.DMA
     drv_dma.c
+    drv_dma_irq.c
 
     ../../include/drv_dma.h
     ../../include/drv_name.h
