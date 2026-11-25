@@ -52,7 +52,7 @@
  * net_config_t cfg;
  * net_config_default( &cfg );
  * cfg.driver = &my_driver;          // see net_driver.h
- * cfg.now_ms = my_millis;           // millisecond counter, e.g. from SysTick
+ * // cfg.now_ms is systime_ms by default; set your own on cores without a cycle counter
  * memcpy( cfg.mac, my_mac, 6 );
  * net_init( &cfg );                 // DHCP by default
  * if ( NET_OK == net_wait_ready( 10000 ) ) { ... }
@@ -127,7 +127,9 @@ typedef int8_t net_socket_t;
 typedef struct
 {
     const net_driver_t *driver;          /*!< Frame driver (mandatory). */
-    uint32_t ( *now_ms )( void );        /*!< Millisecond counter (mandatory), may wrap. */
+    uint32_t ( *now_ms )( void );        /*!< Millisecond counter (mandatory), may wrap. Set to
+                                              systime_ms by net_config_default() where the core has
+                                              a cycle counter (platform/systime). */
     uint8_t mac[ 6 ];                    /*!< MAC address of the interface. */
     bool use_dhcp;                       /*!< true: get the address by DHCP (default). */
     net_ip4_t ip;                        /*!< Static address (use_dhcp == false). */
@@ -145,8 +147,8 @@ typedef struct
 } net_config_t;
 
 /*!
- * @brief Fill @p cfg with defaults: DHCP, no driver, no time source, MAC
- * 00:00:00:00:00:00 (set a real one).
+ * @brief Fill @p cfg with defaults: DHCP, no driver, MAC 00:00:00:00:00:00
+ * (set a real one), time source systime_ms where available (else none).
  */
 void net_config_default( net_config_t *cfg );
 
