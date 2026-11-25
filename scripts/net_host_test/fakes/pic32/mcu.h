@@ -1,8 +1,8 @@
 /*
- * Host test only: the PIC32MZ Ethernet registers used by net_driver_pic32mz.c,
+ * Host test only: the PIC32MZ Ethernet registers used by net_driver_pic32.c,
  * as plain variables. SET/CLR registers keep the last value written; the MDIO
  * read data register answers from a simulated PHY (fake_phy_reg[], address
- * fake_phy_addr). See test_pic32mz.c.
+ * fake_phy_addr). See test_pic32.c.
  */
 #ifndef FAKE_PIC32MZ_MCU_H
 #define FAKE_PIC32MZ_MCU_H

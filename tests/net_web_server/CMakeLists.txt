@@ -39,19 +39,38 @@ if (net_if STREQUAL "SPI")
     )
     ## transport_select.h is shared with the eth_net test.
     target_include_directories(test_net_web_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../spi_ethernet)
-elseif (net_if STREQUAL "PIC32MZ")
-    if (NOT TARGET MikroSDK.Net.Pic32mz)
-        message(FATAL_ERROR "test_net_web_server: NET_IF_PIC32MZ needs a PIC32MZ with Ethernet (${MCU_NAME})")
+elseif (net_if STREQUAL "PIC32")
+    if (NOT TARGET MikroSDK.Net.Pic32)
+        message(FATAL_ERROR "test_net_web_server: NET_IF_PIC32 needs a PIC32MX/MZ with Ethernet (${MCU_NAME})")
     endif()
     target_link_libraries(test_net_web_server PUBLIC
-        MikroSDK.Net.Pic32mz
+        MikroSDK.Net.Pic32
     )
+    if (${MCU_NAME} MATCHES "^PIC32MX")
+        target_compile_definitions(test_net_web_server PRIVATE NET_EXAMPLE_PIC32MX)
+    elseif (${MCU_NAME} MATCHES "^PIC32MZ.+(124|144)$")
+        target_compile_definitions(test_net_web_server PRIVATE NET_EXAMPLE_PIC32MZ_144)
+    endif()
 elseif (net_if STREQUAL "STM32")
     if (NOT TARGET MikroSDK.Net.Stm32)
         message(FATAL_ERROR "test_net_web_server: NET_IF_STM32 needs an STM32 with Ethernet (${MCU_NAME})")
     endif()
     target_link_libraries(test_net_web_server PUBLIC
         MikroSDK.Net.Stm32
+    )
+elseif (net_if STREQUAL "KINETIS")
+    if (NOT TARGET MikroSDK.Net.Kinetis)
+        message(FATAL_ERROR "test_net_web_server: NET_IF_KINETIS needs a Kinetis MK6x / MKV58 (${MCU_NAME})")
+    endif()
+    target_link_libraries(test_net_web_server PUBLIC
+        MikroSDK.Net.Kinetis
+    )
+elseif (net_if STREQUAL "TM4C")
+    if (NOT TARGET MikroSDK.Net.Tm4c)
+        message(FATAL_ERROR "test_net_web_server: NET_IF_TM4C needs a TM4C129 (${MCU_NAME})")
+    endif()
+    target_link_libraries(test_net_web_server PUBLIC
+        MikroSDK.Net.Tm4c
     )
 else()
     message(FATAL_ERROR "test_net_web_server: unknown NET_INTERFACE \"${net_if}\" in main.c")

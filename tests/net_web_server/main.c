@@ -43,10 +43,12 @@
  * @details The same application on two kinds of Ethernet:
  *   NET_IF_SPI     an SPI Ethernet controller on mikroBUS (ENC28J60, W5500,
  *                  LAN9250, W6100, LAN8651, see ../spi_ethernet/transport_select.h)
- *   NET_IF_PIC32MZ the on-chip Ethernet of PIC32MZ with its PHY (mikromedia 4/5
- *                  for PIC32MZ)
+ *   NET_IF_PIC32   the on-chip Ethernet of PIC32MX 6xx/7xx or PIC32MZ with its PHY
+ *                  (MCU card for PIC32MX795F512L, mikromedia 4/5 for PIC32MZ)
  *   NET_IF_STM32   the on-chip Ethernet of STM32F107/F2/F4/F7 with its PHY (MCU
  *                  cards and boards with an Ethernet connector)
+ *   NET_IF_KINETIS the on-chip ENET of NXP Kinetis MK6x / MKV58 with its PHY
+ *   NET_IF_TM4C    the on-chip Ethernet of TI TM4C129 with its integrated PHY
  * Gets an address by DHCP (or uses a static one), then serves
  *   /             an HTML page (interface, address, uptime, requests)
  *   /api/status   the same as JSON
@@ -60,8 +62,10 @@
 // ----------------------------------------------------------------- Settings
 
 #define NET_IF_SPI      0
-#define NET_IF_PIC32MZ  1
+#define NET_IF_PIC32    1
 #define NET_IF_STM32    2
+#define NET_IF_KINETIS  3
+#define NET_IF_TM4C     4
 #define NET_INTERFACE   NET_IF_SPI              // Define your interface
 
 #define SPI_ETH_CHIP    SPI_ETH_CHIP_LAN9250    // NET_IF_SPI: your chip (SPI_ETH_CHIP_* in transport_select.h)
@@ -89,13 +93,19 @@
     #include "transport_select.h"
     #include "net_driver_eth_transport.h"
     #define INTERFACE_NAME SPI_ETH_CHIP_NAME " (SPI)"
-#elif NET_INTERFACE == NET_IF_PIC32MZ
+#elif NET_INTERFACE == NET_IF_PIC32
     #include "mcu.h"
-    #include "net_driver_pic32mz.h"
-    #define INTERFACE_NAME "PIC32MZ Ethernet"
+    #include "net_driver_pic32.h"
+    #define INTERFACE_NAME "PIC32 Ethernet"
 #elif NET_INTERFACE == NET_IF_STM32
     #include "net_driver_stm32.h"
     #define INTERFACE_NAME "STM32 Ethernet"
+#elif NET_INTERFACE == NET_IF_KINETIS
+    #include "net_driver_kinetis.h"
+    #define INTERFACE_NAME "Kinetis Ethernet"
+#elif NET_INTERFACE == NET_IF_TM4C
+    #include "net_driver_tm4c.h"
+    #define INTERFACE_NAME "TM4C129 Ethernet"
 #else
     #error "Unknown NET_INTERFACE"
 #endif
@@ -138,23 +148,55 @@ static void interface_init( void )
     net_stm32_cfg_setup( &eth_cfg );    // pins and PHY clock as wired on the board
     net_driver_stm32( &driver, &eth_cfg );
 }
+#elif NET_INTERFACE == NET_IF_KINETIS
+static void interface_init( void )
+{
+    net_kinetis_cfg_t eth_cfg;
+    net_kinetis_cfg_setup( &eth_cfg );  // pins and RMII clock as wired on the board
+    net_driver_kinetis( &driver, &eth_cfg );
+}
+#elif NET_INTERFACE == NET_IF_TM4C
+static void interface_init( void )
+{
+    net_tm4c_cfg_t eth_cfg;
+    net_tm4c_cfg_setup( &eth_cfg );     // integrated PHY, Ethernet LEDs on PK5/PK6
+    net_driver_tm4c( &driver, &eth_cfg );
+}
 #else
+#if defined( NET_EXAMPLE_PIC32MX )
+// EasyPIC Fusion v7 ETH MCU card with PIC32MX795F512L: ERXERR, ERXD0, ERXD1 share
+// AN11, AN12, AN13. ERXERR (RB11) is not connected to the PHY on this card: tie it
+// to ground, as for CycloneTCP.
+static void board_eth_pins( void )
+{
+    AD1PCFGSET = ( 1UL << 11 ) | ( 1UL << 12 ) | ( 1UL << 13 );
+}
+#ifndef ETH_RST
+    #define ETH_RST GPIO_PG7    // PHY reset of the card
+#endif
+#elif defined( NET_EXAMPLE_PIC32MZ_144 )
 // mikromedia 4/5 for PIC32MZ (144 pins): the RMII pins that share an analog input.
 static void board_eth_pins( void )
 {
     ANSELJCLR = ( 1UL << 8 ) | ( 1UL << 9 ) | ( 1UL << 11 );   // ETXD0, ETXD1, EREFCLK
     ANSELHCLR = ( 1UL << 4 ) | ( 1UL << 5 );                    // ERXERR, ERXD1
 }
+#else
+// Other packages: clear the analog function (ANSELxCLR) of your board's RMII pins here.
+static void board_eth_pins( void )
+{
+}
+#endif
 
 static void interface_init( void )
 {
-    net_pic32mz_cfg_t eth_cfg;
-    net_pic32mz_cfg_setup( &eth_cfg );
+    net_pic32_cfg_t eth_cfg;
+    net_pic32_cfg_setup( &eth_cfg );
     #ifdef ETH_RST
     eth_cfg.phy_reset = ETH_RST;
     #endif
     eth_cfg.pins_init = board_eth_pins;
-    net_driver_pic32mz( &driver, &eth_cfg );
+    net_driver_pic32( &driver, &eth_cfg );
 }
 #endif
 

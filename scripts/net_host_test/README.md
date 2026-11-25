@@ -20,8 +20,11 @@ namespace, so the TAP device, dnsmasq and the servers exist only there.
 | `test_systime.c` | Unit test of `platform/systime` with a fake cycle counter: exact milliseconds across counter wraps |
 | `test_phy.c` | Unit test of `drivers/phy` with a simulated PHY: address scan, reset, latched link bit, negotiated mode |
 | `test_stm32.c`, `fakes/stm32/` | Unit test of the STM32 driver, built once per family (F1, F2, F4, F7): fake registers, a hardware model (DMA reset only with a reference clock, MDIO transfers to a simulated LAN8720, FIFO flush), the test playing both DMA engines; pins, clocks, RMII mode, MCO, MAC/DMA setup, rings, receive/transmit, link modes, Cortex-M7 cache maintenance, failures |
-| `stm32_regmap_*.c`, `stm32_regmap.h` | The STM32 driver's register offsets and bits compared with ST's CMSIS device headers (F107, F207, F407, F746), where the repository has them |
-| `test_pic32mz.c`, `fakes/pic32mz/` | Unit test of the PIC32MZ driver with fake registers and a simulated LAN8720; the test fills the receive descriptors like the DMA controller. Tests the driver logic and descriptor format, not the silicon |
+| `stm32_regmap_*.c`, `stm32_regmap.h` | The STM32 driver's register offsets and bits compared with ST's CMSIS device headers (F107, F207, F407, F746), where the repository has them; `stm32_regmap_main.c` is the comparison program for all register map checks |
+| `test_kinetis.c`, `kinetis_regmap_*.c` | Kinetis ENET driver per pin variant (K64, K66, KV58): fake registers, hardware model (reset, MDIO frames), the test playing the DMA; register map against NXP's headers (MK60, MK64, MK65, MK66, MKV58) |
+| `test_tm4c.c`, `tm4c_regmap_*.c` | TM4C129 driver: fake registers, hardware model (clock/power ready, resets, MDIO to the integrated PHY), the test playing the DMA; register map against TI's headers |
+| `fakes/cmsis/` | CMSIS core and system header stubs, so ST's and NXP's device headers can be read for the register map checks |
+| `test_pic32.c`, `fakes/pic32/` | Unit test of the PIC32 (MX/MZ) driver with fake registers and a simulated LAN8720; the test fills the receive descriptors like the DMA controller. Tests the driver logic and descriptor format, not the silicon |
 
 What is checked: init errors, DHCP and static addresses, ping, address parsing, DNS (found, not found, literal),
 300 KB TCP echo through small windows, refused and timed-out connections, UDP echo and timeout, socket limits and

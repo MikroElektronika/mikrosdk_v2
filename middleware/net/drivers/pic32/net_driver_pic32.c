@@ -38,14 +38,15 @@
 ****************************************************************************/
 
 /*!
- * @file net_driver_pic32mz.c
- * @brief PIC32MZ Ethernet controller driver for the mikroSDK network layer.
- * @details Written from the PIC32MZ EF data sheet (DS60001320) and the PIC32
+ * @file net_driver_pic32.c
+ * @brief PIC32MX / PIC32MZ Ethernet controller driver for the mikroSDK network layer.
+ * @details Written from the PIC32MZ EF (DS60001320) and PIC32MX5XX/6XX/7XX
+ * (DS60001156) data sheets and the PIC32
  * Family Reference Manual, Section 35 "Ethernet Controller". Register and bit
  * names are those of the device header (mcu.h).
  *
  * DMA: the controller reads and writes descriptors and buffers in RAM, and the
- * PIC32MZ has a data cache. Both therefore live in uncached memory (XC32's
+ * PIC32MZ has a data cache (PIC32MX has none). Both therefore live in uncached memory (XC32's
  * "coherent" attribute, KSEG1); the controller is given physical addresses.
  *
  * Descriptor format (5 words, linked with NPV):
@@ -59,7 +60,7 @@
 
 #include <string.h>
 
-#include "net_driver_pic32mz.h"
+#include "net_driver_pic32.h"
 #include "mcu.h"
 #include "delays.h"
 
@@ -131,9 +132,9 @@ typedef struct
 #define DMA_MEMORY __attribute__(( aligned( 16 ) ))     /* syntax checks on other compilers */
 #endif
 
-static DMA_MEMORY dcpt_t rx_dcpt[ NET_PIC32MZ_RX_BUFFERS ];
+static DMA_MEMORY dcpt_t rx_dcpt[ NET_PIC32_RX_BUFFERS ];
 static DMA_MEMORY dcpt_t tx_dcpt[ 2 ];      /* one frame, then a stop descriptor */
-static DMA_MEMORY uint8_t rx_buf[ NET_PIC32MZ_RX_BUFFERS ][ RX_BUF_SIZE ];
+static DMA_MEMORY uint8_t rx_buf[ NET_PIC32_RX_BUFFERS ][ RX_BUF_SIZE ];
 static DMA_MEMORY uint8_t tx_buf[ TX_BUF_SIZE ];
 
 /* Physical address of a kernel virtual address (KSEG0 or KSEG1). */
@@ -146,7 +147,7 @@ static DMA_MEMORY uint8_t tx_buf[ TX_BUF_SIZE ];
 
 static struct
 {
-    net_pic32mz_cfg_t cfg;
+    net_pic32_cfg_t cfg;
     net_phy_t phy;
     uint8_t rx_next;
     bool link;
@@ -200,12 +201,12 @@ static int32_t mdio_write( void *ctx, uint8_t addr, uint8_t reg, uint16_t value 
 
 static void descriptors_init( void )
 {
-    for ( uint8_t i = 0; i < NET_PIC32MZ_RX_BUFFERS; i++ )
+    for ( uint8_t i = 0; i < NET_PIC32_RX_BUFFERS; i++ )
     {
         rx_dcpt[ i ].buffer = PHYS( rx_buf[ i ] );
         rx_dcpt[ i ].status[ 0 ] = 0;
         rx_dcpt[ i ].status[ 1 ] = 0;
-        rx_dcpt[ i ].next = PHYS( &rx_dcpt[ ( i + 1 ) % NET_PIC32MZ_RX_BUFFERS ] );
+        rx_dcpt[ i ].next = PHYS( &rx_dcpt[ ( i + 1 ) % NET_PIC32_RX_BUFFERS ] );
         rx_dcpt[ i ].hdr = DCPT_EOWN | DCPT_NPV;
     }
     eth.rx_next = 0;
@@ -238,7 +239,7 @@ static void mac_set_mode( const net_phy_mode_t *mode )
     }
 }
 
-static int32_t pic32mz_init( void *ctx, const uint8_t *mac )
+static int32_t pic32_init( void *ctx, const uint8_t *mac )
 {
     ( void )ctx;
 
@@ -313,7 +314,7 @@ static int32_t pic32mz_init( void *ctx, const uint8_t *mac )
     return 0;
 }
 
-static int32_t pic32mz_send( void *ctx, const uint8_t *frame, uint16_t len )
+static int32_t pic32_send( void *ctx, const uint8_t *frame, uint16_t len )
 {
     ( void )ctx;
     if ( ( len == 0 ) || ( len > TX_BUF_SIZE ) )
@@ -336,7 +337,7 @@ static int32_t pic32mz_send( void *ctx, const uint8_t *frame, uint16_t len )
     return 0;
 }
 
-static int32_t pic32mz_receive( void *ctx, uint8_t *buf, uint16_t size )
+static int32_t pic32_receive( void *ctx, uint8_t *buf, uint16_t size )
 {
     ( void )ctx;
 
@@ -349,7 +350,7 @@ static int32_t pic32mz_receive( void *ctx, uint8_t *buf, uint16_t size )
 
     /* At most one pass over the ring per call: bounded even if the descriptors
      * are in an unexpected state. */
-    for ( uint8_t pass = 0; pass < NET_PIC32MZ_RX_BUFFERS; pass++ )
+    for ( uint8_t pass = 0; pass < NET_PIC32_RX_BUFFERS; pass++ )
     {
         dcpt_t *d = &rx_dcpt[ eth.rx_next ];
         uint32_t hdr = d->hdr;
@@ -376,7 +377,7 @@ static int32_t pic32mz_receive( void *ctx, uint8_t *buf, uint16_t size )
         /* Give the descriptor back and count the buffer as free. */
         d->hdr = DCPT_EOWN | DCPT_NPV;
         ETHCON1SET = ETHCON1_BUFCDEC;
-        eth.rx_next = ( uint8_t )( ( eth.rx_next + 1 ) % NET_PIC32MZ_RX_BUFFERS );
+        eth.rx_next = ( uint8_t )( ( eth.rx_next + 1 ) % NET_PIC32_RX_BUFFERS );
 
         if ( result > 0 )
         {
@@ -388,7 +389,7 @@ static int32_t pic32mz_receive( void *ctx, uint8_t *buf, uint16_t size )
     return 0;
 }
 
-static bool pic32mz_link_up( void *ctx )
+static bool pic32_link_up( void *ctx )
 {
     ( void )ctx;
     net_phy_mode_t mode;
@@ -403,24 +404,24 @@ static bool pic32mz_link_up( void *ctx )
 
 /* ---------------------------------------------------------------- API --- */
 
-void net_pic32mz_cfg_setup( net_pic32mz_cfg_t *cfg )
+void net_pic32_cfg_setup( net_pic32_cfg_t *cfg )
 {
     cfg->phy_reset = HAL_PIN_NC;
     cfg->phy_addr = NET_PHY_ADDR_AUTO;
     cfg->pins_init = NULL;
 }
 
-void net_driver_pic32mz( net_driver_t *drv, const net_pic32mz_cfg_t *cfg )
+void net_driver_pic32( net_driver_t *drv, const net_pic32_cfg_t *cfg )
 {
     eth.cfg = *cfg;
     drv->ctx = NULL;
-    drv->init = pic32mz_init;
-    drv->send = pic32mz_send;
-    drv->receive = pic32mz_receive;
-    drv->link_up = pic32mz_link_up;
+    drv->init = pic32_init;
+    drv->send = pic32_send;
+    drv->receive = pic32_receive;
+    drv->link_up = pic32_link_up;
 }
 
-const net_phy_t *net_driver_pic32mz_phy( void )
+const net_phy_t *net_driver_pic32_phy( void )
 {
     return &eth.phy;
 }

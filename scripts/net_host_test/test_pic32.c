@@ -1,6 +1,6 @@
 /*
- * Host unit test of middleware/net/drivers/pic32mz with fake registers
- * (fakes/pic32mz/mcu.h) and a simulated LAN8720. The test plays the DMA
+ * Host unit test of middleware/net/drivers/pic32 with fake registers
+ * (fakes/pic32/mcu.h) and a simulated LAN8720. The test plays the DMA
  * controller: it fills receive descriptors and checks what the driver writes.
  * It tests the driver's logic and its use of the descriptor format, not the
  * silicon. Exit status 0 when every check passed.
@@ -10,7 +10,7 @@
 #include <string.h>
 
 /* White box: the driver's static descriptors and buffers are visible here. */
-#include "../../middleware/net/drivers/pic32mz/net_driver_pic32mz.c"
+#include "../../middleware/net/drivers/pic32/net_driver_pic32.c"
 
 static int failures;
 #define CHECK( name, cond ) do { if ( cond ) printf( "OK %s\n", name ); \
@@ -52,7 +52,7 @@ static void dma_receive( const uint8_t *frame, uint32_t len, uint32_t flags )
 {
     memcpy( rx_buf[ dma_next ], frame, len );
     rx_dcpt[ dma_next ].hdr = flags | DCPT_NPV | ( len << 16 );   /* EOWN cleared */
-    dma_next = ( uint8_t )( ( dma_next + 1 ) % NET_PIC32MZ_RX_BUFFERS );
+    dma_next = ( uint8_t )( ( dma_next + 1 ) % NET_PIC32_RX_BUFFERS );
 }
 
 static void make_frame( uint8_t *f, uint32_t len, uint8_t tag )
@@ -67,30 +67,30 @@ int main( void )
 {
     static const uint8_t mac[ 6 ] = { 0x02, 0x11, 0x22, 0x33, 0x44, 0x55 };
     net_driver_t drv;
-    net_pic32mz_cfg_t cfg;
+    net_pic32_cfg_t cfg;
     static uint8_t frame[ 2048 ], out[ 2048 ];
 
     /* ---- init ---- */
-    net_pic32mz_cfg_setup( &cfg );
+    net_pic32_cfg_setup( &cfg );
     CHECK( "cfg-defaults", HAL_PIN_NC == cfg.phy_reset && NET_PHY_ADDR_AUTO == cfg.phy_addr && !cfg.pins_init );
     cfg.phy_reset = 42;
     cfg.pins_init = pins;
-    net_driver_pic32mz( &drv, &cfg );
+    net_driver_pic32( &drv, &cfg );
     lan8720_at( 1 );
     CHECK( "init", 0 == drv.init( drv.ctx, mac ) );
     CHECK( "init-pins-and-phy-reset", 1 == pins_calls && 1 == reset_low && 1 == reset_high );
-    CHECK( "init-phy-found", 1 == net_driver_pic32mz_phy()->addr && 0x0007C0F1u == net_driver_pic32mz_phy()->id );
+    CHECK( "init-phy-found", 1 == net_driver_pic32_phy()->addr && 0x0007C0F1u == net_driver_pic32_phy()->id );
     CHECK( "init-station-address", 0x1102 == EMAC1SA2 && 0x3322 == EMAC1SA1 && 0x5544 == EMAC1SA0 );
     CHECK( "init-rx-buffer-size", ( 1536u / 16u ) << 4 == ETHCON2 );
     CHECK( "init-rx-filter", ( ETHRXFC_CRCOKEN | ETHRXFC_UCEN | ETHRXFC_BCEN | ETHRXFC_MCEN ) == ETHRXFC );
     CHECK( "init-rx-start", PHYS( &rx_dcpt[ 0 ] ) == ETHRXST && ETHCON1_RXEN == ETHCON1SET );
     CHECK( "init-mdc-and-frame", EMAC1MCFG_CLKSEL_50 == EMAC1MCFG && 1518 == EMAC1MAXF && EMAC1CFG1_RXENABLE == EMAC1CFG1 );
     bool ring_ok = true;
-    for ( int i = 0; i < NET_PIC32MZ_RX_BUFFERS; i++ )
+    for ( int i = 0; i < NET_PIC32_RX_BUFFERS; i++ )
     {
         ring_ok = ring_ok && ( DCPT_EOWN | DCPT_NPV ) == rx_dcpt[ i ].hdr &&
                   PHYS( rx_buf[ i ] ) == rx_dcpt[ i ].buffer &&
-                  PHYS( &rx_dcpt[ ( i + 1 ) % NET_PIC32MZ_RX_BUFFERS ] ) == rx_dcpt[ i ].next;
+                  PHYS( &rx_dcpt[ ( i + 1 ) % NET_PIC32_RX_BUFFERS ] ) == rx_dcpt[ i ].next;
     }
     CHECK( "init-rx-ring", ring_ok );
     CHECK( "init-autoneg-started", 0x1200 == EMAC1MWTD );   /* last MDIO write: BMCR auto-negotiation enable + restart */
@@ -108,7 +108,7 @@ int main( void )
 
     /* Ring wrap-around: 3 rounds of the ring, frames come out in order. */
     bool order_ok = true;
-    for ( int round = 0; round < 3 * NET_PIC32MZ_RX_BUFFERS; round++ )
+    for ( int round = 0; round < 3 * NET_PIC32_RX_BUFFERS; round++ )
     {
         uint32_t len = 64 + ( uint32_t )round * 50;
         make_frame( frame, len, ( uint8_t )round );
@@ -188,8 +188,8 @@ int main( void )
 
     /* ---- no PHY: init fails and switches the controller off ---- */
     lan8720_at( 40 );   /* no PHY on the bus */
-    net_pic32mz_cfg_setup( &cfg );
-    net_driver_pic32mz( &drv, &cfg );
+    net_pic32_cfg_setup( &cfg );
+    net_driver_pic32( &drv, &cfg );
     ETHCON1CLR = 0;
     CHECK( "init-without-phy-fails", 0 != drv.init( drv.ctx, mac ) && ETHCON1_ON == ETHCON1CLR );
 

@@ -93,28 +93,28 @@ install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Phy
 
 ## On-chip MAC drivers, only for MCUs with an Ethernet controller.
 check_eth_components(has_eth eth_module_list)
-if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^PIC32MZ")
-    mikrosdk_add_library(lib_net_pic32mz MikroSDK.Net.Pic32mz
-        drivers/pic32mz/net_driver_pic32mz.h
-        drivers/pic32mz/net_driver_pic32mz.c
+if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^PIC32M[XZ]")   # PIC32MX 6xx/7xx, PIC32MZ EF
+    mikrosdk_add_library(lib_net_pic32 MikroSDK.Net.Pic32
+        drivers/pic32/net_driver_pic32.h
+        drivers/pic32/net_driver_pic32.c
     )
 
-    target_include_directories(lib_net_pic32mz
+    target_include_directories(lib_net_pic32
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/pic32mz>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/pic32>
             $<INSTALL_INTERFACE:include/middleware/net>
     )
 
-    target_link_libraries(lib_net_pic32mz PUBLIC
+    target_link_libraries(lib_net_pic32 PUBLIC
         MikroC.Core
         MikroSDK.Net
         MikroSDK.Net.Phy
         MikroSDK.Driver.GPIO.Out
     )
 
-    mikrosdk_install(MikroSDK.Net.Pic32mz)
-    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Pic32mz
-        drivers/pic32mz/net_driver_pic32mz.h
+    mikrosdk_install(MikroSDK.Net.Pic32)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Pic32
+        drivers/pic32/net_driver_pic32.h
     )
 endif()
 
@@ -149,5 +149,66 @@ if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^STM32F[1247]")
     mikrosdk_install(MikroSDK.Net.Stm32)
     install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Stm32
         drivers/stm32/net_driver_stm32.h
+    )
+endif()
+
+## NXP Kinetis MK6x and MKV58 (the MCUs check_eth_components enables). MK61 / MK63
+## (K60 / K64 variants, no CycloneTCP pin setup in hw_eth) use the K60/K64 wiring.
+if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^MK(6[0-6]|V58)")
+    if(${MCU_NAME} MATCHES "^MKV58")
+        set(kinetis_variant KV58)
+    elseif(${MCU_NAME} MATCHES "^MK6[56]")
+        set(kinetis_variant K65_K66)
+    else()
+        set(kinetis_variant K60_K64)
+    endif()
+    mikrosdk_add_library(lib_net_kinetis MikroSDK.Net.Kinetis
+        drivers/kinetis/net_driver_kinetis.h
+        drivers/kinetis/net_driver_kinetis.c
+    )
+
+    target_compile_definitions(lib_net_kinetis PRIVATE NET_KINETIS_${kinetis_variant})
+
+    target_include_directories(lib_net_kinetis
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/kinetis>
+            $<INSTALL_INTERFACE:include/middleware/net>
+    )
+
+    target_link_libraries(lib_net_kinetis PUBLIC
+        MikroC.Core
+        MikroSDK.Net
+        MikroSDK.Net.Phy
+        MikroSDK.Driver.GPIO.Out
+    )
+
+    mikrosdk_install(MikroSDK.Net.Kinetis)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Kinetis
+        drivers/kinetis/net_driver_kinetis.h
+    )
+endif()
+
+## TI TM4C129 with its integrated PHY (the MCUs check_eth_components enables).
+if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^TM4C129")
+    mikrosdk_add_library(lib_net_tm4c MikroSDK.Net.Tm4c
+        drivers/tm4c/net_driver_tm4c.h
+        drivers/tm4c/net_driver_tm4c.c
+    )
+
+    target_include_directories(lib_net_tm4c
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/tm4c>
+            $<INSTALL_INTERFACE:include/middleware/net>
+    )
+
+    target_link_libraries(lib_net_tm4c PUBLIC
+        MikroC.Core
+        MikroSDK.Net
+        MikroSDK.Net.Phy
+    )
+
+    mikrosdk_install(MikroSDK.Net.Tm4c)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Tm4c
+        drivers/tm4c/net_driver_tm4c.h
     )
 endif()

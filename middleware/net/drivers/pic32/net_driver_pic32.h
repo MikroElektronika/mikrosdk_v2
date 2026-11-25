@@ -38,11 +38,13 @@
 ****************************************************************************/
 
 /*!
- * @file net_driver_pic32mz.h
- * @brief net_driver_t for the Ethernet controller of PIC32MZ EC/EF (RMII, XC32).
+ * @file net_driver_pic32.h
+ * @brief net_driver_t for the Ethernet controller of PIC32MX 6xx/7xx and PIC32MZ
+ * EC/EF (RMII, XC32): the same controller, at another address.
  * @details Polled (no interrupts): received frames are taken from a ring of
  * DMA descriptors by net_poll(). The PHY is handled through net_phy.h (any
- * clause 22 PHY, e.g. the LAN8720 of the mikromedia 4/5 for PIC32MZ).
+ * clause 22 PHY, e.g. the LAN8720 of the mikromedia 4/5 for PIC32MZ and of the
+ * MCU cards for PIC32MX).
  *
  * The RMII/MII choice and the default/alternate Ethernet pins are device
  * configuration bits (FMIIEN, FETHIO) set by the setup's preinit; the pins
@@ -50,17 +52,17 @@
  *
  * @code
  * static net_driver_t drv;
- * net_pic32mz_cfg_t eth_cfg;
- * net_pic32mz_cfg_setup( &eth_cfg );
+ * net_pic32_cfg_t eth_cfg;
+ * net_pic32_cfg_setup( &eth_cfg );
  * eth_cfg.phy_reset = ETH_RST;            // from board.h, HAL_PIN_NC if none
  * eth_cfg.pins_init = my_board_eth_pins;  // ANSELxCLR for the RMII pins
- * net_driver_pic32mz( &drv, &eth_cfg );
+ * net_driver_pic32( &drv, &eth_cfg );
  * cfg.driver = &drv;                      // net_config_t, then net_init()
  * @endcode
  */
 
-#ifndef _NET_DRIVER_PIC32MZ_H
-#define _NET_DRIVER_PIC32MZ_H
+#ifndef _NET_DRIVER_PIC32_H
+#define _NET_DRIVER_PIC32_H
 
 #ifdef __cplusplus
 extern "C"{
@@ -71,34 +73,34 @@ extern "C"{
 #include "drv_digital_out.h"
 
 /*! Receive descriptors (one full frame each, 1536 bytes). */
-#ifndef NET_PIC32MZ_RX_BUFFERS
-#define NET_PIC32MZ_RX_BUFFERS 8
+#ifndef NET_PIC32_RX_BUFFERS
+#define NET_PIC32_RX_BUFFERS 8
 #endif
 
-/*! @brief Driver configuration, see net_pic32mz_cfg_setup(). */
+/*! @brief Driver configuration, see net_pic32_cfg_setup(). */
 typedef struct
 {
     pin_name_t phy_reset;           /*!< PHY reset pin (active low), HAL_PIN_NC if none. */
     uint8_t phy_addr;               /*!< PHY address 0..31, or NET_PHY_ADDR_AUTO (default) to scan. */
     void ( *pins_init )( void );    /*!< Board-specific pin setup (analog off), may be NULL. */
-} net_pic32mz_cfg_t;
+} net_pic32_cfg_t;
 
 /*! @brief Defaults: no reset pin, PHY address found by scanning, no pin setup. */
-void net_pic32mz_cfg_setup( net_pic32mz_cfg_t *cfg );
+void net_pic32_cfg_setup( net_pic32_cfg_t *cfg );
 
 /*!
  * @brief Fill @p drv for the on-chip Ethernet controller. The hardware is
  * started by net_init() (driver init callback). Only one instance exists.
  * @param[in] cfg Copied, may be discarded afterwards.
  */
-void net_driver_pic32mz( net_driver_t *drv, const net_pic32mz_cfg_t *cfg );
+void net_driver_pic32( net_driver_t *drv, const net_pic32_cfg_t *cfg );
 
 /*! @brief The PHY found at init (address, identifier), for diagnostics. */
-const net_phy_t *net_driver_pic32mz_phy( void );
+const net_phy_t *net_driver_pic32_phy( void );
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // _NET_DRIVER_PIC32MZ_H
+#endif // _NET_DRIVER_PIC32_H
 // ------------------------------------------------------------------------- END

@@ -1,5 +1,5 @@
 /* Host test only: CMSIS core stub so that ST's device headers can be read for
- * their register definitions (scripts/net_host_test/stm32_regmap). */
+ * their register definitions (scripts/net_host_test, register map checks). */
 #pragma once
 #include <stdint.h>
 #define __I     volatile const
