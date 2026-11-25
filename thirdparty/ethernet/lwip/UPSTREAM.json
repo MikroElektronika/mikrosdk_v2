@@ -1,0 +1,1018 @@
+{
+  "upstream": "https://github.com/lwip-tcpip/lwip",
+  "tag": "STABLE-2_2_1_RELEASE",
+  "commit": "77dcd25a72509eb83f72b033d219b1d40cd8eb95",
+  "license": "BSD-3-Clause",
+  "files": [
+    {
+      "path": "COPYING",
+      "upstream_sha256": "ef4aac92e05e87cd1cdc140870ed52206ba03d4a7fe46c1e11d7ffa6c87d252b",
+      "modified": false
+    },
+    {
+      "path": "src/core/altcp.c",
+      "upstream_sha256": "3c6653588772a62efdd11ceeffa760847f95d8ec98889c7551e9a1eb8326f8cd",
+      "modified": false
+    },
+    {
+      "path": "src/core/altcp_alloc.c",
+      "upstream_sha256": "90db26c801a4a6466e188e8b5a6b8d2aac2e6f39b4ceeb0f825e7b35ae1786c7",
+      "modified": false
+    },
+    {
+      "path": "src/core/altcp_tcp.c",
+      "upstream_sha256": "55119d3a2213bff38a3734834391c48475c1fd6eb35cc0ffdde74ef0ed657a3a",
+      "modified": false
+    },
+    {
+      "path": "src/core/def.c",
+      "upstream_sha256": "a12f3ef6c087efb6d4ec524cf332ff438d2504c17d60c263d0bb1b82b79eb2cd",
+      "modified": false
+    },
+    {
+      "path": "src/core/dns.c",
+      "upstream_sha256": "fe35ede9919974da54598630cc08d654ccc30b668c45b09668c3ba572686b26c",
+      "modified": false
+    },
+    {
+      "path": "src/core/inet_chksum.c",
+      "upstream_sha256": "fc82b44fc866704a51c0aacd6037b10802b88e8576e1b691917cd2b863878b1b",
+      "modified": false
+    },
+    {
+      "path": "src/core/init.c",
+      "upstream_sha256": "e79eface962c17e082bc6d2f9bc0eef16be4cbef1deca3e8248fc7b171b0a49f",
+      "modified": false
+    },
+    {
+      "path": "src/core/ip.c",
+      "upstream_sha256": "82d0fc6b45c6d1af88bdece3229fc9821274263c261369de4f81b8d6c80751e7",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/acd.c",
+      "upstream_sha256": "40132cfec33d8efa2b645754b6d5c1bf6ecb6341fb5dbf72cd51448b11ec8bd2",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/autoip.c",
+      "upstream_sha256": "7cb49b13d57605a31bacdbb946abcc6313d264a4c5f07a6483f84a6d6c73bd1f",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/dhcp.c",
+      "upstream_sha256": "f89cf1aacbd9a04dcb47a03c81a1a231331f4edb323d2e0cf26e640ca78c3453",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/etharp.c",
+      "upstream_sha256": "8ee2c65e26eacf265ef34798aefd39aa9678296a64154d3d049b10f32e658f5d",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/icmp.c",
+      "upstream_sha256": "d53c96e7ce02514d6c88b41df7c2e37d8e0212a297466f50590305c5e3504285",
+      "modified": true
+    },
+    {
+      "path": "src/core/ipv4/igmp.c",
+      "upstream_sha256": "8097841aac8642af43ad7e19a5b340f4b34eabbce8b3b18839176dc5df12b981",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/ip4.c",
+      "upstream_sha256": "d4973142adede3b868036d5404df9a258ed632788d98969539dc21470b748ae6",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/ip4_addr.c",
+      "upstream_sha256": "b440b85c9e49e60510cfa61d40e24b0e2ad480e23a821a94017e42df09dcf8be",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv4/ip4_frag.c",
+      "upstream_sha256": "bb0ddf79430bcd073f7f837451f868107dd6ce60444df72b7c02aca7ca3d4ff6",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/dhcp6.c",
+      "upstream_sha256": "0984b06d9d907af2c9de419d507dc749f622753e752d13802751be1253f00086",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/ethip6.c",
+      "upstream_sha256": "548b460688f824015b5b30401cf907828f1dc088a8442d8ee43e4049c1e1401d",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/icmp6.c",
+      "upstream_sha256": "d2136d4130f39f854d1279be494d0106b99d6523c3b20c4d96698af08d7961e6",
+      "modified": true
+    },
+    {
+      "path": "src/core/ipv6/inet6.c",
+      "upstream_sha256": "3f7676e46413586fc3d07438b51c0dcd46bb3ba24644892362cf47f84fc15390",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/ip6.c",
+      "upstream_sha256": "dae51038b1ddc9bdacc40fe648eb1d2afed4e2ca2205c9e922ab18ffe5e70907",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/ip6_addr.c",
+      "upstream_sha256": "af20c31623fa8bcc50fd41855b7308d9492f7272147f5018aea069358beb7bce",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/ip6_frag.c",
+      "upstream_sha256": "c8577005c75c52b560b74497c20a97f1348bd46260943f7c0560efb4148d703e",
+      "modified": false
+    },
+    {
+      "path": "src/core/ipv6/mld6.c",
+      "upstream_sha256": "70b43ea0fe3cd29817bbd6ced03d56696cc7355ab28fe8fae9b5c5e2acc45670",
+      "modified": true
+    },
+    {
+      "path": "src/core/ipv6/nd6.c",
+      "upstream_sha256": "c54d4c52d0a2c78f6045d125cf18eaae64e094bfd9693d0f697c399ff1ca9e0e",
+      "modified": true
+    },
+    {
+      "path": "src/core/mem.c",
+      "upstream_sha256": "b5316284f3f42782d8b55a750f3f0557d3031edd0c280e653f2fb6dec3f74ed3",
+      "modified": false
+    },
+    {
+      "path": "src/core/memp.c",
+      "upstream_sha256": "91ca3a00487d61849324ae571ac9ede550a879365c557aba38667ace122b6c00",
+      "modified": false
+    },
+    {
+      "path": "src/core/netif.c",
+      "upstream_sha256": "62e386985e3f2c9b943466ef01d3dcda798ee0167d56fd59c057e928f979cbc2",
+      "modified": false
+    },
+    {
+      "path": "src/core/pbuf.c",
+      "upstream_sha256": "2f953eb2bc5b696b2eea156386cc4f99c793859bbf65cee967653bdf3374db61",
+      "modified": false
+    },
+    {
+      "path": "src/core/raw.c",
+      "upstream_sha256": "3ba4f2e5d2b61bbfbe813653c7f4e88e2542d567808d3f03be000e0876ce0392",
+      "modified": false
+    },
+    {
+      "path": "src/core/stats.c",
+      "upstream_sha256": "a18b76cde437213ca9f00137bdb61adb00f6f931fe28c40c81f811a5e674caea",
+      "modified": false
+    },
+    {
+      "path": "src/core/sys.c",
+      "upstream_sha256": "86e336dedec36e042aadaebe93c8be944675210841ccabf180200e82c91b0f8d",
+      "modified": false
+    },
+    {
+      "path": "src/core/tcp.c",
+      "upstream_sha256": "76d701944a20dae435fb09a37046fea046ba1d996038362e37eae57157ba586f",
+      "modified": false
+    },
+    {
+      "path": "src/core/tcp_in.c",
+      "upstream_sha256": "f79b20e6b123af2ed2cfc2b470fe982d0c88d1357fc5a11537bab9cd20d4b639",
+      "modified": false
+    },
+    {
+      "path": "src/core/tcp_out.c",
+      "upstream_sha256": "d8d8d5a54097114904f89f8c5602c937ef3b086933f2132a557698fc65d7e4af",
+      "modified": false
+    },
+    {
+      "path": "src/core/timeouts.c",
+      "upstream_sha256": "930bcfaf5b12b97f975fca7b8c2f7ab999cffa37f7c840ea91b340aa4ef62115",
+      "modified": false
+    },
+    {
+      "path": "src/core/udp.c",
+      "upstream_sha256": "6454ba858cf8a2c71e4a27e0da4b1569160f923c2adce19842dbb6f90da61af7",
+      "modified": false
+    },
+    {
+      "path": "src/include/compat/posix/arpa/inet.h",
+      "upstream_sha256": "8b3edc25121de40cd1c3338d5d68be93091f0713ee8a23eba9789f14d41e0f6d",
+      "modified": false
+    },
+    {
+      "path": "src/include/compat/posix/net/if.h",
+      "upstream_sha256": "b1cc52bb828e7cc23f070269a60a6ea33f3fd828190b0248f4cd589f06fcab6e",
+      "modified": false
+    },
+    {
+      "path": "src/include/compat/posix/netdb.h",
+      "upstream_sha256": "ec3cb99596ef6bf11b39870541bf6607a7cff6011cfef99bf5d53f2abed05948",
+      "modified": false
+    },
+    {
+      "path": "src/include/compat/posix/sys/socket.h",
+      "upstream_sha256": "8b3edc25121de40cd1c3338d5d68be93091f0713ee8a23eba9789f14d41e0f6d",
+      "modified": false
+    },
+    {
+      "path": "src/include/compat/stdc/errno.h",
+      "upstream_sha256": "9fdac7c52c9fe0cfdf50f96eae29c5f341a9afde5a56166d21500c656a8a0728",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/acd.h",
+      "upstream_sha256": "ac7477d81a56bedf62e3db9e502a6d9a46ddf6f8705fd420df91e9f8a2398275",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/altcp.h",
+      "upstream_sha256": "9140dba340b590f329b0d8653c71104d0509d1e7dbb6c184a99afe980474c958",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/altcp_tcp.h",
+      "upstream_sha256": "e6b325b516d9e2af49b3187e01cd324066ef2c6508a2d9c06016fc0570148d43",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/altcp_tls.h",
+      "upstream_sha256": "cf34454f5e63c8f766b0653ffe492bebf763ee767cacfa7277ee84336a9ac55d",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/api.h",
+      "upstream_sha256": "39a93870e9151ab0a4a70c007c931cf3b642b0704eee43aa662aba9cb9d14f4a",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/altcp_proxyconnect.h",
+      "upstream_sha256": "c4b47d012ce46a6aa25d4038ecfe0844b0f3cdfe40e6234d622de298aa48ab13",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/altcp_tls_mbedtls_opts.h",
+      "upstream_sha256": "7fb4fef6a302f23316bad885be4d108a9227377c00948df5be82c9a49fefb0b9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/fs.h",
+      "upstream_sha256": "7b262fbde86e0217750e1254db7fe2660f7d79f11a9c7cc4b039d75870582bfe",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/http_client.h",
+      "upstream_sha256": "ff927c68dd58bb9eeeb99f407b72849dc0da7d39253dd601707269d478a3ad86",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/httpd.h",
+      "upstream_sha256": "d9b70d5da0ad3d525cf2a2c3d18bc5403fa6d693365db583dd64b3de94d60087",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/httpd_opts.h",
+      "upstream_sha256": "d7dec61f4a8f4856504f21734290396588116ec09c8fe1ff9f89ec8ba2510cb9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/lwiperf.h",
+      "upstream_sha256": "894124ebd57d7aa493072e19981781a642d6d7f0ebdd58af5f792dfde20d101e",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mdns.h",
+      "upstream_sha256": "359d459f2d0a4d00eab082d28699478bfb175bd015ecd00a7b601f3494a5d0ca",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mdns_domain.h",
+      "upstream_sha256": "6fd124cb463e07bf6ee81aa816db0cc86204c739f57e98be2f31691fea9bc456",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mdns_opts.h",
+      "upstream_sha256": "f98772a9ec77cb8ff02853f77d2fa9538d7f4e96561ee5a64a1e39b36952383b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mdns_out.h",
+      "upstream_sha256": "2bff804ddd536e3b1daa97d6322a5279aac56288851de1f277c9c131f16dc365",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mdns_priv.h",
+      "upstream_sha256": "46167eba46afba0bc2ecede799441e1f6916e6dd864f2a4ecb75a90ba6474e4d",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mqtt.h",
+      "upstream_sha256": "f7732e962845c1870905d6c6e2cf589cf646b86f82ab3e88bf0bbe31e2de55ee",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mqtt_opts.h",
+      "upstream_sha256": "b8bb920a04472488f3fa1371cbb9c934bfead7cc8ba7f06316da4bdb2e354feb",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/mqtt_priv.h",
+      "upstream_sha256": "e4903b34c12c941650045977e2629d41b1ca8407e48dc28d9ba36382825bb2d9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/netbiosns.h",
+      "upstream_sha256": "438a8e5cb80794959e0ebb0989a8d0615dc8d2d737fa97c231b10d4040e8f715",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/netbiosns_opts.h",
+      "upstream_sha256": "6d83f549e1ce36325382c0a776bddb1b66fc1d3cb1cd573aa92eb2cc719ac313",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/smtp.h",
+      "upstream_sha256": "61d670c0c914cc4d39f6c9e4661a1ac5e2b3cdfc45bb972b35cbf7ad3ea3d569",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/smtp_opts.h",
+      "upstream_sha256": "6f3e0517c42b198078615074a72d8d158304264c8fa56a1dea79636bdd1898be",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp.h",
+      "upstream_sha256": "5fd93bca18a358edc4771ec850278d1615c1b6869d30bd51d6bddaa37fefaae9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_core.h",
+      "upstream_sha256": "226888829e92f37f5e34e04f8472c2bc00f16817f41253288b7746eb1afeeb7a",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_mib2.h",
+      "upstream_sha256": "6f40a24aedc34c24f13d4e4dba0fc49237bc692ee30e2a2d43b6bbe9446087b0",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_opts.h",
+      "upstream_sha256": "fcd7d37a9418f6b25fc367ad1252c193a62915099b5bbc9f6693f0526d915bd4",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_scalar.h",
+      "upstream_sha256": "f88ed96f2010bb383af723c50f8e0b93a9a5d566599ef0f35c11102124805c09",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_snmpv2_framework.h",
+      "upstream_sha256": "8397074e6d74aceb6430e077537eff4330f6c712d00647a13f2832093a7f9eeb",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_snmpv2_usm.h",
+      "upstream_sha256": "ddd777bac19a3f0c6823854f121e52e1c16a9f788540e1f172920b45a01713bc",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_table.h",
+      "upstream_sha256": "1d0ef0508b2a00f55e6a90c27d484e526a2db5cde41c13b2aafcc6f2c8d7e25b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmp_threadsync.h",
+      "upstream_sha256": "730f06bbad7d1fc61cf30fb43f27c4b90c6da50685630563c2f9b1763576f74b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/snmpv3.h",
+      "upstream_sha256": "7d1be4c7469ae8108d3657433f965c8884e66475178fee2a474fbbf01aee3fe0",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/sntp.h",
+      "upstream_sha256": "c7b56e4653387585d4d5073c1917f93114027ccae13ef842880441477b471653",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/sntp_opts.h",
+      "upstream_sha256": "368b754a6fb6ddfaa050df58f0db975937ca49b49803cd647baee8cdd295c0d3",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/tftp_client.h",
+      "upstream_sha256": "afe8265f9b7c7746c5bf86b5a739e1eae6c064c7af7e116959a7b52c66064ed3",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/tftp_common.h",
+      "upstream_sha256": "76b2fb20cbe1212c6e691e9216ced22cc959f602ce76e0fed06dd3c474fb6f31",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/tftp_opts.h",
+      "upstream_sha256": "185e13e074f0ca14271e187fe15fbe8411de355d55ec6cd4fbb5b271776f8479",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/apps/tftp_server.h",
+      "upstream_sha256": "627e19deb28320005781f9052d090aa6fc7d5785ccb0a4315c50beee4180d0c8",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/arch.h",
+      "upstream_sha256": "9801c4638064a3f7f27a90ed4b01867fa65128c67303d40536867dad1ad03f78",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/autoip.h",
+      "upstream_sha256": "d7b0a366fc1442033df3e7247fff0cf28851c1ef7ad6539ac2728fb5f483f707",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/debug.h",
+      "upstream_sha256": "1f3545fc48dec531f2dff50fffa1094bd4bdd0fca5bb96e32f82c559e33a4fce",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/def.h",
+      "upstream_sha256": "224152c2266e14b418ee0e7e1704df9c103011630240548221a91cf6aff64d90",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/dhcp.h",
+      "upstream_sha256": "babfa093330aa0b8039badc8c373f11dda5dd8f0e94c55e4440a6643b9996f7e",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/dhcp6.h",
+      "upstream_sha256": "dbac3f610e3e76547691af73a667bd5fd6564a7fbfa5ac382ef77604938d4afa",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/dns.h",
+      "upstream_sha256": "962c462c90afd41ed010b961f539c11b2baba3e8a6bfe584f331a5e4d43c1b05",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/err.h",
+      "upstream_sha256": "af26b573fc5c6a31877fdcde35e15382ac0c8b01f35af3f5a4429f9cf5dd323d",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/errno.h",
+      "upstream_sha256": "79dc6e03887ccf301e01a5129d1a732e21fb05308a8e38f04ada44e0928c075a",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/etharp.h",
+      "upstream_sha256": "bd50bec728d92dbd790a1504e52f42e4e1bdd018380c2b116f0dd8d3ed44e3f9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ethip6.h",
+      "upstream_sha256": "7a7e744ae373a720261be3651adaa0f35ff00ebb1bcf38e5330e371ddfd162b7",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/icmp.h",
+      "upstream_sha256": "84f63c9fbc6f6d66ef437f834279c25c20bfa78834eb0ee347c70377f7f8d8c8",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/icmp6.h",
+      "upstream_sha256": "f790cd444ecbe2e605b2f1a1deab3e6e9662ba6e87fd47b401912c5a118ee836",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/if_api.h",
+      "upstream_sha256": "6f6945cccbf0721180ddc7ff589d9f7b47f825ce62ae8b3cf6c186f5d2750822",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/igmp.h",
+      "upstream_sha256": "abf5ff1e19ec61690b6e8d55c8ee11afd1556b77c8b0fc452d5eb490810cc27f",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/inet.h",
+      "upstream_sha256": "27abe1e75d1d8a1901875360ac4444199ff0193bc8f83368c182c08c0240db36",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/inet_chksum.h",
+      "upstream_sha256": "df6720f78e47afde2315d6a9dee1bb5b26f76692ce3e040c574409493435c933",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/init.h",
+      "upstream_sha256": "b5ab1373f83c2ead8413d681351d1275ce6c6375c25e2bc555c4098d2d9a5307",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip.h",
+      "upstream_sha256": "dc040fd513b7fff5de699e235e2a09623f2a80d813c09ae91f9c6af067f756e8",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip4.h",
+      "upstream_sha256": "188a62765c765fb07cda26a695f17c9c1674c0da7539c71e4d8f79b3f6f6ba21",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip4_addr.h",
+      "upstream_sha256": "58f6c9a179e8719fb91f2b76b489be45e05365c3958dbba55f00a4d134adf535",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip4_frag.h",
+      "upstream_sha256": "8b0bb67655cba6da8cddc360e655c711553ad35e6306dbae618637e80be9911c",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip6.h",
+      "upstream_sha256": "7681c2948f700aa565c387ca20654f7322991ca15de7fd4e8f342a8ce44abe57",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip6_addr.h",
+      "upstream_sha256": "9dea395e61fdcc6676afdfd322838c185cb87d8b38c39b0ad0b83b206f300c00",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip6_frag.h",
+      "upstream_sha256": "3ab1bdb9220a3c87c8187fb26b1150cd03c4401b0a0c6db2ea4a22674141dd3b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip6_zone.h",
+      "upstream_sha256": "4b1dfc44be4c4c138ac41d17fdfc88712fab42557c899193e46bc4e6972e4641",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/ip_addr.h",
+      "upstream_sha256": "90e9886f4fc5e96058d19d3504415d52ee37d8ebd7d29aeede3435f247cb4146",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/mem.h",
+      "upstream_sha256": "6a3403dd83cc564cdb1b2f712baf925b522fe2755ccebef3dc17ffd3c19319c6",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/memp.h",
+      "upstream_sha256": "79dfd019219330cf08deb1360483eb7d1da7a1a7a304034ef65ad52feefba1ef",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/mld6.h",
+      "upstream_sha256": "026348d23012aa1c2210ae53f2a5ddf3a273cf004ef597a1861266a01d4ca86e",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/nd6.h",
+      "upstream_sha256": "79fa57b4bded6763d38f5e4fa56aa2fac8117bf76ffc69869e05357af88951d6",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/netbuf.h",
+      "upstream_sha256": "1aa92014d8919c5073b5123c92881e00b0c507ca485667ccdebbf31afa214ff3",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/netdb.h",
+      "upstream_sha256": "582518497fefd57cd1d227947965c71b1dc16846add471af0fddfbb461c7aca0",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/netif.h",
+      "upstream_sha256": "6e958aa1bd23b7381c09a873f7af919323f87ec50a2d3055a46f75275c2a121b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/netifapi.h",
+      "upstream_sha256": "2c087eac81246ac74e3ba2c3922de0612890587f0cca7c1360f379a57ab45518",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/opt.h",
+      "upstream_sha256": "d750b825d4e399eca387bdeb98a78dc96267095eb8f15cdb39e4e88d23c14360",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/pbuf.h",
+      "upstream_sha256": "0b84e49877d81241874c101d24aa6fd815e6e78407f0894f88af371e04437196",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/altcp_priv.h",
+      "upstream_sha256": "8b1c271129eea8f8d125ee8e653e143d5099683c2fddb9bc64524fcfdadcabd1",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/api_msg.h",
+      "upstream_sha256": "e2458063868f0813bc26f41709bbf78d994760e72667b646b88f15e16e235f48",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/mem_priv.h",
+      "upstream_sha256": "c90c9b64c8ea95c05d5b8b10d706acb53b6cc124166e8dd85b397698679f7920",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/memp_priv.h",
+      "upstream_sha256": "37aff2894bbe25f1888e43b96be80f4c1a43a24867c0fc9aceb4093328682937",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/memp_std.h",
+      "upstream_sha256": "86cdf1d80f2716a07011dc763e5fa614cd2b555382cb7d6750176116def67a0f",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/nd6_priv.h",
+      "upstream_sha256": "0f8b44f4163523c10c2085a8b9393b87e81d054c9a40cf0887be2885d8b2fa35",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/raw_priv.h",
+      "upstream_sha256": "0b2b019a55fab8eed89d668f13402778835117fe472464046472cd04b93c2bb2",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/sockets_priv.h",
+      "upstream_sha256": "2efcf39c42b1a7055628461915d42521a4df3cb285b6f5635a5c6a961aff4f93",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/tcp_priv.h",
+      "upstream_sha256": "07df02da365d83e5a488b4cf9e61d8319132d11b6830a7fe6b04c2912fd3d4c9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/priv/tcpip_priv.h",
+      "upstream_sha256": "13fb2e7159ebcafc4ddda4961a9d70b2f8182f9e201aa990cb9148d8897bf598",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/acd.h",
+      "upstream_sha256": "3d5d347182390f367afd107322bdbc2b4997806cd0bc83a7ccc5579248e956a5",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/autoip.h",
+      "upstream_sha256": "a0b78c818f6642e68c1d9c0b5c3ad12fc6595b66ac5ae41724c52decc6de760c",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/dhcp.h",
+      "upstream_sha256": "bc74edb6abff7b5182e04e2e588292401ecba3875bb6673156b026a5c391dbc4",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/dhcp6.h",
+      "upstream_sha256": "72c645a6153694229ca535f044af2d1520ebc7860baa98121747218a08c2b74b",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/dns.h",
+      "upstream_sha256": "34049c0f7f489aaec12d0589dc51ecfb24408dba422f605d8deb207c44d02b8f",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/etharp.h",
+      "upstream_sha256": "55164c0d047f1279982fef9681491c8811f8482976aff7fab9b63a9a589ded76",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/ethernet.h",
+      "upstream_sha256": "0d8dab96e78a88835525ef03299666e7007434874a6b63c0206aee499c7e3ad9",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/iana.h",
+      "upstream_sha256": "745c2d70a5d4839e3df5a34f7e37b83bcc7fe58f39eba1d2f5e238242d74c878",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/icmp.h",
+      "upstream_sha256": "5acac93c34363f3ca07f3f14c8861f09cf822096e6654941a307f1c78914cf5c",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/prot/icmp6.h",
+      "upstream_sha256": "a3fdc254460b9e2c45cbfb1ad2402c055b34b907a09fb5337a0f26e068302074",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/prot/ieee.h",
+      "upstream_sha256": "ec85a505aba178178743b34429f463a41ac43d3750d63901c7e1273dcd0a2ba6",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/igmp.h",
+      "upstream_sha256": "9adb3a0b03feff302b057020aa860fd958f6ef4528225014c104bd4175ebdff7",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/ip.h",
+      "upstream_sha256": "eb5371e5ac58467253d813bc58726e317f91abadb10336497de0d64645ec01cd",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/ip4.h",
+      "upstream_sha256": "033570c0b7657f5475959f7b74d9e23c6f8e81498495d5b23d8c2eeb0640d7a7",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/ip6.h",
+      "upstream_sha256": "c0514e97f153f2e5cf514e6f1f4350fd2cbcb7073ebc05495b436c638bd32109",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/mld6.h",
+      "upstream_sha256": "9601cee67b48c4b7cadb75caf3d83c05f5409d367341af70af7e7e4f46f173f8",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/prot/nd6.h",
+      "upstream_sha256": "20f5b3bf8edd5be9b6241df2a5448a7ed4f08ae35714ac7c36383efbba012edf",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/prot/tcp.h",
+      "upstream_sha256": "db67bb5ea0517a8cd9e30ebf655743f69ce05e77ca6e4a113e8c60e69bd7c48a",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/prot/udp.h",
+      "upstream_sha256": "b56daa8ff1e8e52cdd4f720297f07af2a96feea254db86768e20e157d7ce2784",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/raw.h",
+      "upstream_sha256": "e9efc60e31f2ff39a98b1367968ac724fc91ecdc115a74fc44813b761f02caf7",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/sio.h",
+      "upstream_sha256": "d5b13bb9fe2010b215d0c8b9453890b564c12b58471968bcd099563b02469d34",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/snmp.h",
+      "upstream_sha256": "6cdfd8137209605ed6623ba081d37cc291840d85b40fb5120eaa6d93b83dd1a7",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/sockets.h",
+      "upstream_sha256": "cd8af60d7acd3158103cd2b141884cecea79d4011daaa6c9e3f987bb21f8ad84",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/stats.h",
+      "upstream_sha256": "02d5512b59cce1c006388c6535134dd7f84e866ecca5f72bc632fb0718634b9f",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/sys.h",
+      "upstream_sha256": "3455bc027fd97de759f962f664c6084242f08dd80e5c65834cc05aa0a0802e8e",
+      "modified": true
+    },
+    {
+      "path": "src/include/lwip/tcp.h",
+      "upstream_sha256": "eb514477b21ed78dd4d527f4aea3bed5585200e285b85c666689b9c43b77a89a",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/tcpbase.h",
+      "upstream_sha256": "cf4b048f3bc228ab364cde15eb6be5eca961fab09036c699c2c4b1437ab90aff",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/tcpip.h",
+      "upstream_sha256": "c772dbff8e46a86ffa65ec62e5b304e75525b6bcfef94917fb7de1045449f603",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/timeouts.h",
+      "upstream_sha256": "a383b43e3ba021d06ff3791d223db46cb3385e8dcdfcec0221ef2a006243c022",
+      "modified": false
+    },
+    {
+      "path": "src/include/lwip/udp.h",
+      "upstream_sha256": "f9783bca6b68b10c229185559e0ae7e79bb793e1d6c244c7b26408516187f1f8",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/bridgeif.h",
+      "upstream_sha256": "39d409d880187e2a7b372ddae2b1cfc004b88a0dd786dbe9070945420b8e42c8",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/bridgeif_opts.h",
+      "upstream_sha256": "bc6e5f0677c621a5a8adb315e1cdb06210e1391efea6d308684103fd38edfe66",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/etharp.h",
+      "upstream_sha256": "2e1ab81eced65420cdee5940d2e547cae7b0fa70088f452692363676ecfc66dc",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ethernet.h",
+      "upstream_sha256": "1dd88263e583593e47f7c891680d67838287160551b8c06562c9feca1ddee443",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ieee802154.h",
+      "upstream_sha256": "02f21d8b3e143fa77d8fa3f0d3db9ac1683507436ab441a61d5012ddb6037699",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/lowpan6.h",
+      "upstream_sha256": "538ac2429cedf9193b6538998f3ba5bdd003fbf0840fd03b46d4ad5bcfaa4c20",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/lowpan6_ble.h",
+      "upstream_sha256": "5c40e2a9640810cebaa8a0e501913cae093368da21f1226e9476b078f34f247f",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/lowpan6_common.h",
+      "upstream_sha256": "eed0a8f45ea6e62ba4238d6bc139a1bef5fe625ec7527b52856fbf885c12f8ba",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/lowpan6_opts.h",
+      "upstream_sha256": "fc57628292ff0ccece9770a9c101b992f350c55088af2bb364246fbcf6f3f024",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ccp.h",
+      "upstream_sha256": "b6e681ffe6855a6772c6d0a9077f144676c30db0c9ec0ea461e816f7647d6d43",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/chap-md5.h",
+      "upstream_sha256": "f67cd93664262575ded862c17bac7c1003e2eb690224b89ba2b0cdd221c2f725",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/chap-new.h",
+      "upstream_sha256": "f7bfb4e194fedcd1e6d499320826ecca7f14add5170c8fb7d4832b8e831bc2ac",
+      "modified": true
+    },
+    {
+      "path": "src/include/netif/ppp/chap_ms.h",
+      "upstream_sha256": "77316bd6366248a0d0715e19e231667c1564f3ef081dc3ba839cd673a5d4984e",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/eap.h",
+      "upstream_sha256": "1f52215c54298f1b93049cda01f2a9a6dfd254f52b5ba4507bcf755fee16a2c1",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ecp.h",
+      "upstream_sha256": "4936fccc29a900ced5b67906f97f192ea634642b6a003605dc1cb40d65d011f6",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/eui64.h",
+      "upstream_sha256": "fc79081c31fd7333b0e2b3cf61c870727a3b066d82482c894b02c81cdbf464c7",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/fsm.h",
+      "upstream_sha256": "8751104f5cdeb3ace720744016431ee2d704983e8a94de7add0830e63dfdef0e",
+      "modified": true
+    },
+    {
+      "path": "src/include/netif/ppp/ipcp.h",
+      "upstream_sha256": "60bb47d15951954c865393be49b64f6daecc966f7146aeee187530a111d9008a",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ipv6cp.h",
+      "upstream_sha256": "69de1cc233f9ec05312a6cd4d5b558d91d04e39626ad6f9e0fbc4ee61a5709d0",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/lcp.h",
+      "upstream_sha256": "0278457347c50aeaa4636124d0265fb8064511f461de2b3ff7fa51e3dacb0345",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/magic.h",
+      "upstream_sha256": "44881d887c9d1cb351115eabdb54e276fcbaf7e631ef310ef59195b299e5fc2a",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/mppe.h",
+      "upstream_sha256": "8dd28c994f67ca45b11586ecc195fabedd5d51efa0bd99872336d82886477c9f",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/polarssl/arc4.h",
+      "upstream_sha256": "970bc9075bf7aef36f4a225ba8a3dcb89c16a1948016f3521ca4a7609b7ba284",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/polarssl/des.h",
+      "upstream_sha256": "f0a3ea812ead16f7d8fba08115429b5bd7deed1d9ffc6dddf66ec44b1d95ef0a",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/polarssl/md4.h",
+      "upstream_sha256": "d1982ff627c1176d03c60fa8ae307af09626a2655e08525a146019276edb9058",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/polarssl/md5.h",
+      "upstream_sha256": "1962ff0d88f8a7efbb6c8592eb13154129cfc7012c8cc22be7981df35e3c8ba4",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/polarssl/sha1.h",
+      "upstream_sha256": "2951ad6ae5b5797112ae1899cd814536c445334bf59cbd91bf5414db0613980d",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ppp.h",
+      "upstream_sha256": "980aca3ab5ad5e5d90922728b1e0779f53fc747bcd1e47b7e2cf0c63e1d17863",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ppp_impl.h",
+      "upstream_sha256": "6470c520bf42767fdb850ce6028e494ea67ed12258499c3f7c4eb86d58d2998e",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/ppp_opts.h",
+      "upstream_sha256": "4a3507a0cc400a05592d15252ac6513044f1e514be26ba6502fe0b055daa2bc8",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/pppapi.h",
+      "upstream_sha256": "f1520293792605ad0f0c78c93a5907d478affbebea8d6be1b0f8a8bdc9c4b427",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/pppcrypt.h",
+      "upstream_sha256": "954943c6c1286c707c0f1182428eb514dc8cf87a704a4e8f26a926553f260d58",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/pppdebug.h",
+      "upstream_sha256": "fab025981023c13721fac50978c5416ce2c9a0f40db200ef78ce4cd36d3b9b63",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/pppoe.h",
+      "upstream_sha256": "0288d2c8921899c66d0c5f4be01d3173eba6d68473b1af0a8d2e21220ea58238",
+      "modified": true
+    },
+    {
+      "path": "src/include/netif/ppp/pppol2tp.h",
+      "upstream_sha256": "ae9a819aaf816ae4ff25c35bddaf7c10654a54b95451b247fd5d2824229d3cf7",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/pppos.h",
+      "upstream_sha256": "afaafbc40596ccc0511cf3352deec609f5a114e181cfeb3eb804525abecf49e3",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/upap.h",
+      "upstream_sha256": "7cf555545ed20e7d7897ed935c6333e77d629b1862e4e2136df87ebebfcb3907",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/ppp/vj.h",
+      "upstream_sha256": "9fc361a36a938d2044d9449bd82d4f3c36e3145a1585596b64fe10b6cb1d13cd",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/slipif.h",
+      "upstream_sha256": "f58cc6842251be4358904b2475021fc2da592de3756fbb358b615b0173efd791",
+      "modified": false
+    },
+    {
+      "path": "src/include/netif/zepif.h",
+      "upstream_sha256": "7b3a4c9094483c14eb3c4da651874aca325e3927fde02eb28e226040deef4714",
+      "modified": false
+    },
+    {
+      "path": "src/netif/ethernet.c",
+      "upstream_sha256": "7c493427956150ca9e97decd87784df0d2adb0f1504fa262b7e732bee1892eaf",
+      "modified": false
+    }
+  ]
+}

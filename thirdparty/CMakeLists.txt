@@ -12,7 +12,10 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
 endif()
 
-if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
+## CycloneTCP for on-chip MACs (with MIKROSDK_NET_STACK=LWIP, lwIP is built
+## by middleware/net from thirdparty/ethernet/lwip instead).
+if((${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32") AND
+   NOT (MIKROSDK_NET_STACK STREQUAL "LWIP"))
     if(NOT AI_GENERATED_SDK)
         check_eth_components(has_eth eth_module_list)
         if(${has_eth} STREQUAL "true")
