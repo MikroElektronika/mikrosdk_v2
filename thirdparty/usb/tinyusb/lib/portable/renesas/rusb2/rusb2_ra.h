@@ -40,8 +40,18 @@ extern "C" {
 #pragma GCC diagnostic push
 #endif
 
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+/* MikroE core - register definitions and HW specific USB settings */
+#include <stdbool.h>
+#include "mcu.h"
+#include "usb_hw.h"
+// USBFS interrupt is linked to this ICU slot in usb_hw_init().
+#define USBFS_INT_IRQn ((IRQn_Type) USB_HW_RA_IRQ_SLOT)
+#else
 /* renesas fsp api */
 #include "bsp_api.h"
+#endif
 
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
@@ -100,6 +110,11 @@ TU_ATTR_ALWAYS_INLINE static inline void rusb2_int_disable(uint8_t rhport) {
 
 // MCU specific PHY init
 TU_ATTR_ALWAYS_INLINE static inline void rusb2_phy_init(void) {
+  // Note: Added for MikroE implementation.
+  // MCU specific settings done after USB module is enabled (e.g. UCKSEL), defined in usb_hw.h.
+  #if defined(__PROJECT_MIKROSDK_MIKROE__) && defined(USB_HW_PHY_INIT)
+  USB_HW_PHY_INIT();
+  #endif
 }
 
 #ifdef __cplusplus
