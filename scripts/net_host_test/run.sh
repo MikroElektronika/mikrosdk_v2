@@ -8,4 +8,9 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 build="${1:-$here/build}"
 "${CMAKE:-cmake}" -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Debug > /dev/null
 "${CMAKE:-cmake}" --build "$build" -j "$(nproc)"
+for unit in test_phy test_pic32mz; do
+    echo "--- $unit"
+    "$build/$unit" | sed 's/^/   /'
+    [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "$unit FAILED"; exit 1; }
+done
 exec unshare -rn python3 -I "$here/harness.py" "$build/test_net"

@@ -4,7 +4,8 @@
 
 include(${PROJECT_SOURCE_DIR}/thirdparty/ethernet/lwip/lwip_sources.cmake)
 
-## Network layer. lwIP is compiled into this library and its headers stay
+## Network layer (about 30 KB of RAM with the defaults, see README.md).
+## lwIP is compiled into this library and its headers stay
 ## private: applications only see net_api.h / net_http.h / net_driver.h.
 mikrosdk_add_library(lib_net MikroSDK.Net
     include/net_api.h
@@ -59,3 +60,51 @@ mikrosdk_install(MikroSDK.Net.EthTransport)
 install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.EthTransport
     adapters/eth_transport/net_driver_eth_transport.h
 )
+
+## Generic clause 22 PHY control over MDIO, used by the on-chip MAC drivers.
+mikrosdk_add_library(lib_net_phy MikroSDK.Net.Phy
+    drivers/phy/net_phy.h
+    drivers/phy/net_phy.c
+)
+
+target_include_directories(lib_net_phy
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/phy>
+        $<INSTALL_INTERFACE:include/middleware/net>
+)
+
+target_link_libraries(lib_net_phy PUBLIC
+    MikroC.Core
+)
+
+mikrosdk_install(MikroSDK.Net.Phy)
+install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Phy
+    drivers/phy/net_phy.h
+)
+
+## On-chip MAC drivers, only for MCUs with an Ethernet controller.
+check_eth_components(has_eth eth_module_list)
+if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^PIC32MZ")
+    mikrosdk_add_library(lib_net_pic32mz MikroSDK.Net.Pic32mz
+        drivers/pic32mz/net_driver_pic32mz.h
+        drivers/pic32mz/net_driver_pic32mz.c
+    )
+
+    target_include_directories(lib_net_pic32mz
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/pic32mz>
+            $<INSTALL_INTERFACE:include/middleware/net>
+    )
+
+    target_link_libraries(lib_net_pic32mz PUBLIC
+        MikroC.Core
+        MikroSDK.Net
+        MikroSDK.Net.Phy
+        MikroSDK.Driver.GPIO.Out
+    )
+
+    mikrosdk_install(MikroSDK.Net.Pic32mz)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Pic32mz
+        drivers/pic32mz/net_driver_pic32mz.h
+    )
+endif()

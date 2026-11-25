@@ -73,6 +73,16 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi_ethernet_two_wire\" test.")
 endif()
 
+## Network layer (lwIP) web server: MIKROSDK_NET_STACK=LWIP, 128K Flash and 64K RAM minimum.
+if (TARGET MikroSDK.Net)
+    memory_sdk_test_check(memory_issue 131072 65536)
+    if (${memory_issue} STREQUAL "FALSE")
+        add_subdirectory(net_web_server)
+    else()
+        message(INFO ": ${MCU_NAME} does not have enough memory for \"net_web_server\" test.")
+    endif()
+endif()
+
 ## 8K Flash and 4K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 8192 4096)
 

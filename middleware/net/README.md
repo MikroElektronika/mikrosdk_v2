@@ -4,9 +4,10 @@ A small, stack-independent network API for Ethernet: IPv4 with DHCP or a static 
 server sockets, UDP sockets and an HTTP/1.1 client. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
 (BSD-3-Clause), but applications never include lwIP headers, so the stack can change without breaking them.
 
-> **Status: first step.** The API, lwIP, the HTTP client and the driver for the controllers of
-> `middleware/ethernet` are done and tested on a host (see [Testing](#testing)). Drivers for on-chip MACs
-> (PIC32MZ, STM32, TM4C129, Kinetis) do not exist yet; until they do, on-chip Ethernet stays on CycloneTCP.
+> **Status.** The API, lwIP, the HTTP client and the driver for the SPI controllers of `middleware/ethernet` are
+> done and tested on a host (see [Testing](#testing)). The PIC32MZ on-chip driver is written and unit-tested
+> against simulated registers, but **not yet run on hardware**. Other on-chip MACs (STM32, TM4C129, Kinetis) have
+> no driver yet and stay on CycloneTCP.
 
 ## Selecting the stack
 
@@ -26,7 +27,9 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
 | `include/net_api.h` | Interface, DNS, TCP, UDP |
 | `include/net_http.h` | HTTP client (built on `net_api.h` only) |
 | `include/net_driver.h` | Frame driver interface: what an Ethernet controller driver implements |
-| `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100) |
+| `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100); they are used unchanged |
+| `drivers/pic32mz/net_driver_pic32mz.h` | On-chip Ethernet of PIC32MZ EC/EF (RMII, polled DMA descriptor rings in uncached memory) — `MikroSDK.Net.Pic32mz`, built only for PIC32MZ with Ethernet |
+| `drivers/phy/net_phy.h` | Generic PHY control over MDIO (IEEE 802.3 clause 22 registers only), for the on-chip drivers — `MikroSDK.Net.Phy` |
 | `src/net_lwip.c` | `net_api.h` on lwIP (raw API) |
 | `src/net_http.c`, `src/net_common.c` | Stack-independent parts |
 
@@ -94,6 +97,28 @@ definitions:
 | `NET_HTTP_HEADER_MAX` | 1024 | largest HTTP response header block |
 | `NET_LWIP_IPV6` | 0 | IPv6 (not exposed in `net_api.h` yet) |
 
+## Example
+
+[tests/net_web_server](../../tests/net_web_server/ReadMe.txt): a web server (HTML page and `/api/status`) that
+runs unchanged on an SPI Ethernet Click (the same controller selection as `tests/spi_ethernet`) or on the on-chip
+Ethernet of the mikromedia 4/5 for PIC32MZ, chosen with `NET_INTERFACE` in `main.c`. Its `net_clock.h` gives the
+millisecond time source from the core's cycle counter (Cortex-M3 and newer, PIC32) without interrupts.
+
+## PIC32MZ on-chip Ethernet
+
+```c
+static net_driver_t drv;
+net_pic32mz_cfg_t eth_cfg;
+net_pic32mz_cfg_setup( &eth_cfg );      // PHY found by scanning MDIO
+eth_cfg.phy_reset = ETH_RST;            // board.h of the mikromedia 4/5 for PIC32MZ
+eth_cfg.pins_init = board_eth_pins;     // ANSELxCLR for the RMII pins of the board
+net_driver_pic32mz( &drv, &eth_cfg );
+```
+
+RMII and the Ethernet pin set are device configuration bits (`FMIIEN`, `FETHIO`) of the setup. The driver polls
+(no interrupt), keeps `NET_PIC32MZ_RX_BUFFERS` (8) receive buffers of 1536 bytes and one transmit buffer in
+uncached memory (XC32 `coherent`), and sets the MAC to the speed and duplex the PHY negotiated. About 15 KB of RAM.
+
 ## Writing a driver
 
 Implement `net_driver_t` (`include/net_driver.h`): `send` one frame, `receive` one frame without blocking,
@@ -103,14 +128,16 @@ drivers (GPL).
 
 ## Testing
 
-`scripts/net_host_test/run.sh` builds this library and lwIP for Linux and runs 84 checks against the Linux TCP/IP
-stack in a private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP server, TCP server mode, link
-loss, error cases), with AddressSanitizer and UBSan. See [its README](../../scripts/net_host_test/README.md).
+`scripts/net_host_test/run.sh` builds this library and lwIP for Linux and runs, with AddressSanitizer and UBSan:
+unit tests of the PHY code (simulated PHY) and of the PIC32MZ driver (fake registers, the test playing the DMA
+controller), then 84 checks against the Linux TCP/IP stack in a private network namespace (DHCP and DNS from
+dnsmasq, TCP/UDP echo, HTTP server, TCP server mode, link loss, error cases). See
+[its README](../../scripts/net_host_test/README.md).
 
 ## Next steps
 
-1. On-chip MAC drivers: PIC32MZ + LAN8720 first (the PHY the mikromedia 4/5 for PIC32MZ boards declare), then
-   STM32F4/F7, TM4C129, Kinetis.
-2. Examples and tests for MCUs (`tests/net`), and migrating the CycloneTCP tests.
-3. FTP client if needed, IPv6 in `net_api.h`.
+1. Run `tests/net_web_server` on hardware: an SPI Ethernet Click on an ARM board, and the mikromedia 4/5 for
+   PIC32MZ (first run of the PIC32MZ driver).
+2. On-chip drivers for STM32F4/F7, TM4C129, Kinetis (reusing `net_phy`), and migrating the CycloneTCP tests.
+3. FTP client if needed, IPv6 in `net_api.h`, a mikroSDK millisecond time API.
 4. Once the drivers exist: make `LWIP` the default and deprecate CycloneTCP.
