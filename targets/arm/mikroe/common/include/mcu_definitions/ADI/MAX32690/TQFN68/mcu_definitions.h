@@ -211,7 +211,7 @@ extern "C"{
 #define UART_MODULE_0 (1)
 #define UART_MODULE_1 (2)
 #define UART_MODULE_2 (3)
-#define UART_MODULE_3 (3)
+#define UART_MODULE_3 (4)
 
 #define UART_MODULE_COUNT (4)
 // EOF U(S)ART

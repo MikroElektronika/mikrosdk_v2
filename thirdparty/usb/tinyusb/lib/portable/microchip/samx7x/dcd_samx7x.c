@@ -30,7 +30,13 @@
 #if CFG_TUD_ENABLED && CFG_TUSB_MCU == OPT_MCU_SAMX7X
 
 #include "device/dcd.h"
-#include "sam.h"
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+  #include "mcu.h"
+  #include "usb_hw.h"
+#else
+  #include "sam.h"
+#endif
 #include "common_usb_regs.h"
 //--------------------------------------------------------------------+
 // MACRO TYPEDEF CONSTANT ENUM DECLARATION

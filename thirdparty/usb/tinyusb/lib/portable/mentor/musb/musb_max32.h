@@ -31,8 +31,15 @@
 extern "C" {
 #endif
 
-#include "mxc_device.h"
-#include "usbhs_regs.h"
+// Note: Changed for MikroE implementation.
+#ifdef __PROJECT_MIKROSDK_MIKROE__
+  // MikroE core mcu.h is the ADI device header (includes usbhs_regs.h).
+  #include "mcu.h"
+  #include "usb_hw.h"
+#else
+  #include "mxc_device.h"
+  #include "usbhs_regs.h"
+#endif
 
 #define MUSB_CFG_SHARED_FIFO   1 // shared FIFO for TX and RX endpoints
 #define MUSB_CFG_DYNAMIC_FIFO  0 // dynamic EP FIFO sizing
