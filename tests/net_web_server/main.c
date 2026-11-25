@@ -45,6 +45,8 @@
  *                  LAN9250, W6100, LAN8651, see ../spi_ethernet/transport_select.h)
  *   NET_IF_PIC32MZ the on-chip Ethernet of PIC32MZ with its PHY (mikromedia 4/5
  *                  for PIC32MZ)
+ *   NET_IF_STM32   the on-chip Ethernet of STM32F107/F2/F4/F7 with its PHY (MCU
+ *                  cards and boards with an Ethernet connector)
  * Gets an address by DHCP (or uses a static one), then serves
  *   /             an HTML page (interface, address, uptime, requests)
  *   /api/status   the same as JSON
@@ -59,6 +61,7 @@
 
 #define NET_IF_SPI      0
 #define NET_IF_PIC32MZ  1
+#define NET_IF_STM32    2
 #define NET_INTERFACE   NET_IF_SPI              // Define your interface
 
 #define SPI_ETH_CHIP    SPI_ETH_CHIP_LAN9250    // NET_IF_SPI: your chip (SPI_ETH_CHIP_* in transport_select.h)
@@ -90,6 +93,9 @@
     #include "mcu.h"
     #include "net_driver_pic32mz.h"
     #define INTERFACE_NAME "PIC32MZ Ethernet"
+#elif NET_INTERFACE == NET_IF_STM32
+    #include "net_driver_stm32.h"
+    #define INTERFACE_NAME "STM32 Ethernet"
 #else
     #error "Unknown NET_INTERFACE"
 #endif
@@ -124,6 +130,13 @@ static void interface_init( void )
         for ( ; ; );
     }
     net_driver_eth_transport( &driver, &eth );
+}
+#elif NET_INTERFACE == NET_IF_STM32
+static void interface_init( void )
+{
+    net_stm32_cfg_t eth_cfg;
+    net_stm32_cfg_setup( &eth_cfg );    // pins and PHY clock as wired on the board
+    net_driver_stm32( &driver, &eth_cfg );
 }
 #else
 // mikromedia 4/5 for PIC32MZ (144 pins): the RMII pins that share an analog input.
@@ -261,7 +274,7 @@ int main( void )
 
     if ( NET_OK != net_init( &cfg ) )
     {
-        log_printf( &logger, "net_init FAILED (driver / PHY)\r\n" );
+        log_printf( &logger, "net_init FAILED (driver, PHY or its reference clock)\r\n" );
         for ( ; ; );
     }
 

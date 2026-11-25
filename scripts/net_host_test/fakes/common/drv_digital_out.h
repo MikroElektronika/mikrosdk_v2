@@ -1,4 +1,4 @@
-/* Host test only: the parts of mikroSDK's drv_digital_out.h the PIC32MZ driver uses. */
+/* Host test only: the parts of mikroSDK's drv_digital_out.h the on-chip MAC drivers use. */
 #ifndef FAKE_DRV_DIGITAL_OUT_H
 #define FAKE_DRV_DIGITAL_OUT_H
 

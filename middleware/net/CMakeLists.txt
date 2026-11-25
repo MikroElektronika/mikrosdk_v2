@@ -117,3 +117,37 @@ if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^PIC32MZ")
         drivers/pic32mz/net_driver_pic32mz.h
     )
 endif()
+
+## STM32F107, F2x7, F4x7/F4x9, F74x-F77x (the MCUs check_eth_components enables).
+if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^STM32F[1247]")
+    string(SUBSTRING ${MCU_NAME} 6 1 stm32_family)    # STM32F4... -> 4
+    mikrosdk_add_library(lib_net_stm32 MikroSDK.Net.Stm32
+        drivers/stm32/net_driver_stm32.h
+        drivers/stm32/net_driver_stm32.c
+    )
+
+    target_compile_definitions(lib_net_stm32 PRIVATE NET_STM32_F${stm32_family})
+    ## Boards with TX_EN/TXD0/TXD1 on PG11/PG13/PG14 (as for CycloneTCP, cmake/ethUtils.cmake).
+    if("${_MSDK_BOARD_NAME_}" MATCHES "^MIKROMEDIA(7|PLUS)FORSTM32(F4|F7)?")
+        target_compile_definitions(lib_net_stm32 PRIVATE NET_STM32_TX_PG)
+    endif()
+
+    target_include_directories(lib_net_stm32
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/drivers/stm32>
+            $<INSTALL_INTERFACE:include/middleware/net>
+    )
+
+    target_link_libraries(lib_net_stm32 PUBLIC
+        MikroC.Core
+        MikroSDK.Net
+        MikroSDK.Net.Phy
+        MikroSDK.Driver.GPIO.Out
+        MikroSDK.HalLowLevel.GPIO
+    )
+
+    mikrosdk_install(MikroSDK.Net.Stm32)
+    install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Stm32
+        drivers/stm32/net_driver_stm32.h
+    )
+endif()

@@ -46,6 +46,13 @@ elseif (net_if STREQUAL "PIC32MZ")
     target_link_libraries(test_net_web_server PUBLIC
         MikroSDK.Net.Pic32mz
     )
+elseif (net_if STREQUAL "STM32")
+    if (NOT TARGET MikroSDK.Net.Stm32)
+        message(FATAL_ERROR "test_net_web_server: NET_IF_STM32 needs an STM32 with Ethernet (${MCU_NAME})")
+    endif()
+    target_link_libraries(test_net_web_server PUBLIC
+        MikroSDK.Net.Stm32
+    )
 else()
     message(FATAL_ERROR "test_net_web_server: unknown NET_INTERFACE \"${net_if}\" in main.c")
 endif()

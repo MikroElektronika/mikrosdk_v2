@@ -1,8 +1,9 @@
 This example tests the mikroSDK network layer (middleware/net, lwIP). Build mikroSDK with MIKROSDK_NET_STACK=LWIP (GCC for ARM or XC32).
 
-The same web server runs on two kinds of Ethernet, chosen with NET_INTERFACE in main.c:
+The same web server runs on several kinds of Ethernet, chosen with NET_INTERFACE in main.c:
 - NET_IF_SPI (default): an SPI Ethernet controller on mikroBUS (SPI_ETH_CHIP: ENC28J60, W5500/WIZ_IP55, W6100, LAN9250 or LAN8651; LAN9250 by default), the same controllers and setup as the spi_ethernet test.
 - NET_IF_PIC32MZ: the on-chip Ethernet of the mikromedia 4/5 for PIC32MZ (LAN8720 PHY).
+- NET_IF_STM32: the on-chip Ethernet of STM32F107, F2x7, F4x7/F4x9 and F74x-F77x boards and MCU cards (RMII PHY; its 50 MHz clock from MCO1 on PA8 as on the MikroE MCU cards). If net_init fails, the PHY gets no reference clock or does not answer: check mco_div / ref_clock in net_stm32_cfg_t.
 
 The board gets its address by DHCP (USE_DHCP = 1, default) or uses the static address in main.c, and prints it on the USB UART terminal.
 

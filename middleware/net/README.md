@@ -4,10 +4,11 @@ A small, stack-independent network API for Ethernet: IPv4 with DHCP or a static 
 server sockets, UDP sockets and an HTTP/1.1 client. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
 (BSD-3-Clause), but applications never include lwIP headers, so the stack can change without breaking them.
 
-> **Status.** The API, lwIP, the HTTP client and the driver for the SPI controllers of `middleware/ethernet` are
-> done and tested on a host (see [Testing](#testing)). The PIC32MZ on-chip driver is written and unit-tested
-> against simulated registers, but **not yet run on hardware**. Other on-chip MACs (STM32, TM4C129, Kinetis) have
-> no driver yet and stay on CycloneTCP.
+> **Status.** The API, lwIP, the HTTP client and server and the driver for the SPI controllers of
+> `middleware/ethernet` are done and tested on a host (see [Testing](#testing)). The on-chip drivers for PIC32MZ
+> and STM32 (F107, F2x7, F4x7/F4x9, F74x–F77x) are written and unit-tested against simulated hardware (STM32: register
+> map also checked against ST's headers), but **not yet run on hardware**. PIC32MX, Kinetis and TM4C129 have no
+> driver yet and stay on CycloneTCP.
 
 ## Selecting the stack
 
@@ -30,6 +31,7 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
 | `include/net_driver.h` | Frame driver interface: what an Ethernet controller driver implements |
 | `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100); they are used unchanged |
 | `drivers/pic32mz/net_driver_pic32mz.h` | On-chip Ethernet of PIC32MZ EC/EF (RMII, polled DMA descriptor rings in uncached memory) — `MikroSDK.Net.Pic32mz`, built only for PIC32MZ with Ethernet |
+| `drivers/stm32/net_driver_stm32.h` | On-chip Ethernet of STM32F107, F2x7, F4x7/F4x9, F74x–F77x (RMII, polled DMA rings, pins and PHY clock through the mikroSDK GPIO layer, Cortex-M7 cache maintenance) — `MikroSDK.Net.Stm32`, built only for those MCUs |
 | `drivers/phy/net_phy.h` | Generic PHY control over MDIO (IEEE 802.3 clause 22 registers only), for the on-chip drivers — `MikroSDK.Net.Phy` |
 | `src/net_lwip.c` | `net_api.h` on lwIP (raw API) |
 | `src/net_http.c`, `src/net_common.c` | Stack-independent parts |
@@ -144,6 +146,28 @@ RMII and the Ethernet pin set are device configuration bits (`FMIIEN`, `FETHIO`)
 (no interrupt), keeps `NET_PIC32MZ_RX_BUFFERS` (8) receive buffers of 1536 bytes and one transmit buffer in
 uncached memory (XC32 `coherent`), and sets the MAC to the speed and duplex the PHY negotiated. About 15 KB of RAM.
 
+## STM32 on-chip Ethernet
+
+```c
+static net_driver_t drv;
+net_stm32_cfg_t eth_cfg;
+net_stm32_cfg_setup( &eth_cfg );        // wiring and PHY clock of the board the SDK is built for
+net_driver_stm32( &drv, &eth_cfg );
+```
+
+The defaults follow the MikroE boards and MCU cards (as `middleware/hw/hw_eth` does for CycloneTCP):
+
+| | Default | Option |
+| --- | --- | --- |
+| RMII pins | PA1 REF_CLK, PA2 MDIO, PA7 CRS_DV, PC1 MDC, PC4/PC5 RXD0/1, PB11/PB12/PB13 TX_EN/TXD0/TXD1 | `tx_pins`: PG11/PG13/PG14 (default on mikromedia 7 / Plus for STM32F4/F7; packages without port G always use PB) |
+| PHY 50 MHz clock | MCO1 on PA8: main PLL ÷ `mco_div` (F2 2, F4 3, F7 4); F1: MCO = system clock | `ref_clock = NET_STM32_REF_CLOCK_BOARD` when the board has its own oscillator |
+| PHY | found by scanning MDIO, no reset pin | `phy_addr`, `phy_reset` |
+
+Pins are configured through the mikroSDK GPIO layer (`hal_ll_gpio_module_struct_init`), not a vendor HAL. `net_init()`
+fails (driver init returns -2) when the DMA cannot leave reset, which means the PHY gives no reference clock: check
+`ref_clock` / `mco_div` against the board's clock setup. With the Cortex-M7 data cache on (F7), buffers and descriptors
+are cleaned and invalidated as needed. 8 receive and 4 transmit buffers, about 19 KB of RAM.
+
 ## Writing a driver
 
 Implement `net_driver_t` (`include/net_driver.h`): `send` one frame, `receive` one frame without blocking,
@@ -154,15 +178,16 @@ drivers (GPL).
 ## Testing
 
 `scripts/net_host_test/run.sh` builds this library and lwIP for Linux and runs, with AddressSanitizer and UBSan:
-unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulated PHY) and of the PIC32MZ driver
-(fake registers, the test playing the DMA controller), then the network checks against the Linux TCP/IP stack in a
+unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulated PHY), of the PIC32MZ driver and of
+the STM32 driver for F1/F2/F4/F7 (fake registers, a hardware model, the test playing the DMA engines; the STM32
+register map compared with ST's CMSIS headers), then the network checks against the Linux TCP/IP stack in a
 private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP client and server, TCP server mode, link
 loss, error cases). See [its README](../../scripts/net_host_test/README.md).
 
 ## Next steps
 
-1. Run `tests/net_web_server` on hardware: an SPI Ethernet Click on an ARM board, and the mikromedia 4/5 for
-   PIC32MZ (first run of the PIC32MZ driver).
-2. On-chip drivers for STM32F4/F7, TM4C129, Kinetis (reusing `net_phy`), and migrating the CycloneTCP tests.
+1. Run `tests/net_web_server` on hardware: an SPI Ethernet Click, the mikromedia 4/5 for PIC32MZ and STM32
+   F107/F2/F4/F7 MCU cards and boards (first runs of the on-chip drivers).
+2. On-chip drivers for PIC32MX (in the PIC32 driver), Kinetis ENET and TM4C129, and migrating the CycloneTCP tests.
 3. FTP client if needed, IPv6 in `net_api.h`, a mikroSDK millisecond time API.
 4. Once the drivers exist: make `LWIP` the default and deprecate CycloneTCP.

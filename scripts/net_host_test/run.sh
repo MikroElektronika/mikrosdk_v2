@@ -8,7 +8,7 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 build="${1:-$here/build}"
 "${CMAKE:-cmake}" -S "$here" -B "$build" -DCMAKE_BUILD_TYPE=Debug > /dev/null
 "${CMAKE:-cmake}" --build "$build" -j "$(nproc)"
-for unit in test_systime test_phy test_pic32mz; do
+for unit in $(cat "$build/unit_tests.txt"); do
     echo "--- $unit"
     "$build/$unit" | sed 's/^/   /'
     [ "${PIPESTATUS[0]}" -eq 0 ] || { echo "$unit FAILED"; exit 1; }
