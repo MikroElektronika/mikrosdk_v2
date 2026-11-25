@@ -34,6 +34,10 @@ extern "C" {
 #ifdef __PROJECT_MIKROSDK_MIKROE__
 // Note: Added for MikroE implementation.
 #include "usb_hw.h"
+// MikroE mcu.h doesn't include CMSIS core header, so __NOP isn't declared.
+#ifndef __NOP
+#define __NOP() __asm volatile ("nop")
+#endif
 #endif
 
 // EP_MAX       : Max number of bi-directional endpoints including EP0
