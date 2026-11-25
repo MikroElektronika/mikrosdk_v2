@@ -55,6 +55,12 @@ void usb_isr_include(void) {
 
 void @ISR_MACRO@(void)
 {
+    // MCU specific code that has to run first in the ISR,
+    // e.g. clearing the Renesas RA ICU interrupt request flag.
+    // Defined in usb_hw.h, if needed.
+    #ifdef USB_HW_ISR_PROLOGUE
+    USB_HW_ISR_PROLOGUE();
+    #endif
     #if CFG_TUH_ENABLED
     tuh_int_handler(BOARD_TUH_RHPORT);
     #endif

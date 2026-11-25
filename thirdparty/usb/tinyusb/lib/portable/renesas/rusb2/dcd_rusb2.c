@@ -36,7 +36,9 @@
   #include "rusb2_rx.h"
 #elif TU_CHECK_MCU(OPT_MCU_RAXXX)
   #include "rusb2_ra.h"
-  #if defined(RENESAS_CORTEX_M23)
+  // Note: Changed for MikroE implementation.
+  // USB_HW_RA_CFIFO_ONLY is defined in usb_hw.h for MCUs whose data pipes have to use CFIFO port.
+  #if defined(RENESAS_CORTEX_M23) || defined(USB_HW_RA_CFIFO_ONLY)
     #define D0FIFO CFIFO
     #define D0FIFOSEL CFIFOSEL
     #define D0FIFOSEL_b CFIFOSEL_b
@@ -90,7 +92,9 @@ static dcd_data_t _dcd;
 // Note: for small mcu such as
 // - RA2A1: only pipe 4-7 are available, and no support for ISO
 static unsigned find_pipe(unsigned xfer_type) {
-  #if defined(BSP_MCU_GROUP_RA2A1)
+  // Note: Changed for MikroE implementation.
+  // USB_HW_RA_PIPE04567 is defined in usb_hw.h for MCUs that only have pipes 0, 4, 5, 6 and 7.
+  #if defined(BSP_MCU_GROUP_RA2A1) || defined(USB_HW_RA_PIPE04567)
   const uint8_t pipe_idx_arr[4][2] = {
       { 0, 0 }, // Control
       { 0, 0 }, // Isochronous not supported
@@ -716,9 +720,15 @@ bool dcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
   rusb->BRDYENB = 1;
 
   // If VBUS (detect) pin is not used, application need to call tud_connect() manually after tud_init()
+  // Note: Changed for MikroE implementation.
+  // MikroE boards don't route VBUS to the USB_VBUS pin, so connect right away.
+  #ifdef __PROJECT_MIKROSDK_MIKROE__
+  dcd_connect(rhport);
+  #else
   if (rusb->INTSTS0_b.VBSTS) {
     dcd_connect(rhport);
   }
+  #endif
 
   return true;
 }
