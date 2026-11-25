@@ -369,8 +369,11 @@ void dcd_int_enable(uint8_t rhport) {
   } else
   #endif
   // Note: Added for MikroE implementation.
-  // STM32F373xx MCUs have a different IRQ from other STM32F3 MCUs
-  #if ((defined STM32F373x8 || defined STM32F373xB || defined STM32F373xC) \
+  // STM32F373xx MCUs have a different IRQ from other STM32F3 MCUs.
+  // STM32G4xx MCUs - USB_LP IRQ is triggered by all USB events,
+  // so only USB_LP is used (default MikroE ISR is USB_LP_IRQHandler).
+  #if ((defined STM32F373x8 || defined STM32F373xB || defined STM32F373xC \
+        || CFG_TUSB_MCU == OPT_MCU_STM32G4) \
         && defined __PROJECT_MIKROSDK_MIKROE__)
   NVIC_EnableIRQ(USB_LP_IRQn);
   #else
@@ -396,8 +399,11 @@ void dcd_int_disable(uint8_t rhport) {
   } else
   #endif
   // Note: Added for MikroE implementation.
-  // STM32F373xx MCUs have a different IRQ from other STM32F3 MCUs
-  #if ((defined STM32F373x8 || defined STM32F373xB || defined STM32F373xC) \
+  // STM32F373xx MCUs have a different IRQ from other STM32F3 MCUs.
+  // STM32G4xx MCUs - USB_LP IRQ is triggered by all USB events,
+  // so only USB_LP is used (default MikroE ISR is USB_LP_IRQHandler).
+  #if ((defined STM32F373x8 || defined STM32F373xB || defined STM32F373xC \
+        || CFG_TUSB_MCU == OPT_MCU_STM32G4) \
         && defined __PROJECT_MIKROSDK_MIKROE__)
   NVIC_DisableIRQ(USB_LP_IRQn);
   #else
