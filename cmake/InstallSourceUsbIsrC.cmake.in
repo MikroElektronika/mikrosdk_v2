@@ -45,7 +45,9 @@
 
 #if defined(__PROJECT_MIKROSDK_MIKROE__) && (__USE_MIKROE_ISR__==1)
 // Clock value in Hz.
-volatile uint32_t SystemCoreClock = (uint32_t)@CLOCK_VALUE@;
+// Weak, because some cores (e.g. AI generated STM32 cores) already
+// define SystemCoreClock in their CMSIS system file.
+__attribute__((weak)) volatile uint32_t SystemCoreClock = (uint32_t)@CLOCK_VALUE@;
 
 void usb_isr_include(void) {
     asm volatile ("NOP");

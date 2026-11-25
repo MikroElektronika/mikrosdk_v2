@@ -17,6 +17,7 @@
 - [`v2.21.0`](#v2210)
   - [Changes](#changes)
     - [RENESAS](#renesas)
+    - [STM32](#stm32)
     - [NEW HARDWARE](#new-hardware)
 
 ### RENESAS
@@ -81,6 +82,17 @@ The RX26T is a 32-bit MCU family built around the RXv3 core, aimed at motor cont
 + PWM (Full module support)
 + GPIO (Full module support)
 + 1-Wire (Full module support)
+
+### STM32
+
+**USB support extended!**
+
+USB support through the third-party [tinyUSB](https://github.com/hathach/tinyusb) driver is now available for additional STM32 MCU families.
+
++ STM32G4 MCUs
++ STM32G0B1 and STM32G0C1 MCUs
++ STM32H74x and STM32H75x MCUs (USB OTG FS)
++ tinyUSB is now available for AI generated STM32 SDK setups as well
 
 ### NEW HARDWARE
 

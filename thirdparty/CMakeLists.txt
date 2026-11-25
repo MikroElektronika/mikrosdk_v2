@@ -8,8 +8,10 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
                 endif()
             endif()
         endif()
-        add_subdirectory(usb)
     endif()
+    ## USB support is decided per MCU in usbUtils.cmake (check_usb_components),
+    ## so it is built for AI generated SDK setups as well.
+    add_subdirectory(usb)
 endif()
 
 if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
