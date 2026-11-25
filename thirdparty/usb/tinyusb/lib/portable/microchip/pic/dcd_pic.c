@@ -509,7 +509,12 @@ bool dcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
 #else
   U1BDTP1 = (uint8_t)((uint16_t)(void *)_dcd.bdt >> 8);
 
+  // Note: Changed for MikroE implementation.
+  // PPB bits exist only on PIC24F. On PIC24E/dsPIC33E (same USB module as PIC32)
+  // even/odd ping-pong is always enabled for all endpoints, so there is nothing to set.
+  #ifdef _U1CNFG1_PPB_MASK
   U1CNFG1bits.PPB = 2;
+  #endif
 #endif
 
   U1IE = _U1IE_URSTIE_MASK;
