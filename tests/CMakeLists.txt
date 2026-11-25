@@ -178,6 +178,8 @@ add_subdirectory(conversions)
 
 add_subdirectory(st7789)
 
+add_subdirectory(gc9107)
+
 add_subdirectory(st7789_lvgl)
 
 add_subdirectory(st7525i)

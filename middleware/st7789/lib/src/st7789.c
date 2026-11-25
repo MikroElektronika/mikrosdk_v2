@@ -138,6 +138,11 @@ void st7789_write_param( uint8_t param )
     CS_DEACTIVE();
 }
 
+spi_master_t *st7789_get_spi( void )
+{
+    return &display_spi;
+}
+
 void st7789_reset()
 {
     RESET_ACTIVE();

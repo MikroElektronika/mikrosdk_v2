@@ -84,12 +84,22 @@
 
 #define IPS_MAP_PINOUTS( ips_cfg )                                     \
     ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
+    ips_cfg.ips_pwm = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_PWM );  \
     ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
     ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
     ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
     ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
     ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
     ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
+
+/*!
+ * \brief Display controller used by the IPS Click Board.
+ */
+typedef enum
+{
+    IPS_CONTROLLER_ST7789 = 0, /*!< ST7789 controller (IPS Display Click and IPS Display 2 Click). */
+    IPS_CONTROLLER_GC9107      /*!< GC9107 controller (IPS Display 3 Click). */
+} ips_controller_t;
 
 /*!
  * \brief IPS SPI Display definition structure.
@@ -100,6 +110,8 @@ typedef struct ips_display_s
     uint16_t display_height; /*!< Display height resolution in pixels. */
 
     void ( *reset_procedure )( void );
+
+    ips_controller_t controller; /*!< Display controller. */
 } ips_display_t;
 
 /// Definition constant for IPS_DISPLAY_CLICK display Click Board.
@@ -107,6 +119,9 @@ extern const ips_display_t IPS_DISPLAY_1_CLICK;
 
 /// Definition constant for IPS_DISPLAY_2_CLICK display Click Board.
 extern const ips_display_t IPS_DISPLAY_2_CLICK;
+
+/// Definition constant for IPS_DISPLAY_3_CLICK display Click Board.
+extern const ips_display_t IPS_DISPLAY_3_CLICK;
 
 /*!
  * \brief IPS SPI Display library configuration structure.
@@ -116,6 +131,7 @@ typedef struct
     const ips_display_t *board; /*!< Board definition constant. */
 
     hal_pin_name_t ips_bck;     /*!< BCK pin name. */
+    hal_pin_name_t ips_pwm;     /*!< PWM pin name (BCK pin of IPS Display 3 Click). */
     hal_pin_name_t ips_rst;     /*!< RST pin name. */
     hal_pin_name_t ips_cs;      /*!< CS pin name. */
     hal_pin_name_t ips_sck;     /*!< SCK pin name. */

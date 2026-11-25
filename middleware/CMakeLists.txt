@@ -73,3 +73,6 @@ add_subdirectory(st7796)
 
 ## ST7735S display library (SPI).
 add_subdirectory(st7735s)
+
+## GC9107 display library (SPI).
+add_subdirectory(gc9107)
