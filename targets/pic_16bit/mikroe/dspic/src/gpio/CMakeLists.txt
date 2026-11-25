@@ -1,4 +1,4 @@
-## ./mikroe/dspic/src/gpio/CMakeLists.txt
+## ./targets/pic_16bit/mikroe/dspic/src/gpio/CMakeLists.txt
 set(hal_ll_def_list "")
 if(${MCU_NAME} MATCHES "^(ds)?PIC(24|30|33).*")
     list(APPEND hal_ll_def_list "__dspic__")

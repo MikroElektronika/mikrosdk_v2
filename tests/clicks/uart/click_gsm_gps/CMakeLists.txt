@@ -1,4 +1,4 @@
-## ./tests/clicks/uart/click_gsmgps/CMakeLists.txt
+## ./tests/clicks/uart/click_gsm_gps/CMakeLists.txt
 add_executable(test_click_gsmgps
     main.c
     gsmgps.c

@@ -1,5 +1,5 @@
 {
-    "uid": "BOARD_RSSK_RL78_G24",
+    "uid": "BOARD_RSSK_RL78_L23",
     "name": "Capacitive Touch Evaluation System for RL78 L23",
     "icon": "images/boards/board-rssk-rl78-l23.png",
     "default_device": "",
@@ -9,7 +9,7 @@
     "sort_order": 6,
     "min_pin_count": 0,
     "display_socket": "NO_DISPLAY",
-    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_RSSK_RL78_G24\"}",
+    "sdk_config": "{\"_MSDK_BOARD_NAME_\":\"BOARD_RSSK_RL78_L23\"}",
     "necto_config": "",
     "display": "NO_DISPLAY",
     "package_uid": "100/LQFP"

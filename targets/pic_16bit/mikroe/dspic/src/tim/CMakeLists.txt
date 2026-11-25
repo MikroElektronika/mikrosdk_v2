@@ -1,4 +1,4 @@
-## ./mikroe/dspic/src/tim/CMakeLists.txt
+## ./targets/pic_16bit/mikroe/dspic/src/tim/CMakeLists.txt
 set(hal_ll_def_list "")
 
 if(${MCU_NAME} MATCHES "(ds)?PIC")

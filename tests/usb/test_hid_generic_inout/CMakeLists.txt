@@ -1,3 +1,4 @@
+## ./tests/usb/test_hid_generic_inout/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
 add_executable(test_hid_generic_inout

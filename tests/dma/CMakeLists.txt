@@ -1,4 +1,4 @@
-# ## ./tests/dma/CMakeLists.txt
+## ./tests/dma/CMakeLists.txt
 
 ## 8K Flash and 4K RAM minimum for all tests.
 memory_sdk_test_check(memory_issue 8192 4096)

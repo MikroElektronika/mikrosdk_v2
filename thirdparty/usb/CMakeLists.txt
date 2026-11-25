@@ -1,4 +1,4 @@
-## ./api/usb/CMakeLists.txt
+## ./thirdparty/usb/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
 ## Initial mikroSDK 2.9.0 release shall only

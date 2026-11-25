@@ -1,4 +1,4 @@
-## ./targets/risv/mikroe/gigadevice/src/rtc/CMakeLists.txt
+## ./targets/riscv/mikroe/gigadevice/src/rtc/CMakeLists.txt
 set(hal_ll_def_list "")
 list(APPEND hal_ll_def_list "MACRO_USAGE_RTC")
 

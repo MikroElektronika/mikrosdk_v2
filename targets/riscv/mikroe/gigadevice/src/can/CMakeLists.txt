@@ -1,4 +1,4 @@
-## ./targets/arm/mikroe/stm32/src/can/CMakeLists.txt
+## ./targets/riscv/mikroe/gigadevice/src/can/CMakeLists.txt
 set(hal_ll_def_list "")
 set(mcu_header_path "")
 

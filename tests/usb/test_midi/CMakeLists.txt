@@ -1,3 +1,4 @@
+## ./tests/usb/test_midi/CMakeLists.txt
 cmake_minimum_required(VERSION 3.17)
 
 add_executable(test_midi

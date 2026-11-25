@@ -1,4 +1,4 @@
-if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_RSSK_RL78_G24")
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_RSSK_RL78_L23")
     set(BOARD_PATH "include/boards/board_rssk_rl78_l23")
     set(MCU_CARD FALSE)
     set(SHIELD FALSE)
