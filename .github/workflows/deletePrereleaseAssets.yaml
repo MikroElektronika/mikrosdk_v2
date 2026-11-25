@@ -1,0 +1,71 @@
+name: Delete All Assets from Pre-Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        type: string
+        description: Tag of the PRE-RELEASE to clear (e.g. mikroSDK-2.11.1). Published releases are never touched.
+        required: true
+      confirm_tag_name:
+        type: string
+        description: Type the tag name again to confirm deletion
+        required: true
+      dry_run:
+        type: boolean
+        description: Dry run - only list assets that would be deleted
+        default: true
+
+jobs:
+  delete_prerelease_assets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Verify confirmation
+        env:
+          TAG_NAME: ${{ github.event.inputs.tag_name }}
+          CONFIRM_TAG_NAME: ${{ github.event.inputs.confirm_tag_name }}
+        run: |
+          if [ "$TAG_NAME" != "$CONFIRM_TAG_NAME" ]; then
+            echo "::error::Confirmation tag name does not match. Aborting."
+            exit 1
+          fi
+
+      - name: Authorize Mikroe Actions App
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.MIKROE_ACTIONS }}
+          private-key: ${{ secrets.MIKROE_ACTIONS_KEY_AUTHORIZE }}
+          owner: MikroElektronika
+          repositories: |
+            mikrosdk_v2
+
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Delete Pre-Release Assets
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          REPO: ${{ github.repository }}
+          TAG_NAME: ${{ github.event.inputs.tag_name }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" == "true" ]; then
+            python -u scripts/delete_prerelease_assets.py "$GH_TOKEN" "$REPO" "$TAG_NAME" --dry-run
+          else
+            python -u scripts/delete_prerelease_assets.py "$GH_TOKEN" "$REPO" "$TAG_NAME" --yes
+          fi

@@ -1,0 +1,6 @@
+if(${_MSDK_BOARD_NAME_} STREQUAL "BOARD_KIT_PSOC4_HVMS_128K_LITE_02")
+    set(BOARD_PATH "include/boards/board_kit_psoc4_hvms_128k_lite_02")
+    set(MCU_CARD FALSE)
+    set(SHIELD TRUE)
+    set(DIP_SOCKET FALSE)
+endif()

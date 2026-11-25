@@ -82,14 +82,28 @@
 #define DISPLAY_SPI_MIKROBUS MIKROBUS_1
 #endif
 
-#define IPS_MAP_PINOUTS( ips_cfg )                                     \
-    ips_cfg.ips_bck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_AN );   \
-    ips_cfg.ips_rst = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_RST );  \
-    ips_cfg.ips_cs = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_CS );    \
-    ips_cfg.ips_sck = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_SCK );  \
-    ips_cfg.ips_sdi = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MOSI ); \
-    ips_cfg.ips_sdo = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_MISO ); \
-    ips_cfg.ips_dc = MIKROBUS( DISPLAY_SPI_MIKROBUS, MIKROBUS_INT )
+/*!
+ * \brief IPS mikroBUS pin, or HAL_PIN_NC if the pin doesn't exist.
+ * \details Existing pins expand to a parenthesized value, e.g. GPIO_PC3 -> (0x23).
+ * A pin the MCU doesn't have stays an undeclared name (GPIO_PC3), and an unrouted
+ * one expands to nothing. IPS_PIN_PROBE is only invoked when followed by '(',
+ * which pushes the real pin into the second position; otherwise HAL_PIN_NC is second.
+ */
+#define IPS_PIN_PROBE( ... ) ~, ( __VA_ARGS__ )
+#define IPS_PIN_SECOND( first, second, ... ) second
+#define IPS_PIN_SELECT( ... ) IPS_PIN_SECOND( __VA_ARGS__ )
+#define IPS_PIN_OR_NC( pin ) IPS_PIN_SELECT( IPS_PIN_PROBE pin, HAL_PIN_NC, ~ )
+
+#define IPS_MIKROBUS_PIN( pinout ) IPS_PIN_OR_NC( MIKROBUS( DISPLAY_SPI_MIKROBUS, pinout ) )
+
+#define IPS_MAP_PINOUTS( ips_cfg )                          \
+    ips_cfg.ips_bck = IPS_MIKROBUS_PIN( MIKROBUS_AN );   \
+    ips_cfg.ips_rst = IPS_MIKROBUS_PIN( MIKROBUS_RST );  \
+    ips_cfg.ips_cs = IPS_MIKROBUS_PIN( MIKROBUS_CS );    \
+    ips_cfg.ips_sck = IPS_MIKROBUS_PIN( MIKROBUS_SCK );  \
+    ips_cfg.ips_sdi = IPS_MIKROBUS_PIN( MIKROBUS_MOSI ); \
+    ips_cfg.ips_sdo = IPS_MIKROBUS_PIN( MIKROBUS_MISO ); \
+    ips_cfg.ips_dc = IPS_MIKROBUS_PIN( MIKROBUS_INT )
 
 /*!
  * \brief IPS SPI Display definition structure.

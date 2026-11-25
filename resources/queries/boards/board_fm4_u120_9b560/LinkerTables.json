@@ -1,0 +1,22 @@
+{
+    "board_uid": "BOARD_FM4_U120_9B560",
+    "tables": [
+        {
+            "BoardToDevice": {
+                "device_uid": "CY9BF568RPMC-GNE2"
+            }
+        },
+        {
+            "BoardToSocket": {
+                "socket_uid": [
+                    "NONE"
+                ]
+            }
+        },
+        {
+            "SDKToBoard": {
+                "sdk_uid": "2.18.0+"
+            }
+        }
+    ]
+}

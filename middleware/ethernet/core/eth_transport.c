@@ -61,8 +61,11 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
 
     eth->bus = bus;
     eth->bus_ops = bus_ops;
+    eth->bus_error = 0;
 
-    digital_out_init( &eth->reset, cfg->rst );
+    // Reset pin is optional, only a connected pin has to initialize
+    if ( digital_out_init( &eth->reset, cfg->rst ) != DIGITAL_OUT_SUCCESS && cfg->rst != HAL_PIN_NC )
+        return ETH_TRANSPORT_ERROR;
 
     memcpy( eth->mac, cfg->mac, 6 );
     memcpy( eth->ip, cfg->ip, 4 );
@@ -74,19 +77,37 @@ err_t eth_transport_configure( eth_transport_t *eth, void *bus, eth_bus_ops_t *b
 /* --- Bus access (used by controller drivers) --- */
 err_t eth_transport_bus_write( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                                uint8_t *data_buf, uint16_t data_len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->write ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->write( eth->bus, hdr, hdr_len, data_buf, data_len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->write ) ?
+          eth->bus_ops->write( eth->bus, hdr, hdr_len, data_buf, data_len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 err_t eth_transport_bus_read( eth_transport_t *eth, uint8_t *hdr, uint16_t hdr_len,
                               uint8_t *data_buf, uint16_t data_len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->read ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->read( eth->bus, hdr, hdr_len, data_buf, data_len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->read ) ?
+          eth->bus_ops->read( eth->bus, hdr, hdr_len, data_buf, data_len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 err_t eth_transport_bus_transfer( eth_transport_t *eth, uint8_t *tx_buf, uint8_t *rx_buf, uint16_t len ) {
-    if ( !eth || !eth->bus_ops || !eth->bus_ops->transfer ) return ETH_TRANSPORT_ERROR;
-    return eth->bus_ops->transfer( eth->bus, tx_buf, rx_buf, len );
+    err_t err;
+
+    if ( !eth ) return ETH_TRANSPORT_ERROR;
+    err = ( eth->bus_ops && eth->bus_ops->transfer ) ?
+          eth->bus_ops->transfer( eth->bus, tx_buf, rx_buf, len ) : ETH_TRANSPORT_ERROR;
+    if ( err != ETH_TRANSPORT_SUCCESS )
+        eth->bus_error = 1;
+    return err;
 }
 
 /* --- Initialization --- */
@@ -127,12 +148,15 @@ uint8_t eth_transport_get_link_status( eth_transport_t *eth ) {
 
 /* --- Addressing --- */
 err_t eth_transport_set_mac( eth_transport_t *eth, uint8_t *mac ) {
+    err_t err = ETH_TRANSPORT_SUCCESS;
+
     if ( !eth || !mac ) return ETH_TRANSPORT_ERROR;
-    if ( mac != eth->mac )
-        memcpy( eth->mac, mac, 6 );
     if ( eth->drv && eth->drv->set_mac )
-        return eth->drv->set_mac( eth, eth->mac );
-    return ETH_TRANSPORT_SUCCESS;
+        err = eth->drv->set_mac( eth, mac );
+    // Update the cached address only once the controller accepted it
+    if ( err == ETH_TRANSPORT_SUCCESS && mac != eth->mac )
+        memcpy( eth->mac, mac, 6 );
+    return err;
 }
 
 err_t eth_transport_get_mac( eth_transport_t *eth, uint8_t *mac ) {
@@ -142,12 +166,15 @@ err_t eth_transport_get_mac( eth_transport_t *eth, uint8_t *mac ) {
 }
 
 err_t eth_transport_set_ip( eth_transport_t *eth, uint8_t *ip ) {
+    err_t err = ETH_TRANSPORT_SUCCESS;
+
     if ( !eth || !ip ) return ETH_TRANSPORT_ERROR;
-    if ( ip != eth->ip )
-        memcpy( eth->ip, ip, 4 );
     if ( eth->drv && eth->drv->set_ip )
-        return eth->drv->set_ip( eth, eth->ip );
-    return ETH_TRANSPORT_SUCCESS;
+        err = eth->drv->set_ip( eth, ip );
+    // Update the cached address only once the controller accepted it
+    if ( err == ETH_TRANSPORT_SUCCESS && ip != eth->ip )
+        memcpy( eth->ip, ip, 4 );
+    return err;
 }
 
 err_t eth_transport_get_ip( eth_transport_t *eth, uint8_t *ip ) {
