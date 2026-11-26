@@ -73,15 +73,15 @@ static uint16_t native_height;
 static gl_driver_t *current_gl_driver = NULL;
 static uint8_t bgr_order;
 
-#define DATA_SELECT() digital_out_high(&pin_dc)
-#define COMMAND_SELECT() digital_out_low(&pin_dc)
-#define CS_ACTIVE() digital_out_low(&pin_cs)
-#define CS_DEACTIVE() digital_out_high(&pin_cs)
+#define DATA_SELECT() digital_out_high( &pin_dc )
+#define COMMAND_SELECT() digital_out_low( &pin_dc )
+#define CS_ACTIVE() digital_out_low( &pin_cs )
+#define CS_DEACTIVE() digital_out_high( &pin_cs )
 #define ST7796_FILL_CHUNK 64   // Number of pixels sent with one SPI write.
 
-static void spi_send(uint8_t *buffer, uint32_t length)
+static void spi_send( uint8_t *buffer, uint32_t length )
 {
-    spi_master_write(&spi_master, buffer, length);
+    spi_master_write( &spi_master, buffer, length );
 }
 
 uint16_t st7796_get_display_width()
@@ -94,26 +94,26 @@ uint16_t st7796_get_display_height()
     return display_height;
 }
 
-void _st7796_begin_frame(gl_rectangle_t *rect)
+void _st7796_begin_frame( gl_rectangle_t *rect )
 {
     uint16_t start_column = rect->top_left.x;
     uint16_t end_column = rect->top_left.x + rect->width - 1;
     uint16_t start_page = rect->top_left.y;
     uint16_t end_page = rect->top_left.y + rect->height - 1;
 
-    st7796_write_command(ST7796_CMD_CASET);
-    st7796_write_param(Hi(start_column));
-    st7796_write_param(Lo(start_column));
-    st7796_write_param(Hi(end_column));
-    st7796_write_param(Lo(end_column));
+    st7796_write_command( ST7796_CMD_CASET );
+    st7796_write_param( Hi( start_column ) );
+    st7796_write_param( Lo( start_column ) );
+    st7796_write_param( Hi( end_column ) );
+    st7796_write_param( Lo( end_column ) );
 
-    st7796_write_command(ST7796_CMD_RASET);
-    st7796_write_param(Hi(start_page));
-    st7796_write_param(Lo(start_page));
-    st7796_write_param(Hi(end_page));
-    st7796_write_param(Lo(end_page));
+    st7796_write_command( ST7796_CMD_RASET );
+    st7796_write_param( Hi( start_page ) );
+    st7796_write_param( Lo( start_page ) );
+    st7796_write_param( Hi( end_page ) );
+    st7796_write_param( Lo( end_page ) );
 
-    st7796_write_command(ST7796_CMD_RAMWR);
+    st7796_write_command( ST7796_CMD_RAMWR );
 
     CS_ACTIVE();
     DATA_SELECT();
@@ -124,95 +124,95 @@ void _st7796_end_frame()
     CS_DEACTIVE();
 }
 
-void _st7796_frame_data(gl_color_t color)
+void _st7796_frame_data( gl_color_t color )
 {
-    uint8_t pixel[2];
+    uint8_t pixel[ 2 ];
 
-    pixel[0] = Hi(color);   /* High byte first. */
-    pixel[1] = Lo(color);   /* Low byte second. */
+    pixel[ 0 ] = Hi( color );   /* High byte first. */
+    pixel[ 1 ] = Lo( color );   /* Low byte second. */
 
-    spi_send(pixel, 2);
+    spi_send( pixel, 2 );
 }
 
-void _st7796_fill(gl_rectangle_t *rect, gl_color_t color)
+void _st7796_fill( gl_rectangle_t *rect, gl_color_t color )
 {
-    uint32_t length = (uint32_t)rect->width * (uint32_t)rect->height;
-    uint8_t buffer[ST7796_FILL_CHUNK * 2];
-    uint8_t high = Hi(color);
-    uint8_t low = Lo(color);
+    uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+    uint8_t buffer[ ST7796_FILL_CHUNK * 2 ];
+    uint8_t high = Hi( color );
+    uint8_t low = Lo( color );
     uint32_t chunk;
     uint32_t i;
 
-    if (!length)
+    if ( !length )
     {
         return;
     }
 
     // Fill the buffer with the color (only as many pixels as needed).
-    chunk = (length < ST7796_FILL_CHUNK) ? length : ST7796_FILL_CHUNK;
+    chunk = ( length < ST7796_FILL_CHUNK ) ? length : ST7796_FILL_CHUNK;
 
-    for (i = 0; i < chunk; i++)
+    for ( i = 0; i < chunk; i++ )
     {
-        buffer[i * 2] = high;
-        buffer[i * 2 + 1] = low;
+        buffer[ i * 2 ] = high;
+        buffer[ i * 2 + 1 ] = low;
     }
 
-    _st7796_begin_frame(rect);
+    _st7796_begin_frame( rect );
 
-    while (length >= ST7796_FILL_CHUNK)
+    while ( length >= ST7796_FILL_CHUNK )
     {
-        spi_send(buffer, ST7796_FILL_CHUNK * 2);
+        spi_send( buffer, ST7796_FILL_CHUNK * 2 );
         length -= ST7796_FILL_CHUNK;
     }
 
-    if (length)
+    if ( length )
     {
-        spi_send(buffer, length * 2);
+        spi_send( buffer, length * 2 );
     }
 
     _st7796_end_frame();
 }
 
-static void send_init_sequence(const uint8_t *sequence)
+static void send_init_sequence( const uint8_t *sequence )
 {
-    while (*sequence)
+    while ( *sequence )
     {
         uint8_t command = *sequence++;
         uint8_t count = *sequence++;
 
-        st7796_write_command(command);
+        st7796_write_command( command );
 
-        while (count--)
+        while ( count-- )
         {
-            st7796_write_param(*sequence++);
+            st7796_write_param( *sequence++ );
         }
     }
 }
 
-void st7796_init(st7796_cfg_t *cfg, gl_driver_t * __generic_ptr driver)
+void st7796_init( st7796_cfg_t *cfg, gl_driver_t * __generic_ptr driver )
 {
     spi_master_config_t spi_cfg;
-    digital_out_init(&pin_cs, cfg->cs);
-    digital_out_high(&pin_cs);
+    digital_out_init( &pin_cs, cfg->cs );
+    digital_out_high( &pin_cs );
 
-    digital_out_init(&pin_dc, cfg->d_c);
-    digital_out_init(&pin_rst, cfg->rst);
+    digital_out_init( &pin_dc, cfg->d_c );
+    digital_out_init( &pin_rst, cfg->rst );
 
-    digital_out_high(&pin_dc);
-    digital_out_low(&pin_rst);
+    digital_out_high( &pin_dc );
+    digital_out_low( &pin_rst );
 
-    spi_master_configure_default(&spi_cfg);
+    spi_master_configure_default( &spi_cfg );
     spi_cfg.sck = cfg->sck;
     spi_cfg.miso = cfg->miso;
     spi_cfg.mosi = cfg->mosi;
     spi_cfg.speed = cfg->speed;
 
-    if (SPI_MASTER_ERROR == spi_master_open(&spi_master, &spi_cfg))
+    if ( SPI_MASTER_ERROR == spi_master_open( &spi_master, &spi_cfg ) )
     {
         return;
     }
 
-    spi_master_set_speed(&spi_master, cfg->speed);
+    spi_master_set_speed( &spi_master, cfg->speed );
 
     driver->fill_f = _st7796_fill;
     driver->begin_frame_f = _st7796_begin_frame;
@@ -231,64 +231,64 @@ void st7796_init(st7796_cfg_t *cfg, gl_driver_t * __generic_ptr driver)
     bgr_order = cfg->bgr;
 
     Delay_100ms();
-    digital_out_high(&pin_rst);
+    digital_out_high( &pin_rst );
     Delay_100ms();
     Delay_100ms();
 
-    st7796_write_command(ST7796_CMD_SWRESET);
-    Delay_ms(ST7796_DELAY_SWRESET_MS);
+    st7796_write_command( ST7796_CMD_SWRESET );
+    Delay_ms( ST7796_DELAY_SWRESET_MS );
 
-    if (cfg->init_seq)
+    if ( cfg->init_seq )
     {
-        send_init_sequence(cfg->init_seq);
+        send_init_sequence( cfg->init_seq );
     }
 
-    st7796_write_command(ST7796_CMD_SLPOUT);
-    Delay_ms(ST7796_DELAY_SLPOUT_MS);
+    st7796_write_command( ST7796_CMD_SLPOUT );
+    Delay_ms( ST7796_DELAY_SLPOUT_MS );
 
-    st7796_write_command(ST7796_CMD_COLMOD);
-    st7796_write_param(ST7796_COLMOD_16BIT);
+    st7796_write_command( ST7796_CMD_COLMOD );
+    st7796_write_param( ST7796_COLMOD_16BIT );
 
-    if (cfg->invert)
+    if ( cfg->invert )
     {
-        st7796_write_command(ST7796_CMD_INVON);
+        st7796_write_command( ST7796_CMD_INVON );
     }
-    st7796_rotate(0);
+    st7796_rotate( 0 );
 
-    st7796_write_command(ST7796_CMD_DISPON);
+    st7796_write_command( ST7796_CMD_DISPON );
 }
 
-void st7796_write_command(uint8_t command)
+void st7796_write_command( uint8_t command )
 {
     CS_ACTIVE();
     COMMAND_SELECT();
 
-    spi_send(&command, 1);
+    spi_send( &command, 1 );
 
     CS_DEACTIVE();
 }
 
-void st7796_write_param(uint8_t param)
+void st7796_write_param( uint8_t param )
 {
     CS_ACTIVE();
     DATA_SELECT();
 
-    spi_send(&param, 1);
+    spi_send( &param, 1 );
 
     CS_DEACTIVE();
 }
 
-void st7796_write_pixels(const uint8_t *pixels, uint32_t length)
+void st7796_write_pixels( const uint8_t *pixels, uint32_t length )
 {
-    spi_send((uint8_t *)pixels, length);
+    spi_send( ( uint8_t * )pixels, length );
 }
 
-void st7796_rotate(uint8_t rotation)
+void st7796_rotate( uint8_t rotation )
 {
     uint8_t madctl;
     uint8_t landscape;
 
-    switch (rotation)
+    switch ( rotation )
     {
         case 1:  madctl = ST7796_MADCTL_MV; landscape = 1; break; // 90 degrees.
         case 2:  madctl = ST7796_MADCTL_MY; landscape = 0; break; // 180 degrees.
@@ -296,35 +296,35 @@ void st7796_rotate(uint8_t rotation)
         default: madctl = ST7796_MADCTL_MX; landscape = 0; break; // 0 degrees.
     }
 
-    if (bgr_order)
+    if ( bgr_order )
     {
         madctl |= ST7796_MADCTL_RGB;
     }
 
-    st7796_write_command(ST7796_CMD_MADCTL);
-    st7796_write_param(madctl);
+    st7796_write_command( ST7796_CMD_MADCTL );
+    st7796_write_param( madctl );
 
     display_width  = landscape ? native_height : native_width;
     display_height = landscape ? native_width : native_height;
 
-    if (current_gl_driver)
+    if ( current_gl_driver )
     {
         current_gl_driver->display_width  = display_width;
         current_gl_driver->display_height = display_height;
 
         // Graphic library keeps its own copy of the driver, so update it.
-        gl_set_driver(current_gl_driver);
+        gl_set_driver( current_gl_driver );
     }
 }
 
-void st7796_display_power(uint8_t state)
+void st7796_display_power( uint8_t state )
 {
-    if (state)
+    if ( state )
     {
-        st7796_write_command(ST7796_CMD_DISPON);
+        st7796_write_command( ST7796_CMD_DISPON );
     }
     else
     {
-        st7796_write_command(ST7796_CMD_DISPOFF);
+        st7796_write_command( ST7796_CMD_DISPOFF );
     }
 }

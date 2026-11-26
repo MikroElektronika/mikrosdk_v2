@@ -53,57 +53,57 @@ int main()
     uc1609c_cfg.invert   = TEST_UC1609C_INVERT_COLORS;
     uc1609c_cfg.init_seq = TEST_UC1609C_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
-    uc1609c_init(&uc1609c_cfg, &gl_driver);
-    gl_set_driver(&gl_driver);
+    uc1609c_init( &uc1609c_cfg, &gl_driver );
+    gl_set_driver( &gl_driver );
 
     // Fill the whole screen with white and black, one after another.
-    gl_clear(GL_WHITE);
-    Delay_ms(TEST_UC1609C_DELAY_MS);
+    gl_clear( GL_WHITE );
+    Delay_ms( TEST_UC1609C_DELAY_MS );
 
-    gl_clear(GL_BLACK);
-    Delay_ms(TEST_UC1609C_DELAY_MS);
+    gl_clear( GL_BLACK );
+    Delay_ms( TEST_UC1609C_DELAY_MS );
 
-    gl_clear(GL_WHITE);
+    gl_clear( GL_WHITE );
 
     // Draw a square in each corner (checks addressing and orientation).
-    gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-    gl_set_brush_color(GL_BLACK);
+    gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+    gl_set_brush_color( GL_BLACK );
 
-    gl_draw_rect(0, 0, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE);
-    gl_draw_rect(TEST_UC1609C_WIDTH - TEST_UC1609C_SQUARE_SIZE, 0, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE);
-    gl_draw_rect(0, TEST_UC1609C_HEIGHT - TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE);
-    gl_draw_rect(TEST_UC1609C_WIDTH - TEST_UC1609C_SQUARE_SIZE,
+    gl_draw_rect( 0, 0, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE );
+    gl_draw_rect( TEST_UC1609C_WIDTH - TEST_UC1609C_SQUARE_SIZE, 0, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE );
+    gl_draw_rect( 0, TEST_UC1609C_HEIGHT - TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE );
+    gl_draw_rect( TEST_UC1609C_WIDTH - TEST_UC1609C_SQUARE_SIZE,
                  TEST_UC1609C_HEIGHT - TEST_UC1609C_SQUARE_SIZE,
-                 TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE);
+                 TEST_UC1609C_SQUARE_SIZE, TEST_UC1609C_SQUARE_SIZE );
 
-    Delay_ms(TEST_UC1609C_DELAY_MS);
+    Delay_ms( TEST_UC1609C_DELAY_MS );
 
     // Test display rotation. The square grows with every rotation, so the order is easy to follow.
-    for (uint8_t rot = 0; rot < 4; rot++)
+    for ( uint8_t rot = 0; rot < 4; rot++ )
     {
-        uint16_t size = TEST_UC1609C_SQUARE_SIZE * (rot + 1);
+        uint16_t size = TEST_UC1609C_SQUARE_SIZE * ( rot + 1 );
 
-        uc1609c_rotate(rot);
+        uc1609c_rotate( rot );
         // The Graphics Library keeps its own copy of the display size, so refresh it after a rotation.
-        gl_set_driver(&gl_driver);
-        gl_clear(GL_WHITE);
+        gl_set_driver( &gl_driver );
+        gl_clear( GL_WHITE );
 
-        gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-        gl_set_brush_color(GL_BLACK);
-        gl_draw_rect(0, 0, size, size);
+        gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+        gl_set_brush_color( GL_BLACK );
+        gl_draw_rect( 0, 0, size, size );
 
-        Delay_ms(2000);
+        Delay_ms( 2000 );
     }
 
     // Test display power off/on control.
-    uc1609c_display_power(0);
-    Delay_ms(1500);
-    uc1609c_display_power(1);
-    Delay_ms(1500);
+    uc1609c_display_power( 0 );
+    Delay_ms( 1500 );
+    uc1609c_display_power( 1 );
+    Delay_ms( 1500 );
 
-    uc1609c_rotate(0);
-    gl_set_driver(&gl_driver);
-    gl_clear(GL_WHITE);
+    uc1609c_rotate( 0 );
+    gl_set_driver( &gl_driver );
+    gl_clear( GL_WHITE );
 
     return 0;
 }

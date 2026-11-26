@@ -78,40 +78,40 @@ static uint8_t soft_spi;
 static uint16_t offset_x;
 static uint16_t offset_y;
 
-#define DATA_SELECT() digital_out_high(&pin_dc)
-#define COMMAND_SELECT() digital_out_low(&pin_dc)
-#define CS_ACTIVE() do { if (cs_used) { digital_out_low(&pin_cs); } } while (0)
-#define CS_DEACTIVE() do { if (cs_used) { digital_out_high(&pin_cs); } } while (0)
+#define DATA_SELECT() digital_out_high( &pin_dc )
+#define COMMAND_SELECT() digital_out_low( &pin_dc )
+#define CS_ACTIVE() do { if ( cs_used ) { digital_out_low( &pin_cs ); } } while ( 0 )
+#define CS_DEACTIVE() do { if ( cs_used ) { digital_out_high( &pin_cs ); } } while ( 0 )
 #define ST7789_FILL_CHUNK 64   // Number of pixels sent with one SPI write.
 #define ST7789_RAM_WIDTH 240 //Size of the controller memory, in pixels
 #define ST7789_RAM_HEIGHT 320
 
-static void spi_send(uint8_t *bytes, uint32_t length)
+static void spi_send( uint8_t *bytes, uint32_t length )
 {
-    if (!soft_spi)
+    if ( !soft_spi )
     {
-        spi_master_write(&spi_master, bytes, length);
+        spi_master_write( &spi_master, bytes, length );
         return;
     }
 
-    while (length--)
+    while ( length-- )
     {
         uint8_t value = *bytes++;
         uint8_t bit_index;
 
-        for (bit_index = 0; bit_index < 8; bit_index++)
+        for ( bit_index = 0; bit_index < 8; bit_index++ )
         {
-            if (value & 0x80)
+            if ( value & 0x80 )
             {
-                digital_out_high(&pin_mosi_soft);
+                digital_out_high( &pin_mosi_soft );
             }
             else
             {
-                digital_out_low(&pin_mosi_soft);
+                digital_out_low( &pin_mosi_soft );
             }
 
-            digital_out_low(&pin_sck_soft);
-            digital_out_high(&pin_sck_soft);
+            digital_out_low( &pin_sck_soft );
+            digital_out_high( &pin_sck_soft );
             value <<= 1;
         }
     }
@@ -127,26 +127,26 @@ uint16_t st7789_gl_get_display_height()
     return display_height;
 }
 
-void _st7789_begin_frame(gl_rectangle_t *rect)
+void _st7789_begin_frame( gl_rectangle_t *rect )
 {
     uint16_t start_column = rect->top_left.x + offset_x;
     uint16_t end_column = rect->top_left.x + rect->width - 1 + offset_x;
     uint16_t start_page = rect->top_left.y + offset_y;
     uint16_t end_page = rect->top_left.y + rect->height - 1 + offset_y;
 
-    st7789_gl_write_command(ST7789_CMD_CASET);
-    st7789_gl_write_param(Hi(start_column));
-    st7789_gl_write_param(Lo(start_column));
-    st7789_gl_write_param(Hi(end_column));
-    st7789_gl_write_param(Lo(end_column));
+    st7789_gl_write_command( ST7789_CMD_CASET );
+    st7789_gl_write_param( Hi( start_column ) );
+    st7789_gl_write_param( Lo( start_column ) );
+    st7789_gl_write_param( Hi( end_column ) );
+    st7789_gl_write_param( Lo( end_column ) );
 
-    st7789_gl_write_command(ST7789_CMD_RASET);
-    st7789_gl_write_param(Hi(start_page));
-    st7789_gl_write_param(Lo(start_page));
-    st7789_gl_write_param(Hi(end_page));
-    st7789_gl_write_param(Lo(end_page));
+    st7789_gl_write_command( ST7789_CMD_RASET );
+    st7789_gl_write_param( Hi( start_page ) );
+    st7789_gl_write_param( Lo( start_page ) );
+    st7789_gl_write_param( Hi( end_page ) );
+    st7789_gl_write_param( Lo( end_page ) );
 
-    st7789_gl_write_command(ST7789_CMD_RAMWR);
+    st7789_gl_write_command( ST7789_CMD_RAMWR );
 
     CS_ACTIVE();
     DATA_SELECT();
@@ -157,112 +157,112 @@ void _st7789_end_frame()
     CS_DEACTIVE();
 }
 
-void _st7789_frame_data(gl_color_t color)
+void _st7789_frame_data( gl_color_t color )
 {
-    uint8_t pixel[2];
+    uint8_t pixel[ 2 ];
 
-    pixel[0] = Hi(color);   /* High byte first. */
-    pixel[1] = Lo(color);   /* Low byte second. */
+    pixel[ 0 ] = Hi( color );   /* High byte first. */
+    pixel[ 1 ] = Lo( color );   /* Low byte second. */
 
-    spi_send(pixel, 2);
+    spi_send( pixel, 2 );
 }
 
-void _st7789_fill(gl_rectangle_t *rect, gl_color_t color)
+void _st7789_fill( gl_rectangle_t *rect, gl_color_t color )
 {
-    uint32_t length = (uint32_t)rect->width * (uint32_t)rect->height;
-    uint8_t buffer[ST7789_FILL_CHUNK * 2];
-    uint8_t high = Hi(color);
-    uint8_t low = Lo(color);
+    uint32_t length = ( uint32_t )rect->width * ( uint32_t )rect->height;
+    uint8_t buffer[ ST7789_FILL_CHUNK * 2 ];
+    uint8_t high = Hi( color );
+    uint8_t low = Lo( color );
     uint32_t chunk;
     uint32_t i;
 
-    if (!length)
+    if ( !length )
     {
         return;
     }
 
     // Fill the buffer with the color (only as many pixels as needed).
-    chunk = (length < ST7789_FILL_CHUNK) ? length : ST7789_FILL_CHUNK;
+    chunk = ( length < ST7789_FILL_CHUNK ) ? length : ST7789_FILL_CHUNK;
 
-    for (i = 0; i < chunk; i++)
+    for ( i = 0; i < chunk; i++ )
     {
-        buffer[i * 2] = high;
-        buffer[i * 2 + 1] = low;
+        buffer[ i * 2 ] = high;
+        buffer[ i * 2 + 1 ] = low;
     }
 
-    _st7789_begin_frame(rect);
+    _st7789_begin_frame( rect );
 
-    while (length >= ST7789_FILL_CHUNK)
+    while ( length >= ST7789_FILL_CHUNK )
     {
-        spi_send(buffer, ST7789_FILL_CHUNK * 2);
+        spi_send( buffer, ST7789_FILL_CHUNK * 2 );
         length -= ST7789_FILL_CHUNK;
     }
 
-    if (length)
+    if ( length )
     {
-        spi_send(buffer, length * 2);
+        spi_send( buffer, length * 2 );
     }
 
     _st7789_end_frame();
 }
 
-static void send_init_sequence(const uint8_t *sequence)
+static void send_init_sequence( const uint8_t *sequence )
 {
-    while (*sequence)
+    while ( *sequence )
     {
         uint8_t command = *sequence++;
         uint8_t count = *sequence++;
 
-        st7789_gl_write_command(command);
+        st7789_gl_write_command( command );
 
-        while (count--)
+        while ( count-- )
         {
-            st7789_gl_write_param(*sequence++);
+            st7789_gl_write_param( *sequence++ );
         }
     }
 }
 
-void st7789_gl_init(st7789_gl_cfg_t *cfg, gl_driver_t *driver)
+void st7789_gl_init( st7789_gl_cfg_t *cfg, gl_driver_t *driver )
 {
     spi_master_config_t spi_cfg;
 
-    cs_used = (HAL_PIN_NC != cfg->cs);
+    cs_used = ( HAL_PIN_NC != cfg->cs );
 
-    if (cs_used)
+    if ( cs_used )
     {
-        digital_out_init(&pin_cs, cfg->cs);
-        digital_out_high(&pin_cs);
+        digital_out_init( &pin_cs, cfg->cs );
+        digital_out_high( &pin_cs );
     }
-    digital_out_init(&pin_dc, cfg->d_c);
-    digital_out_init(&pin_rst, cfg->rst);
+    digital_out_init( &pin_dc, cfg->d_c );
+    digital_out_init( &pin_rst, cfg->rst );
 
     soft_spi = cfg->soft_spi;
 
-    if (soft_spi)
+    if ( soft_spi )
     {
-        digital_out_init(&pin_sck_soft, cfg->sck);
-        digital_out_init(&pin_mosi_soft, cfg->mosi);
-        digital_out_high(&pin_sck_soft);
+        digital_out_init( &pin_sck_soft, cfg->sck );
+        digital_out_init( &pin_mosi_soft, cfg->mosi );
+        digital_out_high( &pin_sck_soft );
     }
 
-    digital_out_high(&pin_dc);
-    digital_out_low(&pin_rst);
+    digital_out_high( &pin_dc );
+    digital_out_low( &pin_rst );
 
-    if (!soft_spi)
+    if ( !soft_spi )
     {
-        spi_master_configure_default(&spi_cfg);
+        spi_master_configure_default( &spi_cfg );
         spi_cfg.sck = cfg->sck;
         spi_cfg.miso = cfg->miso;
         spi_cfg.mosi = cfg->mosi;
         spi_cfg.speed = cfg->speed;
-        spi_cfg.mode = (spi_master_mode_t)cfg->spi_mode;
+        spi_cfg.mode = ( spi_master_mode_t )cfg->spi_mode;
 
-        if (SPI_MASTER_ERROR == spi_master_open(&spi_master, &spi_cfg))
+        if ( SPI_MASTER_ERROR == spi_master_open( &spi_master, &spi_cfg ) )
         {
             return;
         }
 
-        spi_master_set_speed(&spi_master, cfg->speed);
+        spi_master_set_speed( &spi_master, cfg->speed );
     }
 
     driver->fill_f = _st7789_fill;
@@ -281,65 +281,65 @@ void st7789_gl_init(st7789_gl_cfg_t *cfg, gl_driver_t *driver)
     native_height = cfg->height;
 
     Delay_100ms();
-    digital_out_high(&pin_rst);
+    digital_out_high( &pin_rst );
     Delay_100ms();
     Delay_100ms();
 
-    st7789_gl_write_command(ST7789_CMD_SWRESET);
-    Delay_ms(ST7789_DELAY_SWRESET_MS);
+    st7789_gl_write_command( ST7789_CMD_SWRESET );
+    Delay_ms( ST7789_DELAY_SWRESET_MS );
 
-    if (cfg->init_seq)
+    if ( cfg->init_seq )
     {
-        send_init_sequence(cfg->init_seq);
+        send_init_sequence( cfg->init_seq );
     }
 
-    st7789_gl_write_command(ST7789_CMD_SLPOUT);
-    Delay_ms(ST7789_DELAY_SLPOUT_MS);
+    st7789_gl_write_command( ST7789_CMD_SLPOUT );
+    Delay_ms( ST7789_DELAY_SLPOUT_MS );
 
-    st7789_gl_write_command(ST7789_CMD_COLMOD);
-    st7789_gl_write_param(ST7789_COLMOD_16BIT);
+    st7789_gl_write_command( ST7789_CMD_COLMOD );
+    st7789_gl_write_param( ST7789_COLMOD_16BIT );
 
-    if (cfg->invert)
+    if ( cfg->invert )
     {
-        st7789_gl_write_command(ST7789_CMD_INVON);
+        st7789_gl_write_command( ST7789_CMD_INVON );
     }
 
-    st7789_gl_write_command(ST7789_CMD_DISPON);
+    st7789_gl_write_command( ST7789_CMD_DISPON );
 }
 
-void st7789_gl_write_command(uint8_t command)
+void st7789_gl_write_command( uint8_t command )
 {
     CS_ACTIVE();
     COMMAND_SELECT();
 
-    spi_send(&command, 1);
+    spi_send( &command, 1 );
 
     CS_DEACTIVE();
 }
 
-void st7789_gl_write_param(uint8_t param)
+void st7789_gl_write_param( uint8_t param )
 {
     CS_ACTIVE();
     DATA_SELECT();
 
-    spi_send(&param, 1);
+    spi_send( &param, 1 );
 
     CS_DEACTIVE();
 }
 
-void st7789_gl_write_pixels(uint8_t *pixels, uint32_t length)
+void st7789_gl_write_pixels( uint8_t *pixels, uint32_t length )
 {
-    spi_send(pixels, length);
+    spi_send( pixels, length );
 }
 
-void st7789_gl_rotate(uint8_t rotation)
+void st7789_gl_rotate( uint8_t rotation )
 {
     uint8_t madctl;
     uint8_t landscape;
     uint16_t column_offset;
     uint16_t row_offset;
 
-    switch (rotation)
+    switch ( rotation )
     {
         case 1:  madctl = ST7789_MADCTL_MX | ST7789_MADCTL_MV; landscape = 1; break;   // 90 degrees.
         case 2:  madctl = ST7789_MADCTL_MY | ST7789_MADCTL_MX; landscape = 0; break;   // 180 degrees.
@@ -347,13 +347,13 @@ void st7789_gl_rotate(uint8_t rotation)
         default: madctl = 0x00; landscape = 0; break;                                  // 0 degrees.
     }
 
-    st7789_gl_write_command(ST7789_CMD_MADCTL);
-    st7789_gl_write_param(madctl);
+    st7789_gl_write_command( ST7789_CMD_MADCTL );
+    st7789_gl_write_param( madctl );
     // A panel smaller than the controller memory sits at the end of the memory
     // when the order of that axis is reversed, so the window has to be shifted.
-    column_offset = (madctl & ST7789_MADCTL_MX) ? (ST7789_RAM_WIDTH - native_width) : 0;
-    row_offset = (madctl & ST7789_MADCTL_MY) ? (ST7789_RAM_HEIGHT - native_height) : 0;
-    if(madctl & ST7789_MADCTL_MV)
+    column_offset = ( madctl & ST7789_MADCTL_MX ) ? ( ST7789_RAM_WIDTH - native_width ) : 0;
+    row_offset = ( madctl & ST7789_MADCTL_MY ) ? ( ST7789_RAM_HEIGHT - native_height ) : 0;
+    if ( madctl & ST7789_MADCTL_MV )
     {
         offset_x = row_offset;
         offset_y = column_offset;
@@ -367,24 +367,24 @@ void st7789_gl_rotate(uint8_t rotation)
     display_width  = landscape ? native_height : native_width;
     display_height = landscape ? native_width : native_height;
 
-    if (current_gl_driver)
+    if ( current_gl_driver )
     {
         current_gl_driver->display_width  = display_width;
         current_gl_driver->display_height = display_height;
 
         // Graphic library keeps its own copy of the driver, so update it.
-        gl_set_driver(current_gl_driver);
+        gl_set_driver( current_gl_driver );
     }
 }
 
-void st7789_gl_display_power(uint8_t state)
+void st7789_gl_display_power( uint8_t state )
 {
-    if (state)
+    if ( state )
     {
-        st7789_gl_write_command(ST7789_CMD_DISPON);
+        st7789_gl_write_command( ST7789_CMD_DISPON );
     }
     else
     {
-        st7789_gl_write_command(ST7789_CMD_DISPOFF);
+        st7789_gl_write_command( ST7789_CMD_DISPOFF );
     }
 }

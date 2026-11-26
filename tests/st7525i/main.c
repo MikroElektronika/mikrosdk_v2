@@ -53,57 +53,57 @@ int main()
     st7525i_cfg.invert   = TEST_ST7525I_INVERT_COLORS;
     st7525i_cfg.init_seq = TEST_ST7525I_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
-    st7525i_init(&st7525i_cfg, &gl_driver);
-    gl_set_driver(&gl_driver);
+    st7525i_init( &st7525i_cfg, &gl_driver );
+    gl_set_driver( &gl_driver );
 
     // Fill the whole screen with white and black, one after another.
-    gl_clear(GL_WHITE);
-    Delay_ms(TEST_ST7525I_DELAY_MS);
+    gl_clear( GL_WHITE );
+    Delay_ms( TEST_ST7525I_DELAY_MS );
 
-    gl_clear(GL_BLACK);
-    Delay_ms(TEST_ST7525I_DELAY_MS);
+    gl_clear( GL_BLACK );
+    Delay_ms( TEST_ST7525I_DELAY_MS );
 
-    gl_clear(GL_WHITE);
+    gl_clear( GL_WHITE );
 
     // Draw a square in each corner (checks addressing and orientation).
-    gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-    gl_set_brush_color(GL_BLACK);
+    gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+    gl_set_brush_color( GL_BLACK );
 
-    gl_draw_rect(0, 0, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE);
-    gl_draw_rect(TEST_ST7525I_WIDTH - TEST_ST7525I_SQUARE_SIZE, 0, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE);
-    gl_draw_rect(0, TEST_ST7525I_HEIGHT - TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE);
-    gl_draw_rect(TEST_ST7525I_WIDTH - TEST_ST7525I_SQUARE_SIZE,
+    gl_draw_rect( 0, 0, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE );
+    gl_draw_rect( TEST_ST7525I_WIDTH - TEST_ST7525I_SQUARE_SIZE, 0, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE );
+    gl_draw_rect( 0, TEST_ST7525I_HEIGHT - TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE );
+    gl_draw_rect( TEST_ST7525I_WIDTH - TEST_ST7525I_SQUARE_SIZE,
                  TEST_ST7525I_HEIGHT - TEST_ST7525I_SQUARE_SIZE,
-                 TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE);
+                 TEST_ST7525I_SQUARE_SIZE, TEST_ST7525I_SQUARE_SIZE );
 
-    Delay_ms(TEST_ST7525I_DELAY_MS);
+    Delay_ms( TEST_ST7525I_DELAY_MS );
 
     // Test display rotation. The square grows with every rotation, so the order is easy to follow.
-    for (uint8_t rot = 0; rot < 4; rot++)
+    for ( uint8_t rot = 0; rot < 4; rot++ )
     {
-        uint16_t size = TEST_ST7525I_SQUARE_SIZE * (rot + 1);
+        uint16_t size = TEST_ST7525I_SQUARE_SIZE * ( rot + 1 );
 
-        st7525i_rotate(rot);
+        st7525i_rotate( rot );
         // The Graphics Library keeps its own copy of the display size, so refresh it after a rotation.
-        gl_set_driver(&gl_driver);
-        gl_clear(GL_WHITE);
+        gl_set_driver( &gl_driver );
+        gl_clear( GL_WHITE );
 
-        gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-        gl_set_brush_color(GL_BLACK);
-        gl_draw_rect(0, 0, size, size);
+        gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+        gl_set_brush_color( GL_BLACK );
+        gl_draw_rect( 0, 0, size, size );
 
-        Delay_ms(2000);
+        Delay_ms( 2000 );
     }
 
     // Test display power off/on control.
-    st7525i_display_power(0);
-    Delay_ms(1500);
-    st7525i_display_power(1);
-    Delay_ms(1500);
+    st7525i_display_power( 0 );
+    Delay_ms( 1500 );
+    st7525i_display_power( 1 );
+    Delay_ms( 1500 );
 
-    st7525i_rotate(0);
-    gl_set_driver(&gl_driver);
-    gl_clear(GL_WHITE);
+    st7525i_rotate( 0 );
+    gl_set_driver( &gl_driver );
+    gl_clear( GL_WHITE );
 
     return 0;
 }

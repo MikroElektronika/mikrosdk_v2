@@ -55,51 +55,51 @@ int main()
     ssd1312_cfg.invert         = TEST_SSD1312_INVERT_COLORS;
     ssd1312_cfg.init_seq       = TEST_SSD1312_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
-    ssd1312_init(&ssd1312_cfg, &gl_driver);
-    gl_set_driver(&gl_driver);
+    ssd1312_init( &ssd1312_cfg, &gl_driver );
+    gl_set_driver( &gl_driver );
 
     // Fill the whole screen with white and black, one after another.
-    gl_clear(GL_WHITE);
-    Delay_ms(TEST_SSD1312_DELAY_MS);
+    gl_clear( GL_WHITE );
+    Delay_ms( TEST_SSD1312_DELAY_MS );
 
-    gl_clear(GL_BLACK);
+    gl_clear( GL_BLACK );
 
     // Draw a square in each corner (checks addressing and orientation).
-    gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-    gl_set_brush_color(GL_WHITE);
+    gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+    gl_set_brush_color( GL_WHITE );
 
-    gl_draw_rect(0, 0, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE);
-    gl_draw_rect(TEST_SSD1312_WIDTH - TEST_SSD1312_SQUARE_SIZE, 0, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE);
-    gl_draw_rect(0, TEST_SSD1312_HEIGHT - TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE);
-    gl_draw_rect(TEST_SSD1312_WIDTH - TEST_SSD1312_SQUARE_SIZE,
+    gl_draw_rect( 0, 0, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE );
+    gl_draw_rect( TEST_SSD1312_WIDTH - TEST_SSD1312_SQUARE_SIZE, 0, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE );
+    gl_draw_rect( 0, TEST_SSD1312_HEIGHT - TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE );
+    gl_draw_rect( TEST_SSD1312_WIDTH - TEST_SSD1312_SQUARE_SIZE,
                  TEST_SSD1312_HEIGHT - TEST_SSD1312_SQUARE_SIZE,
-                 TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE);
+                 TEST_SSD1312_SQUARE_SIZE, TEST_SSD1312_SQUARE_SIZE );
 
-    Delay_ms(TEST_SSD1312_DELAY_MS);
+    Delay_ms( TEST_SSD1312_DELAY_MS );
 
     // Test display rotation. The square grows with every rotation, so the order is easy to follow.
-    for (uint8_t rot = 0; rot < 4; rot++)
+    for ( uint8_t rot = 0; rot < 4; rot++ )
     {
         uint16_t size = TEST_SSD1312_SQUARE_SIZE + 8 * rot;
 
-        ssd1312_rotate(rot);
-        gl_clear(GL_BLACK);
+        ssd1312_rotate( rot );
+        gl_clear( GL_BLACK );
 
-        gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-        gl_set_brush_color(GL_WHITE);
-        gl_draw_rect(0, 0, size, size);
+        gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+        gl_set_brush_color( GL_WHITE );
+        gl_draw_rect( 0, 0, size, size );
 
-        Delay_ms(2000);
+        Delay_ms( 2000 );
     }
 
     // Test display power off/on control.
-    ssd1312_display_power(0);
-    Delay_ms(1500);
-    ssd1312_display_power(1);
-    Delay_ms(1500);
+    ssd1312_display_power( 0 );
+    Delay_ms( 1500 );
+    ssd1312_display_power( 1 );
+    Delay_ms( 1500 );
 
-    ssd1312_rotate(0);
-    gl_clear(GL_BLACK);
+    ssd1312_rotate( 0 );
+    gl_clear( GL_BLACK );
 
     return 0;
 }

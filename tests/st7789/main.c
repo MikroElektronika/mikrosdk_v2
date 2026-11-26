@@ -86,61 +86,61 @@ int main()
     st7789_cfg.soft_spi = TEST_ST7789_SOFT_SPI;
     st7789_cfg.init_seq = TEST_ST7789_INIT_SEQ;
     // Initialize the display and link it with the graphic library.
-    st7789_gl_init(&st7789_cfg, &gl_driver);
-    gl_set_driver(&gl_driver);
+    st7789_gl_init( &st7789_cfg, &gl_driver );
+    gl_set_driver( &gl_driver );
 
     // Fill the whole screen with basic colors, one after another.
-    gl_clear(GL_RED);
-    Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
+    gl_clear( GL_RED );
+    Delay_ms( TEST_ST7789_COLOR_DELAY_MS );
 
-    gl_clear(GL_GREEN);
-    Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
+    gl_clear( GL_GREEN );
+    Delay_ms( TEST_ST7789_COLOR_DELAY_MS );
 
-    gl_clear(GL_BLUE);
-    Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
+    gl_clear( GL_BLUE );
+    Delay_ms( TEST_ST7789_COLOR_DELAY_MS );
 
-    gl_clear(GL_WHITE);
-    Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
+    gl_clear( GL_WHITE );
+    Delay_ms( TEST_ST7789_COLOR_DELAY_MS );
 
-    gl_clear(GL_BLACK);
+    gl_clear( GL_BLACK );
 
     // Draw a square in each corner (checks addressing and orientation).
-    gl_set_brush_style(GL_BRUSH_STYLE_FILL);
+    gl_set_brush_style( GL_BRUSH_STYLE_FILL );
 
-    gl_set_brush_color(GL_RED);
-    gl_draw_rect(0, 0, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
-    gl_set_brush_color(GL_GREEN);
-    gl_draw_rect(TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE, 0, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
-    gl_set_brush_color(GL_BLUE);
-    gl_draw_rect(0, TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
-    gl_set_brush_color(GL_WHITE);
-    gl_draw_rect(TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE,
+    gl_set_brush_color( GL_RED );
+    gl_draw_rect( 0, 0, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE );
+    gl_set_brush_color( GL_GREEN );
+    gl_draw_rect( TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE, 0, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE );
+    gl_set_brush_color( GL_BLUE );
+    gl_draw_rect( 0, TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE );
+    gl_set_brush_color( GL_WHITE );
+    gl_draw_rect( TEST_ST7789_WIDTH - TEST_ST7789_SQUARE_SIZE,
                  TEST_ST7789_HEIGHT - TEST_ST7789_SQUARE_SIZE,
-                 TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE);
+                 TEST_ST7789_SQUARE_SIZE, TEST_ST7789_SQUARE_SIZE );
 
-    Delay_ms(TEST_ST7789_COLOR_DELAY_MS);
+    Delay_ms( TEST_ST7789_COLOR_DELAY_MS );
 
     // Test display rotation.
-    for (uint8_t rot = 0; rot < 4; rot++)
+    for ( uint8_t rot = 0; rot < 4; rot++ )
     {
-        st7789_gl_rotate(rot);
-        gl_clear(GL_BLACK);
+        st7789_gl_rotate( rot );
+        gl_clear( GL_BLACK );
 
-        gl_set_brush_style(GL_BRUSH_STYLE_FILL);
-        gl_set_brush_color(GL_RED);
-        gl_draw_rect(0, 0, 60, 60);
+        gl_set_brush_style( GL_BRUSH_STYLE_FILL );
+        gl_set_brush_color( GL_RED );
+        gl_draw_rect( 0, 0, 60, 60 );
 
-        Delay_ms(2000);
+        Delay_ms( 2000 );
     }
 
     // Test display power off/on control.
-    st7789_gl_display_power(0);
-    Delay_ms(1500);
-    st7789_gl_display_power(1);
-    Delay_ms(1500);
+    st7789_gl_display_power( 0 );
+    Delay_ms( 1500 );
+    st7789_gl_display_power( 1 );
+    Delay_ms( 1500 );
 
-    st7789_gl_rotate(0);
-    gl_clear(GL_BLACK);
+    st7789_gl_rotate( 0 );
+    gl_clear( GL_BLACK );
 
     return 0;
 }
