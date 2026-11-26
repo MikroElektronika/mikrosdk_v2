@@ -73,13 +73,15 @@ else()
     message(INFO ": ${MCU_NAME} does not have enough memory for \"spi_ethernet_two_wire\" test.")
 endif()
 
-## Network layer (lwIP) web server: MIKROSDK_NET_STACK=LWIP, 128K Flash and 64K RAM minimum.
+## Network layer (lwIP) web server and clients: MIKROSDK_NET_STACK=LWIP (the default),
+## 128K Flash and 64K RAM minimum (lwIP takes ~57K Flash and 18-48K RAM, see middleware/net/README.md).
 if (TARGET MikroSDK.Net)
     memory_sdk_test_check(memory_issue 131072 65536)
     if (${memory_issue} STREQUAL "FALSE")
         add_subdirectory(net_web_server)
+        add_subdirectory(net_client)
     else()
-        message(INFO ": ${MCU_NAME} does not have enough memory for \"net_web_server\" test.")
+        message(INFO ": ${MCU_NAME} does not have enough memory for the \"net_web_server\" and \"net_client\" tests.")
     endif()
 endif()
 
@@ -120,7 +122,7 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
 endif()
 
-## ETH (CycloneTCP tests; not built with MIKROSDK_NET_STACK=LWIP)
+## ETH (CycloneTCP tests, only with MIKROSDK_NET_STACK=CYCLONETCP; net_client replaces test_http_client)
 if((${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32") AND
    NOT (MIKROSDK_NET_STACK STREQUAL "LWIP"))
     check_eth_components(has_eth eth_module_list)

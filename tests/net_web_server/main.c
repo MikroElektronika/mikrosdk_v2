@@ -52,7 +52,7 @@
  * Gets an address by DHCP (or uses a static one), then serves
  *   /             an HTML page (interface, address, uptime, requests)
  *   /api/status   the same as JSON
- * Needs MIKROSDK_NET_STACK=LWIP.
+ * Needs MIKROSDK_NET_STACK=LWIP (the default).
  */
 
 #ifdef PREINIT_SUPPORTED
@@ -61,11 +61,7 @@
 
 // ----------------------------------------------------------------- Settings
 
-#define NET_IF_SPI      0
-#define NET_IF_PIC32    1
-#define NET_IF_STM32    2
-#define NET_IF_KINETIS  3
-#define NET_IF_TM4C     4
+// NET_IF_SPI (Click), NET_IF_PIC32, NET_IF_STM32, NET_IF_KINETIS or NET_IF_TM4C (on-chip)
 #define NET_INTERFACE   NET_IF_SPI              // Define your interface
 
 #define SPI_ETH_CHIP    SPI_ETH_CHIP_LAN9250    // NET_IF_SPI: your chip (SPI_ETH_CHIP_* in transport_select.h)
@@ -90,26 +86,7 @@
 #include "net_http_server.h"
 #include "net_mdns.h"
 
-#if NET_INTERFACE == NET_IF_SPI
-    #include "transport_select.h"
-    #include "net_driver_eth_transport.h"
-    #define INTERFACE_NAME SPI_ETH_CHIP_NAME " (SPI)"
-#elif NET_INTERFACE == NET_IF_PIC32
-    #include "mcu.h"
-    #include "net_driver_pic32.h"
-    #define INTERFACE_NAME "PIC32 Ethernet"
-#elif NET_INTERFACE == NET_IF_STM32
-    #include "net_driver_stm32.h"
-    #define INTERFACE_NAME "STM32 Ethernet"
-#elif NET_INTERFACE == NET_IF_KINETIS
-    #include "net_driver_kinetis.h"
-    #define INTERFACE_NAME "Kinetis Ethernet"
-#elif NET_INTERFACE == NET_IF_TM4C
-    #include "net_driver_tm4c.h"
-    #define INTERFACE_NAME "TM4C129 Ethernet"
-#else
-    #error "Unknown NET_INTERFACE"
-#endif
+#include "net_test_interface.h"       // tests/net_common: interface selected above
 
 // --------------------------------------------------------------------- State
 
@@ -118,88 +95,6 @@ static log_t logger;
 static net_driver_t driver;
 static net_http_server_t server;
 static char addr_text[ 16 ];
-
-#if NET_INTERFACE == NET_IF_SPI
-static eth_transport_t eth;
-static eth_bus_spi_t bus;
-#endif
-
-// --------------------------------------------------------------- Interfaces
-
-#if NET_INTERFACE == NET_IF_SPI
-static void interface_init( void )
-{
-    spi_eth_cfg_t eth_cfg;
-    spi_eth_cfg_setup( &eth_cfg );
-    SPI_ETH_MAP_MIKROBUS( eth_cfg, MIKROBUS_POSITION_SPI_ETH );
-    memcpy( eth_cfg.eth.mac, local_mac, 6 );
-
-    if ( spi_eth_configure( &eth, &bus, &eth_cfg ) != ETH_TRANSPORT_SUCCESS ||
-         eth_transport_init( &eth, &SPI_ETH_DRIVER ) != ETH_TRANSPORT_SUCCESS )
-    {
-        log_printf( &logger, "%s init FAILED\r\n", SPI_ETH_CHIP_NAME );
-        for ( ; ; );
-    }
-    net_driver_eth_transport( &driver, &eth );
-}
-#elif NET_INTERFACE == NET_IF_STM32
-static void interface_init( void )
-{
-    net_stm32_cfg_t eth_cfg;
-    net_stm32_cfg_setup( &eth_cfg );    // pins and PHY clock as wired on the board
-    net_driver_stm32( &driver, &eth_cfg );
-}
-#elif NET_INTERFACE == NET_IF_KINETIS
-static void interface_init( void )
-{
-    net_kinetis_cfg_t eth_cfg;
-    net_kinetis_cfg_setup( &eth_cfg );  // pins and RMII clock as wired on the board
-    net_driver_kinetis( &driver, &eth_cfg );
-}
-#elif NET_INTERFACE == NET_IF_TM4C
-static void interface_init( void )
-{
-    net_tm4c_cfg_t eth_cfg;
-    net_tm4c_cfg_setup( &eth_cfg );     // integrated PHY, Ethernet LEDs on PK5/PK6
-    net_driver_tm4c( &driver, &eth_cfg );
-}
-#else
-#if defined( NET_EXAMPLE_PIC32MX )
-// EasyPIC Fusion v7 ETH MCU card with PIC32MX795F512L: ERXERR, ERXD0, ERXD1 share
-// AN11, AN12, AN13. ERXERR (RB11) is not connected to the PHY on this card: tie it
-// to ground, as for CycloneTCP.
-static void board_eth_pins( void )
-{
-    AD1PCFGSET = ( 1UL << 11 ) | ( 1UL << 12 ) | ( 1UL << 13 );
-}
-#ifndef ETH_RST
-    #define ETH_RST GPIO_PG7    // PHY reset of the card
-#endif
-#elif defined( NET_EXAMPLE_PIC32MZ_144 )
-// mikromedia 4/5 for PIC32MZ (144 pins): the RMII pins that share an analog input.
-static void board_eth_pins( void )
-{
-    ANSELJCLR = ( 1UL << 8 ) | ( 1UL << 9 ) | ( 1UL << 11 );   // ETXD0, ETXD1, EREFCLK
-    ANSELHCLR = ( 1UL << 4 ) | ( 1UL << 5 );                    // ERXERR, ERXD1
-}
-#else
-// Other packages: clear the analog function (ANSELxCLR) of your board's RMII pins here.
-static void board_eth_pins( void )
-{
-}
-#endif
-
-static void interface_init( void )
-{
-    net_pic32_cfg_t eth_cfg;
-    net_pic32_cfg_setup( &eth_cfg );
-    #ifdef ETH_RST
-    eth_cfg.phy_reset = ETH_RST;
-    #endif
-    eth_cfg.pins_init = board_eth_pins;
-    net_driver_pic32( &driver, &eth_cfg );
-}
-#endif
 
 // ------------------------------------------------------------------- Helpers
 
@@ -301,7 +196,7 @@ int main( void )
     log_init( &logger, &log_cfg );
     log_printf( &logger, "\r\n=== mikroSDK network layer: web server over %s ===\r\n", INTERFACE_NAME );
 
-    interface_init();
+    net_test_interface_init( &driver, local_mac, &logger );
 
     net_config_t cfg;
     net_config_default( &cfg );      // time source: systime_ms (core cycle counter)

@@ -32,3 +32,30 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
 OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+Third-Party Components
+
+The licences above apply to the software written by MikroElektronika.
+mikroSDK also contains third-party components, listed in
+THIRD_PARTY_NOTICES.md, which remain under their own licences. Neither
+the commercial licence nor the GNU Lesser General Public License option
+above changes the licence of a third-party component.
+
+In particular, Ethernet support uses lwIP (thirdparty/ethernet/lwip,
+BSD-3-Clause) by default. CycloneTCP Open by Oryx Embedded SARL
+(thirdparty/ethernet/cyclonetcp), licensed under the GNU General Public
+License version 2 or (at your option) any later version, can still be
+selected until 31 December 2026. Firmware that includes CycloneTCP is
+subject to the terms of the GNU General Public License, unless you
+obtain a commercial licence for CycloneTCP from Oryx Embedded:
+https://www.oryx-embedded.com. mikroSDK does not accept the GPL on your
+behalf: a project that uses CycloneTCP has to accept it explicitly, as
+described in thirdparty/ethernet/cyclonetcp/README.md.
+
+You are solely responsible for complying with the licences of the
+third-party components included in software you build with mikroSDK,
+including obtaining any licence those terms require. MikroElektronika
+grants no rights to third-party components beyond those given by their
+own licences, and accepts no liability for any use of a third-party
+component that does not comply with its licence.

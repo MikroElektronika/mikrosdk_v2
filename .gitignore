@@ -20,3 +20,4 @@ flatten_me.h
 eth_driver.h
 .venv
 service-account.json
+/sbom.cdx.json

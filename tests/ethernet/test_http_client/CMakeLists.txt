@@ -16,6 +16,10 @@ target_link_libraries(test_ethernet_http_client PUBLIC
     MikroSDK.Ethernet.CycloneTCP
 )
 
+## This test uses CycloneTCP (GPL-2.0-or-later); MIKROE accepts the GPL for it.
+## Projects using Ethernet must accept it themselves, see thirdparty/ethernet/cyclonetcp/README.md.
+target_compile_definitions(test_ethernet_http_client PRIVATE GPL_LICENSE_TERMS_ACCEPTED)
+
 # Include search paths.
 if (NOT ${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
     target_include_directories(test_ethernet_http_client

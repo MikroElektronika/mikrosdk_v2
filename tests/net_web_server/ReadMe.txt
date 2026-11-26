@@ -1,4 +1,4 @@
-This example tests the mikroSDK network layer (middleware/net, lwIP). Build mikroSDK with MIKROSDK_NET_STACK=LWIP (GCC for ARM or XC32).
+This example tests the mikroSDK network layer (middleware/net, lwIP). Build mikroSDK with MIKROSDK_NET_STACK=LWIP (the default; GCC for ARM or XC32).
 
 The same web server runs on several kinds of Ethernet, chosen with NET_INTERFACE in main.c:
 - NET_IF_SPI (default): an SPI Ethernet controller on mikroBUS (SPI_ETH_CHIP: ENC28J60, W5500/WIZ_IP55, W6100, LAN9250 or LAN8651; LAN9250 by default), the same controllers and setup as the spi_ethernet test.

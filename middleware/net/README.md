@@ -9,7 +9,7 @@ responder. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
 > `middleware/ethernet` are done and tested on a host (see [Testing](#testing)). On-chip drivers exist for every MCU
 > CycloneTCP supports through CMake (PIC32MX/MZ, STM32F107/F2/F4/F7, Kinetis MK6x/MKV58, TM4C129); they are
 > unit-tested against simulated hardware and their register maps checked against the vendors' headers, but they
-> have **not yet run on hardware**.
+> have **not yet run on hardware**. It is the default stack (`MIKROSDK_NET_STACK=LWIP`).
 
 ## Selecting the stack
 
@@ -17,10 +17,12 @@ The CMake cache variable `MIKROSDK_NET_STACK` selects the stack (`middleware/CMa
 
 | Value | Ethernet |
 | --- | --- |
-| `CYCLONETCP` (default) | As before: on-chip MACs through CycloneTCP (GPL-2.0-or-later). This library is not built. |
-| `LWIP` | This library (`MikroSDK.Net`, `MikroSDK.Net.EthTransport`) is built; CycloneTCP, `hw_eth` and the CycloneTCP tests are not. |
+| `LWIP` (default) | This library (`MikroSDK.Net` and its drivers) is built; CycloneTCP, `hw_eth` and the CycloneTCP tests are not. |
+| `CYCLONETCP` | As before: on-chip MACs through CycloneTCP (GPL-2.0-or-later); projects must accept the GPL themselves. Until 31 December 2026. This library is not built. |
 
-It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
+Moving a CycloneTCP project: [MIGRATION.md](MIGRATION.md).
+
+It is built for `gcc_arm_none_eabi` and `mchp_xc32`, on MCUs with at least 32 KB of RAM (the on-chip drivers: 48 KB).
 
 ## Files
 
@@ -115,8 +117,20 @@ which is predictable.
 
 ## Sizes
 
-Defaults use about 30 KB of RAM (lwIP heap 10 KB, 10 packet buffers of ~1.5 KB, 4 sockets). Override with compile
-definitions:
+lwIP's buffers are compiled into the library, so their size is chosen when mikroSDK is configured: the CMake cache
+variable `MIKROSDK_NET_PROFILE` (default `AUTO`, by the MCU's RAM). Measured on Cortex-M4 (GCC 13, `-Os`, unused
+code removed by the linker) with DHCP, DNS, the HTTP server and mDNS:
+
+| Profile | Chosen for | Receive buffers | lwIP heap | Sockets | TCP window / send buffer | RAM |
+| --- | --- | --- | --- | --- | --- | --- |
+| `SMALL` | 32–95 KB of RAM | 4 | 6 KB | 3 | 2 × MSS | ~18 KB |
+| `MEDIUM` | 96–255 KB | 10 | 10 KB | 4 | 2 × MSS | ~31 KB |
+| `LARGE` | 256 KB and more | 16 | 16 KB | 8 | 4 × MSS | ~48 KB |
+
+Flash: about 46 KB, 57 KB with the HTTP server and mDNS, the same for every profile. An on-chip driver adds 15–19 KB
+of RAM for its DMA buffers. The host tests pass with each profile. The profile's definitions are `PUBLIC`, so
+`net_api.h` sees the same values in the application. Each value can also be set on its own (a mikroSDK build with
+the compile definition):
 
 | Definition | Default | |
 | --- | --- | --- |
@@ -128,6 +142,7 @@ definitions:
 | `NET_HTTP_HEADER_MAX` | 1024 | largest HTTP response header block |
 | `NET_LWIP_IPV6` | 0 | IPv6 (not exposed in `net_api.h` yet) |
 | `NET_LWIP_MDNS` | 1 | mDNS responder and IGMP; 0 leaves them out (`net_mdns_*` return `NET_ERROR`) |
+| `NET_LWIP_TCP_MSS` | 1460 | TCP segment size |
 | `NET_MDNS_MAX_SERVICES` | 2 | DNS-SD services |
 
 mDNS takes about 1.2 KB of the lwIP heap once started (host and two services) and up to 1.5 KB more while it
@@ -139,9 +154,12 @@ multicast; for an SPI controller it depends on its receive filter in `middleware
 
 ## Example
 
-[tests/net_web_server](../../tests/net_web_server/ReadMe.txt): a web server (HTML page and `/api/status`) that
-runs unchanged on an SPI Ethernet Click (the same controller selection as `tests/spi_ethernet`) or on the on-chip
-Ethernet of PIC32, STM32, Kinetis or TM4C129 boards, chosen with `NET_INTERFACE` in `main.c`.
+[tests/net_web_server](../../tests/net_web_server/ReadMe.txt): a web server (HTML page and `/api/status`, mDNS name
+`mikrosdk.local`) that runs unchanged on an SPI Ethernet Click (the same controller selection as `tests/spi_ethernet`)
+or on the on-chip Ethernet of PIC32, STM32, Kinetis or TM4C129 boards, chosen with `NET_INTERFACE` in `main.c`.
+[tests/net_client](../../tests/net_client/ReadMe.txt): HTTP (replacing the CycloneTCP test
+`tests/ethernet/test_http_client`), SNTP and MQTT against public servers, on the same interfaces. Both use
+`tests/net_common` for the interface setup.
 
 **Time source.** `net_config_default()` sets `now_ms` to `systime_ms` ([platform/systime](../../platform/systime)):
 milliseconds from the core's cycle counter, no interrupt or timer needed (Cortex-M3 and newer, PIC32, RISC-V).
@@ -234,11 +252,13 @@ unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulate
 engines), the drivers' register maps compared with ST's, NXP's and TI's device headers, then the network checks against the Linux TCP/IP stack in a
 private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP client and server, TCP server mode, link
 loss, error cases, SNTP against good and misbehaving servers, MQTT against a scripted broker, mDNS queries and a
-name conflict). See [its README](../../scripts/net_host_test/README.md).
+name conflict). See [its README](../../scripts/net_host_test/README.md). GitHub Actions runs it
+(`.github/workflows/netHostTest.yaml`) on every push that changes the network layer, `platform/systime` or
+`thirdparty/`, together with the SBOM check (`scripts/sbom.py --check`).
 
 ## Next steps
 
-1. Run `tests/net_web_server` on hardware: an SPI Ethernet Click and one board per on-chip controller (PIC32MX,
-   PIC32MZ, STM32 F1/F2/F4/F7, Kinetis K6x and KV58, TM4C129).
-2. Migrating the CycloneTCP tests; FTP client last.
-3. Make `LWIP` the default; CycloneTCP selectable until the end of the year, then removed with `hw_eth`.
+1. Run `tests/net_web_server` and `tests/net_client` on hardware: an SPI Ethernet Click and one board per on-chip
+   controller (PIC32MX, PIC32MZ, STM32 F1/F2/F4/F7, Kinetis K6x and KV58, TM4C129).
+2. FTP client (CycloneTCP's FTP client test, `tests/ethernet/test_ftp_client`, moves with it).
+3. After 31 December 2026: remove CycloneTCP, `hw_eth`, the CycloneTCP tests and the `MIKROSDK_NET_STACK` option.

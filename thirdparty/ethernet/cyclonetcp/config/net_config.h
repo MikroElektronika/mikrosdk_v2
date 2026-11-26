@@ -8,6 +8,12 @@
  *
  * Copyright (C) 2010-2023 Oryx Embedded SARL. All rights reserved.
  *
+ * Modified by MikroElektronika d.o.o. (MIKROE):
+ *  - 2024-01-30 (mikroSDK 2.10.0): adapted from the CycloneTCP demo configuration
+ *    as the mikroSDK configuration.
+ *  - 2024-06-27 (mikroSDK 2.11.1): all trace levels set to TRACE_LEVEL_OFF.
+ *  - 2026-11-25: check that the project using CycloneTCP has accepted the GPL.
+ *
  * This file is part of CycloneTCP Open.
  *
  * This program is free software; you can redistribute it and/or
@@ -30,6 +36,16 @@
 
 #ifndef _NET_CONFIG_H
 #define _NET_CONFIG_H
+
+// Note: Added for MikroE implementation.
+// CycloneTCP is licensed under the GPL (version 2 or later). The mikroSDK build
+// does not accept the GPL on behalf of a project: a project that uses mikroSDK
+// Ethernet support must define GPL_LICENSE_TERMS_ACCEPTED itself, for example
+// target_compile_definitions(<your target> PRIVATE GPL_LICENSE_TERMS_ACCEPTED)
+// in its CMakeLists.txt. See thirdparty/ethernet/cyclonetcp/README.md.
+#ifndef GPL_LICENSE_TERMS_ACCEPTED
+   #error mikroSDK Ethernet uses CycloneTCP, licensed under the GPL (version 2 or later). Firmware using it is subject to the GPL unless you hold a commercial CycloneTCP licence from Oryx Embedded. To accept the GPL for this project, add GPL_LICENSE_TERMS_ACCEPTED to its compile definitions. Details: thirdparty/ethernet/cyclonetcp/README.md in mikroSDK.
+#endif
 
 //Trace level for TCP/IP stack debugging
 #define MEM_TRACE_LEVEL          TRACE_LEVEL_OFF

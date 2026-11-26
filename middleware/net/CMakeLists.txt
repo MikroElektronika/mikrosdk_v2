@@ -1,6 +1,6 @@
 ## ./middleware/net/CMakeLists.txt
 ## mikroSDK network API (net_api.h, net_http.h) with lwIP behind it.
-## Built when MIKROSDK_NET_STACK is "LWIP" (see middleware/CMakeLists.txt).
+## Built when MIKROSDK_NET_STACK is "LWIP" (the default, see middleware/CMakeLists.txt).
 
 include(${PROJECT_SOURCE_DIR}/thirdparty/ethernet/lwip/lwip_sources.cmake)
 
@@ -33,8 +33,40 @@ target_include_directories(lib_net
         ${LWIP_INCLUDE_DIRS}
 )
 
-## Sizes (sockets, lwIP memory) can be tuned with compile definitions, e.g.
-## -DNET_MAX_SOCKETS=6 or -DNET_LWIP_MEM_SIZE=16384 (see lwipopts.h, net_api.h).
+## Size profile: lwIP buffers and sockets, compiled into this library. AUTO picks
+## it from the MCU's RAM; RAM figures are measured on Cortex-M4 (README.md, Sizes).
+##   SMALL   32-95 KB RAM:  4 receive buffers, 6 KB heap, 3 sockets  (~18 KB)
+##   MEDIUM  96-255 KB RAM: 10 receive buffers, 10 KB heap, 4 sockets (~31 KB)
+##   LARGE   256 KB RAM up: 16 receive buffers, 16 KB heap, 8 sockets, 4-segment TCP window (~48 KB)
+## The definitions are PUBLIC: net_api.h (NET_MAX_SOCKETS ...) must see the same values.
+set(MIKROSDK_NET_PROFILE "AUTO" CACHE STRING "Network layer size: AUTO, SMALL, MEDIUM or LARGE")
+set_property(CACHE MIKROSDK_NET_PROFILE PROPERTY STRINGS AUTO SMALL MEDIUM LARGE)
+set(net_profile ${MIKROSDK_NET_PROFILE})
+if(net_profile STREQUAL "AUTO")
+    if(NOT MCU_RAM)
+        set(net_profile MEDIUM)
+    elseif(${MCU_RAM} LESS 98304)
+        set(net_profile SMALL)
+    elseif(${MCU_RAM} LESS 262144)
+        set(net_profile MEDIUM)
+    else()
+        set(net_profile LARGE)
+    endif()
+endif()
+if(net_profile STREQUAL "SMALL")
+    target_compile_definitions(lib_net PUBLIC NET_PROFILE_SMALL
+        NET_LWIP_PBUF_POOL_SIZE=4 NET_LWIP_MEM_SIZE=6144 NET_MAX_SOCKETS=3 NET_UDP_QUEUE_LEN=2)
+elseif(net_profile STREQUAL "LARGE")
+    target_compile_definitions(lib_net PUBLIC NET_PROFILE_LARGE
+        NET_LWIP_PBUF_POOL_SIZE=16 NET_LWIP_MEM_SIZE=16384 NET_MAX_SOCKETS=8
+        NET_LWIP_TCP_WND=5840 NET_LWIP_TCP_SND_BUF=5840)
+elseif(net_profile STREQUAL "MEDIUM")
+    target_compile_definitions(lib_net PUBLIC NET_PROFILE_MEDIUM)     # lwipopts.h / net_api.h defaults
+else()
+    message(FATAL_ERROR "MIKROSDK_NET_PROFILE must be AUTO, SMALL, MEDIUM or LARGE, not \"${MIKROSDK_NET_PROFILE}\".")
+endif()
+message(STATUS "MikroSDK.Net: ${net_profile} profile for ${MCU_NAME}")
+
 target_link_libraries(lib_net PUBLIC
     MikroC.Core
 )
@@ -100,8 +132,12 @@ install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net.Phy
     drivers/phy/net_phy.h
 )
 
-## On-chip MAC drivers, only for MCUs with an Ethernet controller.
+## On-chip MAC drivers, only for MCUs with an Ethernet controller and 48 KB of RAM
+## (their DMA buffers take 15-19 KB next to lwIP; CycloneTCP had the same limit on XC32).
 check_eth_components(has_eth eth_module_list)
+if(MCU_RAM AND (${MCU_RAM} LESS 49152))
+    set(has_eth "false")
+endif()
 if(${has_eth} STREQUAL "true" AND ${MCU_NAME} MATCHES "^PIC32M[XZ]")   # PIC32MX 6xx/7xx, PIC32MZ EF
     mikrosdk_add_library(lib_net_pic32 MikroSDK.Net.Pic32
         drivers/pic32/net_driver_pic32.h
