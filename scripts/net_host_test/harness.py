@@ -501,6 +501,259 @@ def mdns_gone_checks(host):
     yield 'mdns-host-kept', r is not None and any(t == T_A for _n, t, _v in r), repr(r)
 
 
+# ---------------------------------------------------------------- FTP
+
+def ftp_big(n=100000):
+    return bytes((i * 7) % 251 for i in range(n))
+
+
+class FtpState:
+    """Files of the FTP server (full paths) and every command line it received."""
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.reset()
+
+    def reset(self):
+        with self.lock:
+            self.files = {'/readme.txt': b'Hello from the mikroSDK FTP test server.\r\n',
+                          '/big.bin': ftp_big(), '/broken.bin': ftp_big(20000)}
+            self.dirs = {'/', '/empty'}
+            self.lines = []
+
+
+FTP = FtpState()
+
+
+class FtpServer(socketserver.BaseRequestHandler):
+    """Small FTP server (RFC 959, passive mode) with test behaviour by user name:
+    demo/password normal; anonymous needs no password; 'liar' gets a PASV reply with
+    another host's address; 'long' gets a long multi-line PWD reply; 'garbage' a
+    malformed reply after login; 'badpasv' a PASV port number over 255. RETR broken.bin stops
+    halfway with 451."""
+    def handle(self):
+        s = self.request
+        s.settimeout(20)
+        f = s.makefile('rb')
+        user, logged_in, cwd, pasv, rnfr = None, False, '/', None, None
+
+        def say(text):
+            s.sendall(text.encode('latin-1') + b'\r\n')
+
+        def path_of(arg):
+            if arg.startswith('/'):
+                full = arg
+            else:
+                full = cwd.rstrip('/') + '/' + arg
+            parts = []
+            for part in full.split('/'):
+                if part == '..':
+                    parts = parts[:-1]
+                elif part and part != '.':
+                    parts.append(part)
+            return '/' + '/'.join(parts)
+
+        def data_conn():
+            nonlocal pasv
+            listener, pasv = pasv, None
+            if not listener:
+                return None
+            listener.settimeout(5)
+            try:
+                conn, _ = listener.accept()
+                return conn
+            except OSError:
+                return None
+            finally:
+                listener.close()
+
+        say('220-Welcome to the mikroSDK FTP test server')
+        say('220-This greeting has three lines')
+        say('220 Ready')
+        try:
+            while True:
+                raw = f.readline(4096)
+                if not raw:
+                    return
+                with FTP.lock:
+                    FTP.lines.append(raw)
+                line = raw.decode('latin-1').rstrip('\r\n')
+                verb, _, arg = line.partition(' ')
+                verb = verb.upper()
+                if verb == 'QUIT':
+                    say('221 Bye')
+                    return
+                if verb == 'USER':
+                    user, logged_in = arg, arg == 'anonymous'
+                    say('230 Anonymous login ok' if logged_in else '331 Password required')
+                    continue
+                if verb == 'PASS':
+                    logged_in = (user, arg) in (('demo', 'password'), ('liar', 'x'), ('long', 'x'), ('garbage', 'x'),
+                                                ('badpasv', 'x'))
+                    say('230 Logged in' if logged_in else '530 Login incorrect')
+                    continue
+                if not logged_in:
+                    say('530 Please login with USER and PASS')
+                    continue
+                if user == 'garbage':
+                    say('xyz this is not a reply')
+                    continue
+                if verb == 'TYPE':
+                    say('200 Type set to ' + arg)
+                elif verb == 'PWD':
+                    if user == 'long':
+                        say('257-' + 'x' * 3000)
+                        for i in range(60):
+                            say(f' continuation line {i}')
+                        say('257 "/" is the current directory')
+                    else:
+                        say('257 "' + cwd.replace('"', '""') + '" is the current directory')
+                elif verb == 'CWD':
+                    p = path_of(arg)
+                    if p in FTP.dirs:
+                        cwd = p
+                        say('250 Directory changed')
+                    else:
+                        say('550 No such directory')
+                elif verb == 'MKD':
+                    p = path_of(arg)
+                    if p in FTP.dirs:
+                        say('550 Exists')
+                    else:
+                        FTP.dirs.add(p)
+                        say('257 "' + p + '" created')
+                elif verb == 'RMD':
+                    p = path_of(arg)
+                    if p in FTP.dirs and p != '/':
+                        FTP.dirs.discard(p)
+                        say('250 Removed')
+                    else:
+                        say('550 No such directory')
+                elif verb == 'DELE':
+                    p = path_of(arg)
+                    if FTP.files.pop(p, None) is None:
+                        say('550 No such file')
+                    else:
+                        say('250 Deleted')
+                elif verb == 'RNFR':
+                    rnfr = path_of(arg)
+                    say('350 Ready for RNTO' if rnfr in FTP.files else '550 No such file')
+                elif verb == 'RNTO':
+                    if rnfr in FTP.files:
+                        FTP.files[path_of(arg)] = FTP.files.pop(rnfr)
+                        say('250 Renamed')
+                    else:
+                        say('503 RNFR first')
+                    rnfr = None
+                elif verb == 'SIZE':
+                    p = path_of(arg)
+                    say(f'213 {len(FTP.files[p])}' if p in FTP.files else '550 No such file')
+                elif verb == 'PASV':
+                    if pasv:
+                        pasv.close()
+                    pasv = socket.socket()
+                    pasv.bind((HOST_IP, 0))
+                    pasv.listen(1)
+                    port = pasv.getsockname()[1]
+                    ip = '10,9,9,9' if user == 'liar' else HOST_IP.replace('.', ',')
+                    if user == 'badpasv':
+                        say(f'227 Entering Passive Mode ({ip},{(port >> 8) + 256},{port & 255}).')
+                    else:
+                        say(f'227 Entering Passive Mode ({ip},{port >> 8},{port & 255}).')
+                elif verb == 'RETR':
+                    p = path_of(arg)
+                    if p not in FTP.files:
+                        if pasv:
+                            pasv.close()
+                            pasv = None
+                        say('550 No such file')
+                        continue
+                    conn = data_conn()
+                    if not conn:
+                        say('425 No data connection')
+                        continue
+                    say('150 Opening BINARY mode data connection')
+                    data = FTP.files[p]
+                    try:
+                        if p == '/broken.bin':
+                            conn.sendall(data[:len(data) // 2])
+                            conn.close()
+                            say('451 Local error in processing')
+                            continue
+                        conn.sendall(data)
+                        conn.close()
+                        say('226 Transfer complete')
+                    except OSError:
+                        conn.close()
+                        say('426 Connection closed; transfer aborted')
+                elif verb in ('STOR', 'APPE'):
+                    p = path_of(arg)
+                    conn = data_conn()
+                    if not conn:
+                        say('425 No data connection')
+                        continue
+                    say('150 Ok to send data')
+                    chunks = []
+                    while True:
+                        chunk = conn.recv(65536)
+                        if not chunk:
+                            break
+                        chunks.append(chunk)
+                    conn.close()
+                    data = b''.join(chunks)
+                    FTP.files[p] = (FTP.files.get(p, b'') + data) if verb == 'APPE' else data
+                    say('226 Transfer complete')
+                elif verb in ('LIST', 'NLST'):
+                    d = path_of(arg) if arg else cwd
+                    conn = data_conn()
+                    if not conn:
+                        say('425 No data connection')
+                        continue
+                    names = sorted(n for n in FTP.files if n.rsplit('/', 1)[0] == d.rstrip('/'))
+                    if not names:
+                        conn.close()
+                        say('226 Nothing to list')            # final reply at once, no 150
+                        continue
+                    say('150 Here comes the listing')
+                    if verb == 'LIST':
+                        text = ''.join(f'-rw-r--r-- 1 ftp ftp {len(FTP.files[n])} Nov 26 12:00 {n.rsplit("/", 1)[1]}\r\n'
+                                       for n in names)
+                    else:
+                        text = ''.join(n.rsplit('/', 1)[1] + '\r\n' for n in names)
+                    conn.sendall(text.encode())
+                    conn.close()
+                    say('226 Directory send OK')
+                else:
+                    say('502 Command not implemented')
+        except OSError:
+            pass
+        finally:
+            if pasv:
+                pasv.close()
+
+
+class FtpBusy(socketserver.BaseRequestHandler):
+    def handle(self):
+        self.request.sendall(b'421 Too many users, try later\r\n')
+
+
+class FtpSilent(socketserver.BaseRequestHandler):
+    def handle(self):
+        self.request.settimeout(10)
+        try:
+            while self.request.recv(64):
+                pass
+        except OSError:
+            pass
+
+
+def ftp_checks():
+    with FTP.lock:
+        lines = list(FTP.lines)
+    yield 'ftp-commands-crlf', all(l.endswith(b'\r\n') and l.count(b'\n') == 1 for l in lines), repr(lines[:3])
+    yield 'ftp-no-injected-command', not any(l.upper().startswith(b'DELE X') for l in lines), repr(lines)
+    yield 'ftp-binary-mode', b'TYPE I\r\n' in lines, 'no TYPE I'
+
+
 def serve(server):
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return server
@@ -593,6 +846,7 @@ def run_test(binary, mode, failures, mdns_peer):
     with MQTT.lock:
         MQTT.events.clear()
     mdns_peer.clear()
+    FTP.reset()
     proc = subprocess.Popen([binary, mode], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     stack_ip = None
     deadline = time.time() + 180
@@ -635,6 +889,13 @@ def run_test(binary, mode, failures, mdns_peer):
             host = line.split()[1]
             checks = mdns_checks(stack_ip, host, mdns_peer) if line.startswith('MDNS ') else mdns_gone_checks(host)
             for name, ok, detail in checks:
+                print(f'   {"OK" if ok else "FAIL"} harness-{name}{"" if ok else ": " + detail}', flush=True)
+                if not ok:
+                    failures.append(f'{mode}: {name}: {detail}')
+            proc.stdin.write('GO\n')
+            proc.stdin.flush()
+        elif line == 'FTPCHECK':
+            for name, ok, detail in ftp_checks():
                 print(f'   {"OK" if ok else "FAIL"} harness-{name}{"" if ok else ": " + detail}', flush=True)
                 if not ok:
                     failures.append(f'{mode}: {name}: {detail}')
@@ -706,6 +967,9 @@ def main():
         serve(socketserver.ThreadingUDPServer((ip, 123), Sntp))
     serve(ThreadingTCP((HOST_IP, 8000), Http))
     serve(ThreadingTCP((HOST_IP, 1883), MqttBroker))
+    serve(ThreadingTCP((HOST_IP, 2121), FtpServer))
+    serve(ThreadingTCP((HOST_IP, 2122), FtpBusy))
+    serve(ThreadingTCP((HOST_IP, 2123), FtpSilent))
     mdns_peer = MdnsPeer()
     time.sleep(0.5)
 

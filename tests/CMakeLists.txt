@@ -122,7 +122,7 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
 endif()
 
-## ETH (CycloneTCP tests, only with MIKROSDK_NET_STACK=CYCLONETCP; net_client replaces test_http_client)
+## ETH (CycloneTCP tests, only with MIKROSDK_NET_STACK=CYCLONETCP; net_client replaces both)
 if((${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32") AND
    NOT (MIKROSDK_NET_STACK STREQUAL "LWIP"))
     check_eth_components(has_eth eth_module_list)

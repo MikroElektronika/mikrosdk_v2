@@ -3,7 +3,7 @@
  * device. Run by harness.py inside a private network namespace, which provides
  * the peer (Linux TCP/IP), DHCP/DNS (dnsmasq) and test servers on 192.168.77.1:
  *   7007/tcp echo, 7008/udp echo, 8000/tcp HTTP, 123/udp SNTP, 1883/tcp MQTT,
- *   5353/udp mDNS peer, nothing on 7999/tcp.
+ *   5353/udp mDNS peer, 2121-2123/tcp FTP (normal, busy, silent), nothing on 7999/tcp.
  *
  *   test_net dhcp     DHCP, random numbers from the built-in PRNG
  *   test_net static   static address 192.168.77.20, random numbers from a hook
@@ -24,6 +24,7 @@
 #include "net_api.h"
 #include "net_http.h"
 #include "net_http_server.h"
+#include "net_ftp.h"
 #include "net_mdns.h"
 #include "net_mqtt.h"
 #include "net_sntp.h"
@@ -778,6 +779,194 @@ static void test_mdns( void )
     CHECK( "mdns-rename-after-conflict", NET_OK == err && NET_OK == end, "rename %d status %d", err, end );
 }
 
+/* -------------------------------------------------------------- FTP --- */
+
+static uint8_t ftp_pattern( uint32_t i )
+{
+    return ( uint8_t )( ( i * 7u ) % 251u );
+}
+
+/* Download path completely into buf; returns the length or a negative error. */
+static int32_t ftp_get( net_ftp_t *f, const char *path, net_ftp_mode_t mode, uint8_t *buf, uint32_t size )
+{
+    net_err_t err = net_ftp_open( f, path, mode );
+    if ( NET_OK != err )
+    {
+        return err;
+    }
+    uint32_t len = 0;
+    int32_t n;
+    while ( ( n = net_ftp_read( f, buf + len, size - len ) ) > 0 )
+    {
+        len += ( uint32_t )n;
+        if ( len == size )
+        {
+            break;
+        }
+    }
+    err = net_ftp_close( f );
+    if ( n < 0 )
+    {
+        return n;
+    }
+    return ( NET_OK == err ) ? ( int32_t )len : err;
+}
+
+static void test_ftp( void )
+{
+    static net_ftp_t f, g;
+    static uint8_t buf[ 110000 ];
+    static uint8_t up[ 30000 ];
+    char text[ 64 ];
+    uint32_t size = 0;
+
+    CHECK( "ftp-refused", NET_REFUSED == net_ftp_connect( &f, "192.168.77.1", 7999, 3000 ), "connected" );
+    net_err_t err = net_ftp_connect( &f, "192.168.77.1", 2122, 3000 );
+    CHECK( "ftp-busy-greeting", NET_REFUSED == err && 421 == f.status && !f.connected, "err %d code %u", err, f.status );
+    uint32_t t0 = net_now_ms();
+    err = net_ftp_connect( &f, "192.168.77.1", 2123, 1000 );
+    uint32_t took = net_now_ms() - t0;
+    CHECK( "ftp-no-greeting-timeout", NET_TIMEOUT == err && took >= 1000 && took < 3000, "err %d after %u ms", err,
+           took );
+
+    err = net_ftp_connect( &f, "192.168.77.1", 2121, 5000 );
+    CHECK( "ftp-connect-multiline-greeting", NET_OK == err && 220 == f.status && 0 == strncmp( f.reply, "220-Welcome", 11 ),
+           "err %d code %u \"%s\"", err, f.status, f.reply );
+    if ( NET_OK != err )
+    {
+        return;
+    }
+    CHECK( "ftp-crlf-rejected", NET_INVALID == net_ftp_login( &f, "demo\r\nDELE x", "password" ) &&
+           NET_INVALID == net_ftp_login( &f, "demo", "pass\nword" ) && f.connected, "accepted" );
+    err = net_ftp_login( &f, "demo", "wrong" );
+    CHECK( "ftp-login-refused", NET_REFUSED == err && 530 == f.status && f.connected, "err %d code %u", err, f.status );
+    CHECK( "ftp-needs-login", NET_REFUSED == net_ftp_size( &f, "readme.txt", &size ) && 530 == f.status, "code %u",
+           f.status );
+    err = net_ftp_login( &f, "demo", "password" );
+    CHECK( "ftp-login", NET_OK == err && 200 == f.status, "err %d code %u", err, f.status );
+
+    CHECK( "ftp-pwd", NET_OK == net_ftp_pwd( &f, text, sizeof( text ) ) && 0 == strcmp( text, "/" ), "\"%s\"", text );
+    err = net_ftp_size( &f, "readme.txt", &size );
+    CHECK( "ftp-size", NET_OK == err && 42 == size, "err %d size %u", err, size );
+    CHECK( "ftp-size-missing", NET_REFUSED == net_ftp_size( &f, "nothing.txt", &size ) && 550 == f.status, "code %u",
+           f.status );
+
+    int32_t n = ftp_get( &f, "readme.txt", NET_FTP_READ, buf, sizeof( buf ) );
+    CHECK( "ftp-retr", 42 == n && 0 == memcmp( buf, "Hello from the mikroSDK FTP test server.\r\n", 42 ), "n %d", n );
+    n = ftp_get( &f, "nothing.txt", NET_FTP_READ, buf, sizeof( buf ) );
+    CHECK( "ftp-retr-missing", NET_REFUSED == n && 550 == f.status && !f.transfer && f.connected, "n %d code %u", n,
+           f.status );
+    n = ftp_get( &f, "/big.bin", NET_FTP_READ, buf, sizeof( buf ) );
+    bool same = ( 100000 == n );
+    for ( uint32_t i = 0; same && i < 100000u; i++ )
+    {
+        same = ( buf[ i ] == ftp_pattern( i ) );
+    }
+    CHECK( "ftp-retr-100k", same, "n %d", n );
+
+    for ( uint32_t i = 0; i < sizeof( up ); i++ )
+    {
+        up[ i ] = ( uint8_t )( i * 13u + 5u );
+    }
+    err = net_ftp_open( &f, "up.bin", NET_FTP_WRITE );
+    CHECK( "ftp-open-twice", NET_INVALID == net_ftp_open( &f, "x", NET_FTP_READ ) &&
+           NET_INVALID == net_ftp_read( &f, buf, 10 ), "accepted" );
+    int32_t w = ( NET_OK == err ) ? net_ftp_write( &f, up, sizeof( up ) ) : err;
+    err = net_ftp_close( &f );
+    n = ftp_get( &f, "up.bin", NET_FTP_READ, buf, sizeof( buf ) );
+    CHECK( "ftp-stor", ( int32_t )sizeof( up ) == w && NET_OK == err && ( int32_t )sizeof( up ) == n &&
+           0 == memcmp( buf, up, sizeof( up ) ), "write %d close %d read back %d", w, err, n );
+    err = net_ftp_open( &f, "up.bin", NET_FTP_APPEND );
+    w = ( NET_OK == err ) ? net_ftp_write( &f, "tail", 4 ) : err;
+    err = net_ftp_close( &f );
+    CHECK( "ftp-appe", 4 == w && NET_OK == err && NET_OK == net_ftp_size( &f, "up.bin", &size ) &&
+           sizeof( up ) + 4 == size, "write %d close %d size %u", w, err, size );
+
+    n = ftp_get( &f, NULL, NET_FTP_LIST, buf, sizeof( buf ) - 1 );
+    buf[ ( n > 0 ) ? n : 0 ] = '\0';
+    CHECK( "ftp-list", n > 0 && strstr( ( char * )buf, " readme.txt\r\n" ) && strstr( ( char * )buf, " up.bin\r\n" ),
+           "n %d \"%.60s\"", n, buf );
+    n = ftp_get( &f, "/", NET_FTP_NAMES, buf, sizeof( buf ) - 1 );
+    buf[ ( n > 0 ) ? n : 0 ] = '\0';
+    CHECK( "ftp-nlst", n > 0 && strstr( ( char * )buf, "big.bin\r\n" ), "n %d", n );
+    n = ftp_get( &f, "empty", NET_FTP_NAMES, buf, sizeof( buf ) );
+    CHECK( "ftp-nlst-empty-final-reply-first", 0 == n && 226 == f.status, "n %d code %u", n, f.status );
+
+    err = net_ftp_mkdir( &f, "newdir" );
+    net_err_t e2 = net_ftp_cwd( &f, "newdir" );
+    net_ftp_pwd( &f, text, sizeof( text ) );
+    CHECK( "ftp-mkdir-cwd", NET_OK == err && NET_OK == e2 && 0 == strcmp( text, "/newdir" ), "%d %d \"%s\"", err, e2,
+           text );
+    err = net_ftp_cwd( &f, ".." );
+    e2 = net_ftp_rmdir( &f, "newdir" );
+    CHECK( "ftp-rmdir", NET_OK == err && NET_OK == e2 && NET_REFUSED == net_ftp_rmdir( &f, "newdir" ) &&
+           NET_REFUSED == net_ftp_cwd( &f, "newdir" ), "%d %d", err, e2 );
+    err = net_ftp_rename( &f, "up.bin", "moved.bin" );
+    CHECK( "ftp-rename", NET_OK == err && NET_OK == net_ftp_size( &f, "moved.bin", &size ) &&
+           NET_REFUSED == net_ftp_rename( &f, "up.bin", "again.bin" ), "err %d", err );
+    err = net_ftp_delete( &f, "moved.bin" );
+    CHECK( "ftp-delete", NET_OK == err && NET_REFUSED == net_ftp_size( &f, "moved.bin", &size ), "err %d", err );
+
+    err = net_ftp_open( &f, "big.bin", NET_FTP_READ );
+    n = ( NET_OK == err ) ? net_ftp_read( &f, buf, 1000 ) : err;
+    err = net_ftp_close( &f );
+    CHECK( "ftp-stop-early", n > 0 && NET_OK == err && f.connected, "read %d close %d code %u", n, err, f.status );
+    n = ftp_get( &f, "broken.bin", NET_FTP_READ, buf, sizeof( buf ) );
+    CHECK( "ftp-failed-transfer", NET_ERROR == n && 451 == f.status && f.connected, "n %d code %u", n, f.status );
+    CHECK( "ftp-still-usable", NET_OK == net_ftp_pwd( &f, text, sizeof( text ) ), "code %u", f.status );
+
+    printf( "FTPCHECK\n" );
+    fflush( stdout );
+    wait_for_go( 10000 );
+    net_ftp_quit( &f );
+    CHECK( "ftp-quit", !f.connected && 221 == f.status && NET_CLOSED == net_ftp_pwd( &f, text, sizeof( text ) ),
+           "code %u", f.status );
+
+    /* Misbehaving servers. */
+    err = net_ftp_connect( &g, "192.168.77.1", 2121, 5000 );
+    if ( NET_OK == err )
+    {
+        err = net_ftp_login( &g, "anonymous", NULL );
+    }
+    CHECK( "ftp-anonymous", NET_OK == err, "err %d code %u", err, g.status );
+    net_ftp_quit( &g );
+    err = net_ftp_connect( &g, "192.168.77.1", 2121, 5000 );
+    if ( NET_OK == err )
+    {
+        err = net_ftp_login( &g, "liar", "x" );
+    }
+    n = ( NET_OK == err ) ? ftp_get( &g, "readme.txt", NET_FTP_READ, buf, sizeof( buf ) ) : err;
+    CHECK( "ftp-pasv-address-ignored", 42 == n, "n %d code %u", n, g.status );
+    net_ftp_quit( &g );
+    err = net_ftp_connect( &g, "192.168.77.1", 2121, 5000 );
+    if ( NET_OK == err )
+    {
+        err = net_ftp_login( &g, "long", "x" );
+    }
+    e2 = net_ftp_pwd( &g, text, sizeof( text ) );
+    CHECK( "ftp-long-multiline-reply", NET_OK == err && NET_ERROR == e2 && 257 == g.status &&
+           strlen( g.reply ) == NET_FTP_REPLY_MAX - 1 && g.connected && NET_OK == net_ftp_cwd( &g, "/" ),
+           "login %d pwd %d code %u len %u", err, e2, g.status, ( unsigned )strlen( g.reply ) );
+    net_ftp_quit( &g );
+    err = net_ftp_connect( &g, "192.168.77.1", 2121, 5000 );
+    if ( NET_OK == err )
+    {
+        err = net_ftp_login( &g, "badpasv", "x" );
+    }
+    e2 = net_ftp_open( &g, "readme.txt", NET_FTP_READ );
+    CHECK( "ftp-bad-pasv-reply", NET_OK == err && NET_ERROR == e2 && !g.connected && !g.transfer, "login %d open %d",
+           err, e2 );
+    net_ftp_quit( &g );
+    err = net_ftp_connect( &g, "192.168.77.1", 2121, 5000 );
+    if ( NET_OK == err )
+    {
+        err = net_ftp_login( &g, "garbage", "x" );   /* its answer to TYPE I is not a reply */
+    }
+    e2 = net_ftp_pwd( &g, text, sizeof( text ) );
+    CHECK( "ftp-malformed-reply", NET_ERROR == err && NET_CLOSED == e2 && !g.connected, "login %d pwd %d", err, e2 );
+    net_ftp_quit( &g );
+}
+
 static void test_link( void )
 {
     tap.link = false;
@@ -844,6 +1033,7 @@ int main( int argc, char **argv )
     test_sntp();
     test_mqtt();
     test_mdns();
+    test_ftp();
     if ( dhcp )
     {
         printf( "MDNSMARK\n" );                        /* the harness forgets what it heard so far */

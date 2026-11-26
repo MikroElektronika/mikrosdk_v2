@@ -1,11 +1,11 @@
 # mikroSDK network layer (`MikroSDK.Net`)
 
 A small, stack-independent network API for Ethernet: IPv4 with DHCP or a static address, DNS, TCP client and
-server sockets, UDP sockets, an HTTP/1.1 client and server, an SNTP client, an MQTT 3.1.1 client and an mDNS
-responder. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
+server sockets, UDP sockets, an HTTP/1.1 client and server, an SNTP client, an MQTT 3.1.1 client, an FTP client and an
+mDNS responder. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
 (BSD-3-Clause), but applications never include lwIP headers, so the stack can change without breaking them.
 
-> **Status.** The API, lwIP, the HTTP client and server, SNTP, MQTT, mDNS and the driver for the SPI controllers of
+> **Status.** The API, lwIP, the HTTP client and server, SNTP, MQTT, FTP, mDNS and the driver for the SPI controllers of
 > `middleware/ethernet` are done and tested on a host (see [Testing](#testing)). On-chip drivers exist for every MCU
 > CycloneTCP supports through CMake (PIC32MX/MZ, STM32F107/F2/F4/F7, Kinetis MK6x/MKV58, TM4C129); they are
 > unit-tested against simulated hardware and their register maps checked against the vendors' headers, but they
@@ -33,6 +33,7 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`, on MCUs with at least 32 KB
 | `include/net_http_server.h` | HTTP server: routes (method + path → handler), query/form parameters, complete or streamed responses, one request at a time from `net_http_server_poll()` (built on `net_api.h` only) |
 | `include/net_sntp.h` | SNTP client (RFC 4330): `net_sntp_sync()` once, then `net_sntp_now()` gives UNIX time from the local millisecond clock; replies must echo a random nonce, come from the server asked, be synchronised; kiss-of-death → `NET_REFUSED` (built on `net_api.h` only) |
 | `include/net_mqtt.h` | MQTT 3.1.1 client over plain TCP: QoS 0 and 1, subscribe/unsubscribe, last will, user/password, keep-alive, polled from the main loop; messages larger than the buffer are dropped (still acknowledged) and counted (built on `net_api.h` only) |
+| `include/net_ftp.h` | FTP client (RFC 959): passive mode, binary transfers (download, upload, append), listings, directories, rename, delete, size; arguments with CR/LF refused, the PASV address ignored (data always to the control connection's server), replies parsed as untrusted (built on `net_api.h` only, about 2 KB of Flash) |
 | `include/net_mdns.h` | mDNS responder (`<name>.local`) with DNS-SD services, on lwIP's `apps/mdns`; probes for name conflicts, follows address and link changes. Started once, no stop (see the header) |
 | `include/net_driver.h` | Frame driver interface: what an Ethernet controller driver implements |
 | `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100); they are used unchanged |
@@ -42,7 +43,7 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`, on MCUs with at least 32 KB
 | `drivers/stm32/net_driver_stm32.h` | On-chip Ethernet of STM32F107, F2x7, F4x7/F4x9, F74x–F77x (RMII, polled DMA rings, pins and PHY clock through the mikroSDK GPIO layer, Cortex-M7 cache maintenance) — `MikroSDK.Net.Stm32`, built only for those MCUs |
 | `drivers/phy/net_phy.h` | Generic PHY control over MDIO (IEEE 802.3 clause 22 registers only), for the on-chip drivers — `MikroSDK.Net.Phy` |
 | `src/net_lwip.c` | `net_api.h` on lwIP (raw API) |
-| `src/net_http.c`, `src/net_http_server.c`, `src/net_sntp.c`, `src/net_mqtt.c`, `src/net_common.c` | Stack-independent parts |
+| `src/net_http.c`, `src/net_http_server.c`, `src/net_sntp.c`, `src/net_mqtt.c`, `src/net_ftp.c`, `src/net_common.c` | Stack-independent parts |
 | `src/net_mdns.c` | `net_mdns.h` on lwIP's mDNS responder |
 
 lwIP and mikroSDK both define a type called `err_t`, so no file includes both: `net_lwip.c` includes only lwIP,
@@ -157,8 +158,8 @@ multicast; for an SPI controller it depends on its receive filter in `middleware
 [tests/net_web_server](../../tests/net_web_server/ReadMe.txt): a web server (HTML page and `/api/status`, mDNS name
 `mikrosdk.local`) that runs unchanged on an SPI Ethernet Click (the same controller selection as `tests/spi_ethernet`)
 or on the on-chip Ethernet of PIC32, STM32, Kinetis or TM4C129 boards, chosen with `NET_INTERFACE` in `main.c`.
-[tests/net_client](../../tests/net_client/ReadMe.txt): HTTP (replacing the CycloneTCP test
-`tests/ethernet/test_http_client`), SNTP and MQTT against public servers, on the same interfaces. Both use
+[tests/net_client](../../tests/net_client/ReadMe.txt): HTTP and FTP (replacing the CycloneTCP tests
+`tests/ethernet/test_http_client` and `test_ftp_client`), SNTP and MQTT against public servers, on the same interfaces. Both use
 `tests/net_common` for the interface setup.
 
 **Time source.** `net_config_default()` sets `now_ms` to `systime_ms` ([platform/systime](../../platform/systime)):
@@ -251,8 +252,8 @@ unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulate
 (PIC32, STM32 F1/F2/F4/F7, Kinetis K64/K66/KV58, TM4C129: fake registers, a hardware model, the test playing the DMA
 engines), the drivers' register maps compared with ST's, NXP's and TI's device headers, then the network checks against the Linux TCP/IP stack in a
 private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP client and server, TCP server mode, link
-loss, error cases, SNTP against good and misbehaving servers, MQTT against a scripted broker, mDNS queries and a
-name conflict). See [its README](../../scripts/net_host_test/README.md). GitHub Actions runs it
+loss, error cases, SNTP against good and misbehaving servers, MQTT against a scripted broker, FTP against a scripted
+server, mDNS queries and a name conflict). See [its README](../../scripts/net_host_test/README.md). GitHub Actions runs it
 (`.github/workflows/netHostTest.yaml`) on every push that changes the network layer, `platform/systime` or
 `thirdparty/`, together with the SBOM check (`scripts/sbom.py --check`).
 
@@ -260,5 +261,4 @@ name conflict). See [its README](../../scripts/net_host_test/README.md). GitHub 
 
 1. Run `tests/net_web_server` and `tests/net_client` on hardware: an SPI Ethernet Click and one board per on-chip
    controller (PIC32MX, PIC32MZ, STM32 F1/F2/F4/F7, Kinetis K6x and KV58, TM4C129).
-2. FTP client (CycloneTCP's FTP client test, `tests/ethernet/test_ftp_client`, moves with it).
-3. After 31 December 2026: remove CycloneTCP, `hw_eth`, the CycloneTCP tests and the `MIKROSDK_NET_STACK` option.
+2. After 31 December 2026: remove CycloneTCP, `hw_eth`, the CycloneTCP tests and the `MIKROSDK_NET_STACK` option.

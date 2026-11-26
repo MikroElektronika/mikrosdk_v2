@@ -1,6 +1,6 @@
 ## ./tests/net_client/CMakeLists.txt
-## HTTP, SNTP and MQTT clients on the mikroSDK network layer (MIKROSDK_NET_STACK=LWIP);
-## replaces the CycloneTCP HTTP client test (tests/ethernet/test_http_client).
+## HTTP, FTP, SNTP and MQTT clients on the mikroSDK network layer (MIKROSDK_NET_STACK=LWIP);
+## replaces the CycloneTCP tests (tests/ethernet/test_http_client, test_ftp_client).
 add_executable(test_net_client
     main.c
     ReadMe.txt

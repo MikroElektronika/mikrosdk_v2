@@ -40,8 +40,8 @@
 /*!
  * @file main.c
  * @brief Network clients on the mikroSDK network layer (net_api.h, lwIP):
- * HTTP (replaces the CycloneTCP test tests/ethernet/test_http_client), SNTP
- * and MQTT against public servers.
+ * HTTP and FTP (they replace the CycloneTCP tests tests/ethernet/test_http_client
+ * and test_ftp_client), SNTP and MQTT against public servers.
  * @details Runs on the same interfaces as net_web_server (NET_INTERFACE below,
  * see ../net_common/net_test_interface.h). Gets an address by DHCP, then checks
  *   DNS     httpbin.org resolves
@@ -50,6 +50,8 @@
  *   SNTP    time from pool.ntp.org
  *   MQTT    test.mosquitto.org: subscribe to a topic of this board, publish
  *           to it with QoS 1 and receive the message back
+ *   FTP     test.rebex.net (read-only demo account): log in, size and
+ *           download readme.txt, list the root directory
  * and prints "PASS <check>" / "FAIL <check>: <why>" and a summary on the USB
  * UART. Needs a network with Internet access.
  */
@@ -74,6 +76,10 @@
 #define HTTP_HOST       "httpbin.org"
 #define NTP_HOST        "pool.ntp.org"
 #define MQTT_HOST       "test.mosquitto.org"
+#define FTP_HOST        "test.rebex.net"
+#define FTP_USER        "demo"
+#define FTP_PASSWORD    "password"
+#define FTP_FILE        "readme.txt"
 #define TIMEOUT_MS      10000
 
 // ------------------------------------------------------------------ Includes
@@ -86,6 +92,7 @@
 #include "net_http.h"
 #include "net_sntp.h"
 #include "net_mqtt.h"
+#include "net_ftp.h"
 
 #include "net_test_interface.h"       // tests/net_common: interface selected above
 
@@ -97,6 +104,7 @@ static net_driver_t driver;
 static char body[ 1024 ];
 static uint8_t mqtt_buffer[ 256 ];
 static net_mqtt_t mqtt;
+static net_ftp_t ftp;
 static char topic[ 40 ];
 static uint8_t passed, failed;
 
@@ -230,6 +238,58 @@ static void test_mqtt( void )
     net_mqtt_disconnect( &mqtt );
 }
 
+static void test_ftp( void )
+{
+    net_err_t err = net_ftp_connect( &ftp, FTP_HOST, NET_FTP_PORT, TIMEOUT_MS );
+    check( "ftp connect " FTP_HOST, NET_OK == err, ftp.reply, err );
+    if ( NET_OK != err )
+    {
+        return;
+    }
+    err = net_ftp_login( &ftp, FTP_USER, FTP_PASSWORD );
+    check( "ftp login", NET_OK == err, ftp.reply, err );
+
+    uint32_t size = 0;
+    err = net_ftp_size( &ftp, FTP_FILE, &size );
+    check( "ftp size " FTP_FILE, NET_OK == err && size > 0, ftp.reply, err );
+
+    // Download into body[]: the whole file when it fits, the rest is read and dropped.
+    uint32_t total = 0, kept = 0;
+    int32_t n = 0;
+    err = net_ftp_open( &ftp, FTP_FILE, NET_FTP_READ );
+    if ( NET_OK == err )
+    {
+        char chunk[ 128 ];
+        while ( ( n = net_ftp_read( &ftp, chunk, sizeof( chunk ) ) ) > 0 )
+        {
+            uint32_t take = ( kept + ( uint32_t )n < sizeof( body ) - 1 ) ? ( uint32_t )n : sizeof( body ) - 1 - kept;
+            memcpy( body + kept, chunk, take );
+            kept += take;
+            total += ( uint32_t )n;
+        }
+        body[ kept ] = '\0';
+        err = net_ftp_close( &ftp );
+    }
+    check( "ftp download " FTP_FILE, NET_OK == err && n == 0 && total == size, ftp.reply, NET_OK == err ? n : err );
+    if ( total )
+    {
+        log_printf( &logger, "     %lu bytes, starting: %.60s\r\n", ( unsigned long )total, body );
+    }
+
+    err = net_ftp_open( &ftp, NULL, NET_FTP_NAMES );
+    uint32_t listed = 0;
+    if ( NET_OK == err )
+    {
+        while ( ( n = net_ftp_read( &ftp, body, sizeof( body ) ) ) > 0 )
+        {
+            listed += ( uint32_t )n;
+        }
+        err = net_ftp_close( &ftp );
+    }
+    check( "ftp list", NET_OK == err && listed > 0, ftp.reply, err );
+    net_ftp_quit( &ftp );
+}
+
 // ---------------------------------------------------------------------- Main
 
 int main( void )
@@ -282,6 +342,7 @@ int main( void )
         test_http();
         test_sntp();
         test_mqtt();
+        test_ftp();
     }
 
     log_printf( &logger, "RESULT %s: %u passed, %u failed\r\n", failed ? "FAIL" : "PASS", passed, failed );

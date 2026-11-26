@@ -10,7 +10,7 @@ projects that used CycloneTCP (`hw_eth.h`, `core/net.h`, `http/http_client.h`, .
 | CMake | `MikroSDK.Ethernet.CycloneTCP` | `MikroSDK.Net` + one driver library (table below) |
 | Threads / timers | SysTick interrupt, `netTask()` | none: call `net_poll()` from the main loop |
 | SPI Ethernet Clicks | separate stack (`middleware/ethernet`) | the same API as on-chip MACs (`MikroSDK.Net.EthTransport`) |
-| IPv6, TLS, FTP client | available in CycloneTCP | not yet (FTP client planned) |
+| IPv6, TLS (FTPS, HTTPS, MQTTS) | available in CycloneTCP | not yet |
 
 ## Option 1: keep CycloneTCP for now
 
@@ -97,6 +97,7 @@ Static address: `cfg.use_dhcp = false;` and set `cfg.ip`, `cfg.netmask`, `cfg.ga
 | `sntpClientInit()` ... `sntpClientGetTimestamp()` | `net_sntp_sync()`, `net_sntp_now()` ([net_sntp.h](include/net_sntp.h)) |
 | `mqttClientInit()` ... `mqttClientTask()` | `net_mqtt_connect()`, `net_mqtt_publish()`, `net_mqtt_subscribe()`, `net_mqtt_poll()` ([net_mqtt.h](include/net_mqtt.h)) |
 | `mdnsResponderInit()` ... | `net_mdns_start()`, `net_mdns_add_service()` ([net_mdns.h](include/net_mdns.h)) |
+| `ftpClientConnect()`, `ftpClientLogin()`, `ftpClientOpenFile()`, `ftpClientReadFile()` / `ftpClientWriteFile()`, `ftpClientCloseFile()`, `ftpClientDisconnect()` | `net_ftp_connect()`, `net_ftp_login()`, `net_ftp_open()`, `net_ftp_read()` / `net_ftp_write()`, `net_ftp_close()`, `net_ftp_quit()` ([net_ftp.h](include/net_ftp.h), passive mode, binary) |
 | `netTask()` / SysTick | `net_poll()` |
 | `error_t` (`NO_ERROR`, `ERROR_TIMEOUT`, ...) | `net_err_t` (`NET_OK`, `NET_TIMEOUT`, ...); lengths are negative on error |
 
@@ -111,5 +112,5 @@ the SPI stack of `middleware/ethernet`.
 
 ## Not available yet
 
-IPv6, TLS (HTTPS, MQTTS) and the FTP client (planned). If you need them before they arrive, keep CycloneTCP
-(option 1) until the end of 2026.
+IPv6 and TLS (HTTPS, MQTTS, FTPS). If you need them before they arrive, keep CycloneTCP (option 1) until the
+end of 2026.
