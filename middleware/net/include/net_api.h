@@ -168,6 +168,12 @@ void net_poll( void );
 /*! @brief Milliseconds of the configured time source (net_config_t.now_ms), 0 before net_init(). */
 uint32_t net_now_ms( void );
 
+/*!
+ * @brief Random number for protocol identifiers (transaction IDs, nonces, client
+ * IDs): net_config_t.random if set (hardware RNG), else the built-in PRNG.
+ */
+uint32_t net_random( void );
+
 /*! @brief true when the driver reports the link up. */
 bool net_link_up( void );
 

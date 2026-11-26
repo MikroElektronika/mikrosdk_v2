@@ -10,6 +10,21 @@
       "modified": false
     },
     {
+      "path": "src/apps/mdns/mdns.c",
+      "upstream_sha256": "abb4846a0d85cc75f7ff82e8503a9d93bc3309a3760e71d50d1f50c8986b8263",
+      "modified": false
+    },
+    {
+      "path": "src/apps/mdns/mdns_domain.c",
+      "upstream_sha256": "e273ff4e4e1a4b9a96a8e1cded5ff240f14f89d9ab6cacf233a8eba49ab51642",
+      "modified": false
+    },
+    {
+      "path": "src/apps/mdns/mdns_out.c",
+      "upstream_sha256": "722ff35f55d9f8f3695663e1f1d16b2cf0e5ca6445798bd07ba0a1221ca2f135",
+      "modified": false
+    },
+    {
       "path": "src/core/altcp.c",
       "upstream_sha256": "3c6653588772a62efdd11ceeffa760847f95d8ec98889c7551e9a1eb8326f8cd",
       "modified": false

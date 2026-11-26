@@ -6,8 +6,8 @@
 <lwip checkout> is a clean checkout of a release tag of https://github.com/lwip-tcpip/lwip
 (e.g. git clone --depth 1 --branch STABLE-2_2_1_RELEASE ...). The script
 
-  - copies only what mikroSDK builds: the core (IPv4, IPv6), the Ethernet netif and the
-    headers, plus COPYING,
+  - copies only what mikroSDK builds: the core (IPv4, IPv6), the Ethernet netif, the mDNS
+    responder (src/apps/mdns) and the headers, plus COPYING,
   - renames the identifier `code` to `_code` outside comments and strings, because every
     mikroSDK library is compiled with `code=` (an empty macro, `code` is a reserved word in
     the mikroC compilers) - lwIP uses `code` as a field name (ICMP headers),
@@ -31,6 +31,7 @@ IMPORT_DIRS = {
     'src/core': ('.c',),             # not recursive, see below
     'src/core/ipv4': ('.c',),
     'src/core/ipv6': ('.c',),
+    'src/apps/mdns': ('.c',),        # mDNS responder (net_mdns.h)
     'src/include': ('.h',),          # recursive
 }
 IMPORT_FILES = ['src/netif/ethernet.c', 'COPYING']

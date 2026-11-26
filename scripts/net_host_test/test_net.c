@@ -2,7 +2,8 @@
  * Host test of the mikroSDK network layer (middleware/net + lwIP) on a Linux TAP
  * device. Run by harness.py inside a private network namespace, which provides
  * the peer (Linux TCP/IP), DHCP/DNS (dnsmasq) and test servers on 192.168.77.1:
- *   7007/tcp echo, 7008/udp echo, 8000/tcp HTTP, nothing on 7999/tcp.
+ *   7007/tcp echo, 7008/udp echo, 8000/tcp HTTP, 123/udp SNTP, 1883/tcp MQTT,
+ *   5353/udp mDNS peer, nothing on 7999/tcp.
  *
  *   test_net dhcp     DHCP, random numbers from the built-in PRNG
  *   test_net static   static address 192.168.77.20, random numbers from a hook
@@ -23,6 +24,9 @@
 #include "net_api.h"
 #include "net_http.h"
 #include "net_http_server.h"
+#include "net_mdns.h"
+#include "net_mqtt.h"
+#include "net_sntp.h"
 #include "tap_driver.h"
 
 static int failures;
@@ -468,6 +472,312 @@ static void test_http_server( void )
     net_http_server_stop( &srv );
 }
 
+/* ------------------------------------------------------------- SNTP --- */
+
+static void test_sntp( void )
+{
+    uint32_t seconds = 0;
+    uint16_t ms = 0;
+    CHECK( "sntp-not-synced-yet", !net_sntp_synced() && NET_NOT_READY == net_sntp_now( &seconds, &ms ), "synced too early" );
+    net_err_t err = net_sntp_sync( "192.168.77.1", 3000 );
+    struct timespec host;
+    clock_gettime( CLOCK_REALTIME, &host );
+    CHECK( "sntp-sync", NET_OK == err && net_sntp_synced(), "err %d", err );
+    net_sntp_now( &seconds, &ms );
+    double diff = ( ( double )seconds + ms / 1000.0 ) - ( ( double )host.tv_sec + host.tv_nsec / 1e9 );
+    CHECK( "sntp-time-matches-host", diff > -2.0 && diff < 2.0, "off by %.3f s", diff );
+    usleep( 300000 );
+    uint32_t later = 0;
+    uint16_t later_ms = 0;
+    net_sntp_now( &later, &later_ms );
+    double step = ( ( double )later + later_ms / 1000.0 ) - ( ( double )seconds + ms / 1000.0 );
+    CHECK( "sntp-clock-runs", step > 0.2 && step < 0.6, "advanced %.3f s in 0.3 s", step );
+    err = net_sntp_sync( "ntp.mikroe.local", 3000 );
+    CHECK( "sntp-by-name", NET_OK == err, "err %d", err );
+    err = net_sntp_sync( "192.168.77.2", 3000 );
+    CHECK( "sntp-kiss-of-death-refused", NET_REFUSED == err, "err %d", err );
+    uint32_t t0 = net_now_ms();
+    err = net_sntp_sync( "192.168.77.3", 1500 );
+    uint32_t took = net_now_ms() - t0;
+    CHECK( "sntp-invalid-answers-ignored", NET_TIMEOUT == err && took >= 1500, "err %d after %u ms", err, took );
+    CHECK( "sntp-keeps-last-good-time", net_sntp_synced(), "lost the time" );
+}
+
+/* ------------------------------------------------------------- MQTT --- */
+
+typedef struct
+{
+    int count;
+    char topic[ 64 ];
+    uint8_t payload[ 512 ];
+    uint32_t len;
+} mqtt_inbox_t;
+
+static void on_mqtt( void *ctx, const char *topic, const uint8_t *payload, uint32_t len )
+{
+    mqtt_inbox_t *in = ctx;
+    in->count++;
+    snprintf( in->topic, sizeof( in->topic ), "%s", topic );
+    in->len = len;
+    memcpy( in->payload, payload, ( len < sizeof( in->payload ) ) ? len : sizeof( in->payload ) );
+}
+
+/* Poll until `in` has `want` messages, the time is up or the connection ends. */
+static net_err_t mqtt_pump( net_mqtt_t *m, mqtt_inbox_t *in, int want, uint32_t ms )
+{
+    uint32_t t0 = net_now_ms();
+    net_err_t err = NET_OK;
+    while ( net_now_ms() - t0 < ms && ( !in || in->count < want ) )
+    {
+        net_poll();
+        err = net_mqtt_poll( m );
+        if ( NET_OK != err )
+        {
+            break;
+        }
+        usleep( 1000 );
+    }
+    return err;
+}
+
+static void test_mqtt( void )
+{
+    static uint8_t buf_a[ 512 ], buf_b[ 256 ], buf_c[ 128 ];
+    static net_mqtt_t a, b, c;
+    static mqtt_inbox_t in_a, in_b;
+    net_mqtt_cfg_t cfg;
+    net_err_t err;
+
+    net_mqtt_cfg_setup( &cfg );
+    CHECK( "mqtt-cfg-defaults", 1883 == cfg.port && 60 == cfg.keepalive_s && cfg.clean_session && !cfg.client_id,
+           "port %u keepalive %u", cfg.port, cfg.keepalive_s );
+    CHECK( "mqtt-needs-host", NET_INVALID == net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), NULL, NULL, 1000 ),
+           "accepted no host" );
+    cfg.host = "192.168.77.1";
+    CHECK( "mqtt-needs-buffer", NET_INVALID == net_mqtt_connect( &a, &cfg, buf_a, 32, NULL, NULL, 1000 ),
+           "accepted a 32-byte buffer" );
+    cfg.password = "secret";
+    CHECK( "mqtt-password-needs-user", NET_INVALID == net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), NULL, NULL,
+           1000 ), "accepted a password without user" );
+
+    cfg.username = "bad";
+    err = net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), NULL, NULL, 3000 );
+    CHECK( "mqtt-connect-refused", NET_REFUSED == err && 5 == a.connack_code && !net_mqtt_connected( &a ),
+           "err %d code %u", err, a.connack_code );
+    cfg.port = 7999;
+    err = net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), NULL, NULL, 3000 );
+    CHECK( "mqtt-no-broker", NET_REFUSED == err && 0 == a.connack_code, "err %d", err );
+    net_mqtt_cfg_setup( &cfg );
+    cfg.host = "192.168.77.1";
+    cfg.client_id = "silent";
+    uint32_t t0 = net_now_ms();
+    err = net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), NULL, NULL, 1000 );
+    uint32_t took = net_now_ms() - t0;
+    CHECK( "mqtt-no-connack-timeout", NET_TIMEOUT == err && took >= 1000 && took < 3000 && !net_mqtt_connected( &a ),
+           "err %d after %u ms", err, took );
+
+    /* Main client: by name, credentials, generated client id, 2 s keep-alive. */
+    net_mqtt_cfg_setup( &cfg );
+    cfg.host = "broker.mikroe.local";
+    cfg.username = "user";
+    cfg.password = "secret";
+    cfg.keepalive_s = 2;
+    err = net_mqtt_connect( &a, &cfg, buf_a, sizeof( buf_a ), on_mqtt, &in_a, 3000 );
+    CHECK( "mqtt-connect", NET_OK == err && net_mqtt_connected( &a ), "err %d", err );
+    if ( NET_OK != err )
+    {
+        return;
+    }
+    err = net_mqtt_subscribe( &a, "echo/#", 1, 3000 );
+    CHECK( "mqtt-subscribe", NET_OK == err, "err %d", err );
+    CHECK( "mqtt-subscribe-refused", NET_REFUSED == net_mqtt_subscribe( &a, "forbidden/x", 1, 3000 ), "accepted" );
+    CHECK( "mqtt-subscribe-qos2-invalid", NET_INVALID == net_mqtt_subscribe( &a, "x", 2, 3000 ), "accepted" );
+
+    err = net_mqtt_publish( &a, "echo/a", "hello", 5, 0, false, 0 );
+    CHECK( "mqtt-publish-qos0", NET_OK == err, "err %d", err );
+    mqtt_pump( &a, &in_a, 1, 3000 );
+    CHECK( "mqtt-receive-qos0", 1 == in_a.count && 0 == strcmp( in_a.topic, "echo/a" ) && 5 == in_a.len &&
+           0 == memcmp( in_a.payload, "hello", 5 ), "%d messages, topic \"%s\" len %u", in_a.count, in_a.topic,
+           in_a.len );
+
+    uint8_t data[ 300 ];
+    for ( uint32_t i = 0; i < sizeof( data ); i++ )
+    {
+        data[ i ] = ( uint8_t )( i * 7 + 3 );
+    }
+    err = net_mqtt_publish( &a, "echo/b", data, sizeof( data ), 1, false, 3000 );
+    CHECK( "mqtt-publish-qos1-acked", NET_OK == err, "err %d", err );
+    mqtt_pump( &a, &in_a, 2, 3000 );
+    CHECK( "mqtt-receive-qos1", 2 == in_a.count && 0 == strcmp( in_a.topic, "echo/b" ) &&
+           sizeof( data ) == in_a.len && 0 == memcmp( in_a.payload, data, sizeof( data ) ),
+           "%d messages, topic \"%s\" len %u", in_a.count, in_a.topic, in_a.len );
+    CHECK( "mqtt-publish-empty", NET_OK == net_mqtt_publish( &a, "echo/empty", NULL, 0, 1, false, 3000 ) &&
+           NET_OK == mqtt_pump( &a, &in_a, 3, 3000 ) && 0 == in_a.len && 0 == strcmp( in_a.topic, "echo/empty" ),
+           "topic \"%s\" len %u", in_a.topic, in_a.len );
+    CHECK( "mqtt-publish-retain", NET_OK == net_mqtt_publish( &a, "echo/retained", "r", 1, 0, true, 0 ) &&
+           NET_OK == mqtt_pump( &a, &in_a, 4, 3000 ) && 4 == in_a.count, "%d messages", in_a.count );
+    CHECK( "mqtt-publish-wildcard-invalid", NET_INVALID == net_mqtt_publish( &a, "echo/+", "x", 1, 0, false, 0 ) &&
+           NET_INVALID == net_mqtt_publish( &a, "echo/#", "x", 1, 0, false, 0 ) &&
+           NET_INVALID == net_mqtt_publish( &a, "", "x", 1, 0, false, 0 ), "accepted" );
+    t0 = net_now_ms();
+    err = net_mqtt_publish( &a, "cmd/wrongack", "x", 1, 1, false, 800 );
+    took = net_now_ms() - t0;
+    CHECK( "mqtt-puback-id-checked", NET_TIMEOUT == err && took >= 800 && net_mqtt_connected( &a ),
+           "err %d after %u ms", err, took );
+    CHECK( "mqtt-publish-qos2-invalid", NET_INVALID == net_mqtt_publish( &a, "echo/q", "x", 1, 2, false, 0 ),
+           "accepted" );
+
+    /* 2000 bytes do not fit the 512-byte buffer: dropped, acknowledged, the stream stays in step. */
+    in_a.count = 0;
+    err = net_mqtt_publish( &a, "cmd/big", "", 0, 1, false, 3000 );
+    mqtt_pump( &a, &in_a, 1, 3000 );
+    CHECK( "mqtt-too-large-dropped", NET_OK == err && 1 == a.dropped && 1 == in_a.count &&
+           0 == strcmp( in_a.topic, "echo/small" ) && 9 == in_a.len && net_mqtt_connected( &a ),
+           "err %d dropped %u, %d messages, topic \"%s\"", err, a.dropped, in_a.count, in_a.topic );
+
+    /* Keep-alive: idle longer than 2 s, the client pings and the broker answers. */
+    in_a.count = 0;
+    err = mqtt_pump( &a, NULL, 0, 2600 );
+    CHECK( "mqtt-keepalive", NET_OK == err && 0 != a.ping_sent && !a.ping_pending && net_mqtt_connected( &a ),
+           "err %d ping_sent %u pending %d", err, a.ping_sent, a.ping_pending );
+
+    /* Last will: a second client with a will "crashes" (closes without DISCONNECT). */
+    err = net_mqtt_subscribe( &a, "status/#", 1, 3000 );
+    net_mqtt_cfg_setup( &cfg );
+    cfg.host = "192.168.77.1";
+    cfg.client_id = "crash";
+    cfg.will_topic = "status/crash";
+    cfg.will_message = "offline";
+    cfg.will_len = 7;
+    cfg.will_qos = 1;
+    cfg.will_retain = true;
+    net_err_t err_b = net_mqtt_connect( &b, &cfg, buf_b, sizeof( buf_b ), on_mqtt, &in_b, 3000 );
+    CHECK( "mqtt-second-client", NET_OK == err && NET_OK == err_b, "subscribe %d connect %d", err, err_b );
+    net_mqtt_publish( &b, "echo/from-b", "b", 1, 1, false, 3000 );
+    mqtt_pump( &a, &in_a, 1, 3000 );
+    CHECK( "mqtt-between-clients", 1 == in_a.count && 0 == strcmp( in_a.topic, "echo/from-b" ), "topic \"%s\"",
+           in_a.topic );
+    net_close( b.sock );
+    b.connected = false;
+    mqtt_pump( &a, &in_a, 2, 3000 );
+    CHECK( "mqtt-last-will", 2 == in_a.count && 0 == strcmp( in_a.topic, "status/crash" ) && 7 == in_a.len &&
+           0 == memcmp( in_a.payload, "offline", 7 ), "%d messages, topic \"%s\"", in_a.count, in_a.topic );
+    CHECK( "mqtt-closed-client", NET_CLOSED == net_mqtt_poll( &b ) &&
+           NET_CLOSED == net_mqtt_publish( &b, "x", "x", 1, 0, false, 0 ), "still usable" );
+
+    /* Unsubscribe: messages stop. */
+    err = net_mqtt_unsubscribe( &a, "echo/#", 3000 );
+    in_a.count = 0;
+    net_err_t pub = net_mqtt_publish( &a, "echo/c", "c", 1, 1, false, 3000 );
+    mqtt_pump( &a, &in_a, 1, 500 );
+    CHECK( "mqtt-unsubscribe", NET_OK == err && NET_OK == pub && 0 == in_a.count, "err %d/%d, %d messages", err, pub,
+           in_a.count );
+
+    /* Clean disconnect: no will (a will would reach a subscriber). */
+    net_mqtt_disconnect( &a );
+    CHECK( "mqtt-disconnect", !net_mqtt_connected( &a ) && NET_CLOSED == net_mqtt_poll( &a ), "still connected" );
+    printf( "MQTTCHECK\n" );
+    fflush( stdout );
+    wait_for_go( 10000 );
+
+    /* Unanswered ping: the connection is given up after another keep-alive period. */
+    net_mqtt_cfg_setup( &cfg );
+    cfg.host = "192.168.77.1";
+    cfg.client_id = "noping";
+    cfg.keepalive_s = 1;
+    err = net_mqtt_connect( &c, &cfg, buf_c, sizeof( buf_c ), NULL, NULL, 3000 );
+    t0 = net_now_ms();
+    net_err_t end = mqtt_pump( &c, NULL, 0, 5000 );
+    took = net_now_ms() - t0;
+    CHECK( "mqtt-ping-unanswered", NET_OK == err && NET_TIMEOUT == end && took >= 1900 && took < 3000 &&
+           !net_mqtt_connected( &c ), "connect %d end %d after %u ms", err, end, took );
+
+    /* Broker errors: a malformed remaining length, the broker closing. */
+    cfg.client_id = "garbage";
+    cfg.keepalive_s = 0;
+    err = net_mqtt_connect( &c, &cfg, buf_c, sizeof( buf_c ), NULL, NULL, 3000 );
+    if ( NET_OK == err )
+    {
+        net_mqtt_publish( &c, "cmd/garbage", "", 0, 0, false, 0 );
+    }
+    end = mqtt_pump( &c, NULL, 0, 3000 );
+    CHECK( "mqtt-malformed-length", NET_OK == err && NET_ERROR == end && !net_mqtt_connected( &c ),
+           "connect %d end %d", err, end );
+    cfg.client_id = "closer";
+    err = net_mqtt_connect( &c, &cfg, buf_c, sizeof( buf_c ), NULL, NULL, 3000 );
+    if ( NET_OK == err )
+    {
+        net_mqtt_publish( &c, "cmd/close", "", 0, 0, false, 0 );
+    }
+    end = mqtt_pump( &c, NULL, 0, 3000 );
+    CHECK( "mqtt-broker-closed", NET_OK == err && ( NET_CLOSED == end || NET_RESET == end ) &&
+           !net_mqtt_connected( &c ), "connect %d end %d", err, end );
+}
+
+/* ------------------------------------------------------------- mDNS --- */
+
+static net_err_t mdns_wait( net_err_t want, uint32_t ms )
+{
+    uint32_t t0 = net_now_ms();
+    while ( net_mdns_status() != want && net_now_ms() - t0 < ms )
+    {
+        net_poll();
+        usleep( 1000 );
+    }
+    return net_mdns_status();
+}
+
+static void test_mdns( void )
+{
+    static const char long_label[] = "a123456789b123456789c123456789d123456789e123456789f123456789xyzw";   /* 64 */
+    static char long_txt[ 80 ];
+    memset( long_txt, 'x', 64 );
+    uint8_t web = 0xFF, mqtt = 0xFF, again = 0xFF;
+
+    CHECK( "mdns-not-started", NET_NOT_READY == net_mdns_status() &&
+           NET_NOT_READY == net_mdns_add_service( "x", "_http", NET_MDNS_TCP, 80, NULL, NULL ) &&
+           NET_NOT_READY == net_mdns_rename( "x" ) && NET_INVALID == net_mdns_remove_service( 0 ), "status %d",
+           net_mdns_status() );
+    CHECK( "mdns-bad-hostname", NET_INVALID == net_mdns_start( "bad name" ) && NET_INVALID == net_mdns_start( "" ) &&
+           NET_INVALID == net_mdns_start( long_label ), "accepted" );
+    net_err_t err = net_mdns_start( NULL );     /* net_config_t.hostname: mikrosdk-test */
+    CHECK( "mdns-start", NET_OK == err && NET_INVALID == net_mdns_start( "again" ), "err %d", err );
+    CHECK( "mdns-bad-service", NET_INVALID == net_mdns_add_service( "x", "http", NET_MDNS_TCP, 80, NULL, NULL ) &&
+           NET_INVALID == net_mdns_add_service( long_label, "_http", NET_MDNS_TCP, 80, NULL, NULL ) &&
+           NET_INVALID == net_mdns_add_service( "x", "_http", ( net_mdns_proto_t )7, 80, NULL, NULL ) &&
+           NET_INVALID == net_mdns_add_service( "x", "_http", NET_MDNS_TCP, 80, long_txt, NULL ), "accepted" );
+    err = net_mdns_add_service( "mikrosdk web", "_http", NET_MDNS_TCP, 80, "path=/;;board=test;", &web );
+    net_err_t err2 = net_mdns_add_service( "mikrosdk mqtt", "_mqtt", NET_MDNS_TCP, 1883, NULL, &mqtt );
+    CHECK( "mdns-add-services", NET_OK == err && NET_OK == err2 && 0 == web && 1 == mqtt, "err %d %d ids %u %u",
+           err, err2, web, mqtt );
+    CHECK( "mdns-services-full", NET_NO_MEMORY == net_mdns_add_service( "x", "_ftp", NET_MDNS_TCP, 21, NULL, NULL ),
+           "third service accepted" );
+    err = mdns_wait( NET_OK, 5000 );
+    CHECK( "mdns-probing-done", NET_OK == err, "status %d", err );
+    printf( "MDNS mikrosdk-test\n" );
+    fflush( stdout );
+    wait_for_go( 30000 );                       /* the harness queries meanwhile */
+
+    err = net_mdns_remove_service( web );
+    CHECK( "mdns-remove-service", NET_OK == err && NET_INVALID == net_mdns_remove_service( web ) &&
+           NET_INVALID == net_mdns_remove_service( 9 ), "err %d", err );
+    printf( "MDNSGONE mikrosdk-test\n" );       /* the harness checks _http is gone, _mqtt is not */
+    fflush( stdout );
+    wait_for_go( 30000 );
+    err = net_mdns_add_service( "mikrosdk web", "_http", NET_MDNS_TCP, 8080, NULL, &again );
+    CHECK( "mdns-slot-reused", NET_OK == err && web == again, "err %d id %u", err, again );
+
+    /* Another device (the harness) owns taken.local. */
+    err = net_mdns_rename( "taken" );
+    net_err_t end = mdns_wait( NET_REFUSED, 5000 );
+    CHECK( "mdns-name-conflict", NET_OK == err && NET_REFUSED == end, "rename %d status %d", err, end );
+    CHECK( "mdns-bad-rename", NET_INVALID == net_mdns_rename( "a.b" ) && NET_INVALID == net_mdns_rename( NULL ),
+           "accepted" );
+    err = net_mdns_rename( "mikrosdk-test" );
+    end = mdns_wait( NET_OK, 5000 );
+    CHECK( "mdns-rename-after-conflict", NET_OK == err && NET_OK == end, "rename %d status %d", err, end );
+}
+
 static void test_link( void )
 {
     tap.link = false;
@@ -531,9 +841,24 @@ int main( int argc, char **argv )
     test_http();
     test_tcp_server();
     test_http_server();
+    test_sntp();
+    test_mqtt();
+    test_mdns();
     if ( dhcp )
     {
+        printf( "MDNSMARK\n" );                        /* the harness forgets what it heard so far */
+        fflush( stdout );
+        wait_for_go( 10000 );
         test_link();
+        uint32_t t0 = net_now_ms();
+        while ( net_now_ms() - t0 < 3000 )              /* probing (3 x 250 ms) and announcing */
+        {
+            net_poll();
+            usleep( 1000 );
+        }
+        printf( "MDNSAGAIN mikrosdk-test\n" );         /* the harness checks it probed and announced again */
+        fflush( stdout );
+        wait_for_go( 10000 );
     }
 
     printf( "RESULT %s (%d failed, tx %u rx %u frames)\n", failures ? "FAIL" : "PASS", failures,

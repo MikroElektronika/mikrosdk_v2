@@ -12,6 +12,9 @@ add_executable(test_net
     ${SDK_ROOT}/middleware/net/src/net_common.c
     ${SDK_ROOT}/middleware/net/src/net_http.c
     ${SDK_ROOT}/middleware/net/src/net_http_server.c
+    ${SDK_ROOT}/middleware/net/src/net_sntp.c
+    ${SDK_ROOT}/middleware/net/src/net_mqtt.c
+    ${SDK_ROOT}/middleware/net/src/net_mdns.c
     ${SDK_ROOT}/middleware/net/src/net_lwip.c
     ${LWIP_SOURCES}
 )
@@ -184,6 +187,9 @@ set_source_files_properties(
     ${SDK_ROOT}/middleware/net/src/net_common.c
     ${SDK_ROOT}/middleware/net/src/net_http.c
     ${SDK_ROOT}/middleware/net/src/net_http_server.c
+    ${SDK_ROOT}/middleware/net/src/net_sntp.c
+    ${SDK_ROOT}/middleware/net/src/net_mqtt.c
+    ${SDK_ROOT}/middleware/net/src/net_mdns.c
     ${SDK_ROOT}/middleware/net/src/net_lwip.c
     PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Werror;-Wshadow;-Wconversion;-Wno-sign-conversion"
 )

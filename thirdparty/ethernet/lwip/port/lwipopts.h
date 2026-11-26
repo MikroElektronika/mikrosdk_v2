@@ -89,8 +89,12 @@
 #define LWIP_UDP                        1
 #define LWIP_TCP                        1
 #define LWIP_DHCP                       1
+/* mDNS responder (net_mdns.h); -DNET_LWIP_MDNS=0 leaves it and IGMP out. */
+#ifndef NET_LWIP_MDNS
+#define NET_LWIP_MDNS                   1
+#endif
 #define LWIP_DNS                        1
-#define LWIP_IGMP                       0
+#define LWIP_IGMP                       NET_LWIP_MDNS   /* joins 224.0.0.251 for mDNS */
 #define LWIP_NETIF_HOSTNAME             1
 #define DNS_MAX_SERVERS                 2
 #define IP_REASSEMBLY                   1
@@ -121,7 +125,22 @@
 #endif
 #define MEMP_NUM_TCP_PCB                NET_MAX_SOCKETS
 #define MEMP_NUM_TCP_PCB_LISTEN         2
-#define MEMP_NUM_UDP_PCB                (NET_MAX_SOCKETS + 2)
+#define MEMP_NUM_UDP_PCB                (NET_MAX_SOCKETS + 2 + NET_LWIP_MDNS)
+
+/* mDNS (net_mdns.h): one more timeout, status callbacks so it follows address/link changes. */
+#define LWIP_MDNS_RESPONDER             NET_LWIP_MDNS
+#define LWIP_NUM_NETIF_CLIENT_DATA      NET_LWIP_MDNS
+#define LWIP_NETIF_EXT_STATUS_CALLBACK  NET_LWIP_MDNS
+#define LWIP_MDNS_SEARCH                0
+#ifndef NET_MDNS_MAX_SERVICES
+#define NET_MDNS_MAX_SERVICES           2
+#endif
+#define MDNS_MAX_SERVICES               NET_MDNS_MAX_SERVICES
+#define MDNS_MAX_STORED_PKTS            2   /* truncated queries waiting for their known answers */
+/* mDNS timers that can run at once (apps/mdns): probe/announce, 3 rate limits and 2 delayed
+ * answers per IP version, plus one per stored packet. Its "+1" comment is out of date. */
+#define MEMP_NUM_SYS_TIMEOUT            (LWIP_NUM_SYS_TIMEOUT_INTERNAL + \
+                                         NET_LWIP_MDNS * (6 + MDNS_MAX_STORED_PKTS + 5 * LWIP_IPV6))
 
 /* ---- Checksums: computed in software (drivers may enable offload later) -- */
 #define CHECKSUM_GEN_IP                 1

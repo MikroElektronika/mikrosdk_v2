@@ -12,9 +12,15 @@ mikrosdk_add_library(lib_net MikroSDK.Net
     include/net_driver.h
     include/net_http.h
     include/net_http_server.h
+    include/net_sntp.h
+    include/net_mqtt.h
+    include/net_mdns.h
     src/net_common.c
     src/net_http.c
     src/net_http_server.c
+    src/net_sntp.c
+    src/net_mqtt.c
+    src/net_mdns.c
     src/net_lwip.c
     ${LWIP_SOURCES}
 )
@@ -45,6 +51,9 @@ install_headers(${CMAKE_INSTALL_PREFIX}/include/middleware/net MikroSDK.Net
     include/net_driver.h
     include/net_http.h
     include/net_http_server.h
+    include/net_sntp.h
+    include/net_mqtt.h
+    include/net_mdns.h
 )
 
 ## Driver for the controllers of middleware/ethernet (eth_transport_* API).

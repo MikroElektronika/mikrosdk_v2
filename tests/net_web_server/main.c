@@ -88,6 +88,7 @@
 #include "log.h"
 #include "net_api.h"
 #include "net_http_server.h"
+#include "net_mdns.h"
 
 #if NET_INTERFACE == NET_IF_SPI
     #include "transport_select.h"
@@ -338,9 +339,27 @@ int main( void )
         for ( ; ; );
     }
 
+    // mDNS: http://mikrosdk.local/ and "mikroSDK web server" in service browsers
+    // (the controller must pass multicast; the SPI Click chips' filters may not).
+    if ( NET_OK == net_mdns_start( NULL ) &&
+         NET_OK == net_mdns_add_service( "mikroSDK web server", "_http", NET_MDNS_TCP, 80, "path=/", NULL ) )
+    {
+        log_printf( &logger, "mDNS: http://%s.local/\r\n", cfg.hostname );
+    }
+
     bool link = true;
+    net_err_t mdns = NET_NOT_READY;
     for ( ; ; )
     {
+        if ( net_mdns_status() != mdns )
+        {
+            mdns = net_mdns_status();
+            if ( NET_REFUSED == mdns )
+            {
+                log_printf( &logger, "mDNS: %s.local is used by another device, renaming\r\n", cfg.hostname );
+                net_mdns_rename( "mikrosdk-2" );
+            }
+        }
         net_poll();
         net_http_server_poll( &server );
 

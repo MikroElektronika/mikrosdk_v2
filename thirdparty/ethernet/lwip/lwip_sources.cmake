@@ -4,7 +4,7 @@
 ## (lwIP and mikroSDK both define a type called err_t).
 ##
 ## Sets:
-##   LWIP_SOURCES       lwIP .c files (IPv4/IPv6 core, Ethernet/ARP)
+##   LWIP_SOURCES       lwIP .c files (IPv4/IPv6 core, Ethernet/ARP, mDNS responder)
 ##   LWIP_INCLUDE_DIRS  lwIP headers and the mikroSDK port (lwipopts.h, arch/cc.h)
 
 set(LWIP_ROOT ${CMAKE_CURRENT_LIST_DIR})
@@ -46,6 +46,9 @@ set(LWIP_SOURCES
     ${LWIP_ROOT}/src/core/ipv6/mld6.c
     ${LWIP_ROOT}/src/core/ipv6/nd6.c
     ${LWIP_ROOT}/src/netif/ethernet.c
+    ${LWIP_ROOT}/src/apps/mdns/mdns.c
+    ${LWIP_ROOT}/src/apps/mdns/mdns_domain.c
+    ${LWIP_ROOT}/src/apps/mdns/mdns_out.c
 )
 
 set(LWIP_INCLUDE_DIRS

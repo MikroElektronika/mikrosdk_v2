@@ -1,10 +1,11 @@
 # mikroSDK network layer (`MikroSDK.Net`)
 
 A small, stack-independent network API for Ethernet: IPv4 with DHCP or a static address, DNS, TCP client and
-server sockets, UDP sockets and an HTTP/1.1 client. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
+server sockets, UDP sockets, an HTTP/1.1 client and server, an SNTP client, an MQTT 3.1.1 client and an mDNS
+responder. Behind it runs [lwIP](../../thirdparty/ethernet/lwip/README.md)
 (BSD-3-Clause), but applications never include lwIP headers, so the stack can change without breaking them.
 
-> **Status.** The API, lwIP, the HTTP client and server and the driver for the SPI controllers of
+> **Status.** The API, lwIP, the HTTP client and server, SNTP, MQTT, mDNS and the driver for the SPI controllers of
 > `middleware/ethernet` are done and tested on a host (see [Testing](#testing)). On-chip drivers exist for every MCU
 > CycloneTCP supports through CMake (PIC32MX/MZ, STM32F107/F2/F4/F7, Kinetis MK6x/MKV58, TM4C129); they are
 > unit-tested against simulated hardware and their register maps checked against the vendors' headers, but they
@@ -28,6 +29,9 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
 | `include/net_api.h` | Interface, DNS, TCP, UDP |
 | `include/net_http.h` | HTTP client (built on `net_api.h` only) |
 | `include/net_http_server.h` | HTTP server: routes (method + path → handler), query/form parameters, complete or streamed responses, one request at a time from `net_http_server_poll()` (built on `net_api.h` only) |
+| `include/net_sntp.h` | SNTP client (RFC 4330): `net_sntp_sync()` once, then `net_sntp_now()` gives UNIX time from the local millisecond clock; replies must echo a random nonce, come from the server asked, be synchronised; kiss-of-death → `NET_REFUSED` (built on `net_api.h` only) |
+| `include/net_mqtt.h` | MQTT 3.1.1 client over plain TCP: QoS 0 and 1, subscribe/unsubscribe, last will, user/password, keep-alive, polled from the main loop; messages larger than the buffer are dropped (still acknowledged) and counted (built on `net_api.h` only) |
+| `include/net_mdns.h` | mDNS responder (`<name>.local`) with DNS-SD services, on lwIP's `apps/mdns`; probes for name conflicts, follows address and link changes. Started once, no stop (see the header) |
 | `include/net_driver.h` | Frame driver interface: what an Ethernet controller driver implements |
 | `adapters/eth_transport/net_driver_eth_transport.h` | Driver for the controllers of `middleware/ethernet` (ENC28J60, LAN9250, LAN8651, W5500, W6100); they are used unchanged |
 | `drivers/pic32/net_driver_pic32.h` | On-chip Ethernet of PIC32MX 6xx/7xx and PIC32MZ EF (RMII, polled DMA descriptor rings in uncached memory) — `MikroSDK.Net.Pic32` |
@@ -36,7 +40,8 @@ It is built for `gcc_arm_none_eabi` and `mchp_xc32`.
 | `drivers/stm32/net_driver_stm32.h` | On-chip Ethernet of STM32F107, F2x7, F4x7/F4x9, F74x–F77x (RMII, polled DMA rings, pins and PHY clock through the mikroSDK GPIO layer, Cortex-M7 cache maintenance) — `MikroSDK.Net.Stm32`, built only for those MCUs |
 | `drivers/phy/net_phy.h` | Generic PHY control over MDIO (IEEE 802.3 clause 22 registers only), for the on-chip drivers — `MikroSDK.Net.Phy` |
 | `src/net_lwip.c` | `net_api.h` on lwIP (raw API) |
-| `src/net_http.c`, `src/net_common.c` | Stack-independent parts |
+| `src/net_http.c`, `src/net_http_server.c`, `src/net_sntp.c`, `src/net_mqtt.c`, `src/net_common.c` | Stack-independent parts |
+| `src/net_mdns.c` | `net_mdns.h` on lwIP's mDNS responder |
 
 lwIP and mikroSDK both define a type called `err_t`, so no file includes both: `net_lwip.c` includes only lwIP,
 the adapters only mikroSDK headers, and the public headers neither.
@@ -122,6 +127,15 @@ definitions:
 | `NET_UDP_QUEUE_LEN`, `NET_TCP_BACKLOG` | 4, 2 | queued datagrams / pending connections |
 | `NET_HTTP_HEADER_MAX` | 1024 | largest HTTP response header block |
 | `NET_LWIP_IPV6` | 0 | IPv6 (not exposed in `net_api.h` yet) |
+| `NET_LWIP_MDNS` | 1 | mDNS responder and IGMP; 0 leaves them out (`net_mdns_*` return `NET_ERROR`) |
+| `NET_MDNS_MAX_SERVICES` | 2 | DNS-SD services |
+
+mDNS takes about 1.2 KB of the lwIP heap once started (host and two services) and up to 1.5 KB more while it
+builds an answer; with mDNS, the HTTP server and busy TCP connections together, consider `NET_LWIP_MEM_SIZE=12288`.
+The MQTT client needs only its receive buffer (given by the application) and one socket.
+
+**Multicast.** mDNS needs the controller to pass frames for 01:00:5E:00:00:FB. The on-chip drivers accept all
+multicast; for an SPI controller it depends on its receive filter in `middleware/ethernet`.
 
 ## Example
 
@@ -219,11 +233,12 @@ unit tests of `platform/systime` (fake cycle counter), of the PHY code (simulate
 (PIC32, STM32 F1/F2/F4/F7, Kinetis K64/K66/KV58, TM4C129: fake registers, a hardware model, the test playing the DMA
 engines), the drivers' register maps compared with ST's, NXP's and TI's device headers, then the network checks against the Linux TCP/IP stack in a
 private network namespace (DHCP and DNS from dnsmasq, TCP/UDP echo, HTTP client and server, TCP server mode, link
-loss, error cases). See [its README](../../scripts/net_host_test/README.md).
+loss, error cases, SNTP against good and misbehaving servers, MQTT against a scripted broker, mDNS queries and a
+name conflict). See [its README](../../scripts/net_host_test/README.md).
 
 ## Next steps
 
 1. Run `tests/net_web_server` on hardware: an SPI Ethernet Click and one board per on-chip controller (PIC32MX,
    PIC32MZ, STM32 F1/F2/F4/F7, Kinetis K6x and KV58, TM4C129).
-2. Protocols: SNTP, MQTT and mDNS clients; migrating the CycloneTCP tests; FTP client last.
+2. Migrating the CycloneTCP tests; FTP client last.
 3. Make `LWIP` the default; CycloneTCP selectable until the end of the year, then removed with `hw_eth`.

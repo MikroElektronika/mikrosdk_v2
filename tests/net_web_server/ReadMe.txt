@@ -11,7 +11,7 @@ The board gets its address by DHCP (USE_DHCP = 1, default) or uses the static ad
 
 Test is considered successful if, on the same network:
 - the board answers pings (`ping <board IP>`),
-- http://<board IP>/ shows the page with the address, uptime and request counter (browser or `curl -v http://<board IP>/`), the counter goes up with every reload,
+- http://mikrosdk.local/ (mDNS; works where the PC resolves .local names: macOS, Linux with Avahi, Windows 10+) or http://<board IP>/ shows the page with the address, uptime and request counter (browser or `curl -v http://<board IP>/`), the counter goes up with every reload,
 - http://<board IP>/api/status returns the same as JSON,
 - other paths return 404,
 - after unplugging and plugging the cable the terminal shows LINK DOWN / LINK UP and the page works again.

@@ -162,6 +162,11 @@ uint32_t net_port_rand( void )
     return x;
 }
 
+uint32_t net_random( void )
+{
+    return net_port_rand();
+}
+
 void net_port_assert( const char *message, const char *file, int line )
 {
     if ( net.cfg.assert_hook )
@@ -257,6 +262,9 @@ static err_t netif_setup( struct netif *netif )
     netif->hwaddr_len = ETH_HWADDR_LEN;
     memcpy( netif->hwaddr, net.cfg.mac, ETH_HWADDR_LEN );
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_ETHERNET;
+#if LWIP_IGMP
+    netif->flags |= NETIF_FLAG_IGMP;    /* the drivers pass all multicast, no MAC filter callback */
+#endif
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = net.cfg.hostname;
 #endif
