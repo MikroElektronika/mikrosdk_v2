@@ -194,6 +194,36 @@ add_subdirectory(sprint)
 
 add_subdirectory(conversions)
 
+add_subdirectory(st7789)
+
+add_subdirectory(gc9107)
+
+add_subdirectory(st7789_lvgl)
+
+add_subdirectory(st7525i)
+
+add_subdirectory(st7525i_lvgl)
+
+add_subdirectory(ssd1312)
+
+add_subdirectory(ssd1312_lvgl)
+
+add_subdirectory(uc1609c)
+
+add_subdirectory(uc1609c_lvgl)
+
+add_subdirectory(sh1107)
+
+add_subdirectory(sh1107_lvgl)
+
+add_subdirectory(st7796)
+
+add_subdirectory(st7796_lvgl)
+
+add_subdirectory(st7735s)
+
+add_subdirectory(st7735s_lvgl)
+
 ## 16K Flash and 4K RAM minimum for this test.
 memory_sdk_test_check(memory_issue 16384 4096)
 
