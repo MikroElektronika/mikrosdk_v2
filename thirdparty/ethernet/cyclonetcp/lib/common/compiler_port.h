@@ -8,6 +8,11 @@
  *
  * Copyright (C) 2010-2023 Oryx Embedded SARL. All rights reserved.
  *
+ * Modified by MikroElektronika d.o.o. (MIKROE):
+ *  - 2024-06-27 (mikroSDK 2.11.1): XC32 excluded from the GCC branch; the
+ *    sprintf redefinition for XC32 is skipped when built for mikroSDK.
+ * Changed lines are marked "Note: ... for MikroE implementation." where applicable.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2

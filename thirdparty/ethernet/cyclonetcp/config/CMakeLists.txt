@@ -31,10 +31,14 @@ get_plds(additional_plds)
 if(DEFINED CMAKE_PROJECT_NAME)
     if(${CMAKE_PROJECT_NAME} STREQUAL "MikroSDK")
         list(APPEND ethernet_module_list "__PROJECT_MIKROSDK_MIKROE__")
-        ## Accept GPL license.
-        list(APPEND ethernet_module_list "GPL_LICENSE_TERMS_ACCEPTED")
         ## NOTE - MikroE implementation doesn't use an OS.
         list(APPEND ethernet_module_list "NET_RTOS_SUPPORT=DISABLED")
+        ## CycloneTCP is GPL-2.0-or-later and refuses to compile unless
+        ## GPL_LICENSE_TERMS_ACCEPTED is defined. It is defined PRIVATE, only to
+        ## build this library: it is NOT passed on to projects that link it, so
+        ## every project using Ethernet must accept the GPL itself (see
+        ## thirdparty/ethernet/cyclonetcp/README.md). Do not make it PUBLIC.
+        target_compile_definitions(lib_cyclone_tcp_config PRIVATE GPL_LICENSE_TERMS_ACCEPTED)
     endif()
 endif()
 

@@ -1,0 +1,80 @@
+name: Network layer host test
+
+## Builds the network layer (middleware/net, lwIP) for Linux and runs its tests in a
+## private network namespace (scripts/net_host_test/README.md), and checks that the
+## SBOM component list covers everything under thirdparty/ (scripts/sbom.py).
+## Nothing here reaches a real network: the tests run under `unshare -rn`.
+
+on:
+  push:
+    paths:
+      - 'middleware/net/**'
+      - 'platform/systime/**'
+      - 'thirdparty/**'
+      - 'scripts/net_host_test/**'
+      - 'scripts/import_lwip.py'
+      - 'scripts/sbom.py'
+      - 'THIRD_PARTY_NOTICES.md'
+      - '.github/workflows/netHostTest.yaml'
+  pull_request:
+    paths:
+      - 'middleware/net/**'
+      - 'platform/systime/**'
+      - 'thirdparty/**'
+      - 'scripts/net_host_test/**'
+      - 'scripts/import_lwip.py'
+      - 'scripts/sbom.py'
+      - 'THIRD_PARTY_NOTICES.md'
+      - '.github/workflows/netHostTest.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install tools
+        ## dnsmasq-base: the dnsmasq binary without the system service.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake gcc dnsmasq-base iproute2 iputils-ping
+
+      - name: Allow unprivileged user namespaces
+        ## Ubuntu 24.04 restricts them through AppArmor; run.sh needs one (unshare -rn).
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+
+      - name: Run host tests
+        run: scripts/net_host_test/run.sh
+
+  sbom-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Check the component list
+        run: python -u scripts/sbom.py --check
+
+      - name: Generate and validate an SBOM
+        run: |
+          python -u scripts/sbom.py --version ci --output sbom.cdx.json
+          pip install "cyclonedx-python-lib[json-validation]"
+          python - <<'EOF'
+          from cyclonedx.validation.json import JsonStrictValidator
+          from cyclonedx.schema import SchemaVersion
+          error = JsonStrictValidator(SchemaVersion.V1_5).validate_str(open('sbom.cdx.json').read())
+          if error is not None:
+              raise SystemExit(f'sbom.cdx.json is not valid CycloneDX 1.5: {error}')
+          print('sbom.cdx.json: valid CycloneDX 1.5')
+          EOF

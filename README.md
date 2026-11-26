@@ -114,4 +114,15 @@ non-commercial projects under the terms of the GNU Lesser</br>
 General Public License version 3 as published by the Free Software</br>
 Foundation. Click [HERE](https://www.gnu.org/licenses/lgpl-3.0.html) to see the license.
 
+### Third-party components
+
+mikroSDK includes third-party components that keep their own licences, listed in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).</br>
+**Ethernet support uses [lwIP](thirdparty/ethernet/lwip/README.md) (BSD-3-Clause)** by default. [CycloneTCP](thirdparty/ethernet/cyclonetcp/README.md)
+(GPL-2.0-or-later) can still be selected with `MIKROSDK_NET_STACK=CYCLONETCP` until 31 December 2026: firmware that uses
+it is subject to the GPL, unless you obtain a commercial CycloneTCP licence from [Oryx Embedded](https://www.oryx-embedded.com),
+and such a project has to accept the GPL explicitly (`GPL_LICENSE_TERMS_ACCEPTED`).</br>
+Each release has a software bill of materials (`sbom.cdx.json`, CycloneDX) in the package and as a release asset.</br>
+You are responsible for complying with the licences of the third-party components in the software you build.
+
 ---

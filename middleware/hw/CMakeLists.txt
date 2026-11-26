@@ -15,8 +15,9 @@ if(${TOOLCHAIN_LANGUAGE} STREQUAL "GNU")
     endif()
 endif()
 
-## ETH
-if(${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32")
+## ETH (on-chip MAC init for CycloneTCP; not used with MIKROSDK_NET_STACK=LWIP)
+if((${TOOLCHAIN_ID} STREQUAL "gcc_arm_none_eabi" OR ${TOOLCHAIN_ID} STREQUAL "mchp_xc32") AND
+   NOT (MIKROSDK_NET_STACK STREQUAL "LWIP"))
     check_eth_components(has_eth eth_module_list)
     if(${has_eth} STREQUAL "true")
         check_eth_requirements(memory_requirements_passed)

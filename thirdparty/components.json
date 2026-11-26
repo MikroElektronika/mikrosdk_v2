@@ -1,0 +1,143 @@
+{
+    "_comment": [
+        "Third-party components in mikroSDK, the input of scripts/sbom.py (CycloneDX SBOM).",
+        "Keep in step with THIRD_PARTY_NOTICES.md: CI (scripts/sbom.py --check) fails when a folder",
+        "under thirdparty/ is not covered, a path does not exist, or a name is missing from the notices.",
+        "licenses: an SPDX licence expression. paths: files or folders, relative to the repository root.",
+        "upstream: a JSON file written on import (lwIP) that gives the commit and the changed files."
+    ],
+    "components": [
+        {
+            "name": "lwIP",
+            "version": "2.2.1",
+            "licenses": "BSD-3-Clause",
+            "copyright": "Swedish Institute of Computer Science and the lwIP contributors",
+            "purl": "pkg:github/lwip-tcpip/lwip@STABLE-2_2_1_RELEASE",
+            "url": "https://github.com/lwip-tcpip/lwip",
+            "paths": ["thirdparty/ethernet/lwip/src", "thirdparty/ethernet/lwip/COPYING"],
+            "upstream": "thirdparty/ethernet/lwip/UPSTREAM.json",
+            "modified": "identifier `code` renamed to `_code` by scripts/import_lwip.py (files listed in UPSTREAM.json)"
+        },
+        {
+            "name": "CycloneTCP Open",
+            "version": "2.3.0",
+            "licenses": "GPL-2.0-or-later",
+            "copyright": "Oryx Embedded SARL",
+            "purl": "pkg:github/Oryx-Embedded/CycloneTCP@v2.3.0",
+            "url": "https://github.com/Oryx-Embedded/CycloneTCP",
+            "paths": ["thirdparty/ethernet/cyclonetcp/lib/cyclone_tcp"],
+            "modified": "see thirdparty/ethernet/cyclonetcp/README.md; identifier `code` renamed to `_code` at release time",
+            "note": "Built only with MIKROSDK_NET_STACK=CYCLONETCP (until 31 Dec 2026)."
+        },
+        {
+            "name": "CycloneTCP Common",
+            "version": "2.3.0",
+            "licenses": "GPL-2.0-or-later",
+            "copyright": "Oryx Embedded SARL",
+            "purl": "pkg:github/Oryx-Embedded/Common@v2.3.0",
+            "url": "https://github.com/Oryx-Embedded/Common",
+            "paths": ["thirdparty/ethernet/cyclonetcp/lib/common", "thirdparty/ethernet/cyclonetcp/config/net_config.h",
+                      "thirdparty/ethernet/cyclonetcp/config/os_port_config.h", "thirdparty/ethernet/cyclonetcp/config/fs_port_config.h",
+                      "thirdparty/ethernet/cyclonetcp/LICENSE"],
+            "modified": "see thirdparty/ethernet/cyclonetcp/README.md",
+            "note": "Built only with MIKROSDK_NET_STACK=CYCLONETCP (until 31 Dec 2026)."
+        },
+        {
+            "name": "CMSIS-Core(M)",
+            "version": "5.3",
+            "licenses": "Apache-2.0",
+            "copyright": "Arm Limited",
+            "purl": "pkg:github/ARM-software/CMSIS_5",
+            "url": "https://github.com/ARM-software/CMSIS_5",
+            "paths": ["thirdparty/ethernet/cyclonetcp/config/arm/core"],
+            "note": "Used by the CycloneTCP MAC drivers."
+        },
+        {
+            "name": "STM32 device headers and STM32F4 HAL files",
+            "version": "see file headers",
+            "licenses": "Apache-2.0 AND BSD-3-Clause",
+            "copyright": "STMicroelectronics",
+            "url": "https://github.com/STMicroelectronics",
+            "paths": ["thirdparty/ethernet/cyclonetcp/config/arm/st",
+                      "thirdparty/ethernet/cyclonetcp/lib/cyclone_tcp/drivers/mac/stm32f4xx_hal_cortex.c",
+                      "thirdparty/ethernet/cyclonetcp/lib/cyclone_tcp/drivers/mac/stm32f4xx_hal_cortex.h"]
+        },
+        {
+            "name": "NXP Kinetis device headers",
+            "version": "see file headers",
+            "licenses": "BSD-3-Clause",
+            "copyright": "NXP Semiconductors",
+            "url": "https://www.nxp.com/mcuxpresso",
+            "paths": ["thirdparty/ethernet/cyclonetcp/config/arm/nxp"]
+        },
+        {
+            "name": "TivaWare driverlib and register headers",
+            "version": "see file headers",
+            "licenses": "BSD-3-Clause",
+            "copyright": "Texas Instruments Incorporated",
+            "url": "https://www.ti.com/tool/SW-TM4C",
+            "paths": ["thirdparty/ethernet/cyclonetcp/config/arm/ti"]
+        },
+        {
+            "name": "LVGL",
+            "version": "9.4.0",
+            "licenses": "MIT",
+            "copyright": "LVGL Kft",
+            "purl": "pkg:github/lvgl/lvgl@v9.4.0",
+            "url": "https://github.com/lvgl/lvgl",
+            "paths": ["thirdparty/lvgl/src", "thirdparty/lvgl/lvgl.h", "thirdparty/lvgl/lvgl_private.h", "thirdparty/lvgl/LICENCE.txt", "thirdparty/lvgl/README.md"],
+            "modified": "identifier `code` renamed to `_code` at release time",
+            "bundled": [
+                {"name": "ThorVG", "version": "0.15.3", "licenses": "MIT", "copyright": "ThorVG project", "url": "https://github.com/thorvg/thorvg", "paths": ["thirdparty/lvgl/src/libs/thorvg"]},
+                {"name": "Expat", "version": "2.6.3", "licenses": "MIT", "copyright": "Expat development team", "url": "https://github.com/libexpat/libexpat", "paths": ["thirdparty/lvgl/src/libs/expat"]},
+                {"name": "LZ4", "version": "1.10.0", "licenses": "BSD-2-Clause", "copyright": "Yann Collet", "url": "https://github.com/lz4/lz4", "paths": ["thirdparty/lvgl/src/libs/lz4"]},
+                {"name": "LodePNG", "version": "as bundled", "licenses": "Zlib", "copyright": "Lode Vandevenne", "url": "https://github.com/lvandeve/lodepng", "paths": ["thirdparty/lvgl/src/libs/lodepng"]},
+                {"name": "QR Code generator", "version": "as bundled", "licenses": "MIT", "copyright": "Project Nayuki", "url": "https://github.com/nayuki/QR-Code-generator", "paths": ["thirdparty/lvgl/src/libs/qrcode"]},
+                {"name": "Code 128 barcode generator", "version": "as bundled", "licenses": "BSD-2-Clause", "copyright": "LKC Technologies, Inc.", "paths": ["thirdparty/lvgl/src/libs/barcode"]},
+                {"name": "EVE library (FT800-FT813)", "version": "as bundled", "licenses": "MIT", "copyright": "Rudolph Riedel", "url": "https://github.com/RudolphRiedel/FT800-FT813", "paths": ["thirdparty/lvgl/src/libs/FT800-FT813"]},
+                {"name": "AnimatedGIF", "version": "as bundled", "licenses": "Apache-2.0", "copyright": "BitBank Software, Inc.", "url": "https://github.com/bitbank2/AnimatedGIF", "paths": ["thirdparty/lvgl/src/libs/gif/AnimatedGIF"]},
+                {"name": "TJpgDec", "version": "R0.03", "licenses": "LicenseRef-TJpgDec", "copyright": "ChaN", "url": "http://elm-chan.org/fsw/tjpgd/", "paths": ["thirdparty/lvgl/src/libs/tjpgd"]},
+                {"name": "stb_truetype", "version": "as bundled", "licenses": "MIT OR Unlicense", "copyright": "Sean Barrett", "url": "https://github.com/nothings/stb", "paths": ["thirdparty/lvgl/src/libs/tiny_ttf"]},
+                {"name": "stb_image", "version": "as bundled", "licenses": "MIT OR Unlicense", "copyright": "Sean Barrett", "url": "https://github.com/nothings/stb", "paths": ["thirdparty/lvgl/src/libs/gltf/stb_image"]},
+                {"name": "VGLite driver", "version": "as bundled", "licenses": "MIT", "copyright": "Vivante Corporation", "paths": ["thirdparty/lvgl/src/libs/vg_lite_driver"]},
+                {"name": "frogfs", "version": "as bundled", "licenses": "MPL-2.0", "copyright": "frogfs authors", "url": "https://github.com/jkent/frogfs", "paths": ["thirdparty/lvgl/src/libs/frogfs"]},
+                {"name": "FreeType configuration headers", "version": "as bundled", "licenses": "FTL OR GPL-2.0-only", "copyright": "The FreeType Project", "url": "https://freetype.org", "paths": ["thirdparty/lvgl/src/libs/freetype/ftoption.h", "thirdparty/lvgl/src/libs/freetype/ftmodule.h"]},
+                {"name": "Liberation Sans Regular font", "version": "as bundled", "licenses": "OFL-1.1", "copyright": "Liberation Fonts project", "paths": ["thirdparty/lvgl/src/libs/freetype/LiberationSans-Regular.ttf"]},
+                {"name": "printf", "version": "as bundled", "licenses": "MIT", "copyright": "Marco Paland", "url": "https://github.com/mpaland/printf", "paths": ["thirdparty/lvgl/src/stdlib/builtin/lv_sprintf_builtin.c"]},
+                {"name": "TLSF", "version": "as bundled", "licenses": "BSD-3-Clause", "copyright": "Matthew Conte", "url": "https://github.com/mattconte/tlsf", "paths": ["thirdparty/lvgl/src/stdlib/builtin/lv_tlsf.c", "thirdparty/lvgl/src/stdlib/builtin/lv_tlsf.h", "thirdparty/lvgl/src/stdlib/builtin/lv_tlsf_private.h"]}
+            ]
+        },
+        {
+            "name": "TinyUSB",
+            "version": "0.18.0",
+            "licenses": "MIT",
+            "copyright": "Ha Thach (tinyusb.org)",
+            "purl": "pkg:github/hathach/tinyusb@0.18.0",
+            "url": "https://github.com/hathach/tinyusb",
+            "paths": ["thirdparty/usb/tinyusb/lib", "cmake/InstallHeadersUsbConfig.cmake.in"]
+        },
+        {
+            "name": "TinyUSB device examples (adapted as tests)",
+            "version": "from TinyUSB 0.18.0",
+            "licenses": "MIT",
+            "copyright": "Ha Thach (tinyusb.org)",
+            "url": "https://github.com/hathach/tinyusb",
+            "paths": ["tests/usb/test_cdc_msc", "tests/usb/test_hid_generic_inout", "tests/usb/test_midi"],
+            "modified": "adapted as mikroSDK tests"
+        },
+        {
+            "name": "FatFs",
+            "version": "R0.15 w/patch1",
+            "licenses": "LicenseRef-FatFs",
+            "copyright": "ChaN",
+            "url": "http://elm-chan.org/fsw/ff/",
+            "paths": ["middleware/filesystem/fat/FatFs", "middleware/filesystem/include/ff_types.h"]
+        }
+    ],
+    "mikroe_folders": [
+        "thirdparty/ethernet/lwip/port", "thirdparty/ethernet/lwip/lwip_sources.cmake", "thirdparty/ethernet/lwip/README.md",
+        "thirdparty/ethernet/lwip/UPSTREAM.json", "thirdparty/ethernet/cyclonetcp/README.md",
+        "thirdparty/lvgl/lv_conf", "thirdparty/usb/tinyusb/callbacks", "thirdparty/usb/tinyusb/config", "thirdparty/usb/tinyusb/isr",
+        "thirdparty/components.json"
+    ]
+}

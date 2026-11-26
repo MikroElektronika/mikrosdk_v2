@@ -19,4 +19,11 @@ if (NOT ${IS_BARE_METAL})
     endif()
     add_subdirectory(simulation)
     add_subdirectory(sprint)
+    # Millisecond time from the core's cycle counter (GNU toolchains): Cortex-M3 and newer,
+    # PIC32 (CP0 Count) and RISC-V. Cortex-M0/M0+/M23 have no cycle counter.
+    if ((NOT ${TOOLCHAIN_LANGUAGE} MATCHES "MikroC") AND
+        ((${CORE_NAME} MATCHES "^(M3|M4|M7|M33|M55|M85)") OR (${CORE_NAME} MATCHES "MIPS32|MICROAPTIV") OR
+         (${CORE_NAME} MATCHES "RISCV")))
+        add_subdirectory(systime)
+    endif()
 endif()

@@ -8,6 +8,11 @@
  *
  * Copyright (C) 2010-2023 Oryx Embedded SARL. All rights reserved.
  *
+ * Modified by MikroElektronika d.o.o. (MIKROE):
+ *  - 2024-01-30 (mikroSDK 2.10.0): RMII mode enabled in the receive control
+ *    register when built for mikroSDK (__PROJECT_MIKROSDK_MIKROE__).
+ * Changed lines are marked "Note: ... for MikroE implementation." where applicable.
+ *
  * This file is part of CycloneTCP Open.
  *
  * This program is free software; you can redistribute it and/or

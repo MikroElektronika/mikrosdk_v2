@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os, re, argparse
+from datetime import datetime, timezone
 from os.path import dirname, abspath
 
 from pathlib import Path
@@ -11,6 +12,27 @@ from typing import Iterable, Tuple
 
 root_path = dirname(dirname(abspath(__file__)))
 
+## Change notice
+## Third-party licences such as the GPL (CycloneTCP) require modified files to
+## state that they were changed, and when. Every file this script changes gets
+## a dated notice at the top. The notice is made of '//' lines, which both
+## replacement methods below leave untouched, and it is added only once.
+
+CHANGE_NOTICE_MARKER = 'Modified by MikroElektronika d.o.o. (MIKROE) at release time'
+
+def change_notice(keyword, keyword_new):
+    ''' Notice put at the top of every file this script changes '''
+    date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    return (
+        f'// {CHANGE_NOTICE_MARKER} on {date}:\n'
+        f"// identifier '{keyword}' renamed to '{keyword_new}' (reserved word in the mikroC compilers)\n"
+        '// by scripts/keyword_replace.py of mikroSDK.\n'
+    )
+
+def has_change_notice(text):
+    ''' True when the file already starts with a change notice '''
+    return CHANGE_NOTICE_MARKER in text[:1000]
+
 ## ETHERNET
 
 def is_commented_line(line):
@@ -18,26 +40,39 @@ def is_commented_line(line):
     stripped_line = line.lstrip()
     return stripped_line.startswith('//')
 
-def replace_patterns_in_file(file_path, pattern_replacements, set_encoding):
-    ''' Replace all strings that match the regexes '''
+def replace_patterns_in_file(file_path, pattern_replacements, set_encoding, notice=None):
+    ''' Replace all strings that match the regexes; returns True when the content changed '''
     with open(file_path, 'r', encoding=set_encoding) as file:
         lines = file.readlines()
 
+    new_lines = []
+    for line in lines:
+        if not is_commented_line(line):
+            for pattern, replacement in pattern_replacements:
+                line = re.sub(pattern, replacement, line)
+        new_lines.append(line)
+
+    changed = new_lines != lines
+    if changed and notice and not has_change_notice(''.join(lines)):
+        new_lines.insert(0, notice)
+
     ## Set new line to LF(linux system default)
     with open(file_path, 'wb') as file:
-        for line in lines:
-            if not is_commented_line(line):
-                for pattern, replacement in pattern_replacements:
-                    line = re.sub(pattern, replacement, line)
+        for line in new_lines:
             file.write(bytes(line, set_encoding))
 
-def replace_patterns_in_directory(directory, pattern_replacements, set_encoding, extensions=('.c', '.h')):
-    ''' Iterate through all source and header files '''
+    return changed
+
+def replace_patterns_in_directory(directory, pattern_replacements, set_encoding, extensions=('.c', '.h'), notice=None):
+    ''' Iterate through all source and header files; returns the files whose content changed '''
+    changed = []
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith(extensions):
                 file_path = os.path.join(root, file)
-                replace_patterns_in_file(file_path, pattern_replacements, set_encoding)
+                if replace_patterns_in_file(file_path, pattern_replacements, set_encoding, notice):
+                    changed.append(file_path)
+    return changed
 
 def generate_pattern_replacements(target_word, replacement_word):
     ''' List of patterns and replacements '''
@@ -195,6 +230,7 @@ def replace_code_identifier_in_project(
     replacement: str,
     target: str = "code",
     dry_run: bool = True,
+    notice: str | None = None,
 ) -> List[Path]:
     """
     Recursively replaces identifier `target` -> `replacement` in .c/.h files under `root`,
@@ -203,6 +239,7 @@ def replace_code_identifier_in_project(
     Uses UTF-8 with surrogateescape so we can round-trip odd bytes without corrupting files.
 
     Returns list of modified files (or would-be modified if dry_run).
+    A changed file gets `notice` at the top, unless it already has one.
     """
     root_path = Path(root)
     modified: List[Path] = []
@@ -226,6 +263,8 @@ def replace_code_identifier_in_project(
 
         modified.append(path)
         if not dry_run:
+            if notice and not has_change_notice(original):
+                updated = notice + updated
             path.write_text(updated, encoding="utf-8", errors="surrogateescape")
 
     return modified
@@ -245,14 +284,18 @@ if __name__ == "__main__":
     ## If so, create a PR with this change and remove previous 'replace_patterns_in_directory'
     ## and supporting functions
     if 'ethernet' in args.directory:
-        replace_patterns_in_directory(
+        changed = replace_patterns_in_directory(
             os.path.join(root_path, args.directory),
             generate_pattern_replacements(args.keyword, args.keyword_new),
-            args.encoding
+            args.encoding,
+            notice=change_notice(args.keyword, args.keyword_new)
         )
+        print(f'{args.directory}: {len(changed)} files changed, change notice added')
     elif 'lvgl' in args.directory:
         changed = replace_code_identifier_in_project(
             root=os.path.join(root_path, args.directory),
             replacement="_code",
             dry_run=False,
+            notice=change_notice("code", "_code"),
         )
+        print(f'{args.directory}: {len(changed)} files changed, change notice added')
